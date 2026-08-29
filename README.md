@@ -1,198 +1,240 @@
-# 🎬 TikTok Product Promo Generator
+# 🎬 TikTok Product Promo Generator (Gemini Pro + Flow AI Pipeline)
 
-> **One TikTok Shop link → 3 AI keyframes + Flow AI prompts + TikTok caption + Suno BGM — ready for manual Flow video generation.**
+> **From a single TikTok Shop product link $\rightarrow$ AI scraped images, 3 keyframe prompts, Gemini Pro content generation, Flow AI video prompts (Veo 3.1 / Omni Flash), policy-compliant TikTok SEO caption, and Suno AI background music.**
 
-Automates creation of TikTok product promotion content for the **Malaysian hijab fashion market**. You provide a product link, the pipeline generates everything you need — then you manually paste into [Google Flow](https://flow.google) to create the final videos.
-
----
-
-## 📋 What You Get
-
-| # | Output | Description |
-|---|--------|-------------|
-| 1 | **3 Keyframe Images (9:16)** | Front pose, side profile, over-the-shoulder — consistent character, outfit, and background |
-| 2 | **3 Flow AI Video Prompts** | Ready-to-paste prompts for Veo 3.1 / Omni Flash 8s with Malaysian Malay lip-sync |
-| 3 | **TikTok Caption & Hashtags** | Bahasa Melayu Malaysia copy — hooks, styling tips, CTA — no price (TikTok policy compliant) |
-| 4 | **Suno BGM Prompt & Lyrics** | Style tags + Malay lyrics for background music generation |
+This repository provides an automated, end-to-end content production pipeline designed specifically for **TikTok Shop affiliate marketing and e-commerce in Malaysia**.
 
 ---
 
-## 🔄 Pipeline
+## 📌 Table of Contents
+1. [Pipeline Architecture](#-pipeline-architecture)
+2. [What This Workflow Produces](#-what-this-workflow-produces)
+3. [Prerequisites & Installation](#-prerequisites--installation)
+4. [Step-by-Step Execution Guide](#-step-by-step-execution-guide)
+   - [Step 1: Scrape Product Listing](#step-1-scrape-product-listing)
+   - [Step 2: Generate Prompts & Copy via Gemini Pro](#step-2-generate-prompts--copy-via-gemini-pro)
+   - [Step 3: Generate 9:16 Keyframe Images](#step-3-generate-916-keyframe-images)
+   - [Step 4: Generate Videos on Google Flow](#step-4-generate-videos-on-google-flow)
+   - [Step 5: Generate Background Music on Suno AI](#step-5-generate-background-music-on-suno-ai)
+5. [Prompting Rules & Strategy](#-prompting-rules--strategy)
+   - [Flow AI Multi-Modal Prompt Format](#flow-ai-multi-modal-prompt-format)
+   - [TikTok SEO Hashtag Strategy (No Spam Tags)](#tiktok-seo-hashtag-strategy-no-spam-tags)
+6. [Repository Structure](#-repository-structure)
+7. [Customization Guide](#-customization-guide)
+
+---
+
+## 🔄 Pipeline Architecture
 
 ```
- TikTok Shop Link
-       │
-       ▼
- ┌─────────────────────────────────────────┐
- │  1. SCRAPE PRODUCT                      │
- │     • Resolve short URL → PDP page      │
- │     • Extract title, colors, features   │
- │     • Download product images (.jpg)    │
- │     python scrape_product.py <url>      │
- └──────────────┬──────────────────────────┘
-                │
-                ▼
- ┌─────────────────────────────────────────┐
- │  2. GENERATE 3 KEYFRAMES               │  ← Gemini Pro
- │     • Frame 1: Front (intro)            │
- │     • Frame 2: Side profile (details)   │
- │     • Frame 3: Over shoulder (CTA)      │
- │     9:16, consistent character & scene  │
- └──────────────┬──────────────────────────┘
-                │
-                ▼
- ┌─────────────────────────────────────────┐
- │  3. GENERATE ALL TEXT CONTENT           │  ← Gemini Pro
- │     • 3x Flow AI video prompts          │
- │     • TikTok caption + hashtags         │
- │     • Suno BGM style + lyrics           │
- └──────────────┬──────────────────────────┘
-                │
-                ▼
- ┌─────────────────────────────────────────┐
- │  OUTPUT FOLDER                          │
- │  output/<timestamp>/                    │
- │  ├── product_1.jpg ... product_N.jpg    │
- │  ├── product_info.json                  │
- │  ├── frame_1_front.jpg                  │
- │  ├── frame_2_side.jpg                   │
- │  ├── frame_3_shoulder.jpg               │
- │  ├── flow_prompts.txt                   │
- │  ├── tiktok_caption.txt                 │
- │  └── suno_prompt.txt                    │
- └─────────────────────────────────────────┘
-                │
-                ▼
- ┌─────────────────────────────────────────┐
- │  YOU: Manual Flow Video Generation      │
- │     1. Open flow.google                 │
- │     2. Upload frame + paste prompt      │
- │     3. Veo 3.1 / Omni Flash, 8 seconds │
- │     4. Download 3 scene MP4s            │
- │     5. Post on TikTok with caption!     │
- └─────────────────────────────────────────┘
+ ┌─────────────────────────────────────────────────────────────┐
+ │ 1. INPUT: TikTok Shop URL                                   │
+ │    e.g. https://vt.tiktok.com/ZS9B.../                      │
+ └──────────────────────────────┬──────────────────────────────┘
+                                │
+                                ▼
+ ┌─────────────────────────────────────────────────────────────┐
+ │ 2. SCRAPE & EXTRACT (`scrape_product.py`)                   │
+ │    • Resolves short URL $\rightarrow$ Full PDP listing page │
+ │    • Extracts product title, features, colors, & body text  │
+ │    • Downloads & converts listing images to high-res .jpg   │
+ │    • Saves metadata to `output/<timestamp>/product_info.json│
+ └──────────────────────────────┬──────────────────────────────┘
+                                │
+                                ▼
+ ┌─────────────────────────────────────────────────────────────┐
+ │ 3. PROMPT GENERATION (`generate_prompts.py` - Gemini Pro)   │
+ │    • Analyzes product attributes & solves buyer pain points │
+ │    • Generates 3 Keyframe Image Prompts (9:16 vertical)     │
+ │    • Generates 3 Flow AI Video Prompts (8s with Malay audio)│
+ │    • Generates High-Converting TikTok Caption (SEO tags)    │
+ │    • Generates Suno AI Style Prompt & Malay Lyrics          │
+ └──────────────────────────────┬──────────────────────────────┘
+                                │
+                                ▼
+ ┌─────────────────────────────────────────────────────────────┐
+ │ 4. IMAGE GENERATION (Gemini Pro / Imagen 3)                 │
+ │    • Frame 1: Front-facing hook & intro                     │
+ │    • Frame 2: Side profile showing fabric drape & cut       │
+ │    • Frame 3: Over-the-shoulder CTA look                    │
+ └──────────────────────────────┬──────────────────────────────┘
+                                │
+                                ▼
+ ┌─────────────────────────────────────────────────────────────┐
+ │ 5. MANUAL VIDEO GENERATION (Google Flow - Veo 3.1)          │
+ │    • Upload Frame 1, 2, 3 + paste generated scene prompts   │
+ │    • 8-second frame-to-video with Malaysian Malay lip-sync  │
+ │    • Download the 3 final MP4 clips & post to TikTok!       │
+ └─────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 🛠️ Requirements
+## 📋 What This Workflow Produces
 
+For every single product link provided, the system generates:
+
+| # | Asset | Description |
+|---|---|---|
+| 1 | **Downloaded Product Photos** | High-resolution listing images converted to `.jpg` in an `output/<timestamp>/` directory. |
+| 2 | **3 Keyframe Images (9:16)** | Consistent Malaysian hijab model showcasing the exact product in Front, Side, and Over-the-Shoulder poses. |
+| 3 | **3 Flow AI Video Prompts** | Tailored 8-second scene prompts for Veo 3.1 / Omni Flash with explicit instructions for Malaysian Malay spoken lip-sync. |
+| 4 | **TikTok Caption & Hashtags** | High-converting Bahasa Melayu copy with relatable hooks, problem-solution angles, styling tips, "beg kuning" CTA, and zero price mentions (TikTok policy safe). |
+| 5 | **Suno AI Prompt & Lyrics** | Upbeat music genre tags + singable Bahasa Melayu lyrics matching the product vibe. |
+
+---
+
+## 🛠️ Prerequisites & Installation
+
+### 1. System Requirements
+- **Python 3.10+**
+- **Microsoft Edge** or **Google Chrome** installed (used by Playwright)
+
+### 2. Install Python Dependencies
 ```bash
-pip install playwright pillow beautifulsoup4
+pip install playwright pillow beautifulsoup4 google-genai python-dotenv
 python -m playwright install
 ```
 
-| Dependency | Purpose |
-|------------|---------|
-| `playwright` | Headless browser for TikTok scraping |
-| `pillow` | Image format conversion (webp → jpg) |
-| `beautifulsoup4` | HTML parsing |
-
----
-
-## 🚀 Usage
-
-### Step 1: Scrape the Product
-
-```bash
-python scrape_product.py "https://vt.tiktok.com/ZS9BPhWgnmMJh-HKAvy/"
+### 3. Setup Gemini API Key
+Create a `.env` file in the root directory:
+```env
+GEMINI_API_KEY="your_google_gemini_api_key_here"
 ```
 
-This creates `output/<timestamp>/` with product images and `product_info.json`.
+---
 
-### Step 2: Generate Frames + Prompts (via Antigravity / Gemini Pro)
+## 📖 Step-by-Step Execution Guide
 
-Provide the TikTok link in chat. The AI will:
-1. Run the scraper automatically
-2. Generate 3 consistent keyframe images (9:16)
-3. Write all Flow AI prompts, TikTok caption, and Suno prompts
-4. Save everything to the output folder
+### Step 1: Scrape Product Listing
 
-### Step 3: Manual Flow Video Generation
+Run `scrape_product.py` with your TikTok Shop link:
 
-For each scene (1, 2, 3):
-1. Open [flow.google](https://flow.google)
-2. Upload the corresponding keyframe image
-3. Paste the Flow AI prompt from `flow_prompts.txt`
-4. Select **Veo 3.1** or **Omni Flash**, duration **8 seconds**
-5. Generate → Download MP4
+```bash
+python scrape_product.py "https://vt.tiktok.com/ZS9Bmw6opErnP-latdI/"
+```
 
-### Step 4: Post on TikTok
-
-Copy the caption from `tiktok_caption.txt` and post with the video!
+**What it does:**
+1. Automatically launches a headless browser and follows redirects to the TikTok Shop product page.
+2. Extracts product title, full specifications, fabric type, colors, and reviews.
+3. Downloads all product images, converts them from WebP to high-quality JPG, and saves everything into a timestamped folder:
+   ```
+   output/20260830_000436/
+   ├── product_info.json
+   ├── product_1.jpg
+   ├── product_2.jpg
+   └── ...
+   ```
 
 ---
 
-## 📂 Project Structure
+### Step 2: Generate Prompts & Copy via Gemini Pro
+
+Run `generate_prompts.py` pointing to the scraped `product_info.json`:
+
+```bash
+python generate_prompts.py output/20260830_000436/product_info.json
+```
+
+**What it does:**
+- Sends the extracted product data to **Gemini Pro** (`gemini-1.5-pro` via `google-genai`).
+- Returns a structured JSON payload containing:
+  - `keyframe_prompts`: 3 image generation prompts (Front, Side, Over-the-Shoulder).
+  - `flow_ai_prompts`: 3 video prompts tailored for 8-second Veo 3.1 generation.
+  - `tiktok_caption`: SEO-optimized post copy with 4–6 high-intent hashtags (no generic spam tags).
+  - `suno_bgm`: Style prompt and catchy Malay lyrics.
+
+---
+
+### Step 3: Generate 9:16 Keyframe Images
+
+Use the 3 prompts generated in Step 2 with Gemini Pro image generation / Antigravity:
+
+1. **Frame 1 (Front View - Intro Hook):**
+   - Establishes the full outfit, setting (e.g. modern cafe / urban KL), and subject looking directly at the camera.
+2. **Frame 2 (Side 3/4 Profile - Product Focus):**
+   - References Frame 1 to maintain character consistency while highlighting specific fabric drape, cuts, collars, pockets, or waistlines.
+3. **Frame 3 (Over-the-Shoulder - Outro & CTA):**
+   - References Frames 1 & 2 to showcase back silhouette and a warm, inviting smile pointing towards the call-to-action.
+
+---
+
+### Step 4: Generate Videos on Google Flow
+
+1. Open **[flow.google](https://flow.google)** in your browser.
+2. Create or select a project.
+3. For each of the 3 scenes:
+   - **Upload the Image**: Attach `frame_1_front.jpg` for Scene 1, `frame_2_side.jpg` for Scene 2, and `frame_3_shoulder.jpg` for Scene 3.
+   - **Model Selection**: Select **Veo 3.1** (or Gemini Omni Flash).
+   - **Duration**: Set to **8 seconds**.
+   - **Paste the Scene Prompt**: Paste the corresponding prompt from `generate_prompts.py`.
+4. Click **Generate** and download the 3 `.mp4` video clips.
+
+---
+
+### Step 5: Generate Background Music on Suno AI
+
+1. Open **[suno.com](https://suno.com)**.
+2. Switch to **Custom Mode**.
+3. Paste the generated **Style Prompt** (e.g. *Acoustic pop, warm guitar, cheerful TikTok tempo*).
+4. Paste the generated **Malay Lyrics** into the lyrics box (or leave blank for instrumental).
+5. Click **Create** and download your custom audio track.
+
+---
+
+## 🎯 Prompting Rules & Strategy
+
+### Flow AI Multi-Modal Prompt Format
+Every Flow AI prompt is written as a single self-contained prompt adhering to these rules:
+- **Duration**: Explicitly specifies 8 seconds (matching Veo 3.1 duration limits).
+- **Camera Dynamics**: Scene 1 uses slow zoom-in; Scene 2 uses slow pan; Scene 3 uses subtle slow-motion.
+- **Audio & Language Instruction**: Explicitly commands standard **Malaysian Malay (Bahasa Melayu Malaysia)** spoken audio with accurate lip-syncing, strictly forbidding Indonesian accents.
+- **Visual Cleanliness**: Commands no text overlays and no watermarks.
+
+### TikTok SEO Hashtag Strategy (No Spam Tags)
+Generic spam tags like `#RacunTikTok`, `#fyp`, and `#viral` are **strictly excluded**. Modern TikTok algorithms reward search intent. Captions use a **3-tier SEO hashtag framework (4–6 tags total)**:
+
+```
+[Product Keyword]      + [Occasion / Pain Point]  + [Niche Community]
+#BlazerWanita           #OutfitKePejabat           #HijabFashionMY
+#TudungInstant          #TudungMalas               #MuslimahStyleMY
+#SmartScaleMalaysia     #TipKurusSihat             #DietMalaysia
+```
+
+---
+
+## 📂 Repository Structure
 
 ```
 gemini-flow/
-├── README.md              # This file
-├── scrape_product.py      # TikTok product page scraper
-├── prompt_templates.py    # All prompt templates (parameterized)
-├── .gitignore
-└── output/                # Generated output (gitignored)
-    └── <timestamp>/
+├── README.md              # Comprehensive documentation and pipeline manual
+├── scrape_product.py      # Automated TikTok Shop product scraper & image downloader
+├── generate_prompts.py    # Gemini Pro prompt & content generation engine
+├── prompt_templates.py    # Parameterized prompt templates and SEO rules
+├── .gitignore             # Automatically ignores all image binaries (*.jpg, *.webp, *.png) & output/
+└── output/                # (Local only) Timestamped folders with scraped assets & metadata
+    └── 20260830_XXXXXX/
         ├── product_info.json
-        ├── product_1.jpg ... product_N.jpg
-        ├── frame_1_front.jpg
-        ├── frame_2_side.jpg
-        ├── frame_3_shoulder.jpg
-        ├── flow_prompts.txt
-        ├── tiktok_caption.txt
-        └── suno_prompt.txt
+        ├── product_1.jpg
+        └── ...
 ```
 
 ---
 
-## 📝 Prompt Rules
+## ⚙️ Customization Guide
 
-### Keyframe Images
-- **Character**: Adult Malaysian woman, hijab, 25 y/o
-- **Outfit**: Exact product from the listing
-- **Background**: Outdoor urban KL street
-- **Aspect ratio**: 9:16 (TikTok vertical)
-- **Lighting**: Cinematic golden hour
-- **No**: Text overlays, watermarks
+All generation behavior can be customized in `prompt_templates.py` or via `generate_prompts.py`:
 
-### Flow AI Video
-- **Duration**: 8 seconds per scene
-- **Audio**: Malaysian Malay (Bahasa Melayu Malaysia) — NOT Indonesian
-- **Lip-sync**: Accurate
-- **Camera**: Scene 1 zoom in, Scene 2 slow pan, Scene 3 slow motion
-- **No**: Text overlays, watermarks
-
-### TikTok Caption
-- **Language**: Bahasa Melayu Malaysia
-- **Hooks**: Relatable Malaysian references (office aircond, Genting, K-Drama)
-- **Content**: Styling tips, entertainment/info value
-- **CTA**: "Tekan beg kuning kat bawah!"
-- **No**: Price (violates TikTok policy)
-
-### Suno BGM
-- **Style**: Lo-fi hip hop, chill pop, upbeat, TikTok-tempo
-- **Lyrics**: Bahasa Melayu Malaysia, catchy verse/chorus/outro
+| Parameter | Default Setting | Alternative Options |
+|---|---|---|
+| **Model Character** | Malaysian 24-25 y/o woman wearing modern hijab | Any demographic, age, or modest fashion style |
+| **Scene Count** | 3 scenes $\times$ 8 seconds (24s total ad) | 2 to 5 scenes |
+| **Aspect Ratio** | 9:16 (TikTok Vertical) | 16:9 (YouTube), 1:1 (Instagram) |
+| **Spoken Accent** | Standard Malaysian Malay (KL / Urban) | English (MY), Mandarin, etc. |
+| **Location Setting** | Modern KL cafe / Urban high-rise / Studio | Outdoor garden, office, home gym |
 
 ---
 
-## ⚙️ Customization
+## 📜 License
 
-| Parameter | Default | Options |
-|-----------|---------|---------|
-| Model character | Malaysian hijab woman | Any ethnicity/style |
-| Scene count | 3 (8s each = 24s total) | 2–5 scenes |
-| Aspect ratio | 9:16 (TikTok) | 16:9, 1:1 |
-| Language | Bahasa Melayu Malaysia | Any |
-| Video model | Veo 3.1 / Omni Flash | Any Flow model |
-| Background | Outdoor urban KL | Indoor, cafe, studio |
-
-Edit `prompt_templates.py` to customize the templates.
-
----
-
-## 🔗 References
-
-- [Original Gemini workflow](https://share.gemini.google/acPGgNqdqowG)
-- [Google Flow](https://flow.google) — Veo 3.1 / Omni Flash frame-to-video
-- [Suno AI](https://suno.com) — BGM generation
-- Model: **Gemini Pro** (always)
+Personal & commercial affiliate promotion use.
