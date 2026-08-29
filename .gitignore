@@ -1,0 +1,44 @@
+# Raw scraped data
+share_raw.html
+gemini_share_content.html
+script_*.txt
+tiktok_images.json
+tiktok_new_images.json
+tiktok_page_text.txt
+tiktok_new_product_text.txt
+tiktok_product_screenshot.png
+gemini_details.json
+gemini_conversation_text.txt
+
+# Downloaded product images (raw/intermediate)
+product_image_*.webp
+product_image_*.jpg
+product_input_*.jpg
+new_product_*.webp
+new_product_*.jpg
+
+# Generated frames (large binaries - keep in releases or LFS)
+frame_*.jpg
+trench2_frame*.jpg
+
+# Flow video output
+extracted_flow_video/
+*.zip
+*.mp4
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# IDE / OS
+.vscode/
+*.code-workspace
+.DS_Store
+Thumbs.db
+
+# Temp scripts from scraping
+fetch_gemini_chat.js
+parse_share.py
+scrape_gemini.py
