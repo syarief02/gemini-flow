@@ -86,10 +86,11 @@ for the spoken audio: "{dialogue_scene_3}" """
 # =============================================================================
 # Rules:
 # - No price mentioned (violates TikTok policy)
-# - Relatable Malaysian hooks
-# - Styling tips for hijab-wearing women
-# - CTA pointing to yellow bag / link in bio
-# - Malaysian-focused hashtags
+# - Relatable Malaysian hooks (problem-solution or aesthetic lifestyle)
+# - Styling/usage tips tailored specifically to the item
+# - CTA pointing to yellow basket
+# - NO generic spam tags (#RacunTikTok, #fyp, #viral)
+# - Use 4-6 targeted, high-intent SEO hashtags (Product + Occasion + Community)
 
 CAPTION_TEMPLATE = """{hook}
 
@@ -99,13 +100,11 @@ CAPTION_TEMPLATE = """{hook}
 
 {cta}
 
-{hashtags}"""
+{targeted_seo_hashtags}"""
 
-DEFAULT_HASHTAGS = (
-    "#RacunTikTok #OOTDHijab #FashionMalaysia #GayaTiktok "
-    "#OutfitKePejabat #TiktokFashion #OOTDMalaysia "
-    "#OOTDGenting #GayaHijabi #FypMalaysia"
-)
+# Example high-intent niche hashtags (no #RacunTikTok / #fyp)
+# Format: [Product Name/Type] + [Occasion/Problem] + [Target Community]
+
 
 
 # =============================================================================
