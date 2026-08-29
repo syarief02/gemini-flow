@@ -27,6 +27,11 @@ from urllib.parse import unquote
 from PIL import Image
 from playwright.async_api import async_playwright
 
+if sys.platform == "win32":
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+
+
 
 def extract_product_details_from_url(url: str) -> dict:
     """Extract product title and metadata from the resolved TikTok Shop URL."""
