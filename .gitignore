@@ -38,7 +38,11 @@ venv/
 .DS_Store
 Thumbs.db
 
+# Output directory
+output/
+
 # Temp scripts from scraping
 fetch_gemini_chat.js
 parse_share.py
 scrape_gemini.py
+
