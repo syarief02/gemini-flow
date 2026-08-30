@@ -31,6 +31,7 @@ STRICT RULES
    - ALL spoken dialogue must be in standard Malaysian Malay (Bahasa Melayu Malaysia, KL/urban accent).
    - STRICTLY NOT Indonesian (no "banget", "emang", "keren", "bgt").
    - Use natural Malaysian slang & filler ("korang", "gila", "serious", "tau tak", "eh", "kan").
+   - ALWAYS use "saya" (NOT "aku") as the first-person pronoun. "Saya" sounds more polished and professional while still being friendly.
 
 2. SPEAKING PERSONALITY (CRITICAL — This is what makes or breaks the video):
    - Talk like a CLOSE FRIEND sharing a discovery, NOT like a salesperson reading features.
@@ -48,8 +49,8 @@ STRICT RULES
    ║ • Pattern-interrupt the viewer in the first 2 seconds.   ║
    ║ • Tone: Excited whisper → building curiosity.            ║
    ║ • Camera: Slow zoom-in from medium to close-up.          ║
-   ║ • Example energy: "Okay korang... tau tak... aku jumpa   ║
-   ║   something yang literally buat aku rasa macam..."       ║
+   ║ • Example energy: "Okay korang... tau tak... saya jumpa  ║
+   ║   something yang literally buat saya rasa macam..."     ║
    ║ • BODY LANGUAGE: Lean in slightly, wide eyes, genuine    ║
    ║   excited expression like sharing a secret.              ║
    ╚══════════════════════════════════════════════════════════╝
@@ -76,7 +77,7 @@ STRICT RULES
    ║ • Tone: Warm but urgent, like a friend warning you.      ║
    ║ • Camera: Subtle slow-motion with soft-focus glow.        ║
    ║ • Example energy: "Warna ni memang cepat habis tau...    ║
-   ║   aku dah grab dua warna. Korang better cepat before     ║
+   ║   saya dah grab dua warna. Korang better cepat before    ║
    ║   menyesal!"                                             ║
    ║ • BODY LANGUAGE: Over-shoulder glance, knowing smile,     ║
    ║   casual wave or thumbs-up.                              ║
