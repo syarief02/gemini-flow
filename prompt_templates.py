@@ -45,40 +45,56 @@ sharp focus, no text overlay, no watermark."""
 # =============================================================================
 # FLOW AI VIDEO PROMPTS (Veo 3.1 / Omni Flash 8s)
 # =============================================================================
-# Each prompt is a single combined prompt (no separate audio prompt).
-# Replace {product_description} with the actual product details.
-# Replace {dialogue_scene_X} with the scene-specific dialogue.
+# Each prompt combines visual direction + audio/dialogue in one paragraph.
+# The dialogue follows a 3-Act storytelling arc (Hook → Reveal → Close).
+#
+# PERSONALITY RULES FOR ALL SCENES:
+# - Speak like a close bestie sharing a discovery, NOT a salesperson.
+# - Use dramatic vocal dynamics (whisper → normal → excited).
+# - Natural pauses, gasps, and emphasis make it feel real.
+# - NEVER just list product features. Paint scenes the viewer can feel.
 
 FLOW_SCENE_1_INTRO = """Generate an 8-second video from the provided frame of an adult \
 Malaysian woman wearing a hijab and {product_description} outdoors. \
-The camera slowly zooms in to highlight the outfit's details. \
+The camera starts at a medium shot and slowly zooms in to a close-up of her face. \
+She leans in slightly with wide, excited eyes as if sharing a juicy secret with her best friend. \
 Ensure there are no text overlays or watermarks in the video. \
-The subject must look directly at the camera with accurate lip-syncing. \
+The subject must look directly at the camera with expressive, animated facial movements and accurate lip-syncing. \
+Her tone starts as an excited whisper that builds into curiosity. \
 For the audio, generate a highly realistic female voice with a standard \
 Malaysian Malay (Bahasa Melayu Malaysia) accent—strictly NOT an Indonesian accent. \
+The voice should sound warm, personal, and genuinely excited—like a real person talking to a close friend, \
+NOT like someone reading a script. \
 Explicitly translate the following English text into standard Malaysian Malay \
 for the spoken audio: "{dialogue_scene_1}" """
 
 FLOW_SCENE_2_PRODUCT = """Generate an 8-second video from the provided frame of the woman \
-in {product_description} posing to her left. \
-The camera performs a subtle slow pan to emphasize the fabric quality and cut of the outfit. \
+in {product_description} turned to a side profile view. \
+The camera performs a smooth, slow cinematic pan across the outfit to emphasize texture and cut. \
+She naturally touches and adjusts the product with genuine delight—running her fingers along the fabric, \
+adjusting a collar, or gently pulling at a feature to show it off. \
 Ensure there are no text overlays or watermarks in the video. \
-The subject subtly turns her head to speak with accurate lip-syncing. \
+The subject subtly turns her head to speak towards the camera with confident, warm energy and accurate lip-syncing. \
+Her tone is like a trusted friend giving honest styling advice. \
 For the audio, generate a highly realistic female voice with a standard \
 Malaysian Malay (Bahasa Melayu Malaysia) accent—strictly NOT an Indonesian accent. \
+The voice should use sensory descriptive language that makes the viewer FEEL the product through words. \
 Explicitly translate the following English text into standard Malaysian Malay \
 for the spoken audio: "{dialogue_scene_2}" """
 
 FLOW_SCENE_3_OUTRO = """Generate an 8-second video from the provided frame of the woman \
-in {product_description} turning to look over her shoulder, \
-showcasing the back details of the outfit. \
-Add a subtle cinematic slow-motion effect as she smiles. \
+in {product_description} turning to glance back over her shoulder with a knowing, confident smile. \
+Add a subtle cinematic soft-focus glow effect with gentle slow-motion. \
+She gives a casual, friendly wave or gentle thumbs-up as she delivers the final line. \
 Ensure there are no text overlays or watermarks in the video. \
-The subject must speak with accurate lip-syncing. \
+The subject speaks with warm urgency and accurate lip-syncing—like a friend giving a last-minute warning \
+before something sells out. \
 For the audio, generate a highly realistic female voice with a standard \
 Malaysian Malay (Bahasa Melayu Malaysia) accent—strictly NOT an Indonesian accent. \
+The voice should sound warm but urgent—creating a sense of FOMO and making the purchase feel like a smart decision. \
 Explicitly translate the following English text into standard Malaysian Malay \
 for the spoken audio: "{dialogue_scene_3}" """
+
 
 
 # =============================================================================
