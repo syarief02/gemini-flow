@@ -42,18 +42,21 @@ STRICT RULES
    - AVOID forced hyper-excitement, exaggerated whispers, dramatic screaming, or fake hype.
    - Natural, smooth conversational flow (steady pace, pleasant rhythm, clear pronunciation).
    - NEVER repeat the exact same opening line (e.g. BANNED: "Okay korang... tau tak... saya jumpa something yang literally").
-   - Use diverse, natural Malaysian conversational openings:
-     • Casual Review: "Ramai yang tanya saya macam mana nak nampak kemas tapi tetap selesa..."
-     • Everyday Problem: "Kalau korang jenis yang suka outfit simple tapi nak nampak terletak elok..."
-     • Honest Experience: "Bila saya sarung je baju ni tadi, terus rasa berbaloi sangat..."
-     • Styling Tip: "Untuk korang yang nak jimat masa bersiap pagi-pagi..."
+   - STRICTLY FORBID repetitive starter clichés. DO NOT always start with "Kalau korang" or "Kalau korang tengah cari".
+   - Rotate and diversify opening hook styles naturally:
+     • Direct Personal Pick: "Hari ni saya nak share satu outfit yang saya selalu capai bila nak keluar cepat..."
+     • Visual Observation: "Potongan kemeja macam ni memang nampak effortlessly chic dan kemas..."
+     • Relatable Daily Habit: "Paling best bila ada baju yang langsung tak payah pening nak gosok..."
+     • Follower Interaction: "Ramai yang tanya saya mana nak dapatkan cutting yang terletak elok macam ni..."
+     • First Impression: "Bila saya sarung je tadi, benda pertama yang saya rasa ialah fabrik dia yang sejuk dan beralun..."
 
 3. THE 3-ACT NATURAL VIDEO STRUCTURE (8 seconds each):
 
    ╔══════════════════════════════════════════════════════════╗
    ║ SCENE 1 — "THE CASUAL INTRO" (Frame 1: Front-facing)     ║
    ╠══════════════════════════════════════════════════════════╣
-   ║ • A calm, relatable conversational opening.              ║
+   ║ • A calm, organic conversational opening (NO repetitive   ║
+   ║   "Kalau korang" formula).                                ║
    ║ • Natural pleasant smile, steady comfortable eye contact.║
    ║ • NO exaggerated wide-eyes, NO aggressive leaning in.    ║
    ║ • Camera: Smooth, subtle slow zoom or steady shot.       ║
