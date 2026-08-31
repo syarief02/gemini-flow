@@ -52,7 +52,8 @@ sharp focus, no text overlay, no watermark."""
 # - Speak in a calm, relaxed, and effortless tone—like a creator chatting casually with followers.
 # - AVOID exaggerated gestures, frantic whispers, or wide-eyed hyper-excitement.
 # - STRICTLY FORBID repetitive intro clichés (DO NOT always start with "Kalau korang").
-# - Diversify opening hooks: Personal picks, visual observations, first impressions, or follower questions.
+# - STRICTLY FORBID repetitive outro crutches (DO NOT always end with "...di bawah ya" or "...ya").
+# - Diversify opening hooks and sign-off CTAs naturally.
 # - Natural, smooth delivery with relaxed micro-expressions and clear lip-syncing.
 
 FLOW_SCENE_1_INTRO = """Generate an 8-second video from the provided frame of an adult \

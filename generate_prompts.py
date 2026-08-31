@@ -77,7 +77,14 @@ STRICT RULES
    ╔══════════════════════════════════════════════════════════╗
    ║ SCENE 3 — "THE FRIENDLY SIGN-OFF" (Frame 3: Over Shoulder║
    ╠══════════════════════════════════════════════════════════╣
-   ║ • A warm, helpful reminder to check the yellow basket.   ║
+   ║ • A warm, natural recommendation to check yellow basket. ║
+   ║ • STRICTLY FORBID repetitive endings with "...ya" or     ║
+   ║   always ending with "...dekat beg kuning di bawah ya."   ║
+   ║ • Diversify closing phrasing:                            ║
+   ║   - "Korang boleh tekan beg kuning kalau nak survey."     ║
+   ║   - "Sempat lagi nak grab saiz korang dekat beg kuning."  ║
+   ║   - "Boleh check ukuran lengkap dekat beg kuning bawah."  ║
+   ║   - "Pilihan warna lain ada dekat beg kuning sekarang."   ║
    ║ • Camera: Soft, natural lighting with gentle slow-mo.    ║
    ║ • Tone: Friendly, effortless, polite recommendation.     ║
    ║ • Body Language: Natural relaxed over-the-shoulder       ║
