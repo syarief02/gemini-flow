@@ -77,8 +77,9 @@ STRICT RULES
    ║ • A warm, helpful reminder to check the yellow basket.   ║
    ║ • Camera: Soft, natural lighting with gentle slow-mo.    ║
    ║ • Tone: Friendly, effortless, polite recommendation.     ║
-   ║ • Body Language: Gentle glance back, soft warm smile,    ║
-   ║   polite wave.                                           ║
+   ║ • Body Language: Natural relaxed over-the-shoulder       ║
+   ║   glance, soft pleasant smile, arms resting naturally at  ║
+   ║   her side or carrying bag casually. NO AWKWARD WAVING.  ║
    ╚══════════════════════════════════════════════════════════╝
 
 4. FLOW AI PROMPT FORMAT:

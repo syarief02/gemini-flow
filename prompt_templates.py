@@ -81,7 +81,7 @@ for the spoken audio: "{dialogue_scene_2}" """
 FLOW_SCENE_3_OUTRO = """Generate an 8-second video from the provided frame of the woman \
 in {product_description} turning to glance back over her shoulder with a relaxed, soft smile. \
 Add a gentle cinematic soft-focus effect with natural lighting. \
-She gives a subtle, polite wave as she signs off. \
+Her arms and hands rest naturally at her side or hold her bag casually without any awkward waving gestures. \
 Ensure there are no text overlays or watermarks in the video. \
 The subject speaks with warm, friendly sincerity and accurate lip-syncing. \
 For the audio, generate a highly realistic female voice with a standard \
