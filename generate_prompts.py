@@ -92,6 +92,7 @@ STRICT RULES
    - High-converting Bahasa Melayu copywriting with relatable problem-solution angle.
    - Zero direct price mentions (TikTok policy).
    - CTA pointing to "beg kuning" (yellow basket).
+   - STRICTLY NEVER use the em-dash "—" or en-dash "–" character anywhere in the caption. Use colon ":", comma ",", or natural punctuation instead.
 
 6. HASHTAGS:
    - STRICTLY NO generic spam: #RacunTikTok, #fyp, #viral are BANNED.

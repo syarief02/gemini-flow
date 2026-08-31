@@ -100,6 +100,7 @@ for the spoken audio: "{dialogue_scene_3}" """
 # - Relatable Malaysian hooks (problem-solution or aesthetic lifestyle)
 # - Styling/usage tips tailored specifically to the item
 # - CTA pointing to yellow basket
+# - STRICTLY NEVER use the em-dash "—" or en-dash "–" character anywhere in the caption (use colon, comma, or natural phrasing)
 # - NO generic spam tags (#RacunTikTok, #fyp, #viral)
 # - Use 4-6 targeted, high-intent SEO hashtags (Product + Occasion + Community)
 
