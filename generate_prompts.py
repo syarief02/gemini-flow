@@ -14,6 +14,7 @@ Usage:
 import os
 import sys
 import json
+from datetime import datetime, timezone
 from dotenv import load_dotenv
 
 if sys.platform == "win32":
@@ -21,6 +22,67 @@ if sys.platform == "win32":
     sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 
 load_dotenv()
+
+HISTORY_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "generation_history.json")
+
+def load_generation_history(last_n: int = 5) -> list:
+    """Load the last N generation entries from history file."""
+    try:
+        with open(HISTORY_FILE, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        entries = data.get("generations", [])
+        return entries[-last_n:]  # return only the last N
+    except (FileNotFoundError, json.JSONDecodeError):
+        return []
+
+def get_recently_used_phrases(last_n: int = 5) -> str:
+    """Build a summary of recently used hooks and sign-offs to inject into prompts."""
+    recent = load_generation_history(last_n)
+    if not recent:
+        return ""
+    
+    lines = ["\n\n⚠️ ANTI-REPETITION CONTEXT — RECENTLY USED PHRASES (DO NOT REUSE THESE):"]
+    for entry in recent:
+        lines.append(f"  • Product: {entry.get('product', '?')}")
+        lines.append(f"    Hook style: {entry.get('intro_hook_style', '?')}")
+        lines.append(f"    Opening: \"{entry.get('opening_line', '?')}\"")
+        lines.append(f"    Sign-off style: {entry.get('signoff_style', '?')}")
+        lines.append(f"    Closing: \"{entry.get('closing_line', '?')}\"")
+    
+    lines.append("\nYou MUST use a DIFFERENT hook style and DIFFERENT opening phrasing from all of the above.")
+    lines.append("You MUST use a DIFFERENT sign-off style and DIFFERENT closing phrasing from all of the above.")
+    lines.append("Rotate through all 5 hook categories: direct_personal_pick, visual_observation, relatable_daily_habit, first_impression, follower_interaction.")
+    lines.append("Rotate through all 5 signoff categories: casual_survey, sizing_check, color_options, gentle_recommendation, urgency_stock.")
+    return "\n".join(lines)
+
+def save_generation_history(product_name: str, intro_hook_style: str, opening_line: str,
+                            signoff_style: str, closing_line: str):
+    """Append a new entry to the generation history file."""
+    try:
+        with open(HISTORY_FILE, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        data = {
+            "_description": "Tracks previously used hooks and sign-offs to prevent repetition.",
+            "_rules": [],
+            "hook_categories": ["direct_personal_pick", "visual_observation", "relatable_daily_habit", "first_impression", "follower_interaction"],
+            "signoff_categories": ["casual_survey", "sizing_check", "color_options", "gentle_recommendation", "urgency_stock"],
+            "generations": []
+        }
+    
+    data["generations"].append({
+        "product": product_name,
+        "timestamp": datetime.now(timezone.utc).astimezone().isoformat(),
+        "intro_hook_style": intro_hook_style,
+        "opening_line": opening_line,
+        "signoff_style": signoff_style,
+        "closing_line": closing_line
+    })
+    
+    with open(HISTORY_FILE, 'w', encoding='utf-8') as f:
+        json.dump(data, f, indent=2, ensure_ascii=False)
+    print(f"📝 Saved generation history for: {product_name}")
+
 
 SYSTEM_PROMPT = """You are a top Malaysian TikTok e-commerce content strategist who creates VIRAL short-form video scripts.
 You specialize in creating spoken dialogue that feels like a real person talking to their bestie—NOT a product brochure being read aloud.
@@ -143,6 +205,9 @@ def generate_with_gemini_pro(product_info: dict) -> dict:
         print("⚠️ GEMINI_API_KEY not found in environment. Using direct template engine.")
         return None
     
+    # Load anti-repetition context from generation history
+    anti_repetition = get_recently_used_phrases(last_n=5)
+    
     try:
         from google import genai
         client = genai.Client(api_key=api_key)
@@ -151,7 +216,8 @@ def generate_with_gemini_pro(product_info: dict) -> dict:
 Product Title: {product_info.get('title', '')}
 Product Details: {product_info.get('page_text', '')[:1500]}
 
-Generate completely unique, non-repeating prompts and copy tailored specifically to this product's exact attributes."""
+Generate completely unique, non-repeating prompts and copy tailored specifically to this product's exact attributes.
+{anti_repetition}"""
 
         response = client.models.generate_content(
             model='gemini-1.5-pro',
@@ -173,3 +239,4 @@ if __name__ == "__main__":
         res = generate_with_gemini_pro(data)
         if res:
             print(json.dumps(res, indent=2, ensure_ascii=False))
+
