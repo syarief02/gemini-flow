@@ -23,6 +23,10 @@ extracted_flow_video/
 *.zip
 *.mp4
 
+# Environment variables / Secrets
+.env
+*.env
+
 # Python
 __pycache__/
 *.pyc
