@@ -1,89 +1,52 @@
 {
-  "_description": "Tracks previously used hooks, sign-offs, and key phrases across all product generations to prevent repetition. Each entry logs the product name, timestamp, intro hook style, sign-off CTA phrasing, and notable phrases used. New generations MUST check this file and avoid repeating recent entries.",
-  "_rules": [
-    "Never repeat the same intro_hook_style for 3 consecutive products",
-    "Never repeat the same signoff_style for 2 consecutive products",
-    "Never reuse the exact same opening_line within the last 5 products",
-    "Never reuse the exact same closing_line within the last 5 products",
-    "Rotate through all 5 hook categories before repeating any"
-  ],
-  "hook_categories": [
-    "direct_personal_pick",
-    "visual_observation",
-    "relatable_daily_habit",
-    "first_impression",
-    "follower_interaction"
-  ],
-  "signoff_categories": [
-    "casual_survey",
-    "sizing_check",
-    "color_options",
-    "gentle_recommendation",
-    "urgency_stock"
-  ],
+  "_description": "Tracks previously used opening hooks and sign-off CTAs across all product generation sessions. The purpose is simply to let the next generation know what was already said, so it can create genuinely fresh phrasing on the spot. No fixed rotation scripts, no rigid categories.",
   "generations": [
     {
       "product": "Nely Set Pants",
       "timestamp": "2026-08-28T20:00:00+08:00",
-      "intro_hook_style": "direct_personal_pick",
       "opening_line": "Hari ni saya nak share satu set yang sangat senang nak pakai...",
-      "signoff_style": "casual_survey",
       "closing_line": "Korang boleh tekan beg kuning kalau nak survey saiz yang tinggal."
     },
     {
       "product": "Vyra Set Skirt",
       "timestamp": "2026-08-28T20:15:00+08:00",
-      "intro_hook_style": "direct_personal_pick",
       "opening_line": "Hari ni saya nak share satu set skirt yang sangat versatile...",
-      "signoff_style": "casual_survey",
       "closing_line": "Korang boleh tekan beg kuning kalau nak tengok saiz yang ada."
     },
     {
       "product": "Ruched Puff Peplum Blouse",
       "timestamp": "2026-08-29T10:35:00+08:00",
-      "intro_hook_style": "first_impression",
       "opening_line": "Bila saya sarung blaus peplum ni tadi, terus rasa potongan dia yang kemas...",
-      "signoff_style": "gentle_recommendation",
       "closing_line": "Senang sangat nak padan, korang boleh tekan beg kuning."
     },
     {
       "product": "Faux Mink Long Trench Coat",
       "timestamp": "2026-08-29T10:45:00+08:00",
-      "intro_hook_style": "visual_observation",
       "opening_line": "Potongan trench coat panjang macam ni memang nampak effortlessly chic...",
-      "signoff_style": "color_options",
       "closing_line": "Pilihan warna lain ada dekat beg kuning sekarang."
     },
     {
       "product": "Bootcut Acid Wash Jeans",
       "timestamp": "2026-08-30T14:30:00+08:00",
-      "intro_hook_style": "direct_personal_pick",
       "opening_line": "Hari ni saya nak share satu jeans bootcut yang memang fit gila...",
-      "signoff_style": "sizing_check",
       "closing_line": "Boleh check ukuran lengkap dekat beg kuning bawah."
     },
     {
       "product": "Shanice Flare Pants",
       "timestamp": "2026-08-31T22:50:00+08:00",
-      "intro_hook_style": "direct_personal_pick",
       "opening_line": "Hari ni saya nak share satu seluar flare yang memang jadi kegemaran saya...",
-      "signoff_style": "casual_survey",
       "closing_line": "Korang boleh tekan beg kuning kalau nak survey saiz."
     },
     {
       "product": "Vintage Floral Chiffon Blouse",
       "timestamp": "2026-08-31T23:48:00+08:00",
-      "intro_hook_style": "direct_personal_pick",
       "opening_line": "Hari ni saya nak share satu blaus corak bunga vintaj yang sangat manis...",
-      "signoff_style": "casual_survey",
       "closing_line": "Korang boleh tekan beg kuning kalau nak survey saiz dan corak yang masih ada."
     },
     {
       "product": "360 Outfit Baggy Sweatpants",
       "timestamp": "2026-09-01T00:16:00+08:00",
-      "intro_hook_style": "direct_personal_pick",
       "opening_line": "Hari ni saya nak share satu seluar sweatpants baggy yang paling kerap saya pakai...",
-      "signoff_style": "color_options",
       "closing_line": "Ada pilihan warna lain macam kelabu, putih, dan hitam. Korang boleh tekan beg kuning."
     }
   ]

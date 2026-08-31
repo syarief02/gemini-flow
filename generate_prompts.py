@@ -41,41 +41,37 @@ def get_recently_used_phrases(last_n: int = 5) -> str:
     if not recent:
         return ""
     
-    lines = ["\n\n⚠️ ANTI-REPETITION CONTEXT — RECENTLY USED PHRASES (DO NOT REUSE THESE):"]
-    for entry in recent:
-        lines.append(f"  • Product: {entry.get('product', '?')}")
-        lines.append(f"    Hook style: {entry.get('intro_hook_style', '?')}")
-        lines.append(f"    Opening: \"{entry.get('opening_line', '?')}\"")
-        lines.append(f"    Sign-off style: {entry.get('signoff_style', '?')}")
-        lines.append(f"    Closing: \"{entry.get('closing_line', '?')}\"")
+    lines = ["\n\n⚠️ PREVIOUSLY USED PHRASES — DO NOT REUSE OR CLOSELY PARAPHRASE ANY OF THESE:"]
+    for i, entry in enumerate(recent, 1):
+        lines.append(f"  {i}. [{entry.get('product', '?')}]")
+        lines.append(f"     Opening used: \"{entry.get('opening_line', '?')}\"")
+        lines.append(f"     Closing used: \"{entry.get('closing_line', '?')}\"")
     
-    lines.append("\nYou MUST use a DIFFERENT hook style and DIFFERENT opening phrasing from all of the above.")
-    lines.append("You MUST use a DIFFERENT sign-off style and DIFFERENT closing phrasing from all of the above.")
-    lines.append("Rotate through all 5 hook categories: direct_personal_pick, visual_observation, relatable_daily_habit, first_impression, follower_interaction.")
-    lines.append("Rotate through all 5 signoff categories: casual_survey, sizing_check, color_options, gentle_recommendation, urgency_stock.")
+    lines.append("")
+    lines.append("IMPORTANT: You must write COMPLETELY FRESH opening and closing lines that are genuinely different from ALL of the above.")
+    lines.append("Do NOT just rearrange the same words or swap synonyms. Create something a real human would naturally say differently.")
+    lines.append("Think of it like a real TikTok creator who never scripts the same intro twice — each video just starts differently because that's how people naturally talk.")
     return "\n".join(lines)
 
-def save_generation_history(product_name: str, intro_hook_style: str, opening_line: str,
-                            signoff_style: str, closing_line: str):
-    """Append a new entry to the generation history file."""
+def save_generation_history(product_name: str, opening_line: str, closing_line: str):
+    """Append a new entry to the generation history file.
+    
+    Just stores the raw opening and closing text — no rigid categories.
+    The point is simply to know what was already said so the next generation avoids it.
+    """
     try:
         with open(HISTORY_FILE, 'r', encoding='utf-8') as f:
             data = json.load(f)
     except (FileNotFoundError, json.JSONDecodeError):
         data = {
-            "_description": "Tracks previously used hooks and sign-offs to prevent repetition.",
-            "_rules": [],
-            "hook_categories": ["direct_personal_pick", "visual_observation", "relatable_daily_habit", "first_impression", "follower_interaction"],
-            "signoff_categories": ["casual_survey", "sizing_check", "color_options", "gentle_recommendation", "urgency_stock"],
+            "_description": "Tracks previously used opening hooks and sign-off CTAs to prevent repetition across sessions.",
             "generations": []
         }
     
     data["generations"].append({
         "product": product_name,
         "timestamp": datetime.now(timezone.utc).astimezone().isoformat(),
-        "intro_hook_style": intro_hook_style,
         "opening_line": opening_line,
-        "signoff_style": signoff_style,
         "closing_line": closing_line
     })
     
@@ -103,14 +99,10 @@ STRICT RULES
    - Speak in a CALM, FRIENDLY, and EFFORTLESS tone—like a creator sharing an honest daily outfit recommendation.
    - AVOID forced hyper-excitement, exaggerated whispers, dramatic screaming, or fake hype.
    - Natural, smooth conversational flow (steady pace, pleasant rhythm, clear pronunciation).
-   - NEVER repeat the exact same opening line (e.g. BANNED: "Okay korang... tau tak... saya jumpa something yang literally").
-   - STRICTLY FORBID repetitive starter clichés. DO NOT always start with "Kalau korang" or "Kalau korang tengah cari".
-   - Rotate and diversify opening hook styles naturally:
-     • Direct Personal Pick: "Hari ni saya nak share satu outfit yang saya selalu capai bila nak keluar cepat..."
-     • Visual Observation: "Potongan kemeja macam ni memang nampak effortlessly chic dan kemas..."
-     • Relatable Daily Habit: "Paling best bila ada baju yang langsung tak payah pening nak gosok..."
-     • Follower Interaction: "Ramai yang tanya saya mana nak dapatkan cutting yang terletak elok macam ni..."
-     • First Impression: "Bila saya sarung je tadi, benda pertama yang saya rasa ialah fabrik dia yang sejuk dan beralun..."
+   - NEVER repeat the exact same opening line across products.
+   - STRICTLY FORBID formulaic starters like always using "Kalau korang" or always using "Hari ni saya nak share".
+   - CREATE FRESH, ORIGINAL opening hooks every time. Think like a real human creator who naturally says things differently each time.
+   - You will be given a list of PREVIOUSLY USED opening lines and sign-off lines. You MUST write something completely different from all of them — not just rearranging the same words, but genuinely new phrasing and angles.
 
 3. THE 3-ACT NATURAL VIDEO STRUCTURE (8 seconds each):
 
@@ -142,11 +134,9 @@ STRICT RULES
    ║ • A warm, natural recommendation to check yellow basket. ║
    ║ • STRICTLY FORBID repetitive endings with "...ya" or     ║
    ║   always ending with "...dekat beg kuning di bawah ya."   ║
-   ║ • Diversify closing phrasing:                            ║
-   ║   - "Korang boleh tekan beg kuning kalau nak survey."     ║
-   ║   - "Sempat lagi nak grab saiz korang dekat beg kuning."  ║
-   ║   - "Boleh check ukuran lengkap dekat beg kuning bawah."  ║
-   ║   - "Pilihan warna lain ada dekat beg kuning sekarang."   ║
+   ║ • CREATE a completely fresh, original sign-off CTA every  ║
+   ║   time. Do NOT copy-paste from previous products. Write   ║
+   ║   it on the spot like a real human would naturally say it. ║
    ║ • Camera: Soft, natural lighting with gentle slow-mo.    ║
    ║ • Tone: Friendly, effortless, polite recommendation.     ║
    ║ • Body Language: Natural relaxed over-the-shoulder       ║

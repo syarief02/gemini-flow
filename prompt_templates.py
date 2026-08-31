@@ -7,16 +7,12 @@ Templates used to generate:
 - TikTok caption & hashtags (Bahasa Melayu Malaysia)
 - Suno BGM prompt & lyrics
 
-ANTI-REPETITION SYSTEM:
-- generation_history.json tracks all previously used intro hooks, sign-off CTAs, 
-  and key phrases across every product generation session.
+ANTI-REPETITION SYSTEM (generation_history.json):
+- Tracks all previously used opening hooks and sign-off CTAs across sessions.
 - Before generating new content, ALWAYS check the last 5 entries in the history file
-  and ensure the new generation uses a DIFFERENT hook_category and signoff_category.
+  and ensure the new generation uses genuinely different phrasing and angles.
 - After generating, ALWAYS log the new entry with save_generation_history() from generate_prompts.py.
-- 5 Hook Categories: direct_personal_pick, visual_observation, relatable_daily_habit, 
-  first_impression, follower_interaction
-- 5 Sign-off Categories: casual_survey, sizing_check, color_options, 
-  gentle_recommendation, urgency_stock
+- NO fixed rotation scripts — just be aware of what was already used and create fresh words on the spot.
 """
 
 # =============================================================================
