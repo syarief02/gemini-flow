@@ -35,22 +35,25 @@ def load_generation_history(last_n: int = 5) -> list:
     except (FileNotFoundError, json.JSONDecodeError):
         return []
 
-def get_recently_used_phrases(last_n: int = 5) -> str:
-    """Build a summary of recently used hooks and sign-offs to inject into prompts."""
+def get_recently_used_phrases(last_n: int = 7) -> str:
+    """Build a summary of recently used hooks and sign-offs to inject into prompts.
+    
+    Only the last `last_n` entries are shown. Phrases older than this window
+    are allowed to be reused freely.
+    """
     recent = load_generation_history(last_n)
     if not recent:
         return ""
     
-    lines = ["\n\n⚠️ PREVIOUSLY USED PHRASES — DO NOT REUSE OR CLOSELY PARAPHRASE ANY OF THESE:"]
+    lines = [f"\n\n⚠️ LAST {len(recent)} USED PHRASES — avoid reusing or closely paraphrasing these:"]
     for i, entry in enumerate(recent, 1):
         lines.append(f"  {i}. [{entry.get('product', '?')}]")
         lines.append(f"     Opening used: \"{entry.get('opening_line', '?')}\"")
         lines.append(f"     Closing used: \"{entry.get('closing_line', '?')}\"")
     
     lines.append("")
-    lines.append("IMPORTANT: You must write COMPLETELY FRESH opening and closing lines that are genuinely different from ALL of the above.")
-    lines.append("Do NOT just rearrange the same words or swap synonyms. Create something a real human would naturally say differently.")
-    lines.append("Think of it like a real TikTok creator who never scripts the same intro twice — each video just starts differently because that's how people naturally talk.")
+    lines.append(f"Avoid reusing the {len(recent)} entries above. Phrases older than this list are fine to reuse.")
+    lines.append("Write genuinely different phrasing — not just rearranging the same words or swapping synonyms.")
     return "\n".join(lines)
 
 def save_generation_history(product_name: str, opening_line: str, closing_line: str):
@@ -195,7 +198,7 @@ def generate_with_gemini_pro(product_info: dict) -> dict:
         return None
     
     # Load anti-repetition context from generation history
-    anti_repetition = get_recently_used_phrases(last_n=5)
+    anti_repetition = get_recently_used_phrases(last_n=7)
     
     try:
         from google import genai
