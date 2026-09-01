@@ -9,7 +9,7 @@ Templates used to generate:
 
 ANTI-REPETITION SYSTEM (generation_history.json):
 - Tracks all previously used opening hooks and sign-off CTAs across sessions.
-- Before generating new content, ALWAYS check the last 5 entries in the history file
+- Before generating new content, check the last 7 entries in the history file
   and ensure the new generation uses genuinely different phrasing and angles.
 - After generating, ALWAYS log the new entry with save_generation_history() from generate_prompts.py.
 - NO fixed rotation scripts — just be aware of what was already used and create fresh words on the spot.
