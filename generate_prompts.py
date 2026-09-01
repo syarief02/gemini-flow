@@ -99,18 +99,17 @@ STRICT RULES
    - Speak in a CALM, FRIENDLY, and EFFORTLESS tone—like a creator sharing an honest daily outfit recommendation.
    - AVOID forced hyper-excitement, exaggerated whispers, dramatic screaming, or fake hype.
    - Natural, smooth conversational flow (steady pace, pleasant rhythm, clear pronunciation).
-   - NEVER repeat the exact same opening line across products.
-   - STRICTLY FORBID formulaic starters like always using "Kalau korang" or always using "Hari ni saya nak share".
-   - CREATE FRESH, ORIGINAL opening hooks every time. Think like a real human creator who naturally says things differently each time.
-   - You will be given a list of PREVIOUSLY USED opening lines and sign-off lines. You MUST write something completely different from all of them — not just rearranging the same words, but genuinely new phrasing and angles.
+   - You will be given a list of PREVIOUSLY USED opening lines and sign-off lines.
+   - You MUST write something different from all of them — not just rearranging the same words, but genuinely new phrasing and angles.
+   - Any opener style is allowed (including "Kalau korang", "Hari ni saya nak share", etc.) as long as it was not used in the recent history provided.
 
 3. THE 3-ACT NATURAL VIDEO STRUCTURE (8 seconds each):
 
    ╔══════════════════════════════════════════════════════════╗
    ║ SCENE 1 — "THE CASUAL INTRO" (Frame 1: Front-facing)     ║
    ╠══════════════════════════════════════════════════════════╣
-   ║ • A calm, organic conversational opening (NO repetitive   ║
-   ║   "Kalau korang" formula).                                ║
+   ║ • A calm, organic conversational opening. Any style is    ║
+   ║   allowed as long as it differs from recent history.       ║
    ║ • Natural pleasant smile, steady comfortable eye contact.║
    ║ • NO exaggerated wide-eyes, NO aggressive leaning in.    ║
    ║ • Camera: Smooth, subtle slow zoom or steady shot.       ║

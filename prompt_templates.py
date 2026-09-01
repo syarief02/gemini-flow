@@ -58,9 +58,9 @@ sharp focus, no text overlay, no watermark."""
 # PERSONALITY RULES FOR ALL SCENES:
 # - Speak in a calm, relaxed, and effortless tone—like a creator chatting casually with followers.
 # - AVOID exaggerated gestures, frantic whispers, or wide-eyed hyper-excitement.
-# - STRICTLY FORBID repetitive intro clichés (DO NOT always start with "Kalau korang").
 # - STRICTLY FORBID repetitive outro crutches (DO NOT always end with "...di bawah ya" or "...ya").
-# - Diversify opening hooks and sign-off CTAs naturally.
+# - Anti-repetition is handled by generation_history.json — any opener/sign-off style is valid
+#   as long as it differs from what was recently used.
 # - Natural, smooth delivery with relaxed micro-expressions and clear lip-syncing.
 
 FLOW_SCENE_1_INTRO = """Generate an 8-second video from the provided frame of an adult \
