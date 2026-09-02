@@ -19,6 +19,42 @@ Given a single TikTok Shop product URL, the pipeline produces:
 
 When the user gives you a TikTok product link, follow this exact sequence:
 
+### Step 0: Policy Compliance Check (MANDATORY FIRST STEP)
+
+Before generating ANY content, you MUST verify that our output will comply with TikTok's latest policies.
+
+**0a. Read the local policy notes:**
+```
+Open and review: tiktok_policy_notes.md
+```
+This file contains our compiled understanding of TikTok Shop, Affiliate, AIGC, and Community policies.
+
+**0b. Search online for the latest policy updates:**
+Search the web for the latest TikTok Shop content policy, affiliate policy, and AIGC policy changes.
+Compare findings against what's in `tiktok_policy_notes.md`.
+
+**0c. If new rules or changes are found:**
+- Update `tiktok_policy_notes.md` with the new information.
+- Add an entry to the **Change Log** table at the bottom of the file with the date, change description, and source.
+- Commit and push the updated policy file:
+```bash
+git add tiktok_policy_notes.md
+git commit -m "Update TikTok policy notes: <brief description of change>"
+git push
+```
+
+**0d. Apply compliance to all content:**
+Cross-check the product category against the prohibited/restricted categories in `tiktok_policy_notes.md`.
+If the product falls into a prohibited category, STOP and inform the user immediately.
+
+**Key policies to always verify:**
+- Pricing rules (no misleading prices; we avoid direct prices entirely)
+- AIGC disclosure requirements (remind user to toggle "AI-generated content" when posting)
+- Product-content match (video must match linked product)
+- No medical/weight-loss claims
+- No prohibited product categories
+- Hashtag rules (no spam tags)
+
 ### Step 1: Scrape the Product
 ```bash
 python scrape_product.py "https://vt.tiktok.com/..."
@@ -57,6 +93,8 @@ Deliver to the user in this order:
 2. **3 Flow AI Video Prompts** (Scene 1, 2, 3 with spoken dialogue in English for Flow to translate)
 3. **TikTok Caption + Hashtags**
 4. **Suno AI BGM Prompt + Lyrics**
+5. **⚠️ AIGC Reminder** — Always include this note at the end:
+   > **Reminder:** This content is AI-generated. When posting to TikTok, enable the "AI-generated content" toggle in posting settings to comply with TikTok's AIGC disclosure policy.
 
 ### Step 6: Log to Generation History
 After EVERY generation, you MUST log the new entry:
@@ -91,7 +129,8 @@ git push
 - Use colon `:`, comma `,`, or natural phrasing instead.
 
 ### Pricing
-- **NEVER** mention direct prices in captions (violates TikTok Shop policy).
+- **NEVER** mention direct prices in captions (violates TikTok Shop policy on conditional pricing).
+- Direct viewers to "beg kuning" (yellow basket) instead.
 
 ### Hashtags
 - **BANNED:** `#RacunTikTok`, `#fyp`, `#viral`, or any generic spam tags.
@@ -104,6 +143,11 @@ git push
 - Arms rest naturally at sides or holding bag casually.
 - **NO awkward waving. NO raised hands.**
 
+### AIGC Compliance
+- All keyframe images and Flow AI videos are AI-generated synthetic media.
+- User MUST enable TikTok's "AI-generated content" toggle when posting.
+- Always include the AIGC disclosure reminder in every deliverable package.
+
 ---
 
 ## Key Files Reference
@@ -113,9 +157,25 @@ git push
 | `generate_prompts.py` | Core engine: SYSTEM_PROMPT, anti-repetition functions, Gemini API caller |
 | `prompt_templates.py` | Reusable templates for keyframes, Flow AI prompts, caption, and Suno BGM |
 | `generation_history.json` | Tracks last used opening/closing lines to prevent repetition (window: last 7) |
+| `tiktok_policy_notes.md` | **TikTok policy tracker**: compiled rules, violations, AIGC requirements, and change log |
 | `scrape_product.py` | Scrapes TikTok Shop product page → images + metadata |
 | `.env` | Contains `GEMINI_API_KEY` and `GOOGLE_API_KEY` (gitignored, never commit) |
 | `.gitignore` | Excludes `.env`, images, output dir, and temp files from git |
+
+---
+
+## TikTok Policy Compliance System
+
+- **File:** `tiktok_policy_notes.md`
+- **Purpose:** Single source of truth for all TikTok Shop, Affiliate, AIGC, and Community policies.
+- **How it works:**
+  1. AI reads the file at the START of every generation session (Step 0).
+  2. AI searches online for any policy updates or changes.
+  3. If new rules are found, AI updates the file and adds to the Change Log.
+  4. AI cross-checks the product category against prohibited categories.
+  5. AI ensures all generated content complies with documented rules.
+  6. Updated policy file is committed and pushed to Git for version tracking.
+- **Change Log:** Bottom of `tiktok_policy_notes.md` — records date, change, and source for every policy update detected.
 
 ---
 
