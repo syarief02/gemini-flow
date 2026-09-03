@@ -61,7 +61,13 @@ async def scrape_tiktok_product(tiktok_url: str, output_dir: str) -> dict:
     os.makedirs(output_dir, exist_ok=True)
 
     async with async_playwright() as p:
-        browser = await p.chromium.launch(channel="msedge", headless=True)
+        try:
+            browser = await p.chromium.launch(channel="chrome", headless=True)
+        except Exception:
+            try:
+                browser = await p.chromium.launch(headless=True)
+            except Exception:
+                browser = await p.chromium.launch(channel="msedge", headless=True)
         page = await browser.new_page(
             user_agent=(
                 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
