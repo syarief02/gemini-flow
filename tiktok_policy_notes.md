@@ -79,10 +79,12 @@
 
 | Rule | Details |
 |------|---------|
-| **Creator Health Rating (CHR)** | TikTok tracks compliance via CHR dashboard. Monitor regularly. |
-| **5-Video Misleading Threshold** | If 5+ "misleading" or "non-interactive" videos are posted in 7 days, posting limits may be imposed. |
+| **Promotion Performance Score (PPS)** | Replaced PQP system effective **Aug 27, 2026**. Evaluates shoppable video/LIVE quality and compliance (50%) + product selection (50%). Target: **PPS >= 4.5**. If score drops below **3.0**, visibility is penalized and access to campaigns/tools restricted. |
+| **Creator Health Rating (CHR)** | TikTok tracks compliance via CHR dashboard. Monitor regularly alongside PPS. |
+| **5-Video Misleading Threshold** | If 5+ "misleading" or "non-interactive" videos are posted in 7 days, posting limits cap creators to only 7 shoppable videos/week. |
 | **90-Day Violation Window** | Repeated violations within 90 days → content removal, suspension, or permanent e-commerce ban. |
 | **Engagement Bait Detection** | Algorithm detects and suppresses "like-for-like", fake incentives, and engagement bait. |
+| **Health Claims (Updated July 2026)** | Stricter restrictions on body structure alteration claims, GLP-1/Ozempic medicine comparisons, and exceeding dosage guidelines. |
 | **Appeals** | Creators can appeal removals through the app's "Content violations and bans" section. |
 
 ---
@@ -117,5 +119,6 @@ These are rules we enforce on ourselves to maintain a clean account health:
 
 | Date | Change | Source |
 |------|--------|--------|
+| 2026-09-03 | Added Promotion Performance Score (PPS) policy launched Aug 27, 2026 replacing PQP. Requires PPS >= 4.5; under 3.0 reduces visibility. Updated weekly cap (7 videos/week) for 5+ misleading flags. | Web search (TikTok Shop Malaysia Seller Center & Affiliate Portal) |
 | 2026-09-02 | Initial policy compilation. Verified pricing, AIGC, content accuracy, prohibited categories, and engagement rules. | Web search (TikTok Seller Center, Community Guidelines, darkroomagency.com, bigseller.com) |
 | 2026-07-21 | TikTok mandated AIGC disclosure labels for all paid advertisements. | TikTok official announcement |
