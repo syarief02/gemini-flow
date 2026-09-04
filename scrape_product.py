@@ -159,6 +159,24 @@ async def scrape_tiktok_product(tiktok_url: str, output_dir: str) -> dict:
                             )
                         except Exception as err:
                             print(f"  ❌ Failed product_{count}: {err}", flush=True)
+            # If no in-page images found (e.g. region block on US cloud IP), use og_image from URL params
+            if not image_paths and url_details.get("og_image"):
+                og_src = url_details["og_image"]
+                count += 1
+                webp_path = os.path.join(output_dir, f"product_{count}.webp")
+                jpg_path = os.path.join(output_dir, f"product_{count}.jpg")
+                try:
+                    urllib.request.urlretrieve(og_src, webp_path)
+                    im = Image.open(webp_path)
+                    im.convert("RGB").save(jpg_path, "JPEG", quality=95)
+                    os.remove(webp_path)
+                    image_paths.append(jpg_path)
+                    print(
+                        f"  📸 product_{count}.jpg (from og_image, {im.size[0]}x{im.size[1]})",
+                        flush=True,
+                    )
+                except Exception as err:
+                    print(f"  ❌ Failed og_image product_{count}: {err}", flush=True)
 
             # Build product info
             product_info = {
