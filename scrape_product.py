@@ -19,6 +19,7 @@ Output:
 import asyncio
 import json
 import os
+import subprocess
 import sys
 import urllib.request
 from datetime import datetime
@@ -73,16 +74,26 @@ async def scrape_tiktok_product(tiktok_url: str, output_dir: str) -> dict:
         try:
             browser = await p.chromium.launch(headless=True, args=container_args)
         except Exception as e_chromium:
-            print(f"⚠️ Standard Chromium launch failed ({e_chromium}), trying Chrome channel...", flush=True)
-            try:
-                # 2. Try Chrome channel (macOS / Windows dev environments)
-                browser = await p.chromium.launch(channel="chrome", headless=True, args=container_args)
-            except Exception as e_chrome:
+            err_str = str(e_chromium)
+            print(f"⚠️ Standard Chromium launch failed: {err_str}", flush=True)
+            if "Executable doesn't exist" in err_str or "playwright install" in err_str.lower():
+                print("🔧 Attempting on-demand 'playwright install chromium'...", flush=True)
                 try:
-                    # 3. Try plain launch without args
-                    browser = await p.chromium.launch(headless=True)
-                except Exception as e_plain:
-                    raise RuntimeError(f"Playwright Chromium launch failed: {e_chromium}")
+                    subprocess.run([sys.executable, "-m", "playwright", "install", "chromium"], check=True)
+                    browser = await p.chromium.launch(headless=True, args=container_args)
+                except Exception as e_install:
+                    print(f"⚠️ On-demand install/launch failed: {e_install}", flush=True)
+            
+            if not browser:
+                try:
+                    # 2. Try Chrome channel (macOS / Windows dev environments)
+                    browser = await p.chromium.launch(channel="chrome", headless=True, args=container_args)
+                except Exception as e_chrome:
+                    try:
+                        # 3. Try plain launch without args
+                        browser = await p.chromium.launch(headless=True)
+                    except Exception as e_plain:
+                        raise RuntimeError(f"Playwright Chromium launch failed: {e_chromium}")
         page = await browser.new_page(
             user_agent=(
                 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "

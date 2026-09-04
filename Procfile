@@ -1,1 +1,1 @@
-web: gunicorn webapp:app --bind 0.0.0.0:$PORT --workers 2 --timeout 120
+web: python -m playwright install chromium && gunicorn webapp:app --bind 0.0.0.0:$PORT --workers 2 --timeout 120
