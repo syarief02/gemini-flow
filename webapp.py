@@ -192,6 +192,25 @@ def api_generate():
     with session_lock:
         session = session_store.get(session_id)
 
+    # Fallback to disk if handled by a different worker or after container restart
+    if not session:
+        output_dir = os.path.join(OUTPUT_DIR, session_id)
+        info_path = os.path.join(output_dir, "product_info.json")
+        if os.path.isdir(output_dir) and os.path.isfile(info_path):
+            try:
+                with open(info_path, "r", encoding="utf-8") as f:
+                    pinfo = json.load(f)
+                session = {
+                    "product_info": pinfo,
+                    "output_dir": output_dir,
+                    "created_at": time.time(),
+                    "prompts": None,
+                }
+                with session_lock:
+                    session_store[session_id] = session
+            except Exception:
+                pass
+
     if not session:
         return jsonify({"error": "Session not found. Please scrape again."}), 404
 
@@ -213,9 +232,18 @@ def api_generate():
                 "error": "Gemini API call failed. Please check your Gemini API key."
             }), 500
 
-        # Store prompts in session
+        # Store prompts in session memory
         with session_lock:
-            session_store[session_id]["prompts"] = prompts
+            if session_id in session_store:
+                session_store[session_id]["prompts"] = prompts
+
+        # Persist generated_prompts.json to disk so any worker or download call can access it
+        try:
+            prompts_path = os.path.join(session["output_dir"], "generated_prompts.json")
+            with open(prompts_path, "w", encoding="utf-8") as pf:
+                json.dump(prompts, pf, indent=2, ensure_ascii=False)
+        except Exception as err_p:
+            print(f"⚠️ Failed writing generated_prompts.json: {err_p}")
 
         # Save to generation history
         flow = prompts.get("flow_ai_prompts", {})
@@ -248,15 +276,33 @@ def api_download(session_id):
     """
     session_id = re.sub(r"[^a-zA-Z0-9_]", "", session_id)
 
+    # 1. Check in-memory session or load from disk
+    output_dir = os.path.join(OUTPUT_DIR, session_id)
+    if not os.path.isdir(output_dir):
+        return jsonify({"error": "Session files not found or expired. Please scrape again."}), 404
+
+    product_info = {}
+    info_path = os.path.join(output_dir, "product_info.json")
+    if os.path.isfile(info_path):
+        try:
+            with open(info_path, "r", encoding="utf-8") as f:
+                product_info = json.load(f)
+        except Exception:
+            pass
+
+    prompts = None
     with session_lock:
-        session = session_store.get(session_id)
+        if session_id in session_store:
+            prompts = session_store[session_id].get("prompts")
 
-    if not session:
-        return jsonify({"error": "Session not found"}), 404
-
-    output_dir = session["output_dir"]
-    product_info = session["product_info"]
-    prompts = session.get("prompts")
+    if not prompts:
+        prompts_path = os.path.join(output_dir, "generated_prompts.json")
+        if os.path.isfile(prompts_path):
+            try:
+                with open(prompts_path, "r", encoding="utf-8") as f:
+                    prompts = json.load(f)
+            except Exception:
+                pass
 
     # Build the ZIP in memory
     buffer = io.BytesIO()

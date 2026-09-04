@@ -623,21 +623,47 @@ async function copyText(elementId, btn) {
 // ═══════════════════════════════════════════════════════════
 // Download ZIP
 // ═══════════════════════════════════════════════════════════
-function downloadZip() {
+async function downloadZip() {
   if (!sessionId) return;
   setBtnLoading('btn-download', true);
 
-  const a = document.createElement('a');
-  a.href = apiUrl(`api/download/${sessionId}`);
-  a.download = '';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+  try {
+    const downloadUrl = apiUrl(`api/download/${sessionId}`);
+    const response = await fetch(downloadUrl);
+    if (!response.ok) {
+      const errData = await response.json().catch(() => ({}));
+      throw new Error(errData.error || `Download failed (HTTP ${response.status})`);
+    }
 
-  setTimeout(() => {
+    const blob = await response.blob();
+    const blobUrl = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.style.display = 'none';
+    a.href = blobUrl;
+
+    const disposition = response.headers.get('content-disposition');
+    let filename = `gemini_flow_${sessionId}.zip`;
+    if (disposition && disposition.includes('filename=')) {
+      const match = disposition.match(/filename=["']?([^"';]+)["']?/);
+      if (match && match[1]) filename = match[1];
+    }
+    a.download = filename;
+
+    document.body.appendChild(a);
+    a.click();
+
+    setTimeout(() => {
+      window.URL.revokeObjectURL(blobUrl);
+      document.body.removeChild(a);
+    }, 2000);
+
+    showToast('📦 ZIP downloaded successfully! Keep copying your prompts below.');
+  } catch (err) {
+    console.error('Download error:', err);
+    showToast('❌ ' + err.message);
+  } finally {
     setBtnLoading('btn-download', false);
-    showToast('📦 ZIP download started! Keep copying your prompts below.');
-  }, 1200);
+  }
 }
 
 // ═══════════════════════════════════════════════════════════
