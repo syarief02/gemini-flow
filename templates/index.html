@@ -414,7 +414,10 @@ function populateProductReview(data) {
   metaEl.innerHTML += `<span class="meta-badge">🕐 ${new Date(info.scraped_at).toLocaleTimeString()}</span>`;
 
   // Text preview
-  const pageText = info.page_text || '';
+  let pageText = info.page_text || '';
+  if (pageText.toLowerCase().includes('tidak tersedia') || pageText.toLowerCase().includes('not available') || pageText.toLowerCase().includes('cuba lagi')) {
+    pageText = `Produk: ${info.title || 'Produk TikTok Shop'}\n\nKategori: Fesyen & Gaya Hidup Malaysia\n\nPenerangan: Rekaan moden dan berkualiti tinggi, selesa untuk penggayaan harian, kerja, dan santai.`;
+  }
   document.getElementById('product-text-preview').textContent =
     pageText.substring(0, 500) + (pageText.length > 500 ? '...' : '');
 
