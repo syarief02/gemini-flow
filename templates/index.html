@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="Gemini Flow: TikTok Shop Product Promo Generator. Scrape products, generate prompts, download as ZIP.">
+  <title>Gemini Flow — TikTok Promo Generator</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✨</text></svg>">
+</head>
+<body>
+
+<div class="app-container">
+
+  <!-- Header -->
+  <header class="app-header">
+    <div class="app-logo">
+      <div class="app-logo-icon">✨</div>
+      <span class="app-logo-text">Gemini Flow</span>
+    </div>
+    <p class="app-tagline">TikTok Shop Promo Generator</p>
+  </header>
+
+  <!-- Stepper -->
+  <div class="stepper" id="stepper">
+    <div class="step-dot active" data-step="1"></div>
+    <div class="step-line" data-line="1"></div>
+    <div class="step-dot" data-step="2"></div>
+    <div class="step-line" data-line="2"></div>
+    <div class="step-dot" data-step="3"></div>
+    <div class="step-line" data-line="3"></div>
+    <div class="step-dot" data-step="4"></div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- STEP 1: Paste URL                           -->
+  <!-- ═══════════════════════════════════════════ -->
+  <section class="step-panel active" id="step-1">
+    <div class="glass-card">
+      <h1 class="step-title">Paste Product URL</h1>
+      <p class="step-subtitle">Paste a TikTok Shop link to start scraping</p>
+
+      <div class="input-group">
+        <label for="product-url">TikTok Shop URL</label>
+        <input
+          type="url"
+          id="product-url"
+          class="text-input"
+          placeholder="https://vt.tiktok.com/..."
+          autocomplete="off"
+          autocapitalize="off"
+          spellcheck="false"
+        >
+      </div>
+
+      <button class="btn btn-primary" id="btn-scrape" onclick="startScrape()">
+        🔍 Scrape Product
+      </button>
+
+      <div class="progress-container" id="scrape-progress">
+        <div class="progress-bar-track">
+          <div class="progress-bar-fill indeterminate" id="scrape-progress-fill"></div>
+        </div>
+        <div class="progress-text">
+          <span class="spinner"></span>
+          <span id="scrape-status-text">Connecting to TikTok...</span>
+        </div>
+      </div>
+
+      <div id="scrape-error"></div>
+    </div>
+
+    <!-- Recent History -->
+    <div class="glass-card mt-4" id="history-card" style="display:none">
+      <div class="flex-between mb-3">
+        <span class="content-block-label">Recent Generations</span>
+        <span class="meta-badge" id="history-count"></span>
+      </div>
+      <div id="history-list"></div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- STEP 2: Review Product                      -->
+  <!-- ═══════════════════════════════════════════ -->
+  <section class="step-panel" id="step-2">
+    <div class="glass-card">
+      <h2 class="step-title">Review Product</h2>
+      <p class="step-subtitle">Confirm the scraped product details</p>
+
+      <!-- Image Carousel -->
+      <div class="carousel" id="product-carousel">
+        <div class="carousel-track" id="carousel-track"></div>
+        <div class="carousel-dots" id="carousel-dots"></div>
+        <span class="carousel-counter" id="carousel-counter"></span>
+        <button class="carousel-nav prev" onclick="carouselPrev()">‹</button>
+        <button class="carousel-nav next" onclick="carouselNext()">›</button>
+      </div>
+
+      <!-- Product Info -->
+      <h3 class="product-title" id="product-title"></h3>
+      <div class="product-meta" id="product-meta"></div>
+
+      <div class="content-block">
+        <div class="content-block-header">
+          <span class="content-block-label">Page Text (Preview)</span>
+        </div>
+        <div class="content-block-text" id="product-text-preview"
+             style="max-height:120px;overflow-y:auto;font-size:12px;"></div>
+      </div>
+
+      <button class="btn btn-primary" id="btn-generate" onclick="startGenerate()">
+        ✨ Generate Prompts
+      </button>
+
+      <div class="progress-container" id="generate-progress">
+        <div class="progress-bar-track">
+          <div class="progress-bar-fill indeterminate" id="generate-progress-fill"></div>
+        </div>
+        <div class="progress-text">
+          <span class="spinner"></span>
+          <span id="generate-status-text">Generating with Gemini...</span>
+        </div>
+      </div>
+
+      <div id="generate-error"></div>
+
+      <button class="btn btn-outline mt-3" onclick="goToStep(1)">
+        ← Back
+      </button>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- STEP 3: View Results                        -->
+  <!-- ═══════════════════════════════════════════ -->
+  <section class="step-panel" id="step-3">
+    <div class="glass-card">
+      <h2 class="step-title">Your Promo Package</h2>
+      <p class="step-subtitle" id="results-product-name"></p>
+
+      <!-- Tabs -->
+      <div class="tabs" id="result-tabs">
+        <button class="tab-btn active" data-tab="flow" onclick="switchTab('flow')">Flow AI</button>
+        <button class="tab-btn" data-tab="caption" onclick="switchTab('caption')">Caption</button>
+        <button class="tab-btn" data-tab="bgm" onclick="switchTab('bgm')">BGM</button>
+        <button class="tab-btn" data-tab="summary" onclick="switchTab('summary')">Summary</button>
+      </div>
+
+      <!-- Tab: Flow AI Prompts -->
+      <div class="tab-content active" id="tab-flow">
+        <div class="scene-card" id="scene-1-card">
+          <div class="scene-header">
+            <div class="scene-label">
+              <span class="scene-num">1</span> The Casual Intro
+            </div>
+            <button class="copy-btn" onclick="copyText('scene-1-text', this)">📋 Copy</button>
+          </div>
+          <div class="scene-text" id="scene-1-text"></div>
+        </div>
+        <div class="scene-card" id="scene-2-card">
+          <div class="scene-header">
+            <div class="scene-label">
+              <span class="scene-num">2</span> The Detail &amp; Feel
+            </div>
+            <button class="copy-btn" onclick="copyText('scene-2-text', this)">📋 Copy</button>
+          </div>
+          <div class="scene-text" id="scene-2-text"></div>
+        </div>
+        <div class="scene-card" id="scene-3-card">
+          <div class="scene-header">
+            <div class="scene-label">
+              <span class="scene-num">3</span> The Friendly Sign-Off
+            </div>
+            <button class="copy-btn" onclick="copyText('scene-3-text', this)">📋 Copy</button>
+          </div>
+          <div class="scene-text" id="scene-3-text"></div>
+        </div>
+      </div>
+
+      <!-- Tab: Caption -->
+      <div class="tab-content" id="tab-caption">
+        <div class="content-block">
+          <div class="content-block-header">
+            <span class="content-block-label">TikTok Caption</span>
+            <button class="copy-btn" onclick="copyText('caption-text', this)">📋 Copy</button>
+          </div>
+          <div class="content-block-text" id="caption-text"></div>
+        </div>
+      </div>
+
+      <!-- Tab: BGM -->
+      <div class="tab-content" id="tab-bgm">
+        <div class="content-block">
+          <div class="content-block-header">
+            <span class="content-block-label">Suno AI Style</span>
+            <button class="copy-btn" onclick="copyText('bgm-style-text', this)">📋 Copy</button>
+          </div>
+          <div class="content-block-text" id="bgm-style-text"></div>
+        </div>
+        <div class="content-block">
+          <div class="content-block-header">
+            <span class="content-block-label">Lyrics</span>
+            <button class="copy-btn" onclick="copyText('bgm-lyrics-text', this)">📋 Copy</button>
+          </div>
+          <div class="content-block-text" id="bgm-lyrics-text"></div>
+        </div>
+      </div>
+
+      <!-- Tab: Summary -->
+      <div class="tab-content" id="tab-summary">
+        <div class="content-block">
+          <div class="content-block-header">
+            <span class="content-block-label">Product Summary</span>
+            <button class="copy-btn" onclick="copyText('summary-text', this)">📋 Copy</button>
+          </div>
+          <div class="content-block-text" id="summary-text"></div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Keyframe Prompts (always visible) -->
+      <details class="mt-3" style="cursor:pointer">
+        <summary style="font-size:13px;font-weight:600;color:var(--text-secondary);margin-bottom:8px">
+          🖼️ Keyframe Image Prompts
+        </summary>
+        <div class="content-block mt-2">
+          <div class="content-block-header">
+            <span class="content-block-label">Frame 1: Front</span>
+            <button class="copy-btn" onclick="copyText('kf-1-text', this)">📋 Copy</button>
+          </div>
+          <div class="content-block-text" id="kf-1-text" style="font-size:12px"></div>
+        </div>
+        <div class="content-block">
+          <div class="content-block-header">
+            <span class="content-block-label">Frame 2: Side</span>
+            <button class="copy-btn" onclick="copyText('kf-2-text', this)">📋 Copy</button>
+          </div>
+          <div class="content-block-text" id="kf-2-text" style="font-size:12px"></div>
+        </div>
+        <div class="content-block">
+          <div class="content-block-header">
+            <span class="content-block-label">Frame 3: Shoulder</span>
+            <button class="copy-btn" onclick="copyText('kf-3-text', this)">📋 Copy</button>
+          </div>
+          <div class="content-block-text" id="kf-3-text" style="font-size:12px"></div>
+        </div>
+      </details>
+
+      <div class="divider"></div>
+
+      <!-- AIGC Reminder -->
+      <div class="alert alert-warning">
+        ⚠️ <span><strong>AIGC Reminder:</strong> This content is AI-generated. When posting to TikTok, enable the "AI-generated content" toggle in posting settings.</span>
+      </div>
+
+      <!-- Action Buttons -->
+      <button class="btn btn-success mt-3" id="btn-download" onclick="downloadZip()">
+        📦 Download ZIP
+      </button>
+      <button class="btn btn-outline mt-3" onclick="goToStep(1)">
+        🔄 New Product
+      </button>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- STEP 4: Done                                -->
+  <!-- ═══════════════════════════════════════════ -->
+  <section class="step-panel" id="step-4">
+    <div class="glass-card text-center">
+      <div class="success-icon">✅</div>
+      <h2 class="success-title">Package Downloaded!</h2>
+      <p class="success-subtitle">Your ZIP file contains all images, prompts, caption, and BGM lyrics.</p>
+
+      <div class="alert alert-info">
+        💡 <span>Tip: Open the ZIP on your phone to copy-paste prompts into Flow AI, TikTok, and Suno.</span>
+      </div>
+
+      <button class="btn btn-primary mt-4" onclick="resetApp()">
+        ✨ Generate Another
+      </button>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    Gemini Flow &middot; TikTok Shop Promo Generator
+  </footer>
+
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// State
+// ═══════════════════════════════════════════════════════════
+let currentStep = 1;
+let sessionId = null;
+let productInfo = null;
+let generatedPrompts = null;
+let carouselIndex = 0;
+let carouselTotal = 0;
+
+// Touch swipe state
+let touchStartX = 0;
+let touchEndX = 0;
+
+// ═══════════════════════════════════════════════════════════
+// Step Navigation
+// ═══════════════════════════════════════════════════════════
+function goToStep(step) {
+  currentStep = step;
+
+  // Update panels
+  document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById(`step-${step}`).classList.add('active');
+
+  // Update stepper dots & lines
+  document.querySelectorAll('.step-dot').forEach(d => {
+    const s = parseInt(d.dataset.step);
+    d.classList.remove('active', 'completed');
+    if (s === step) d.classList.add('active');
+    else if (s < step) d.classList.add('completed');
+  });
+  document.querySelectorAll('.step-line').forEach(l => {
+    const s = parseInt(l.dataset.line);
+    l.classList.toggle('completed', s < step);
+  });
+
+  // Scroll to top
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ═══════════════════════════════════════════════════════════
+// Step 1: Scrape
+// ═══════════════════════════════════════════════════════════
+async function startScrape() {
+  const urlInput = document.getElementById('product-url');
+  const url = urlInput.value.trim();
+
+  if (!url) {
+    showError('scrape-error', 'Please paste a TikTok Shop URL');
+    return;
+  }
+
+  // Reset
+  clearError('scrape-error');
+  setBtnLoading('btn-scrape', true);
+  showProgress('scrape-progress', 'Connecting to TikTok...');
+
+  try {
+    const res = await fetch('/api/scrape', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.error || 'Scraping failed');
+    }
+
+    // Store state
+    sessionId = data.session_id;
+    productInfo = data.product_info;
+
+    // Populate Step 2
+    populateProductReview(data);
+
+    // Move to Step 2
+    hideProgress('scrape-progress');
+    setBtnLoading('btn-scrape', false);
+    goToStep(2);
+
+  } catch (err) {
+    hideProgress('scrape-progress');
+    setBtnLoading('btn-scrape', false);
+    showError('scrape-error', err.message);
+  }
+}
+
+function populateProductReview(data) {
+  const info = data.product_info;
+
+  // Title
+  document.getElementById('product-title').textContent = info.title || 'Untitled Product';
+
+  // Meta badges
+  const metaEl = document.getElementById('product-meta');
+  metaEl.innerHTML = '';
+  if (info.image_count) {
+    metaEl.innerHTML += `<span class="meta-badge">📸 ${info.image_count} images</span>`;
+  }
+  metaEl.innerHTML += `<span class="meta-badge">🕐 ${new Date(info.scraped_at).toLocaleTimeString()}</span>`;
+
+  // Text preview
+  const pageText = info.page_text || '';
+  document.getElementById('product-text-preview').textContent =
+    pageText.substring(0, 500) + (pageText.length > 500 ? '...' : '');
+
+  // Build carousel
+  buildCarousel(data.image_urls || []);
+}
+
+// ═══════════════════════════════════════════════════════════
+// Image Carousel
+// ═══════════════════════════════════════════════════════════
+function buildCarousel(imageUrls) {
+  const track = document.getElementById('carousel-track');
+  const dots = document.getElementById('carousel-dots');
+  track.innerHTML = '';
+  dots.innerHTML = '';
+  carouselIndex = 0;
+  carouselTotal = imageUrls.length;
+
+  if (carouselTotal === 0) {
+    track.innerHTML = '<div class="carousel-slide" style="color:var(--text-muted);font-size:14px">No images scraped</div>';
+    document.getElementById('carousel-counter').textContent = '';
+    return;
+  }
+
+  imageUrls.forEach((url, i) => {
+    track.innerHTML += `<div class="carousel-slide"><img src="${url}" alt="Product image ${i + 1}" loading="lazy"></div>`;
+    dots.innerHTML += `<button class="carousel-dot ${i === 0 ? 'active' : ''}" onclick="goToSlide(${i})"></button>`;
+  });
+
+  updateCarouselCounter();
+  setupCarouselSwipe();
+}
+
+function goToSlide(index) {
+  if (index < 0 || index >= carouselTotal) return;
+  carouselIndex = index;
+  document.getElementById('carousel-track').style.transform = `translateX(-${index * 100}%)`;
+
+  document.querySelectorAll('.carousel-dot').forEach((d, i) => {
+    d.classList.toggle('active', i === index);
+  });
+  updateCarouselCounter();
+}
+
+function carouselPrev() { goToSlide(carouselIndex - 1); }
+function carouselNext() { goToSlide(carouselIndex + 1); }
+
+function updateCarouselCounter() {
+  document.getElementById('carousel-counter').textContent = `${carouselIndex + 1} / ${carouselTotal}`;
+}
+
+function setupCarouselSwipe() {
+  const carousel = document.getElementById('product-carousel');
+  carousel.addEventListener('touchstart', e => {
+    touchStartX = e.changedTouches[0].screenX;
+  }, { passive: true });
+  carousel.addEventListener('touchend', e => {
+    touchEndX = e.changedTouches[0].screenX;
+    const diff = touchStartX - touchEndX;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) carouselNext();
+      else carouselPrev();
+    }
+  }, { passive: true });
+}
+
+// ═══════════════════════════════════════════════════════════
+// Step 2: Generate Prompts
+// ═══════════════════════════════════════════════════════════
+async function startGenerate() {
+  clearError('generate-error');
+  setBtnLoading('btn-generate', true);
+  showProgress('generate-progress', 'Generating with Gemini...');
+
+  try {
+    const res = await fetch('/api/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ session_id: sessionId })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.error || 'Generation failed');
+    }
+
+    generatedPrompts = data.prompts;
+
+    // Populate Step 3
+    populateResults(data.prompts);
+
+    hideProgress('generate-progress');
+    setBtnLoading('btn-generate', false);
+    goToStep(3);
+
+  } catch (err) {
+    hideProgress('generate-progress');
+    setBtnLoading('btn-generate', false);
+    showError('generate-error', err.message);
+  }
+}
+
+function populateResults(prompts) {
+  // Product name in header
+  document.getElementById('results-product-name').textContent =
+    prompts.product_summary ? prompts.product_summary.substring(0, 80) : productInfo?.title || '';
+
+  // Flow AI scenes
+  const flow = prompts.flow_ai_prompts || {};
+  document.getElementById('scene-1-text').textContent = flow.scene_1_intro || '';
+  document.getElementById('scene-2-text').textContent = flow.scene_2_detail || '';
+  document.getElementById('scene-3-text').textContent = flow.scene_3_outro || '';
+
+  // Caption
+  document.getElementById('caption-text').textContent = prompts.tiktok_caption || '';
+
+  // BGM
+  const bgm = prompts.suno_bgm || {};
+  document.getElementById('bgm-style-text').textContent = bgm.style || '';
+  document.getElementById('bgm-lyrics-text').textContent = bgm.lyrics || '';
+
+  // Summary
+  document.getElementById('summary-text').textContent = prompts.product_summary || '';
+
+  // Keyframes
+  const kf = prompts.keyframe_prompts || {};
+  document.getElementById('kf-1-text').textContent = kf.frame_1_front || '';
+  document.getElementById('kf-2-text').textContent = kf.frame_2_side || '';
+  document.getElementById('kf-3-text').textContent = kf.frame_3_shoulder || '';
+}
+
+// ═══════════════════════════════════════════════════════════
+// Tabs
+// ═══════════════════════════════════════════════════════════
+function switchTab(tabId) {
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.tab === tabId);
+  });
+  document.querySelectorAll('.tab-content').forEach(c => {
+    c.classList.toggle('active', c.id === `tab-${tabId}`);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════
+// Copy to Clipboard
+// ═══════════════════════════════════════════════════════════
+async function copyText(elementId, btn) {
+  const text = document.getElementById(elementId).textContent;
+  try {
+    await navigator.clipboard.writeText(text);
+    btn.classList.add('copied');
+    btn.innerHTML = '✅ Copied';
+    showToast('Copied to clipboard');
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.innerHTML = '📋 Copy';
+    }, 2000);
+  } catch {
+    // Fallback for mobile
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    btn.classList.add('copied');
+    btn.innerHTML = '✅ Copied';
+    showToast('Copied to clipboard');
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.innerHTML = '📋 Copy';
+    }, 2000);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// Download ZIP
+// ═══════════════════════════════════════════════════════════
+function downloadZip() {
+  if (!sessionId) return;
+  setBtnLoading('btn-download', true);
+
+  const a = document.createElement('a');
+  a.href = `/api/download/${sessionId}`;
+  a.download = '';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+
+  setTimeout(() => {
+    setBtnLoading('btn-download', false);
+    goToStep(4);
+  }, 1500);
+}
+
+// ═══════════════════════════════════════════════════════════
+// Reset
+// ═══════════════════════════════════════════════════════════
+function resetApp() {
+  sessionId = null;
+  productInfo = null;
+  generatedPrompts = null;
+  document.getElementById('product-url').value = '';
+  clearError('scrape-error');
+  clearError('generate-error');
+  goToStep(1);
+  loadHistory();
+}
+
+// ═══════════════════════════════════════════════════════════
+// History
+// ═══════════════════════════════════════════════════════════
+async function loadHistory() {
+  try {
+    const res = await fetch('/api/history');
+    const data = await res.json();
+    const entries = data.entries || [];
+
+    if (entries.length === 0) {
+      document.getElementById('history-card').style.display = 'none';
+      return;
+    }
+
+    document.getElementById('history-card').style.display = '';
+    document.getElementById('history-count').textContent = `Last ${entries.length}`;
+
+    const listEl = document.getElementById('history-list');
+    listEl.innerHTML = entries.reverse().map(e =>
+      `<div class="history-entry">
+        <strong>${e.product}</strong><br>
+        🎬 "${e.opening_line?.substring(0, 60)}..."
+      </div>`
+    ).join('');
+  } catch { /* silent */ }
+}
+
+// ═══════════════════════════════════════════════════════════
+// UI Helpers
+// ═══════════════════════════════════════════════════════════
+function setBtnLoading(id, loading) {
+  const btn = document.getElementById(id);
+  if (loading) {
+    btn.disabled = true;
+    btn.dataset.originalText = btn.innerHTML;
+    btn.innerHTML = '<span class="spinner"></span> Working...';
+  } else {
+    btn.disabled = false;
+    btn.innerHTML = btn.dataset.originalText || btn.innerHTML;
+  }
+}
+
+function showProgress(id, text) {
+  const container = document.getElementById(id);
+  container.classList.add('active');
+  const statusEl = container.querySelector('[id$="-status-text"]');
+  if (statusEl) statusEl.textContent = text;
+}
+
+function hideProgress(id) {
+  document.getElementById(id).classList.remove('active');
+}
+
+function showError(containerId, message) {
+  document.getElementById(containerId).innerHTML =
+    `<div class="alert alert-error mt-3">❌ <span>${message}</span></div>`;
+}
+
+function clearError(containerId) {
+  document.getElementById(containerId).innerHTML = '';
+}
+
+function showToast(message) {
+  const toast = document.getElementById('toast');
+  toast.textContent = message;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2000);
+}
+
+// ═══════════════════════════════════════════════════════════
+// Init
+// ═══════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  loadHistory();
+
+  // Auto-paste from clipboard on mobile
+  document.getElementById('product-url').addEventListener('focus', async () => {
+    try {
+      if (navigator.clipboard && navigator.clipboard.readText) {
+        const clip = await navigator.clipboard.readText();
+        const input = document.getElementById('product-url');
+        if (clip && (clip.includes('tiktok.com') || clip.includes('vt.tiktok')) && !input.value) {
+          input.value = clip;
+          showToast('Pasted from clipboard');
+        }
+      }
+    } catch { /* clipboard permission denied */ }
+  });
+});
+</script>
+
+</body>
+</html>

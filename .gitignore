@@ -39,6 +39,10 @@ venv/
 .DS_Store
 Thumbs.db
 
+# Web app: Keep templates & static tracked
+!templates/
+!static/
+
 # Output directory
 output/
 
