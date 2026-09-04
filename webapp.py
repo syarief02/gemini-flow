@@ -451,9 +451,9 @@ if __name__ == "__main__":
             s.connect(("8.8.8.8", 80))
             local_ip = s.getsockname()[0]
             s.close()
-            print(f"   Network: http://{local_ip}:{args.port}")
+            print(f"   Network: http://{local_ip}:{args.port}  (PASTIKAN GUNA http:// BUKAN https://)")
         except Exception:
-            print(f"   Network: http://0.0.0.0:{args.port}")
+            print(f"   Network: http://0.0.0.0:{args.port}  (PASTIKAN GUNA http:// BUKAN https://)")
     print(f"   Press Ctrl+C to quit\n")
 
     app.run(host=args.host, port=args.port, debug=args.debug)
