@@ -14,9 +14,15 @@
 
   <!-- Header -->
   <header class="app-header">
-    <div class="app-logo">
-      <div class="app-logo-icon">✨</div>
-      <span class="app-logo-text">Gemini Flow</span>
+    <div class="header-top">
+      <div class="app-logo">
+        <div class="app-logo-icon">✨</div>
+        <span class="app-logo-text">Gemini Flow</span>
+      </div>
+      <button class="key-pill" id="key-pill-btn" onclick="openKeyModal()" title="Gemini API Key Settings">
+        <span class="key-pill-dot" id="key-pill-dot"></span>
+        <span class="key-pill-label" id="key-pill-label">Gemini Key</span>
+      </button>
     </div>
     <p class="app-tagline">TikTok Shop Promo Generator</p>
   </header>
@@ -474,11 +480,19 @@ async function startGenerate() {
   setBtnLoading('btn-generate', true);
   showProgress('generate-progress', 'Generating with Gemini...');
 
+  const customKey = (localStorage.getItem('gemini_api_key') || '').trim();
+
   try {
     const res = await fetch('/api/generate', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ session_id: sessionId })
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Gemini-Api-Key': customKey
+      },
+      body: JSON.stringify({
+        session_id: sessionId,
+        api_key: customKey
+      })
     });
 
     const data = await res.json();
@@ -499,7 +513,19 @@ async function startGenerate() {
   } catch (err) {
     hideProgress('generate-progress');
     setBtnLoading('btn-generate', false);
-    showError('generate-error', err.message);
+    
+    let errMsg = err.message;
+    if (errMsg.toLowerCase().includes('key') || errMsg.toLowerCase().includes('quota')) {
+      document.getElementById('generate-error').innerHTML = `
+        <div class="alert alert-error mt-3">
+          ❌ <span>${errMsg}</span>
+          <div style="margin-top: 8px;">
+            <button class="btn btn-secondary btn-sm" onclick="openKeyModal()">🔑 Enter Your Gemini API Key</button>
+          </div>
+        </div>`;
+    } else {
+      showError('generate-error', errMsg);
+    }
   }
 }
 
@@ -682,10 +708,143 @@ function showToast(message) {
 }
 
 // ═══════════════════════════════════════════════════════════
+// Gemini API Key Management
+// ═══════════════════════════════════════════════════════════
+let serverHasKey = false;
+
+async function checkServerAuthStatus() {
+  try {
+    const res = await fetch('/api/auth-status');
+    const data = await res.json();
+    serverHasKey = !!data.has_server_key;
+    updateKeyStatusUI();
+  } catch {
+    updateKeyStatusUI();
+  }
+}
+
+function updateKeyStatusUI() {
+  const customKey = localStorage.getItem('gemini_api_key');
+  const dot = document.getElementById('key-pill-dot');
+  const label = document.getElementById('key-pill-label');
+  const hint = document.getElementById('server-fallback-hint');
+
+  if (customKey) {
+    dot.classList.add('active');
+    label.textContent = 'Custom Key';
+    if (hint) {
+      hint.innerHTML = `<span style="color: var(--accent-teal);">●</span> Using your custom key (ends in ...${customKey.slice(-4)})`;
+    }
+  } else if (serverHasKey) {
+    dot.classList.add('active');
+    label.textContent = 'Server Key';
+    if (hint) {
+      hint.innerHTML = `<span style="color: var(--accent-teal);">●</span> Server default key active. You can override it with your own key.`;
+    }
+  } else {
+    dot.classList.remove('active');
+    label.textContent = 'No Key';
+    if (hint) {
+      hint.innerHTML = `<span style="color: var(--accent-amber);">●</span> No server key configured. Please enter your own Gemini key.`;
+    }
+  }
+}
+
+function openKeyModal() {
+  const modal = document.getElementById('key-modal-overlay');
+  const input = document.getElementById('custom-api-key');
+  const savedKey = localStorage.getItem('gemini_api_key') || '';
+  input.value = savedKey;
+  document.getElementById('key-test-feedback').innerHTML = '';
+  modal.classList.add('open');
+  input.focus();
+}
+
+function closeKeyModal() {
+  document.getElementById('key-modal-overlay').classList.remove('open');
+}
+
+function closeKeyModalOnBackdrop(e) {
+  if (e.target.id === 'key-modal-overlay') {
+    closeKeyModal();
+  }
+}
+
+function toggleKeyVisibility() {
+  const input = document.getElementById('custom-api-key');
+  const btn = document.getElementById('btn-toggle-eye');
+  if (input.type === 'password') {
+    input.type = 'text';
+    btn.textContent = '🙈';
+  } else {
+    input.type = 'password';
+    btn.textContent = '👁️';
+  }
+}
+
+function saveCustomKey() {
+  const input = document.getElementById('custom-api-key');
+  const key = input.value.trim();
+  if (key) {
+    localStorage.setItem('gemini_api_key', key);
+    showToast('Gemini API key saved!');
+  } else {
+    localStorage.removeItem('gemini_api_key');
+    showToast('Key removed — using server default');
+  }
+  updateKeyStatusUI();
+  closeKeyModal();
+}
+
+function clearCustomKey() {
+  localStorage.removeItem('gemini_api_key');
+  document.getElementById('custom-api-key').value = '';
+  updateKeyStatusUI();
+  showToast('Key cleared. Using server default.');
+  closeKeyModal();
+}
+
+async function testCustomKey() {
+  const input = document.getElementById('custom-api-key');
+  const key = input.value.trim();
+  const feedback = document.getElementById('key-test-feedback');
+  const testBtn = document.getElementById('btn-test-key');
+
+  if (!key) {
+    feedback.innerHTML = '<span style="color: var(--accent-rose);">Please enter a key to test.</span>';
+    return;
+  }
+
+  testBtn.disabled = true;
+  testBtn.innerHTML = '<span class="spinner"></span> Testing...';
+  feedback.innerHTML = '<span style="color: var(--text-secondary);">Connecting to Gemini API...</span>';
+
+  try {
+    const res = await fetch('/api/verify-key', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ api_key: key })
+    });
+    const data = await res.json();
+    if (res.ok && data.valid) {
+      feedback.innerHTML = '<span style="color: var(--accent-teal); font-weight: 600;">✅ Key is valid and active!</span>';
+    } else {
+      feedback.innerHTML = `<span style="color: var(--accent-rose);">❌ ${data.error || 'Invalid API key.'}</span>`;
+    }
+  } catch (err) {
+    feedback.innerHTML = `<span style="color: var(--accent-rose);">❌ Network error: ${err.message}</span>`;
+  } finally {
+    testBtn.disabled = false;
+    testBtn.innerHTML = '🧪 Test';
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
 // Init
 // ═══════════════════════════════════════════════════════════
 document.addEventListener('DOMContentLoaded', () => {
   loadHistory();
+  checkServerAuthStatus();
 
   // Auto-paste from clipboard on mobile
   document.getElementById('product-url').addEventListener('focus', async () => {
@@ -702,6 +861,65 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 </script>
+
+<!-- API Key Modal -->
+<div class="modal-overlay" id="key-modal-overlay" onclick="closeKeyModalOnBackdrop(event)">
+  <div class="modal-content glass-card" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <div class="modal-title-group">
+        <span style="font-size: 20px;">🔑</span>
+        <h3 class="modal-title">Gemini API Key</h3>
+      </div>
+      <button class="modal-close" onclick="closeKeyModal()">✕</button>
+    </div>
+
+    <p class="modal-desc">
+      Use your own Google/Gmail Gemini key so requests use your personal quota. Any Gmail account can get a free key in 5 seconds:
+    </p>
+
+    <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="google-key-btn">
+      <svg viewBox="0 0 24 24" width="18" height="18">
+        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+      </svg>
+      <span>Get Free Key at Google AI Studio ↗</span>
+    </a>
+
+    <div class="input-group">
+      <label for="custom-api-key">Your Gemini API Key</label>
+      <div class="password-input-wrapper">
+        <input
+          type="password"
+          id="custom-api-key"
+          class="text-input"
+          placeholder="AIzaSy..."
+          autocomplete="off"
+          spellcheck="false"
+        >
+        <button type="button" class="btn-toggle-visibility" onclick="toggleKeyVisibility()" id="btn-toggle-eye">👁️</button>
+      </div>
+      <span class="field-hint">Stored safely in your device's browser only. Never saved to server disks.</span>
+    </div>
+
+    <div id="key-test-feedback" class="key-feedback"></div>
+
+    <div class="modal-actions">
+      <button class="btn btn-secondary" id="btn-test-key" onclick="testCustomKey()">🧪 Test</button>
+      <button class="btn btn-primary" id="btn-save-key" onclick="saveCustomKey()">💾 Save Key</button>
+    </div>
+
+    <div style="margin-top: 14px; text-align: center;" id="server-fallback-hint" class="field-hint">
+    </div>
+
+    <div style="margin-top: 8px; text-align: center;">
+      <button type="button" style="color: var(--text-muted); font-size: 11px; background: none; border: none; cursor: pointer; text-decoration: underline;" onclick="clearCustomKey()">
+        Clear custom key & use server default
+      </button>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>

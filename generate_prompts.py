@@ -191,10 +191,10 @@ OUTPUT SCHEMA (Return valid JSON)
   }
 }"""
 
-def generate_with_gemini_pro(product_info: dict) -> dict:
-    api_key = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
-    if not api_key:
-        print("⚠️ GEMINI_API_KEY not found in environment. Using direct template engine.")
+def generate_with_gemini_pro(product_info: dict, api_key: str = None) -> dict:
+    effective_key = (api_key or "").strip() or os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
+    if not effective_key:
+        print("⚠️ No Gemini API key provided and none found in environment.")
         return None
     
     # Load anti-repetition context from generation history
@@ -202,7 +202,7 @@ def generate_with_gemini_pro(product_info: dict) -> dict:
     
     try:
         from google import genai
-        client = genai.Client(api_key=api_key)
+        client = genai.Client(api_key=effective_key)
         
         prompt = f"""Analyze this product and generate complete assets:
 Product Title: {product_info.get('title', '')}
@@ -222,7 +222,7 @@ Generate completely unique, non-repeating prompts and copy tailored specifically
         return json.loads(response.text)
     except Exception as e:
         print(f"Error calling Gemini API: {e}")
-        return None
+        raise e
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:

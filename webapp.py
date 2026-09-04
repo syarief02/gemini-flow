@@ -142,16 +142,50 @@ def api_image(session_id, filename):
     return send_file(img_path, mimetype="image/jpeg")
 
 
+@app.route("/api/auth-status", methods=["GET"])
+def api_auth_status():
+    """Return whether the server has a default Gemini key configured."""
+    has_server_key = bool(os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY"))
+    return jsonify({
+        "has_server_key": has_server_key,
+    })
+
+
+@app.route("/api/verify-key", methods=["POST"])
+def api_verify_key():
+    """Verify that a user-provided Gemini API key is valid."""
+    data = request.get_json() or {}
+    api_key = (data.get("api_key") or "").strip()
+    if not api_key:
+        return jsonify({"valid": False, "error": "No API key provided."}), 400
+
+    try:
+        from google import genai
+        client = genai.Client(api_key=api_key)
+        client.models.generate_content(
+            model='gemini-1.5-flash',
+            contents="Respond with the single word: OK",
+        )
+        return jsonify({"valid": True, "message": "Key is valid and active!"})
+    except Exception as e:
+        err_msg = str(e)
+        if "API_KEY_INVALID" in err_msg:
+            return jsonify({"valid": False, "error": "Invalid API key. Please check your Google AI Studio key."}), 400
+        return jsonify({"valid": False, "error": f"Verification failed: {err_msg}"}), 400
+
+
 @app.route("/api/generate", methods=["POST"])
 def api_generate():
     """
     Generate prompts using Gemini for a scraped product.
 
-    Request JSON: { "session_id": "..." }
+    Request JSON: { "session_id": "...", "api_key": "..." (optional) }
+    Header (optional): X-Gemini-Api-Key
     Response JSON: { "prompts": { ... } }
     """
-    data = request.get_json()
-    session_id = data.get("session_id") if data else None
+    data = request.get_json() or {}
+    session_id = data.get("session_id")
+    custom_api_key = (data.get("api_key") or request.headers.get("X-Gemini-Api-Key") or "").strip()
 
     if not session_id:
         return jsonify({"error": "Missing session_id"}), 400
@@ -162,15 +196,22 @@ def api_generate():
     if not session:
         return jsonify({"error": "Session not found. Please scrape again."}), 404
 
+    # Check if we have any API key available
+    has_any_key = bool(custom_api_key or os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY"))
+    if not has_any_key:
+        return jsonify({
+            "error": "No Gemini API key found. Please click '🔑 Gemini Key' in the header to enter your key."
+        }), 400
+
     product_info = session["product_info"]
 
     try:
-        # Call the existing Gemini generator
-        prompts = generate_with_gemini_pro(product_info)
+        # Call the Gemini generator with custom or env key
+        prompts = generate_with_gemini_pro(product_info, api_key=custom_api_key)
 
         if not prompts:
             return jsonify({
-                "error": "Gemini API call failed. Check your GEMINI_API_KEY in .env"
+                "error": "Gemini API call failed. Please check your Gemini API key."
             }), 500
 
         # Store prompts in session
@@ -192,7 +233,12 @@ def api_generate():
         return jsonify({"prompts": prompts})
 
     except Exception as e:
-        return jsonify({"error": f"Generation failed: {str(e)}"}), 500
+        err_str = str(e)
+        if "API_KEY_INVALID" in err_str:
+            return jsonify({"error": "Invalid Gemini API key. Please check your key in settings."}), 400
+        if "RESOURCE_EXHAUSTED" in err_str:
+            return jsonify({"error": "Gemini API quota exceeded for this key. Please try another key or wait."}), 429
+        return jsonify({"error": f"Generation failed: {err_str}"}), 500
 
 
 @app.route("/api/download/<session_id>")
