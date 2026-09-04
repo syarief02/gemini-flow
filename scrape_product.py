@@ -161,17 +161,23 @@ async def scrape_tiktok_product(tiktok_url: str, output_dir: str) -> dict:
                                  document.querySelector('meta[name="twitter:description"]');
                     return meta ? meta.content : '';
                 }""")
-                if meta_desc and not any(k in meta_desc.lower() for k in blocked_keywords):
+                if meta_desc and len(meta_desc.strip()) > 25 and not any(k in meta_desc.lower() for k in blocked_keywords):
                     body_text = meta_desc.strip()
                 else:
                     # 2. Construct high-quality descriptive product summary from title
                     body_text = (
                         f"Nama Produk: {clean_title}\n\n"
-                        f"Kategori: Fesyen & Gaya Hidup Malaysia\n\n"
+                        f"Kategori: Fesyen & Pakaian / Gaya Hidup Malaysia\n\n"
                         f"Penerangan & Kelebihan: Rekaan bergaya, potongan moden dan kemas, "
                         f"menggunakan material berkualiti tinggi yang selesa dipakai sepanjang hari. "
                         f"Sesuai digayakan untuk urusan kerja, harian, mahupun majlis kasual."
                     )
+            elif not body_text or not body_text.strip() or len(body_text.strip()) < 15:
+                body_text = (
+                    f"Nama Produk: {clean_title}\n\n"
+                    f"Kategori: Fesyen & Pakaian / Gaya Hidup Malaysia\n\n"
+                    f"Penerangan & Kelebihan: Rekaan bergaya dan selesa dipakai sepanjang hari."
+                )
 
             # Extract all images from the DOM
             imgs = await page.evaluate(
