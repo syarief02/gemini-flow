@@ -211,14 +211,25 @@ Product Details: {product_info.get('page_text', '')[:1500]}
 Generate completely unique, non-repeating prompts and copy tailored specifically to this product's exact attributes.
 {anti_repetition}"""
 
-        response = client.models.generate_content(
-            model='gemini-1.5-pro',
-            contents=prompt,
-            config={
-                'system_instruction': SYSTEM_PROMPT,
-                'response_mime_type': 'application/json'
-            }
-        )
+        # Try gemini-2.5-pro first, fallback to gemini-2.5-flash
+        try:
+            response = client.models.generate_content(
+                model='gemini-2.5-pro',
+                contents=prompt,
+                config={
+                    'system_instruction': SYSTEM_PROMPT,
+                    'response_mime_type': 'application/json'
+                }
+            )
+        except Exception:
+            response = client.models.generate_content(
+                model='gemini-2.5-flash',
+                contents=prompt,
+                config={
+                    'system_instruction': SYSTEM_PROMPT,
+                    'response_mime_type': 'application/json'
+                }
+            )
         return json.loads(response.text)
     except Exception as e:
         print(f"Error calling Gemini API: {e}")

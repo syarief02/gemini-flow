@@ -162,14 +162,13 @@ def api_verify_key():
     try:
         from google import genai
         client = genai.Client(api_key=api_key)
-        client.models.generate_content(
-            model='gemini-1.5-flash',
-            contents="Respond with the single word: OK",
-        )
+        # Validate key by listing models (no quota consumed, resilient to model deprecations)
+        models_iter = client.models.list(config={'page_size': 3})
+        next(iter(models_iter), None)
         return jsonify({"valid": True, "message": "Key is valid and active!"})
     except Exception as e:
         err_msg = str(e)
-        if "API_KEY_INVALID" in err_msg:
+        if "API_KEY_INVALID" in err_msg or "INVALID_ARGUMENT" in err_msg:
             return jsonify({"valid": False, "error": "Invalid API key. Please check your Google AI Studio key."}), 400
         return jsonify({"valid": False, "error": f"Verification failed: {err_msg}"}), 400
 
