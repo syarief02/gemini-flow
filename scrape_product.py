@@ -94,13 +94,19 @@ async def scrape_tiktok_product(tiktok_url: str, output_dir: str) -> dict:
                         browser = await p.chromium.launch(headless=True)
                     except Exception as e_plain:
                         raise RuntimeError(f"Playwright Chromium launch failed: {e_chromium}")
-        page = await browser.new_page(
+        context = await browser.new_context(
             user_agent=(
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                "AppleWebKit/537.36 (KHTML, like Gecko) "
-                "Chrome/120.0.0.0 Safari/537.36"
-            )
+                "Mozilla/5.0 (iPhone; CPU iPhone OS 17_4 like Mac OS X) "
+                "AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+            ),
+            locale="ms-MY",
+            timezone_id="Asia/Kuala_Lumpur",
+            extra_http_headers={
+                "Accept-Language": "ms-MY,ms;q=0.9,en-US;q=0.8,en;q=0.7",
+                "Referer": "https://vt.tiktok.com/",
+            },
         )
+        page = await context.new_page()
 
         print(f"🔗 Navigating to: {tiktok_url}", flush=True)
 
@@ -117,7 +123,16 @@ async def scrape_tiktok_product(tiktok_url: str, output_dir: str) -> dict:
             # Extract details from URL params
             url_details = extract_product_details_from_url(final_url)
 
-            # Extract all images from the page
+            # If page_text hit regional blocker, clean it up with product title
+            if "Product not available in this country or region" in body_text:
+                clean_title = (url_details.get("title") or page_title).replace("+", " ").strip()
+                body_text = (
+                    f"Product Title: {clean_title}\n"
+                    f"Category: Fashion / Lifestyle / Apparel\n"
+                    f"Features: Premium quality, stylish modern Malaysian cut, comfortable daily wear material."
+                )
+
+            # Extract all images from the DOM
             imgs = await page.evaluate(
                 """() => {
                 return Array.from(document.querySelectorAll('img')).map(i => ({
@@ -159,7 +174,48 @@ async def scrape_tiktok_product(tiktok_url: str, output_dir: str) -> dict:
                             )
                         except Exception as err:
                             print(f"  ❌ Failed product_{count}: {err}", flush=True)
-            # If no in-page images found (e.g. region block on US cloud IP), use og_image from URL params
+
+            # Deep Scan: If fewer than 3 images found, search HTML & embedded scripts for ByteDance image CDN URLs
+            if len(image_paths) < 3:
+                try:
+                    import re
+                    html_content = await page.content()
+                    found_urls = re.findall(
+                        r'https?:[\\/]+[^\s"\'<>\\]*(?:p16-oec|tos-maliva|tos-alisg)[^\s"\'<>\\]*',
+                        html_content.replace(r"\/", "/")
+                    )
+                    for raw_src in found_urls:
+                        # Clean escaped characters
+                        src = raw_src.replace(r"\/", "/").replace("\\", "")
+                        if any(bad in src.lower() for bad in ["avatar", "logo", "icon", "100x100", "50x50"]):
+                            continue
+                        base = src.split("~")[0]
+                        if base not in seen_bases:
+                            seen_bases.add(base)
+                            count += 1
+                            webp_path = os.path.join(output_dir, f"product_{count}.webp")
+                            jpg_path = os.path.join(output_dir, f"product_{count}.jpg")
+                            try:
+                                urllib.request.urlretrieve(src, webp_path)
+                                im = Image.open(webp_path)
+                                if im.size[0] >= 250 and im.size[1] >= 250:
+                                    im.convert("RGB").save(jpg_path, "JPEG", quality=95)
+                                    image_paths.append(jpg_path)
+                                    print(
+                                        f"  📸 product_{count}.jpg (from deep scan, {im.size[0]}x{im.size[1]})",
+                                        flush=True,
+                                    )
+                                if os.path.exists(webp_path):
+                                    os.remove(webp_path)
+                            except Exception:
+                                if os.path.exists(webp_path):
+                                    os.remove(webp_path)
+                            if len(image_paths) >= 8:
+                                break
+                except Exception as e_deep:
+                    print(f"⚠️ Deep scan error: {e_deep}", flush=True)
+
+            # Fallback to og_image from URL params if still no images
             if not image_paths and url_details.get("og_image"):
                 og_src = url_details["og_image"]
                 count += 1

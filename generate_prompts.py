@@ -211,25 +211,36 @@ Product Details: {product_info.get('page_text', '')[:1500]}
 Generate completely unique, non-repeating prompts and copy tailored specifically to this product's exact attributes.
 {anti_repetition}"""
 
-        # Try gemini-2.5-pro first, fallback to gemini-2.5-flash
-        try:
-            response = client.models.generate_content(
-                model='gemini-2.5-pro',
-                contents=prompt,
-                config={
-                    'system_instruction': SYSTEM_PROMPT,
-                    'response_mime_type': 'application/json'
-                }
-            )
-        except Exception:
-            response = client.models.generate_content(
-                model='gemini-2.5-flash',
-                contents=prompt,
-                config={
-                    'system_instruction': SYSTEM_PROMPT,
-                    'response_mime_type': 'application/json'
-                }
-            )
+        candidate_models = [
+            'gemini-3.6-flash',
+            'gemini-3.5-pro',
+            'gemini-2.5-pro',
+            'gemini-2.5-flash',
+        ]
+
+        response = None
+        last_err = None
+        for model_name in candidate_models:
+            try:
+                print(f"🤖 Generating with model: {model_name}...", flush=True)
+                response = client.models.generate_content(
+                    model=model_name,
+                    contents=prompt,
+                    config={
+                        'system_instruction': SYSTEM_PROMPT,
+                        'response_mime_type': 'application/json'
+                    }
+                )
+                if response and response.text:
+                    print(f"✅ Successfully generated assets using {model_name}!", flush=True)
+                    break
+            except Exception as e_m:
+                print(f"⚠️ Model {model_name} failed: {e_m}", flush=True)
+                last_err = e_m
+
+        if not response or not response.text:
+            raise last_err or RuntimeError("All Gemini candidate models failed to generate content.")
+
         return json.loads(response.text)
     except Exception as e:
         print(f"Error calling Gemini API: {e}")
