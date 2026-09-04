@@ -287,6 +287,9 @@
       <button class="btn btn-primary mt-4" onclick="resetApp()">
         ✨ Generate Another
       </button>
+      <button class="btn btn-outline mt-2" onclick="goToStep(3)">
+        ← Back to Prompts
+      </button>
     </div>
   </section>
 
@@ -633,8 +636,8 @@ function downloadZip() {
 
   setTimeout(() => {
     setBtnLoading('btn-download', false);
-    goToStep(4);
-  }, 1500);
+    showToast('📦 ZIP download started! Keep copying your prompts below.');
+  }, 1200);
 }
 
 // ═══════════════════════════════════════════════════════════
