@@ -67,6 +67,7 @@ async def scrape_tiktok_product(tiktok_url: str, output_dir: str) -> dict:
             "--disable-setuid-sandbox",
             "--disable-dev-shm-usage",
             "--disable-gpu",
+            "--disable-blink-features=AutomationControlled",
         ]
 
         browser = None
@@ -96,18 +97,22 @@ async def scrape_tiktok_product(tiktok_url: str, output_dir: str) -> dict:
                         raise RuntimeError(f"Playwright Chromium launch failed: {e_chromium}")
         context = await browser.new_context(
             user_agent=(
-                "Mozilla/5.0 (iPhone; CPU iPhone OS 17_4 like Mac OS X) "
-                "AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                "(KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
             ),
+            viewport={"width": 1280, "height": 800},
             locale="ms-MY",
             timezone_id="Asia/Kuala_Lumpur",
             extra_http_headers={
                 "Accept-Language": "ms-MY,ms;q=0.9,en-US;q=0.8,en;q=0.7",
-                "X-Forwarded-For": "175.139.142.25",
-                "X-Real-IP": "175.139.142.25",
                 "Referer": "https://www.tiktok.com/",
             },
         )
+        await context.add_init_script("""
+            Object.defineProperty(navigator, 'webdriver', {
+                get: () => undefined
+            });
+        """)
         # Seed Malaysian cookies to instruct TikTok to serve the Malaysian storefront
         try:
             await context.add_cookies([
@@ -198,29 +203,39 @@ async def scrape_tiktok_product(tiktok_url: str, output_dir: str) -> dict:
 
             for img in imgs:
                 src = img["src"]
-                is_product = (
-                    "p16-oec" in src or "tos-maliva" in src or "tos-alisg" in src
-                )
-                if is_product and img["width"] >= 300:
-                    base = src.split("~")[0]
-                    if base not in seen_bases:
-                        seen_bases.add(base)
-                        count += 1
-                        webp_path = os.path.join(output_dir, f"product_{count}.webp")
-                        jpg_path = os.path.join(output_dir, f"product_{count}.jpg")
+                is_product = any(k in src for k in ["p16-oec", "p19-oec", "tos-maliva", "tos-alisg"])
+                if not is_product:
+                    continue
+                if any(bad in src.lower() for bad in ["avatar", "logo", "icon", "100x100", "50x50", "common-sign"]):
+                    continue
 
-                        try:
-                            urllib.request.urlretrieve(src, webp_path)
-                            im = Image.open(webp_path)
+                base = src.split("~")[0]
+                if base not in seen_bases:
+                    seen_bases.add(base)
+                    webp_path = os.path.join(output_dir, f"temp_{count + 1}.webp")
+                    jpg_path = os.path.join(output_dir, f"product_{count + 1}.jpg")
+
+                    try:
+                        urllib.request.urlretrieve(src, webp_path)
+                        im = Image.open(webp_path)
+                        # Only keep good quality product photos (>= 250px)
+                        if im.size[0] >= 250 and im.size[1] >= 250:
+                            count += 1
+                            jpg_path = os.path.join(output_dir, f"product_{count}.jpg")
                             im.convert("RGB").save(jpg_path, "JPEG", quality=95)
-                            os.remove(webp_path)
                             image_paths.append(jpg_path)
                             print(
                                 f"  📸 product_{count}.jpg ({im.size[0]}x{im.size[1]})",
                                 flush=True,
                             )
-                        except Exception as err:
-                            print(f"  ❌ Failed product_{count}: {err}", flush=True)
+                        if os.path.exists(webp_path):
+                            os.remove(webp_path)
+                        if len(image_paths) >= 15:
+                            break
+                    except Exception as err:
+                        if os.path.exists(webp_path):
+                            os.remove(webp_path)
+                        print(f"  ❌ Failed image download: {err}", flush=True)
 
             # Deep Scan: If fewer than 3 images found, search HTML & embedded scripts for ByteDance image CDN URLs
             if len(image_paths) < 3:
@@ -228,24 +243,23 @@ async def scrape_tiktok_product(tiktok_url: str, output_dir: str) -> dict:
                     import re
                     html_content = await page.content()
                     found_urls = re.findall(
-                        r'https?:[\\/]+[^\s"\'<>\\]*(?:p16-oec|tos-maliva|tos-alisg)[^\s"\'<>\\]*',
+                        r'https?:[\\/]+[^\s"\'<>\\]*(?:p16-oec|p19-oec|tos-maliva|tos-alisg)[^\s"\'<>\\]*',
                         html_content.replace(r"\/", "/")
                     )
                     for raw_src in found_urls:
-                        # Clean escaped characters
                         src = raw_src.replace(r"\/", "/").replace("\\", "")
-                        if any(bad in src.lower() for bad in ["avatar", "logo", "icon", "100x100", "50x50"]):
+                        if any(bad in src.lower() for bad in ["avatar", "logo", "icon", "100x100", "50x50", "common-sign"]):
                             continue
                         base = src.split("~")[0]
                         if base not in seen_bases:
                             seen_bases.add(base)
-                            count += 1
-                            webp_path = os.path.join(output_dir, f"product_{count}.webp")
-                            jpg_path = os.path.join(output_dir, f"product_{count}.jpg")
+                            webp_path = os.path.join(output_dir, f"temp_deep_{count + 1}.webp")
                             try:
                                 urllib.request.urlretrieve(src, webp_path)
                                 im = Image.open(webp_path)
                                 if im.size[0] >= 250 and im.size[1] >= 250:
+                                    count += 1
+                                    jpg_path = os.path.join(output_dir, f"product_{count}.jpg")
                                     im.convert("RGB").save(jpg_path, "JPEG", quality=95)
                                     image_paths.append(jpg_path)
                                     print(
@@ -257,7 +271,7 @@ async def scrape_tiktok_product(tiktok_url: str, output_dir: str) -> dict:
                             except Exception:
                                 if os.path.exists(webp_path):
                                     os.remove(webp_path)
-                            if len(image_paths) >= 8:
+                            if len(image_paths) >= 15:
                                 break
                 except Exception as e_deep:
                     print(f"⚠️ Deep scan error: {e_deep}", flush=True)
