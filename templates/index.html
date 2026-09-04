@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="description" content="Gemini Flow: TikTok Shop Product Promo Generator. Scrape products, generate prompts, download as ZIP.">
   <title>Gemini Flow — TikTok Promo Generator</title>
-  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="static/style.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✨</text></svg>">
 </head>
 <body>
@@ -302,6 +302,15 @@
 
 <script>
 // ═══════════════════════════════════════════════════════════
+// Base URL Helper (supports root /, /tiktok/, or reverse proxies)
+// ═══════════════════════════════════════════════════════════
+const APP_BASE = window.location.pathname.replace(/\/+$/, '');
+function apiUrl(path) {
+  const cleanPath = path.replace(/^\/+/, '');
+  return APP_BASE ? `${APP_BASE}/${cleanPath}` : `/${cleanPath}`;
+}
+
+// ═══════════════════════════════════════════════════════════
 // State
 // ═══════════════════════════════════════════════════════════
 let currentStep = 1;
@@ -359,7 +368,7 @@ async function startScrape() {
   showProgress('scrape-progress', 'Connecting to TikTok...');
 
   try {
-    const res = await fetch('/api/scrape', {
+    const res = await fetch(apiUrl('api/scrape'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ url })
@@ -430,8 +439,9 @@ function buildCarousel(imageUrls) {
     return;
   }
 
-  imageUrls.forEach((url, i) => {
-    track.innerHTML += `<div class="carousel-slide"><img src="${url}" alt="Product image ${i + 1}" loading="lazy"></div>`;
+  imageUrls.forEach((u, i) => {
+    const fullImgUrl = apiUrl(u);
+    track.innerHTML += `<div class="carousel-slide"><img src="${fullImgUrl}" alt="Product image ${i + 1}" loading="lazy"></div>`;
     dots.innerHTML += `<button class="carousel-dot ${i === 0 ? 'active' : ''}" onclick="goToSlide(${i})"></button>`;
   });
 
@@ -483,7 +493,7 @@ async function startGenerate() {
   const customKey = (localStorage.getItem('gemini_api_key') || '').trim();
 
   try {
-    const res = await fetch('/api/generate', {
+    const res = await fetch(apiUrl('api/generate'), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -612,7 +622,7 @@ function downloadZip() {
   setBtnLoading('btn-download', true);
 
   const a = document.createElement('a');
-  a.href = `/api/download/${sessionId}`;
+  a.href = apiUrl(`api/download/${sessionId}`);
   a.download = '';
   document.body.appendChild(a);
   a.click();
@@ -643,7 +653,7 @@ function resetApp() {
 // ═══════════════════════════════════════════════════════════
 async function loadHistory() {
   try {
-    const res = await fetch('/api/history');
+    const res = await fetch(apiUrl('api/history'));
     const data = await res.json();
     const entries = data.entries || [];
 
@@ -714,7 +724,7 @@ let serverHasKey = false;
 
 async function checkServerAuthStatus() {
   try {
-    const res = await fetch('/api/auth-status');
+    const res = await fetch(apiUrl('api/auth-status'));
     const data = await res.json();
     serverHasKey = !!data.has_server_key;
     updateKeyStatusUI();
@@ -820,7 +830,7 @@ async function testCustomKey() {
   feedback.innerHTML = '<span style="color: var(--text-secondary);">Connecting to Gemini API...</span>';
 
   try {
-    const res = await fetch('/api/verify-key', {
+    const res = await fetch(apiUrl('api/verify-key'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ api_key: key })
