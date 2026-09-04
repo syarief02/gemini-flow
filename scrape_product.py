@@ -217,24 +217,30 @@ async def scrape_tiktok_product(tiktok_url: str, output_dir: str) -> dict:
 
                     try:
                         urllib.request.urlretrieve(src, webp_path)
-                        im = Image.open(webp_path)
-                        # Only keep good quality product photos (>= 250px)
-                        if im.size[0] >= 250 and im.size[1] >= 250:
-                            count += 1
-                            jpg_path = os.path.join(output_dir, f"product_{count}.jpg")
-                            im.convert("RGB").save(jpg_path, "JPEG", quality=95)
-                            image_paths.append(jpg_path)
-                            print(
-                                f"  📸 product_{count}.jpg ({im.size[0]}x{im.size[1]})",
-                                flush=True,
-                            )
+                        with Image.open(webp_path) as im:
+                            # Only keep good quality product photos (>= 250px)
+                            if im.size[0] >= 250 and im.size[1] >= 250:
+                                count += 1
+                                jpg_path = os.path.join(output_dir, f"product_{count}.jpg")
+                                im.convert("RGB").save(jpg_path, "JPEG", quality=95)
+                                image_paths.append(jpg_path)
+                                print(
+                                    f"  📸 product_{count}.jpg ({im.size[0]}x{im.size[1]})",
+                                    flush=True,
+                                )
                         if os.path.exists(webp_path):
-                            os.remove(webp_path)
+                            try:
+                                os.remove(webp_path)
+                            except Exception:
+                                pass
                         if len(image_paths) >= 15:
                             break
                     except Exception as err:
                         if os.path.exists(webp_path):
-                            os.remove(webp_path)
+                            try:
+                                os.remove(webp_path)
+                            except Exception:
+                                pass
                         print(f"  ❌ Failed image download: {err}", flush=True)
 
             # Deep Scan: If fewer than 3 images found, search HTML & embedded scripts for ByteDance image CDN URLs
@@ -256,21 +262,27 @@ async def scrape_tiktok_product(tiktok_url: str, output_dir: str) -> dict:
                             webp_path = os.path.join(output_dir, f"temp_deep_{count + 1}.webp")
                             try:
                                 urllib.request.urlretrieve(src, webp_path)
-                                im = Image.open(webp_path)
-                                if im.size[0] >= 250 and im.size[1] >= 250:
-                                    count += 1
-                                    jpg_path = os.path.join(output_dir, f"product_{count}.jpg")
-                                    im.convert("RGB").save(jpg_path, "JPEG", quality=95)
-                                    image_paths.append(jpg_path)
-                                    print(
-                                        f"  📸 product_{count}.jpg (from deep scan, {im.size[0]}x{im.size[1]})",
-                                        flush=True,
-                                    )
+                                with Image.open(webp_path) as im:
+                                    if im.size[0] >= 250 and im.size[1] >= 250:
+                                        count += 1
+                                        jpg_path = os.path.join(output_dir, f"product_{count}.jpg")
+                                        im.convert("RGB").save(jpg_path, "JPEG", quality=95)
+                                        image_paths.append(jpg_path)
+                                        print(
+                                            f"  📸 product_{count}.jpg (from deep scan, {im.size[0]}x{im.size[1]})",
+                                            flush=True,
+                                        )
                                 if os.path.exists(webp_path):
-                                    os.remove(webp_path)
+                                    try:
+                                        os.remove(webp_path)
+                                    except Exception:
+                                        pass
                             except Exception:
                                 if os.path.exists(webp_path):
-                                    os.remove(webp_path)
+                                    try:
+                                        os.remove(webp_path)
+                                    except Exception:
+                                        pass
                             if len(image_paths) >= 15:
                                 break
                 except Exception as e_deep:
