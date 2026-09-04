@@ -61,13 +61,28 @@ async def scrape_tiktok_product(tiktok_url: str, output_dir: str) -> dict:
     os.makedirs(output_dir, exist_ok=True)
 
     async with async_playwright() as p:
+        container_args = [
+            "--no-sandbox",
+            "--disable-setuid-sandbox",
+            "--disable-dev-shm-usage",
+            "--disable-gpu",
+        ]
+
+        browser = None
+        # 1. Try standard installed Playwright Chromium (default on Railway / Linux)
         try:
-            browser = await p.chromium.launch(channel="chrome", headless=True)
-        except Exception:
+            browser = await p.chromium.launch(headless=True, args=container_args)
+        except Exception as e_chromium:
+            print(f"⚠️ Standard Chromium launch failed ({e_chromium}), trying Chrome channel...", flush=True)
             try:
-                browser = await p.chromium.launch(headless=True)
-            except Exception:
-                browser = await p.chromium.launch(channel="msedge", headless=True)
+                # 2. Try Chrome channel (macOS / Windows dev environments)
+                browser = await p.chromium.launch(channel="chrome", headless=True, args=container_args)
+            except Exception as e_chrome:
+                try:
+                    # 3. Try plain launch without args
+                    browser = await p.chromium.launch(headless=True)
+                except Exception as e_plain:
+                    raise RuntimeError(f"Playwright Chromium launch failed: {e_chromium}")
         page = await browser.new_page(
             user_agent=(
                 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
