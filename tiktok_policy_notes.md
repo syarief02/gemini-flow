@@ -4,7 +4,7 @@
 # AI agents MUST check this file AND search online for the latest updates
 # BEFORE generating any content. If new rules are found, update this file.
 #
-# Last Verified: 2026-09-02
+# Last Verified: 2026-09-06
 
 ---
 
@@ -119,6 +119,7 @@ These are rules we enforce on ourselves to maintain a clean account health:
 
 | Date | Change | Source |
 |------|--------|--------|
+| 2026-09-06 | Re-verified Malaysia TikTok Shop Creator Policies: Validated "Three Golden Rules" of AIGC (no product misrepresentation, no deceptive result edits, no fabricated stories), mandatory C2PA / AIGC disclosure toggle, and Creator Health Rating (CHR) 7-day rolling compliance monitoring. | Web search (TikTok Shop Malaysia Seller Center & Policy Guidelines) |
 | 2026-09-03 | Added Promotion Performance Score (PPS) policy launched Aug 27, 2026 replacing PQP. Requires PPS >= 4.5; under 3.0 reduces visibility. Updated weekly cap (7 videos/week) for 5+ misleading flags. | Web search (TikTok Shop Malaysia Seller Center & Affiliate Portal) |
 | 2026-09-02 | Initial policy compilation. Verified pricing, AIGC, content accuracy, prohibited categories, and engagement rules. | Web search (TikTok Seller Center, Community Guidelines, darkroomagency.com, bigseller.com) |
 | 2026-07-21 | TikTok mandated AIGC disclosure labels for all paid advertisements. | TikTok official announcement |
