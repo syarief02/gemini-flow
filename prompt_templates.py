@@ -130,20 +130,15 @@ CAPTION_TEMPLATE = """{hook}
 
 
 # =============================================================================
-# SUNO BGM TEMPLATE
+# SUNO BGM TEMPLATE (INSTRUMENTAL ONLY — NO LYRICS)
 # =============================================================================
+# Instrumental only so it doesn't clash with Flow AI spoken Malay lip-sync.
+# Use directly in Suno with 'Instrumental' toggle enabled.
 
-SUNO_STYLE = (
-    "Upbeat, trendy, lo-fi hip hop, chill pop, modern, rhythmic, catchy, bright, "
-    "sophisticated, subtle electronic elements, confident, relaxing but with a good "
-    "tempo for TikTok, fashionable."
+SUNO_STYLE_TEMPLATE = (
+    "Upbeat, breezy lo-fi indie chill pop, bright fingerpicked acoustic guitar, "
+    "smooth Rhodes electric piano chords, crisp lo-fi hip-hop drum beat, warm synth bass, "
+    "uplifting and stylish modern Malaysian cafe lifestyle vibe, 110 BPM, pure instrumental, "
+    "no vocals, high-production polish, seamless loopable feel"
 )
 
-SUNO_LYRICS_TEMPLATE = """[Verse]
-{verse}
-
-[Chorus]
-{chorus}
-
-[Outro]
-{outro}"""

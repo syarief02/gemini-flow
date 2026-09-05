@@ -347,15 +347,18 @@ def api_download(session_id):
             if caption:
                 zf.writestr("tiktok_caption.txt", caption)
 
-            # Suno BGM
+            # Suno BGM (Instrumental)
             bgm = prompts.get("suno_bgm", {})
             if bgm:
+                style_str = bgm.get("style", "") if isinstance(bgm, dict) else str(bgm)
+                lyrics_str = bgm.get("lyrics", "") if isinstance(bgm, dict) else ""
                 bgm_text = (
-                    "═══ SUNO AI BGM STYLE ═══\n\n"
-                    f"{bgm.get('style', '')}\n\n\n"
-                    "═══ LYRICS ═══\n\n"
-                    f"{bgm.get('lyrics', '')}\n"
+                    "═══ SUNO AI BGM STYLE (INSTRUMENTAL) ═══\n"
+                    "Note: In Suno, enable 'Instrumental' mode. Paste the style prompt below into 'Song Description' or 'Style of Music'.\n\n"
+                    f"{style_str}\n"
                 )
+                if lyrics_str and lyrics_str.strip():
+                    bgm_text += f"\n\n═══ LYRICS (OPTIONAL) ═══\n\n{lyrics_str}\n"
                 zf.writestr("suno_bgm.txt", bgm_text)
 
             # Keyframe prompts

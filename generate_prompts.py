@@ -165,7 +165,7 @@ STRICT RULES
      • Occasion/Pain Point (e.g. #OutfitKePejabat, #OOTDCikgu)
      • Niche Community (e.g. #MuslimahStyleMY, #HijabFashionMY)
 
-7. SUNO BGM: Specific genre/instrument style + unique singable Malay lyrics.
+7. SUNO BGM: ONE comprehensive, highly detailed instrumental style prompt for Suno's 'Song Description' / 'Style of Music' box. STRICTLY NO LYRICS (instrumental only, no vocals, to prevent clashing with the Flow AI spoken Malay dialogue). Include genre, subgenre, specific instruments, tempo BPM (105-115 BPM), mood, and high-quality production attributes tailored to the product vibe.
 
 8. NO REPEATING GENERIC LINES across products. Analyze the exact collar type, fabric, drawstring, length, pocket style, sleeve detail, and specific silhouette benefits.
 
@@ -186,8 +186,8 @@ OUTPUT SCHEMA (Return valid JSON)
   },
   "tiktok_caption": "string",
   "suno_bgm": {
-    "style": "string",
-    "lyrics": "string"
+    "style": "string (Comprehensive instrumental style prompt with genre, instruments, tempo BPM, mood, pure instrumental no vocals)",
+    "lyrics": ""
   }
 }"""
 

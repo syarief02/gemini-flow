@@ -11,7 +11,7 @@ Given a single TikTok Shop product URL, the pipeline produces:
 1. **3 Consistent 9:16 Keyframe Images** (Front, Side, Over-Shoulder poses)
 2. **3 Flow AI Video Prompts** (Veo 3.1 / Omni Flash 8s with Malaysian Malay lip-sync)
 3. **TikTok Caption + SEO Hashtags** (Bahasa Melayu Malaysia, policy-safe)
-4. **Suno AI BGM Prompt + Lyrics** (Bahasa Melayu)
+4. **Suno AI BGM Instrumental Prompt** (One comprehensive style prompt, no lyrics)
 
 ---
 
@@ -107,7 +107,7 @@ Deliver to the user in this order:
    - If quota was exhausted, clearly state the quota limit and supply the 3 detailed 9:16 fallback prompts.
 2. **3 Flow AI Video Prompts** (Scene 1, 2, 3 with spoken dialogue in English for Flow to translate)
 3. **TikTok Caption + Hashtags**
-4. **Suno AI BGM Prompt + Lyrics**
+4. **Suno AI Instrumental BGM Prompt** (One comprehensive style prompt tailored for Suno Instrumental mode — strictly no lyrics)
 5. **⚠️ AIGC Reminder** — Always include this note at the end:
    > **Reminder:** This content is AI-generated. When posting to TikTok, enable the "AI-generated content" toggle in posting settings to comply with TikTok's AIGC disclosure policy.
 
@@ -241,8 +241,13 @@ Kelebihan [product] ni yang buat saya suka:
 
 ---
 
-## Suno AI BGM Structure
+## Suno AI BGM Structure (Instrumental Only)
 
-- **Style Prompt:** Specific genre + instruments + mood (tailored to the product vibe).
-- **Lyrics:** Bahasa Melayu, structured as `[Verse]`, `[Chorus]`, `[Outro]`.
-  - Always end with a line about "beg kuning" (yellow basket CTA).
+- **NO LYRICS NEEDED**: TikTok Shop video promos use spoken Malay lip-sync voiceovers from Flow AI. Background music with singing/lyrics clashes with the spoken audio. Suno is set to **Instrumental** mode.
+- **Single Comprehensive Style Prompt**: Provide ONE detailed, highly descriptive prompt for Suno's "Song Description" / "Style of Music" box.
+- **Components to Include in the Style Prompt**:
+  - **Genre & Subgenre**: e.g. Upbeat lo-fi indie chill pop, modern acoustic groove, chillout synthwave, cheerful cafe pop.
+  - **Instrumentation**: Specific instruments (e.g. fingerpicked acoustic guitar, subtle Rhodes piano, crisp lo-fi drum snare, warm analog synth bass).
+  - **Mood & Atmosphere**: e.g. breezy, optimistic, fashionable, relaxing, modern Malaysian lifestyle vibe.
+  - **Tempo/Pacing**: BPM guidance (e.g. 108–115 BPM, smooth rhythm matched for short-form video pacing).
+  - **Production Quality**: "pure instrumental, no vocals, high-quality production, warm acoustic mixing, seamless loopable feel".

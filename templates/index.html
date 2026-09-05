@@ -199,14 +199,17 @@
       <div class="tab-content" id="tab-bgm">
         <div class="content-block">
           <div class="content-block-header">
-            <span class="content-block-label">Suno AI Style</span>
+            <span class="content-block-label">Suno AI Instrumental Style</span>
             <button class="copy-btn" onclick="copyText('bgm-style-text', this)">📋 Copy</button>
           </div>
           <div class="content-block-text" id="bgm-style-text"></div>
+          <div style="margin-top: 10px; font-size: 11px; color: var(--text-secondary); line-height: 1.4;">
+            💡 <em>Gunakan dalam mod <strong>Instrumental</strong> di Suno — tiada lirik diperlukan supaya muzik latar tidak bertindih dengan suara lip-sync Flow AI.</em>
+          </div>
         </div>
-        <div class="content-block">
+        <div class="content-block" id="bgm-lyrics-block" style="display:none">
           <div class="content-block-header">
-            <span class="content-block-label">Lyrics</span>
+            <span class="content-block-label">Lyrics (Optional)</span>
             <button class="copy-btn" onclick="copyText('bgm-lyrics-text', this)">📋 Copy</button>
           </div>
           <div class="content-block-text" id="bgm-lyrics-text"></div>
@@ -559,10 +562,21 @@ function populateResults(prompts) {
   // Caption
   document.getElementById('caption-text').textContent = prompts.tiktok_caption || '';
 
-  // BGM
+  // BGM (Instrumental)
   const bgm = prompts.suno_bgm || {};
-  document.getElementById('bgm-style-text').textContent = bgm.style || '';
-  document.getElementById('bgm-lyrics-text').textContent = bgm.lyrics || '';
+  const styleText = typeof bgm === 'string' ? bgm : (bgm.style || '');
+  const lyricsText = typeof bgm === 'object' && bgm.lyrics ? bgm.lyrics : '';
+  document.getElementById('bgm-style-text').textContent = styleText;
+
+  const lyricsBlock = document.getElementById('bgm-lyrics-block');
+  const lyricsEl = document.getElementById('bgm-lyrics-text');
+  if (lyricsText && lyricsText.trim()) {
+    lyricsEl.textContent = lyricsText;
+    if (lyricsBlock) lyricsBlock.style.display = 'block';
+  } else {
+    lyricsEl.textContent = '';
+    if (lyricsBlock) lyricsBlock.style.display = 'none';
+  }
 
   // Summary
   document.getElementById('summary-text').textContent = prompts.product_summary || '';
