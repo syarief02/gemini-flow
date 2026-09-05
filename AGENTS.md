@@ -105,7 +105,8 @@ Deliver to the user in this order:
    - Always display the quota badge/status: e.g. `🟢 Status Kuota Imej: Aktif (3/3 imej berjaya dijana)` OR `🔴 Status Kuota Imej: Had kuota tercapai (Reset dalam: X jam)`.
    - Embed the 3 generated images (Frame 1 Front, Frame 2 Side, Frame 3 Shoulder).
    - If quota was exhausted, clearly state the quota limit and supply the 3 detailed 9:16 fallback prompts.
-2. **3 Flow AI Video Prompts** (Scene 1, 2, 3 with spoken dialogue in English for Flow to translate)
+2. **3 Flow AI Video Prompts** (Scene 1, 2, 3):
+   - **MANDATORY**: Each scene prompt AND its exact spoken Malay lip-sync dialogue MUST be enclosed together in the **SAME code box** for easy 1-click copying. Do NOT separate the lip-sync dialogue outside the box.
 3. **TikTok Caption + Hashtags**
 4. **Suno AI Instrumental BGM Prompt** (One comprehensive style prompt tailored for Suno Instrumental mode — strictly no lyrics)
 5. **⚠️ AIGC Reminder** — Always include this note at the end:
@@ -215,6 +216,18 @@ Each scene prompt is a **single English paragraph** combining:
 - **Dialogue:** "Explicitly translate the following English text into standard Malaysian Malay for the spoken audio: ..."
 
 The English dialogue text provided will be auto-translated by Flow's audio engine into natural spoken Malaysian Malay with lip-sync.
+
+**CRITICAL PACKAGING RULE — WRAP IN SAME CODE BOX FOR 1-CLICK COPY:**
+ALWAYS wrap the Flow AI prompt AND the spoken Malay lip-sync dialogue in the **SAME text / code box**.
+Do NOT separate the spoken Malay into an external quote below the box. This allows the user to click the copy button (`📋`) on the code box once to copy everything needed for that scene cleanly.
+
+Example layout:
+```text
+A smooth front-facing medium camera shot with subtle slow zoom-in on an aesthetic Malaysian Muslim woman... For the audio, generate a highly realistic female voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent—strictly NOT an Indonesian accent. Explicitly translate the following English text into standard Malaysian Malay for the spoken audio: "..." Ensure there are no text overlays or watermarks.
+
+Spoken Malay (Lip-sync):
+"Ayat dialog bahasa Melayu di sini..."
+```
 
 ---
 
