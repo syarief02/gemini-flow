@@ -67,11 +67,18 @@ python scrape_product.py "https://vt.tiktok.com/..."
 - Open `output/<timestamp>/product_1.jpg`, `product_2.jpg`, `product_3.jpg` to understand the product's exact visual details (fabric, color, cut, collar, buttons, etc.).
 
 ### Step 3: Generate 3 Keyframe Images (9:16)
-- Use the image generation tool with the scraped product images as reference.
+- **MANDATORY**: ALWAYS attempt to generate the images first using the image generation tool (`generate_image`). Do not skip straight to giving prompts.
+- Pass the scraped product images as visual reference (e.g. `product_1.jpg`, `product_2.jpg`).
 - Pass Frame 1 as reference to Frame 2, and both to Frame 3, for character consistency.
 - Save generated images to the workspace root as `<product_prefix>_frame1_front.jpg`, `<product_prefix>_frame2_side.jpg`, `<product_prefix>_frame3_shoulder.jpg`.
 
+**Handling Quota Exhaustion:**
+- If the image generation tool encounters a quota limit error (e.g. `429 RESOURCE_EXHAUSTED` / `QUOTA_EXHAUSTED`), you MUST:
+  1. Clearly alert the user that the image generation quota has been reached (including the estimated reset time if available from the error).
+  2. Then, provide the ready-to-use 9:16 Keyframe Prompts as fallback so the user can easily generate them in Midjourney, Flux, Imagen, or Gemini Web.
+
 **CRITICAL KEYFRAME RULES:**
+- Model styling: Malaysian Muslimah wearing a neat, matching modern hijab (e.g. chiffon/bawal) and modest chic outfit.
 - Frame 1: Front-facing, relaxed natural smile, comfortable eye contact.
 - Frame 2: 3/4 side profile, showing fabric drape and cut.
 - Frame 3: Over-the-shoulder glance. Arms and hands rest naturally at sides or holding bag casually. **NO WAVING. NO RAISED HANDS.**
@@ -89,7 +96,8 @@ This shows the last 7 used opening lines and closing lines. The new dialogue **M
 
 ### Step 5: Compose the Full Deliverable Package
 Deliver to the user in this order:
-1. **3 Keyframe Images** (embedded or linked)
+1. **3 Keyframe Images** (embedded if generated successfully).
+   *If image generation quota was hit:* State the quota limit status explicitly, and provide the 3 detailed 9:16 Keyframe Prompts as fallback for the user.
 2. **3 Flow AI Video Prompts** (Scene 1, 2, 3 with spoken dialogue in English for Flow to translate)
 3. **TikTok Caption + Hashtags**
 4. **Suno AI BGM Prompt + Lyrics**
