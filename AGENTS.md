@@ -72,10 +72,15 @@ python scrape_product.py "https://vt.tiktok.com/..."
 - Pass Frame 1 as reference to Frame 2, and both to Frame 3, for character consistency.
 - Save generated images to the workspace root as `<product_prefix>_frame1_front.jpg`, `<product_prefix>_frame2_side.jpg`, `<product_prefix>_frame3_shoulder.jpg`.
 
-**Handling Quota Exhaustion:**
-- If the image generation tool encounters a quota limit error (e.g. `429 RESOURCE_EXHAUSTED` / `QUOTA_EXHAUSTED`), you MUST:
-  1. Clearly alert the user that the image generation quota has been reached (including the estimated reset time if available from the error).
-  2. Then, provide the ready-to-use 9:16 Keyframe Prompts as fallback so the user can easily generate them in Midjourney, Flux, Imagen, or Gemini Web.
+**Quota Tracking & Reporting Rules (MANDATORY EVERY RUN):**
+- You MUST report the image generation quota status in EVERY generation response to the user:
+  1. **Quota Status & Image Count**: State clearly how many images were successfully generated in the run (e.g. `3/3 images successfully generated`) and current operational capacity.
+  2. **If Quota is Active/Available**: Inform the user that the image generation capacity is healthy/active for continuous runs.
+  3. **If Quota Limit (429 RESOURCE_EXHAUSTED) is Hit**:
+     - Clearly alert the user: "Image generation quota limit has been reached."
+     - Report the exact reset countdown and timestamp extracted from the error message (e.g., `Resets in: X hours / Date: YYYY-MM-DD`).
+     - State how many images could not be generated.
+     - Provide the 3 ready-to-use 9:16 Keyframe Prompts as fallback for external generation (Midjourney, Flux, Imagen, Gemini Web).
 
 **CRITICAL KEYFRAME RULES:**
 - Model styling: Malaysian Muslimah wearing a neat, matching modern hijab (e.g. chiffon/bawal) and modest chic outfit.
@@ -96,8 +101,10 @@ This shows the last 7 used opening lines and closing lines. The new dialogue **M
 
 ### Step 5: Compose the Full Deliverable Package
 Deliver to the user in this order:
-1. **3 Keyframe Images** (embedded if generated successfully).
-   *If image generation quota was hit:* State the quota limit status explicitly, and provide the 3 detailed 9:16 Keyframe Prompts as fallback for the user.
+1. **Quota Status & 3 Keyframe Images**:
+   - Always display the quota badge/status: e.g. `🟢 Status Kuota Imej: Aktif (3/3 imej berjaya dijana)` OR `🔴 Status Kuota Imej: Had kuota tercapai (Reset dalam: X jam)`.
+   - Embed the 3 generated images (Frame 1 Front, Frame 2 Side, Frame 3 Shoulder).
+   - If quota was exhausted, clearly state the quota limit and supply the 3 detailed 9:16 fallback prompts.
 2. **3 Flow AI Video Prompts** (Scene 1, 2, 3 with spoken dialogue in English for Flow to translate)
 3. **TikTok Caption + Hashtags**
 4. **Suno AI BGM Prompt + Lyrics**
