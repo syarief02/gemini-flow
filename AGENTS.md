@@ -17,20 +17,26 @@ Given a single TikTok Shop product URL, the pipeline produces:
 
 ## End-to-End Workflow (Step by Step)
 
-When the user gives you a TikTok product link, follow this exact sequence:
+> ⛔ **MANDATORY PRE-FLIGHT GATE — NEVER SKIP STEP 0**:
+> Under NO circumstances may an agent proceed directly to Step 1 (`scrape_product.py`) when given a TikTok product URL without completing Step 0.
+> Skipping Step 0 is a critical workflow violation. Every deliverable package MUST start with the **Policy Compliance Badge**.
 
 ### Step 0: Policy Compliance Check (MANDATORY FIRST STEP)
 
-Before generating ANY content, you MUST verify that our output will comply with TikTok's latest policies.
+Before generating ANY content or running scraper tools, you MUST verify that our output will comply with TikTok's latest policies.
 
-**0a. Read the local policy notes:**
+**0a. Run the pre-flight policy check tool:**
+```bash
+python check_policy.py "[Product Category or Link Query]"
+```
+And open and review the local policy file:
 ```
 Open and review: tiktok_policy_notes.md
 ```
 This file contains our compiled understanding of TikTok Shop, Affiliate, AIGC, and Community policies.
 
 **0b. Search online for the latest policy updates:**
-Search the web for the latest TikTok Shop content policy, affiliate policy, and AIGC policy changes.
+Search the web for the latest TikTok Shop content policy, affiliate policy, and AIGC policy changes (mandatory if >7 days since the last verified date in `tiktok_policy_notes.md`).
 Compare findings against what's in `tiktok_policy_notes.md`.
 
 **0c. If new rules or changes are found:**
@@ -59,9 +65,10 @@ If the product falls into a prohibited category, STOP and inform the user immedi
 ```bash
 python scrape_product.py "https://vt.tiktok.com/..."
 ```
+- Pre-flight compliance check runs automatically during scraping.
 - Resolves short URL → full TikTok Shop PDP page.
 - Downloads all product listing images as `.jpg` into `output/<timestamp>/`.
-- Extracts product title, description, and metadata.
+- Extracts product title, description, policy status, and metadata.
 
 ### Step 2: View the Scraped Product Images
 - Open `output/<timestamp>/product_1.jpg`, `product_2.jpg`, `product_3.jpg` to understand the product's exact visual details (fabric, color, cut, collar, buttons, etc.).
@@ -100,9 +107,12 @@ This shows the last 7 used opening lines and closing lines. The new dialogue **M
 **Any opener style is valid** — "Kalau korang", "Hari ni saya nak share", "Saya baru je cuba", etc. — as long as it's not in the recent 7 history.
 
 ### Step 5: Compose the Full Deliverable Package
-Deliver to the user in this order:
-1. **Quota Status & 3 Keyframe Images**:
-   - Always display the quota badge/status: e.g. `🟢 Status Kuota Imej: Aktif (3/3 imej berjaya dijana)` OR `🔴 Status Kuota Imej: Had kuota tercapai (Reset dalam: X jam)`.
+Deliver to the user in this exact order:
+1. **Verification Badges & 3 Keyframe Images**:
+   - **MANDATORY Policy Badge**: Always display policy verification status:
+     `🛡️ Status Pematuhan Polisi TikTok: Disemak & Patuh (Tarikh: YYYY-MM-DD | Kategori: [Kategori] - Dibenarkan)`
+   - **MANDATORY Quota Badge**: Always display quota status:
+     `🟢 Status Kuota Imej: Aktif (3/3 imej berjaya dijana)` OR `🔴 Status Kuota Imej: Had kuota tercapai (Reset dalam: X jam)`.
    - Embed the 3 generated images (Frame 1 Front, Frame 2 Side, Frame 3 Shoulder).
    - If quota was exhausted, clearly state the quota limit and supply the 3 detailed 9:16 fallback prompts.
 2. **3 Flow AI Video Prompts** (Scene 1, 2, 3):

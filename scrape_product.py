@@ -307,11 +307,16 @@ async def scrape_tiktok_product(tiktok_url: str, output_dir: str) -> dict:
                 except Exception as err:
                     print(f"  ❌ Failed og_image product_{count}: {err}", flush=True)
 
+            # Check policy compliance for the product title
+            from check_policy import check_policy
+            is_compliant, compliance_badge, verified_date = check_policy(clean_title or "Pakaian & Fesyen")
+
             # Build product info
             product_info = {
                 "url": tiktok_url,
                 "final_url": final_url,
                 "title": clean_title,
+                "policy_compliance": compliance_badge,
                 "page_text": body_text,
                 "image_count": len(image_paths),
                 "image_paths": image_paths,
@@ -335,6 +340,11 @@ def main():
         print("Usage: python scrape_product.py <tiktok_url>")
         print('Example: python scrape_product.py "https://vt.tiktok.com/ZS9BPhWgnmMJh-HKAvy/"')
         sys.exit(1)
+
+    from check_policy import check_policy
+    print("\n--- [PRE-FLIGHT POLICY COMPLIANCE CHECK] ---")
+    check_policy("TikTok Shop Scraper Initializing")
+    print("--------------------------------------------\n")
 
     tiktok_url = sys.argv[1]
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
