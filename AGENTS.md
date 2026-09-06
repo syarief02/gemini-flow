@@ -118,7 +118,8 @@ Deliver to the user in this exact order:
    - If quota was exhausted, clearly state the quota limit and supply the 3 detailed 9:16 fallback prompts.
 2. **3 Flow AI Video Prompts** (Scene 1, 2, 3):
    - **MANDATORY**: Each scene prompt AND its exact spoken Malay lip-sync dialogue MUST be enclosed together in the **SAME code box** for easy 1-click copying. Do NOT separate the lip-sync dialogue outside the box.
-3. **TikTok Caption + Hashtags**
+3. **TikTok Caption + Hashtags**:
+   - **MANDATORY**: Enclose the entire caption AND hashtags together in a single code/text box (`text`) for easy 1-click copying. Do NOT leave as unboxed markdown.
 4. **Suno AI Instrumental BGM Prompt** (One comprehensive style prompt tailored for Suno Instrumental mode — strictly no lyrics)
 5. **⚠️ AIGC Reminder** — Always include this note at the end:
    > **Reminder:** This content is AI-generated. When posting to TikTok, enable the "AI-generated content" toggle in posting settings to comply with TikTok's AIGC disclosure policy.
@@ -243,6 +244,9 @@ Spoken Malay (Lip-sync):
 ---
 
 ## TikTok Caption Structure
+
+**CRITICAL PACKAGING RULE — WRAP IN CODE BOX FOR 1-CLICK COPY:**
+ALWAYS deliver the full caption and hashtags inside a single code box (`text`) so the user can copy everything in 1 click.
 
 ```
 {relatable_hook_question} {emoji}
