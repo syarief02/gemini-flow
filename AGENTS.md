@@ -77,7 +77,7 @@ python scrape_product.py "https://vt.tiktok.com/..."
 - **MANDATORY**: ALWAYS attempt to generate the images first using the image generation tool (`generate_image`). Do not skip straight to giving prompts.
 - Pass the scraped product images as visual reference (e.g. `product_1.jpg`, `product_2.jpg`).
 - Pass Frame 1 as reference to Frame 2, and both to Frame 3, for character consistency.
-- Save generated images to the workspace root as `<product_prefix>_frame1_front.jpg`, `<product_prefix>_frame2_side.jpg`, `<product_prefix>_frame3_shoulder.jpg`.
+- Save generated images to the dedicated `keyframes/` directory in the workspace root as `keyframes/<product_prefix>_frame1_front.jpg`, `keyframes/<product_prefix>_frame2_side.jpg`, `keyframes/<product_prefix>_frame3_shoulder.jpg` (create `keyframes/` directory automatically if it does not exist).
 
 **Quota Tracking & Reporting Rules (MANDATORY EVERY RUN):**
 - You MUST report the image generation quota status in EVERY generation response to the user:
@@ -113,8 +113,8 @@ Deliver to the user in this exact order:
      `🛡️ Status Pematuhan Polisi TikTok: Disemak & Patuh (Tarikh: YYYY-MM-DD | Kategori: [Kategori] - Dibenarkan)`
    - **MANDATORY Quota Badge**: Always display quota status:
      `🟢 Status Kuota Imej: Aktif (3/3 imej berjaya dijana)` OR `🔴 Status Kuota Imej: Had kuota tercapai (Reset dalam: X jam)`.
-   - **MANDATORY Frame Filenames & Location**: Always explicitly list the exact filenames and workspace path so the user can immediately locate and upload them to Flow AI.
-   - Embed the 3 generated images (Frame 1 Front, Frame 2 Side, Frame 3 Shoulder).
+   - **MANDATORY Frame Filenames & Dedicated Location**: Always explicitly list the exact filenames and full path inside the dedicated `keyframes/` folder (`c:\Users\User\OneDrive\Desktop\gemini flow\keyframes\`) so the user can immediately locate and upload them to Flow AI.
+   - Embed the 3 generated images from `keyframes/` (Frame 1 Front, Frame 2 Side, Frame 3 Shoulder).
    - If quota was exhausted, clearly state the quota limit and supply the 3 detailed 9:16 fallback prompts.
 2. **3 Flow AI Video Prompts** (Scene 1, 2, 3):
    - **MANDATORY**: Each scene prompt AND its exact spoken Malay lip-sync dialogue MUST be enclosed together in the **SAME code box** for easy 1-click copying. Do NOT separate the lip-sync dialogue outside the box.

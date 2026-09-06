@@ -16,6 +16,8 @@ gemini_conversation_text.txt
 *.png
 *.webp
 *.gif
+keyframes/
+
 
 
 # Flow video output
