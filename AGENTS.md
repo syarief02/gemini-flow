@@ -113,6 +113,7 @@ Deliver to the user in this exact order:
      `🛡️ Status Pematuhan Polisi TikTok: Disemak & Patuh (Tarikh: YYYY-MM-DD | Kategori: [Kategori] - Dibenarkan)`
    - **MANDATORY Quota Badge**: Always display quota status:
      `🟢 Status Kuota Imej: Aktif (3/3 imej berjaya dijana)` OR `🔴 Status Kuota Imej: Had kuota tercapai (Reset dalam: X jam)`.
+   - **MANDATORY Frame Filenames & Location**: Always explicitly list the exact filenames and workspace path so the user can immediately locate and upload them to Flow AI.
    - Embed the 3 generated images (Frame 1 Front, Frame 2 Side, Frame 3 Shoulder).
    - If quota was exhausted, clearly state the quota limit and supply the 3 detailed 9:16 fallback prompts.
 2. **3 Flow AI Video Prompts** (Scene 1, 2, 3):
