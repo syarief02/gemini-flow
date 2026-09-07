@@ -74,7 +74,14 @@ python scrape_product.py "https://vt.tiktok.com/..."
 - Open `output/<timestamp>/product_1.jpg`, `product_2.jpg`, `product_3.jpg` to understand the product's exact visual details (fabric, color, cut, collar, buttons, etc.).
 
 ### Step 3: Generate 3 Keyframe Images (9:16)
-- **MANDATORY**: ALWAYS attempt to generate the images first using the image generation tool (`generate_image`). Do not skip straight to giving prompts.
+- **MANDATORY HYBRID GENERATION**: ALWAYS attempt to generate the images before giving prompts. Do not stop after a single image-model failure.
+- Use the following fallback order, continuing until all three images are generated or no usable option remains:
+  1. Use the session's native image-generation tool (`generate_image` / ImageGen) when it is callable.
+  2. If it is unavailable, disabled, or quota-limited, inspect the tools and models available in the current session for another image-capable provider.
+  3. Use an already configured workspace provider next, such as Gemini or Imagen through `GEMINI_API_KEY` or `GOOGLE_API_KEY` in `.env`, when it can generate images. Never expose secret values.
+  4. Use an OpenAI Images API fallback only when an `OPENAI_API_KEY` is already configured or the user explicitly authorizes setting one up. Follow any active image-generation skill restrictions.
+  5. Do not use an unconfigured external website, ask the user to paste a credential, or claim generation succeeded when it did not.
+- A provider is "available" only when its tool or API is callable, its required credential is already configured or explicitly authorized, and its use is permitted by the active environment and instructions.
 - Pass the scraped product images as visual reference (e.g. `product_1.jpg`, `product_2.jpg`).
 - Pass Frame 1 as reference to Frame 2, and both to Frame 3, for character consistency.
 - Save generated images to the dedicated `keyframes/` directory in the workspace root as `keyframes/<product_prefix>_frame1_front.jpg`, `keyframes/<product_prefix>_frame2_side.jpg`, `keyframes/<product_prefix>_frame3_shoulder.jpg` (create `keyframes/` directory automatically if it does not exist).
@@ -82,12 +89,12 @@ python scrape_product.py "https://vt.tiktok.com/..."
 **Quota Tracking & Reporting Rules (MANDATORY EVERY RUN):**
 - You MUST report the image generation quota status in EVERY generation response to the user:
   1. **Quota Status & Image Count**: State clearly how many images were successfully generated in the run (e.g. `3/3 images successfully generated`) and current operational capacity.
-  2. **If Quota is Active/Available**: Inform the user that the image generation capacity is healthy/active for continuous runs.
-  3. **If Quota Limit (429 RESOURCE_EXHAUSTED) is Hit**:
-     - Clearly alert the user: "Image generation quota limit has been reached."
-     - Report the exact reset countdown and timestamp extracted from the error message (e.g., `Resets in: X hours / Date: YYYY-MM-DD`).
-     - State how many images could not be generated.
-     - Provide the 3 ready-to-use 9:16 Keyframe Prompts as fallback for external generation (Midjourney, Flux, Imagen, Gemini Web).
+  2. **If Any Provider Is Active/Available**: Inform the user which provider completed the images and that its capacity is active for continuous runs, subject to that provider's limits.
+  3. **If a Provider Hits 429 RESOURCE_EXHAUSTED**:
+     - Clearly report that provider's quota limit, including the exact reset countdown and timestamp when present in the error.
+     - Immediately continue with the next available provider. Do not provide prompt-only output while a viable configured image provider remains.
+  4. **If a Provider Is Unavailable for Another Reason**: State the provider and cause, such as tool not exposed, unsupported model, missing credential, or permission restriction. Do not call it a quota limit or invent a reset time.
+  5. **Only When All Options Are Exhausted**: State how many images could not be generated and provide the three ready-to-use 9:16 fallback prompts for external generation. Include the attempted providers and the actual reason each was unavailable.
 
 **CRITICAL KEYFRAME RULES:**
 - Model styling: Malaysian Muslimah wearing a neat, matching modern hijab (e.g. chiffon/bawal) and modest chic outfit.
