@@ -4,7 +4,7 @@
 # AI agents MUST check this file AND search online for the latest updates
 # BEFORE generating any content. If new rules are found, update this file.
 #
-# Last Verified: 2026-09-06
+# Last Verified: 2026-09-07
 
 ---
 
@@ -79,8 +79,8 @@
 
 | Rule | Details |
 |------|---------|
-| **Promotion Performance Score (PPS)** | Replaced PQP system effective **Aug 27, 2026**. Evaluates shoppable video/LIVE quality and compliance (50%) + product selection (50%). Target: **PPS >= 4.5**. If score drops below **3.0**, visibility is penalized and access to campaigns/tools restricted. |
-| **Creator Health Rating (CHR)** | TikTok tracks compliance via CHR dashboard. Monitor regularly alongside PPS. |
+| **Promotion Performance Score (PPS)** | Replaced PQP system effective **Aug 27, 2026**. Evaluates shoppable video/LIVE quality and compliance (50%) + product selection (50%). Target: **PPS >= 4.5**. If score drops below **3.0**, visibility is penalized and access to campaigns/tools restricted. Current Malaysia campaign guidance requires **PPS >= 3.5** for Affiliate Creators. |
+| **Creator Health Rating (CHR)** | TikTok tracks compliance via CHR dashboard. Monitor regularly alongside PPS. Current Malaysia campaign guidance requires **CHR >= 150**. |
 | **5-Video Misleading Threshold** | If 5+ "misleading" or "non-interactive" videos are posted in 7 days, posting limits cap creators to only 7 shoppable videos/week. |
 | **90-Day Violation Window** | Repeated violations within 90 days → content removal, suspension, or permanent e-commerce ban. |
 | **Engagement Bait Detection** | Algorithm detects and suppresses "like-for-like", fake incentives, and engagement bait. |
@@ -119,6 +119,7 @@ These are rules we enforce on ourselves to maintain a clean account health:
 
 | Date | Change | Source |
 |------|--------|--------|
+| 2026-09-07 | Re-verified Malaysia creator campaign eligibility: Affiliate Creators need PPS at least 3.5 and CHR at least 150 for campaign enrolment. Retained stricter internal PPS target of 4.5 for account health. | TikTok Shop Malaysia, Campaign Season Policy Tips & Tricks for Creators, 2026-09-04 |
 | 2026-09-06 | Re-verified Malaysia TikTok Shop Creator Policies: Validated "Three Golden Rules" of AIGC (no product misrepresentation, no deceptive result edits, no fabricated stories), mandatory C2PA / AIGC disclosure toggle, and Creator Health Rating (CHR) 7-day rolling compliance monitoring. | Web search (TikTok Shop Malaysia Seller Center & Policy Guidelines) |
 | 2026-09-03 | Added Promotion Performance Score (PPS) policy launched Aug 27, 2026 replacing PQP. Requires PPS >= 4.5; under 3.0 reduces visibility. Updated weekly cap (7 videos/week) for 5+ misleading flags. | Web search (TikTok Shop Malaysia Seller Center & Affiliate Portal) |
 | 2026-09-02 | Initial policy compilation. Verified pricing, AIGC, content accuracy, prohibited categories, and engagement rules. | Web search (TikTok Seller Center, Community Guidelines, darkroomagency.com, bigseller.com) |
