@@ -82,6 +82,17 @@ def save_generation_history(product_name: str, opening_line: str, closing_line: 
         json.dump(data, f, indent=2, ensure_ascii=False)
     print(f"📝 Saved generation history for: {product_name}")
 
+    # Optionally sync to Supabase database
+    try:
+        from supabase_client import save_generation_record
+        save_generation_record(
+            product_name=product_name,
+            opening_line=opening_line,
+            closing_line=closing_line
+        )
+    except Exception:
+        pass
+
 
 SYSTEM_PROMPT = """You are a top Malaysian TikTok e-commerce content strategist who creates VIRAL short-form video scripts.
 You specialize in creating spoken dialogue that feels like a real person talking to their bestie—NOT a product brochure being read aloud.
@@ -213,9 +224,11 @@ Generate completely unique, non-repeating prompts and copy tailored specifically
 
         candidate_models = [
             'gemini-3.6-flash',
-            'gemini-3.5-pro',
-            'gemini-2.5-pro',
-            'gemini-2.5-flash',
+            'gemini-3.7-flash',
+            'gemini-3.8-flash',
+            'gemini-3.5-flash',
+            'gemini-3.1-pro-preview',
+            'gemini-flash-latest',
         ]
 
         response = None

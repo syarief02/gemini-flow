@@ -190,11 +190,14 @@ git push
 | File | Purpose |
 |------|---------|
 | `generate_prompts.py` | Core engine: SYSTEM_PROMPT, anti-repetition functions, Gemini API caller |
+| `generate_keyframes.py` | Generates 3 consistent 9:16 keyframe images dynamically for any product session |
 | `prompt_templates.py` | Reusable templates for keyframes, Flow AI prompts, caption, and Suno BGM |
 | `generation_history.json` | Tracks last used opening/closing lines to prevent repetition (window: last 7) |
+| `supabase_client.py` | Supabase cloud database client, health monitoring, and remote generation sync |
+| `publish_to_wordpress.py` | WordPress.com publishing integration for promo articles and affiliate links |
 | `tiktok_policy_notes.md` | **TikTok policy tracker**: compiled rules, violations, AIGC requirements, and change log |
 | `scrape_product.py` | Scrapes TikTok Shop product page → images + metadata |
-| `.env` | Contains `GEMINI_API_KEY` and `GOOGLE_API_KEY` (gitignored, never commit) |
+| `.env` | Contains `GEMINI_API_KEY`, Supabase, and WordPress credentials (gitignored, never commit) |
 | `.gitignore` | Excludes `.env`, images, output dir, and temp files from git |
 
 ---

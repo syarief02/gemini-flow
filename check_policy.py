@@ -40,15 +40,16 @@ def check_policy(product_name_or_cat: str = "General Fashion"):
     
     lower_input = product_name_or_cat.lower()
     
-    # Check prohibited
+    # Check prohibited (word-boundary matched to avoid false positives on partial substrings)
     for kw in PROHIBITED_KEYWORDS:
-        if kw in lower_input:
+        pattern = r"(?:\b|_)" + re.escape(kw) + r"(?:\b|_)"
+        if re.search(pattern, lower_input):
             print(f"❌ PELANGGARAN POLISI: Produk ini dikesan mengandungi kata kunci terlarang '{kw}'.")
             print("Status: DITOLAK (Kategori Dilarang TikTok Shop)")
             return False, "Ditolak", last_verified
 
     # Check restricted
-    is_restricted = any(kw in lower_input for kw in RESTRICTED_KEYWORDS)
+    is_restricted = any(re.search(r"(?:\b|_)" + re.escape(kw) + r"(?:\b|_)", lower_input) for kw in RESTRICTED_KEYWORDS)
     status_label = "Terhad (Perlu Kelulusan)" if is_restricted else "Dibenarkan"
     
     badge = f"🛡️ Status Pematuhan Polisi TikTok: Disemak & Patuh (Tarikh: {last_verified} | Kategori: {product_name_or_cat} - {status_label})"

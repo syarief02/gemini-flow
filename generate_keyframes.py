@@ -1,18 +1,36 @@
-"""Generate consistent TikTok Shop keyframes using an already configured Gemini API key."""
+"""
+Generate consistent 9:16 TikTok Shop keyframes dynamically for any product
+using configured Gemini image generation models.
+
+Usage:
+    python generate_keyframes.py --latest
+    python generate_keyframes.py --session output/20260908_210526
+    python generate_keyframes.py --source-dir output/20260907_160155 --prefix my_product
+"""
 
 from __future__ import annotations
 
+import argparse
 import base64
+import json
 import os
+import re
+import sys
 from pathlib import Path
+from typing import List, Optional
 
 from dotenv import load_dotenv
 from google import genai
 
+if sys.platform == "win32":
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 
 WORKSPACE = Path(__file__).resolve().parent
-SOURCE_DIR = WORKSPACE / "output" / "20260907_160155"
+load_dotenv(WORKSPACE / ".env")
+
 KEYFRAME_DIR = WORKSPACE / "keyframes"
+
 MODEL_CANDIDATES = (
     "gemini-3.1-flash-image",
     "gemini-3.1-flash-lite-image",
@@ -31,19 +49,9 @@ def image_input(path: Path) -> dict[str, str]:
     }
 
 
-BASE_PRODUCT_DETAILS = """Use the supplied listing photos as exact product references. The promoted garment is a deep indigo-blue long-sleeve denim blouse with a pointed polo collar, full front placket of small brown buttons, button cuffs, and a rounded hem. Preserve the pink butterfly embroidery precisely: one small butterfly on the viewer-left upper chest, one on the viewer-left lower torso, and one large outlined butterfly near the viewer-left lower hem. Do not add or remove product details. Do not reproduce the marketplace graphic banners or brand wordmarks from the references."""
-
-FRAME_PROMPTS = (
-    """Create Frame 1 for a 9:16 TikTok Shop keyframe. Photorealistic full-body lifestyle fashion photo of an adult Malaysian Muslim woman wearing the exact blouse described in the product references, cream wide-leg trousers, and a neat light-ivory chiffon bawal hijab. She faces the camera with relaxed shoulders, a natural gentle smile, and comfortable eye contact. Modern Kuala Lumpur covered walkway with a neutral cafe facade softly blurred behind her. Soft golden-hour daylight, natural skin texture, editorial realism, full outfit visible head to toe. Her hands rest naturally by her sides. No text overlay, no logo, no watermark, no price, no raised hands, no waving. """ + BASE_PRODUCT_DETAILS,
-    """Create Frame 2 for a 9:16 TikTok Shop keyframe. Keep the same adult Malaysian Muslim woman, face, light-ivory chiffon bawal hijab, cream wide-leg trousers, exact blouse, and Kuala Lumpur covered-walkway background as Frame 1. Turn her gently to her left into a 3/4 side profile, showing the relaxed silhouette, denim drape, cuff and curved hem. Full outfit visible head to toe. One hand can lightly touch the blouse side seam, with the other resting naturally. Soft golden-hour daylight, photorealistic editorial lifestyle image. No text overlay, no logo, no watermark, no price, no raised hands, no waving. """ + BASE_PRODUCT_DETAILS,
-    """Create Frame 3 for a 9:16 TikTok Shop keyframe. Keep the same adult Malaysian Muslim woman, face, light-ivory chiffon bawal hijab, cream wide-leg trousers, exact blouse, and Kuala Lumpur covered-walkway background as Frames 1 and 2. She faces mostly away from the camera, then gives a gentle glance back over her right shoulder with a soft natural smile. Show the blouse back silhouette and modest relaxed fit. Full outfit visible head to toe. Her arms remain naturally low by her sides; she may hold a small plain cream tote bag casually at one side. Soft golden-hour daylight, photorealistic editorial lifestyle image. No text overlay, no logo, no watermark, no price, no raised hands, no waving. """ + BASE_PRODUCT_DETAILS,
-)
-
-OUTPUT_NAMES = (
-    "bgm_polo_denim_butterfly_frame1_front.jpg",
-    "bgm_polo_denim_butterfly_frame2_side.jpg",
-    "bgm_polo_denim_butterfly_frame3_shoulder.jpg",
-)
+def clean_slug(text: str) -> str:
+    cleaned = re.sub(r"[^a-zA-Z0-9]+", "_", text.lower()).strip("_")
+    return cleaned[:30] if cleaned else "product"
 
 
 def generate_one(client: genai.Client, prompt: str, references: list[Path], output_path: Path) -> str:
@@ -74,29 +82,116 @@ def generate_one(client: genai.Client, prompt: str, references: list[Path], outp
     raise RuntimeError(f"All configured Gemini image models failed for {output_path.name}: {last_error}")
 
 
-def main() -> None:
-    load_dotenv(WORKSPACE / ".env")
+def run_generation(source_dir: Path, prefix: Optional[str] = None, force: bool = False):
     api_key = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
     if not api_key:
-        raise RuntimeError("No configured GEMINI_API_KEY or GOOGLE_API_KEY was found.")
+        raise RuntimeError("No configured GEMINI_API_KEY or GOOGLE_API_KEY was found in .env.")
 
-    source_references = [SOURCE_DIR / "product_1.jpg", SOURCE_DIR / "product_2.jpg"]
-    missing = [str(path) for path in source_references if not path.is_file()]
-    if missing:
-        raise RuntimeError(f"Missing product reference images: {', '.join(missing)}")
+    if not source_dir.is_dir():
+        raise RuntimeError(f"Source directory does not exist: {source_dir}")
+
+    # Load product metadata if present
+    product_title = "Muslimah Fashion Product"
+    product_details = ""
+    info_file = source_dir / "product_info.json"
+    if info_file.is_file():
+        try:
+            with open(info_file, "r", encoding="utf-8") as f:
+                info_data = json.load(f)
+                product_title = info_data.get("title", product_title)
+                product_details = info_data.get("page_text", "")[:400]
+        except Exception:
+            pass
+
+    if not prefix:
+        prefix = clean_slug(product_title)
+
+    # Locate source product images
+    source_images = sorted(list(source_dir.glob("product_*.jpg")))
+    if not source_images:
+        source_images = sorted(list(source_dir.glob("*.jpg")))
+    if not source_images:
+        raise RuntimeError(f"No reference images (.jpg) found in {source_dir}")
+
+    source_references = source_images[:2]
 
     KEYFRAME_DIR.mkdir(exist_ok=True)
-    outputs = [KEYFRAME_DIR / name for name in OUTPUT_NAMES]
-    existing = [str(path) for path in outputs if path.exists()]
-    if existing:
-        raise RuntimeError(f"Refusing to overwrite existing keyframes: {', '.join(existing)}")
+    output_names = (
+        f"{prefix}_frame1_front.jpg",
+        f"{prefix}_frame2_side.jpg",
+        f"{prefix}_frame3_shoulder.jpg",
+    )
+    outputs = [KEYFRAME_DIR / name for name in output_names]
+
+    if not force:
+        existing = [str(p) for p in outputs if p.exists()]
+        if existing:
+            print(f"⚠️ Keyframes already exist: {', '.join(existing)}")
+            print("Use --force to overwrite if desired.")
+            return
+
+    base_desc = (
+        f"Use the supplied listing photos as exact product references for: {product_title}. "
+        f"{product_details} "
+        f"Do not add or remove product details. Do not reproduce marketplace graphic banners or wordmarks."
+    )
+
+    frame_prompts = (
+        f"Create Frame 1 for a 9:16 TikTok Shop keyframe. Photorealistic full-body lifestyle fashion photo of an adult Malaysian Muslim woman wearing the exact product described, paired with modern modest trousers and a neat light-ivory chiffon bawal hijab. She faces the camera with relaxed shoulders, a natural gentle smile, and comfortable eye contact. Modern Kuala Lumpur covered walkway with a neutral cafe facade softly blurred behind her. Soft golden-hour daylight, natural skin texture, editorial realism, full outfit visible head to toe. Her hands rest naturally by her sides. No text overlay, no logo, no watermark, no price, no raised hands, no waving. {base_desc}",
+        f"Create Frame 2 for a 9:16 TikTok Shop keyframe. Keep the same adult Malaysian Muslim woman, face, hijab, outfit, and Kuala Lumpur background as Frame 1. Turn her gently to her left into a 3/4 side profile, showing the relaxed silhouette and drape. Full outfit visible head to toe. One hand can lightly touch the side seam, with the other resting naturally. Soft daylight, photorealistic editorial lifestyle image. No text overlay, no logo, no watermark, no price, no raised hands, no waving. {base_desc}",
+        f"Create Frame 3 for a 9:16 TikTok Shop keyframe. Keep the same adult Malaysian Muslim woman, face, hijab, outfit, and Kuala Lumpur background as Frames 1 and 2. She faces mostly away from the camera, then gives a gentle glance back over her right shoulder with a soft natural smile. Show the back silhouette and modest relaxed fit. Full outfit visible head to toe. Her arms remain naturally low by her sides; she may hold a small plain cream tote bag casually at one side. Soft daylight. No text overlay, no logo, no watermark, no price, no raised hands, no waving. {base_desc}",
+    )
 
     client = genai.Client(api_key=api_key)
     completed: list[Path] = []
-    for prompt, output_path in zip(FRAME_PROMPTS, outputs, strict=True):
+    success_count = 0
+
+    for prompt, output_path in zip(frame_prompts, outputs, strict=True):
         references = [*source_references, *completed][-3:]
-        generate_one(client, prompt, references, output_path)
-        completed.append(output_path)
+        try:
+            generate_one(client, prompt, references, output_path)
+            completed.append(output_path)
+            success_count += 1
+        except Exception as err:
+            print(f"❌ Could not generate {output_path.name}: {err}")
+            break
+
+    print(f"\n🎉 Generation complete: {success_count}/3 keyframes created in {KEYFRAME_DIR}/")
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Generate 9:16 Keyframe images dynamically")
+    parser.add_argument("--latest", action="store_true", help="Use the latest output session")
+    parser.add_argument("--session", type=str, help="Specific output session folder or name")
+    parser.add_argument("--source-dir", type=str, help="Full path to source folder containing images")
+    parser.add_argument("--prefix", type=str, help="Custom prefix for generated frame files")
+    parser.add_argument("--force", action="store_true", help="Overwrite existing keyframe files")
+    args = parser.parse_args()
+
+    output_dir = WORKSPACE / "output"
+    target_dir = None
+
+    if args.source_dir:
+        target_dir = Path(args.source_dir)
+    elif args.session:
+        session_p = Path(args.session)
+        target_dir = session_p if session_p.is_dir() else (output_dir / args.session)
+    elif args.latest:
+        subdirs = sorted([d for d in output_dir.iterdir() if d.is_dir()], reverse=True)
+        if subdirs:
+            target_dir = subdirs[0]
+    else:
+        # Default to latest if no argument passed
+        subdirs = sorted([d for d in output_dir.iterdir() if d.is_dir()], reverse=True)
+        if subdirs:
+            target_dir = subdirs[0]
+
+    if not target_dir or not target_dir.exists():
+        print("Usage: python generate_keyframes.py [--latest | --session <folder> | --source-dir <path>]")
+        return
+
+    print(f"🚀 Generating keyframes from session: {target_dir.name}")
+    run_generation(target_dir, prefix=args.prefix, force=args.force)
 
 
 if __name__ == "__main__":

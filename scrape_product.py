@@ -45,7 +45,28 @@ def extract_product_details_from_url(url: str) -> dict:
             details["og_image"] = og_json.get("image", "")
         except Exception:
             pass
-    return details
+def download_file(url: str, output_path: str, timeout: int = 25) -> bool:
+    """Download a file with realistic browser headers to prevent CDN 403 Forbidden."""
+    headers = {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+            "(KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
+        ),
+        "Referer": "https://www.tiktok.com/",
+        "Accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+    }
+    req = urllib.request.Request(url, headers=headers)
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as resp, open(output_path, "wb") as f:
+            f.write(resp.read())
+        return True
+    except Exception:
+        if os.path.exists(output_path):
+            try:
+                os.remove(output_path)
+            except Exception:
+                pass
+        return False
 
 
 async def scrape_tiktok_product(tiktok_url: str, output_dir: str) -> dict:
@@ -216,7 +237,8 @@ async def scrape_tiktok_product(tiktok_url: str, output_dir: str) -> dict:
                     jpg_path = os.path.join(output_dir, f"product_{count + 1}.jpg")
 
                     try:
-                        urllib.request.urlretrieve(src, webp_path)
+                        if not download_file(src, webp_path):
+                            raise RuntimeError(f"Could not download {src[:60]}")
                         with Image.open(webp_path) as im:
                             # Only keep good quality product photos (>= 250px)
                             if im.size[0] >= 250 and im.size[1] >= 250:
@@ -261,7 +283,8 @@ async def scrape_tiktok_product(tiktok_url: str, output_dir: str) -> dict:
                             seen_bases.add(base)
                             webp_path = os.path.join(output_dir, f"temp_deep_{count + 1}.webp")
                             try:
-                                urllib.request.urlretrieve(src, webp_path)
+                                if not download_file(src, webp_path):
+                                    continue
                                 with Image.open(webp_path) as im:
                                     if im.size[0] >= 250 and im.size[1] >= 250:
                                         count += 1
@@ -295,15 +318,15 @@ async def scrape_tiktok_product(tiktok_url: str, output_dir: str) -> dict:
                 webp_path = os.path.join(output_dir, f"product_{count}.webp")
                 jpg_path = os.path.join(output_dir, f"product_{count}.jpg")
                 try:
-                    urllib.request.urlretrieve(og_src, webp_path)
-                    im = Image.open(webp_path)
-                    im.convert("RGB").save(jpg_path, "JPEG", quality=95)
-                    os.remove(webp_path)
-                    image_paths.append(jpg_path)
-                    print(
-                        f"  📸 product_{count}.jpg (from og_image, {im.size[0]}x{im.size[1]})",
-                        flush=True,
-                    )
+                    if download_file(og_src, webp_path):
+                        im = Image.open(webp_path)
+                        im.convert("RGB").save(jpg_path, "JPEG", quality=95)
+                        os.remove(webp_path)
+                        image_paths.append(jpg_path)
+                        print(
+                            f"  📸 product_{count}.jpg (from og_image, {im.size[0]}x{im.size[1]})",
+                            flush=True,
+                        )
                 except Exception as err:
                     print(f"  ❌ Failed og_image product_{count}: {err}", flush=True)
 
