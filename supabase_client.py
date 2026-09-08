@@ -94,3 +94,4 @@ if __name__ == "__main__":
     print("Testing Supabase connectivity...")
     res = test_supabase_connection()
     print(json.dumps(res, indent=2))
+
