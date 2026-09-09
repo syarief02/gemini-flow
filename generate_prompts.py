@@ -56,7 +56,16 @@ def get_recently_used_phrases(last_n: int = 7) -> str:
     lines.append("Write genuinely different phrasing — not just rearranging the same words or swapping synonyms.")
     return "\n".join(lines)
 
-def save_generation_history(product_name: str, opening_line: str, closing_line: str):
+def save_generation_history(
+    product_name: str,
+    opening_line: str,
+    closing_line: str,
+    scenes: dict = None,
+    caption: str = None,
+    hashtags: str = None,
+    bgm_prompt: str = None,
+    keyframe_urls: list = None
+):
     """Append a new entry to the generation history file.
     
     Just stores the raw opening and closing text — no rigid categories.
@@ -88,10 +97,15 @@ def save_generation_history(product_name: str, opening_line: str, closing_line: 
         save_generation_record(
             product_name=product_name,
             opening_line=opening_line,
-            closing_line=closing_line
+            closing_line=closing_line,
+            scenes=scenes,
+            caption=caption,
+            hashtags=hashtags,
+            bgm_prompt=bgm_prompt,
+            keyframe_urls=keyframe_urls
         )
-    except Exception:
-        pass
+    except Exception as e_sup:
+        print(f"Notice: Supabase sync: {e_sup}")
 
 
 SYSTEM_PROMPT = """You are a top Malaysian TikTok e-commerce content strategist who creates VIRAL short-form video scripts.
@@ -223,12 +237,13 @@ Generate completely unique, non-repeating prompts and copy tailored specifically
 {anti_repetition}"""
 
         candidate_models = [
+            'gemini-3.5-flash',
+            'gemini-flash-lite-latest',
+            'gemini-3.5-flash-lite',
             'gemini-3.6-flash',
             'gemini-3.7-flash',
             'gemini-3.8-flash',
-            'gemini-3.5-flash',
-            'gemini-3.1-pro-preview',
-            'gemini-flash-latest',
+            'gemini-pro-latest',
         ]
 
         response = None

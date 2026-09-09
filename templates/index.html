@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ms">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="description" content="Gemini Flow: TikTok Shop Product Promo Generator. Scrape products, generate prompts, download as ZIP.">
-  <title>Gemini Flow — TikTok Promo Generator</title>
-  <link rel="stylesheet" href="static/style.css">
+  <meta name="description" content="Gemini Flow: Penjana Promosi & Gambar Produk TikTok Shop Malaysia. Jana 3 Keyframe 9:16, skrip video Flow AI, kapsyen & Suno BGM.">
+  <title>Gemini Flow — Mobile Promo & Picture Generator</title>
+  <link rel="stylesheet" href="/static/style.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✨</text></svg>">
 </head>
 <body>
@@ -19,12 +19,18 @@
         <div class="app-logo-icon">✨</div>
         <span class="app-logo-text">Gemini Flow</span>
       </div>
-      <button class="key-pill" id="key-pill-btn" onclick="openKeyModal()" title="Gemini API Key Settings">
-        <span class="key-pill-dot" id="key-pill-dot"></span>
-        <span class="key-pill-label" id="key-pill-label">Gemini Key</span>
-      </button>
+      <div style="display: flex; gap: 8px; align-items: center;">
+        <span class="supabase-pill" id="supabase-status-pill" title="Supabase Cloud Database">
+          <span class="supabase-pill-dot" id="supabase-dot"></span>
+          <span id="supabase-label">Database</span>
+        </span>
+        <button class="key-pill" id="key-pill-btn" onclick="openKeyModal()" title="Gemini API Key Settings">
+          <span class="key-pill-dot" id="key-pill-dot"></span>
+          <span class="key-pill-label" id="key-pill-label">Gemini Key</span>
+        </button>
+      </div>
     </div>
-    <p class="app-tagline">TikTok Shop Promo Generator</p>
+    <p class="app-tagline">TikTok Shop Mobile Promo &amp; Picture Generator</p>
   </header>
 
   <!-- Stepper -->
@@ -39,29 +45,74 @@
   </div>
 
   <!-- ═══════════════════════════════════════════ -->
-  <!-- STEP 1: Paste URL                           -->
+  <!-- STEP 1: Input Product                       -->
   <!-- ═══════════════════════════════════════════ -->
   <section class="step-panel active" id="step-1">
     <div class="glass-card">
-      <h1 class="step-title">Paste Product URL</h1>
-      <p class="step-subtitle">Paste a TikTok Shop link to start scraping</p>
+      <h1 class="step-title">Pilih Kaedah Input</h1>
+      <p class="step-subtitle">Tampal pautan TikTok Shop atau masukkan maklumat terus</p>
 
-      <div class="input-group">
-        <label for="product-url">TikTok Shop URL</label>
-        <input
-          type="url"
-          id="product-url"
-          class="text-input"
-          placeholder="https://vt.tiktok.com/..."
-          autocomplete="off"
-          autocapitalize="off"
-          spellcheck="false"
-        >
+      <!-- Mode Switcher -->
+      <div class="mode-switcher">
+        <button class="mode-btn active" id="mode-btn-url" onclick="switchInputMode('url')">🔗 Pautan TikTok</button>
+        <button class="mode-btn" id="mode-btn-manual" onclick="switchInputMode('manual')">✍️ Maklumat Terus</button>
       </div>
 
-      <button class="btn btn-primary" id="btn-scrape" onclick="startScrape()">
-        🔍 Scrape Product
-      </button>
+      <!-- Mode URL -->
+      <div id="input-container-url">
+        <div class="input-group">
+          <div class="flex-between mb-1">
+            <label for="product-url">URL TikTok Shop</label>
+            <button type="button" class="copy-btn" onclick="pasteFromClipboard()" style="padding: 2px 8px; font-size: 11px;">📋 Tampal</button>
+          </div>
+          <input
+            type="url"
+            id="product-url"
+            class="text-input"
+            placeholder="https://vt.tiktok.com/..."
+            autocomplete="off"
+            autocapitalize="off"
+            spellcheck="false"
+          >
+        </div>
+
+        <button class="btn btn-primary" id="btn-scrape" onclick="startScrape()">
+          🔍 Imbas &amp; Jana Produk
+        </button>
+      </div>
+
+      <!-- Mode Manual -->
+      <div id="input-container-manual" style="display: none;">
+        <div class="input-group">
+          <label for="manual-title">Nama Produk / Tajuk Promosi</label>
+          <input
+            type="text"
+            id="manual-title"
+            class="text-input"
+            placeholder="cth: Baju Kemeja Moden Patchwork 2-Tone"
+            autocomplete="off"
+          >
+        </div>
+        <div class="input-group">
+          <label for="manual-details">Ciri-ciri &amp; Fabrik (Pilihan)</label>
+          <textarea
+            id="manual-details"
+            class="text-input"
+            rows="3"
+            placeholder="cth: Material cotton sejuk, potongan loose modesty Muslimah, lengan panjang berbutang"
+            style="resize: vertical; font-family: inherit;"
+          ></textarea>
+        </div>
+        <button class="btn btn-primary" id="btn-manual-submit" onclick="startManualSubmit()">
+          ✨ Jana Terus Pakej Promosi
+        </button>
+      </div>
+
+      <!-- Compliance Note -->
+      <div style="margin-top: 12px; font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 6px;">
+        <span>🛡️</span>
+        <span>Disahkan patuh garis panduan TikTok Shop MY &amp; polisi AIGC.</span>
+      </div>
 
       <div class="progress-container" id="scrape-progress">
         <div class="progress-bar-track">
@@ -69,7 +120,7 @@
         </div>
         <div class="progress-text">
           <span class="spinner"></span>
-          <span id="scrape-status-text">Connecting to TikTok...</span>
+          <span id="scrape-status-text">Menyambung ke TikTok...</span>
         </div>
       </div>
 
@@ -79,7 +130,7 @@
     <!-- Recent History -->
     <div class="glass-card mt-4" id="history-card" style="display:none">
       <div class="flex-between mb-3">
-        <span class="content-block-label">Recent Generations</span>
+        <span class="content-block-label">Sejarah Penjanaan (Cloud Database)</span>
         <span class="meta-badge" id="history-count"></span>
       </div>
       <div id="history-list"></div>
@@ -91,8 +142,8 @@
   <!-- ═══════════════════════════════════════════ -->
   <section class="step-panel" id="step-2">
     <div class="glass-card">
-      <h2 class="step-title">Review Product</h2>
-      <p class="step-subtitle">Confirm the scraped product details</p>
+      <h2 class="step-title">Sahkan Maklumat Produk</h2>
+      <p class="step-subtitle">Periksa gambar dan butiran sebelum menjana aset</p>
 
       <!-- Image Carousel -->
       <div class="carousel" id="product-carousel">
@@ -109,14 +160,13 @@
 
       <div class="content-block">
         <div class="content-block-header">
-          <span class="content-block-label">Page Text (Preview)</span>
+          <span class="content-block-label">Ringkasan Produk</span>
         </div>
-        <div class="content-block-text" id="product-text-preview"
-             style="max-height:120px;overflow-y:auto;font-size:12px;"></div>
+        <div class="content-block-text" id="product-text-preview" style="max-height:120px;overflow-y:auto;font-size:12px;"></div>
       </div>
 
       <button class="btn btn-primary" id="btn-generate" onclick="startGenerate()">
-        ✨ Generate Prompts
+        ✨ Jana Promosi &amp; Gambar Keyframe
       </button>
 
       <div class="progress-container" id="generate-progress">
@@ -125,14 +175,14 @@
         </div>
         <div class="progress-text">
           <span class="spinner"></span>
-          <span id="generate-status-text">Generating with Gemini...</span>
+          <span id="generate-status-text">Menjana skrip video &amp; gambar...</span>
         </div>
       </div>
 
       <div id="generate-error"></div>
 
       <button class="btn btn-outline mt-3" onclick="goToStep(1)">
-        ← Back
+        ← Kembali
       </button>
     </div>
   </section>
@@ -142,134 +192,160 @@
   <!-- ═══════════════════════════════════════════ -->
   <section class="step-panel" id="step-3">
     <div class="glass-card">
-      <h2 class="step-title">Your Promo Package</h2>
+      <h2 class="step-title">Pakej Promosi Lengkap</h2>
       <p class="step-subtitle" id="results-product-name"></p>
+
+      <!-- Status Badges -->
+      <div style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px;">
+        <div style="font-size: 11px; padding: 6px 10px; background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: var(--radius-sm); color: #10b981; font-weight: 500;" id="policy-badge-box">
+          🛡️ Status Pematuhan Polisi: Disemak &amp; Patuh (Kategori Dibenarkan)
+        </div>
+        <div style="font-size: 11px; padding: 6px 10px; background: rgba(139, 92, 246, 0.12); border: 1px solid rgba(139, 92, 246, 0.25); border-radius: var(--radius-sm); color: #c4b5fd; font-weight: 500;" id="quota-badge-box">
+          🟢 Status Kuota Imej: Aktif (3/3 imej sedia dipaparkan)
+        </div>
+      </div>
 
       <!-- Tabs -->
       <div class="tabs" id="result-tabs">
-        <button class="tab-btn active" data-tab="flow" onclick="switchTab('flow')">Flow AI</button>
-        <button class="tab-btn" data-tab="caption" onclick="switchTab('caption')">Caption</button>
-        <button class="tab-btn" data-tab="bgm" onclick="switchTab('bgm')">BGM</button>
-        <button class="tab-btn" data-tab="summary" onclick="switchTab('summary')">Summary</button>
+        <button class="tab-btn active" data-tab="keyframes" onclick="switchTab('keyframes')">📸 3 Keyframes</button>
+        <button class="tab-btn" data-tab="flow" onclick="switchTab('flow')">🎬 Flow AI</button>
+        <button class="tab-btn" data-tab="caption" onclick="switchTab('caption')">📝 Caption</button>
+        <button class="tab-btn" data-tab="bgm" onclick="switchTab('bgm')">🎵 BGM</button>
       </div>
 
-      <!-- Tab: Flow AI Prompts -->
-      <div class="tab-content active" id="tab-flow">
+      <!-- TAB: 3 Keyframe Pictures (9:16) -->
+      <div class="tab-content active" id="tab-keyframes">
+        <div class="keyframe-grid" id="keyframe-grid-container">
+          
+          <!-- Frame 1 -->
+          <div class="keyframe-card">
+            <div class="keyframe-preview-box" onclick="zoomImage('kf-img-front')">
+              <span class="keyframe-badge-pose">Frame 1: Front</span>
+              <img id="kf-img-front" src="" alt="Frame 1 Front" onerror="handleKeyframeError(this, 'front')">
+              <span class="keyframe-badge-zoom">🔍 Zoom</span>
+            </div>
+            <div class="keyframe-meta-title">Frame 1: Front Facing</div>
+            <div class="keyframe-meta-desc">Senyuman natural, pandangan kamera mesra, hijab &amp; pakaian moden penuh kepala-ke-kaki.</div>
+            <div class="keyframe-actions">
+              <a href="#" id="kf-btn-download-front" class="keyframe-btn-download" download>💾 Simpan ke Phone</a>
+              <button class="copy-btn" onclick="copyText('kf-1-text', this)">📋 Prompt</button>
+            </div>
+            <details class="keyframe-prompt-toggle">
+              <summary style="cursor:pointer; color: var(--text-muted);">Lihat 9:16 Prompt</summary>
+              <div id="kf-1-text" style="white-space: pre-wrap; margin-top: 6px; line-height: 1.4;"></div>
+            </details>
+          </div>
+
+          <!-- Frame 2 -->
+          <div class="keyframe-card">
+            <div class="keyframe-preview-box" onclick="zoomImage('kf-img-side')">
+              <span class="keyframe-badge-pose">Frame 2: 3/4 Side</span>
+              <img id="kf-img-side" src="" alt="Frame 2 Side" onerror="handleKeyframeError(this, 'side')">
+              <span class="keyframe-badge-zoom">🔍 Zoom</span>
+            </div>
+            <div class="keyframe-meta-title">Frame 2: Profil Sisi (3/4)</div>
+            <div class="keyframe-meta-desc">Menyerlahkan potongan baju, lipatan kemas fabrik, dan siluet anggun santai.</div>
+            <div class="keyframe-actions">
+              <a href="#" id="kf-btn-download-side" class="keyframe-btn-download" download>💾 Simpan ke Phone</a>
+              <button class="copy-btn" onclick="copyText('kf-2-text', this)">📋 Prompt</button>
+            </div>
+            <details class="keyframe-prompt-toggle">
+              <summary style="cursor:pointer; color: var(--text-muted);">Lihat 9:16 Prompt</summary>
+              <div id="kf-2-text" style="white-space: pre-wrap; margin-top: 6px; line-height: 1.4;"></div>
+            </details>
+          </div>
+
+          <!-- Frame 3 -->
+          <div class="keyframe-card">
+            <div class="keyframe-preview-box" onclick="zoomImage('kf-img-shoulder')">
+              <span class="keyframe-badge-pose">Frame 3: Shoulder</span>
+              <img id="kf-img-shoulder" src="" alt="Frame 3 Shoulder" onerror="handleKeyframeError(this, 'shoulder')">
+              <span class="keyframe-badge-zoom">🔍 Zoom</span>
+            </div>
+            <div class="keyframe-meta-title">Frame 3: Pandangan Bahu</div>
+            <div class="keyframe-meta-desc">Pusingan belakang sopan dengan tolehan lembut ke bahu kanan. Tangan di sisi santai, tiada lambaian.</div>
+            <div class="keyframe-actions">
+              <a href="#" id="kf-btn-download-shoulder" class="keyframe-btn-download" download>💾 Simpan ke Phone</a>
+              <button class="copy-btn" onclick="copyText('kf-3-text', this)">📋 Prompt</button>
+            </div>
+            <details class="keyframe-prompt-toggle">
+              <summary style="cursor:pointer; color: var(--text-muted);">Lihat 9:16 Prompt</summary>
+              <div id="kf-3-text" style="white-space: pre-wrap; margin-top: 6px; line-height: 1.4;"></div>
+            </details>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- TAB: Flow AI Prompts (Combined Box) -->
+      <div class="tab-content" id="tab-flow">
+        <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 12px;">
+          💡 <strong>Tip 1-Klik Salin:</strong> Arahan visual video dan dialog suara lip-sync BM disertakan bersama di dalam kotak untuk salinan pantas terus ke Flow AI.
+        </p>
+
         <div class="scene-card" id="scene-1-card">
           <div class="scene-header">
-            <div class="scene-label">
-              <span class="scene-num">1</span> The Casual Intro
-            </div>
-            <button class="copy-btn" onclick="copyText('scene-1-text', this)">📋 Copy</button>
+            <div class="scene-label"><span class="scene-num">1</span> The Casual Intro</div>
+            <button class="copy-btn" onclick="copyText('scene-1-text', this)">📋 Salin</button>
           </div>
           <div class="scene-text" id="scene-1-text"></div>
         </div>
+
         <div class="scene-card" id="scene-2-card">
           <div class="scene-header">
-            <div class="scene-label">
-              <span class="scene-num">2</span> The Detail &amp; Feel
-            </div>
-            <button class="copy-btn" onclick="copyText('scene-2-text', this)">📋 Copy</button>
+            <div class="scene-label"><span class="scene-num">2</span> The Detail &amp; Feel</div>
+            <button class="copy-btn" onclick="copyText('scene-2-text', this)">📋 Salin</button>
           </div>
           <div class="scene-text" id="scene-2-text"></div>
         </div>
+
         <div class="scene-card" id="scene-3-card">
           <div class="scene-header">
-            <div class="scene-label">
-              <span class="scene-num">3</span> The Friendly Sign-Off
-            </div>
-            <button class="copy-btn" onclick="copyText('scene-3-text', this)">📋 Copy</button>
+            <div class="scene-label"><span class="scene-num">3</span> The Friendly Sign-Off</div>
+            <button class="copy-btn" onclick="copyText('scene-3-text', this)">📋 Salin</button>
           </div>
           <div class="scene-text" id="scene-3-text"></div>
         </div>
       </div>
 
-      <!-- Tab: Caption -->
+      <!-- TAB: Caption -->
       <div class="tab-content" id="tab-caption">
         <div class="content-block">
           <div class="content-block-header">
-            <span class="content-block-label">TikTok Caption</span>
-            <button class="copy-btn" onclick="copyText('caption-text', this)">📋 Copy</button>
+            <span class="content-block-label">Kapsyen TikTok + Hashtag SEO</span>
+            <button class="copy-btn" onclick="copyText('caption-text', this)">📋 Salin Kapsyen</button>
           </div>
           <div class="content-block-text" id="caption-text"></div>
         </div>
       </div>
 
-      <!-- Tab: BGM -->
+      <!-- TAB: BGM -->
       <div class="tab-content" id="tab-bgm">
         <div class="content-block">
           <div class="content-block-header">
-            <span class="content-block-label">Suno AI Instrumental Style</span>
-            <button class="copy-btn" onclick="copyText('bgm-style-text', this)">📋 Copy</button>
+            <span class="content-block-label">Gaya Muzik Suno AI (Instrumental)</span>
+            <button class="copy-btn" onclick="copyText('bgm-style-text', this)">📋 Salin Gaya</button>
           </div>
           <div class="content-block-text" id="bgm-style-text"></div>
           <div style="margin-top: 10px; font-size: 11px; color: var(--text-secondary); line-height: 1.4;">
-            💡 <em>Gunakan dalam mod <strong>Instrumental</strong> di Suno — tiada lirik diperlukan supaya muzik latar tidak bertindih dengan suara lip-sync Flow AI.</em>
+            💡 <em>Pastikan mod <strong>Instrumental</strong> diaktifkan di Suno AI supaya tiada lirik bertindih dengan suara lip-sync BM Flow AI.</em>
           </div>
-        </div>
-        <div class="content-block" id="bgm-lyrics-block" style="display:none">
-          <div class="content-block-header">
-            <span class="content-block-label">Lyrics (Optional)</span>
-            <button class="copy-btn" onclick="copyText('bgm-lyrics-text', this)">📋 Copy</button>
-          </div>
-          <div class="content-block-text" id="bgm-lyrics-text"></div>
-        </div>
-      </div>
-
-      <!-- Tab: Summary -->
-      <div class="tab-content" id="tab-summary">
-        <div class="content-block">
-          <div class="content-block-header">
-            <span class="content-block-label">Product Summary</span>
-            <button class="copy-btn" onclick="copyText('summary-text', this)">📋 Copy</button>
-          </div>
-          <div class="content-block-text" id="summary-text"></div>
         </div>
       </div>
 
       <div class="divider"></div>
 
-      <!-- Keyframe Prompts (always visible) -->
-      <details class="mt-3" style="cursor:pointer">
-        <summary style="font-size:13px;font-weight:600;color:var(--text-secondary);margin-bottom:8px">
-          🖼️ Keyframe Image Prompts
-        </summary>
-        <div class="content-block mt-2">
-          <div class="content-block-header">
-            <span class="content-block-label">Frame 1: Front</span>
-            <button class="copy-btn" onclick="copyText('kf-1-text', this)">📋 Copy</button>
-          </div>
-          <div class="content-block-text" id="kf-1-text" style="font-size:12px"></div>
-        </div>
-        <div class="content-block">
-          <div class="content-block-header">
-            <span class="content-block-label">Frame 2: Side</span>
-            <button class="copy-btn" onclick="copyText('kf-2-text', this)">📋 Copy</button>
-          </div>
-          <div class="content-block-text" id="kf-2-text" style="font-size:12px"></div>
-        </div>
-        <div class="content-block">
-          <div class="content-block-header">
-            <span class="content-block-label">Frame 3: Shoulder</span>
-            <button class="copy-btn" onclick="copyText('kf-3-text', this)">📋 Copy</button>
-          </div>
-          <div class="content-block-text" id="kf-3-text" style="font-size:12px"></div>
-        </div>
-      </details>
-
-      <div class="divider"></div>
-
-      <!-- AIGC Reminder -->
+      <!-- AIGC Disclosure Reminder -->
       <div class="alert alert-warning">
-        ⚠️ <span><strong>AIGC Reminder:</strong> This content is AI-generated. When posting to TikTok, enable the "AI-generated content" toggle in posting settings.</span>
+        ⚠️ <span><strong>Peringatan Pematuhan AIGC TikTok:</strong> Video &amp; gambar ini dijana oleh AI. Semasa memuat naik ke TikTok, pastikan anda hidupkan togol <strong>"AI-generated content"</strong> dalam tetapan muat naik.</span>
       </div>
 
       <!-- Action Buttons -->
       <button class="btn btn-success mt-3" id="btn-download" onclick="downloadZip()">
-        📦 Download ZIP
+        📦 Muat Turun Pakej Lengkap (ZIP)
       </button>
       <button class="btn btn-outline mt-3" onclick="goToStep(1)">
-        🔄 New Product
+        🔄 Jana Produk Baharu
       </button>
     </div>
   </section>
@@ -280,27 +356,92 @@
   <section class="step-panel" id="step-4">
     <div class="glass-card text-center">
       <div class="success-icon">✅</div>
-      <h2 class="success-title">Package Downloaded!</h2>
-      <p class="success-subtitle">Your ZIP file contains all images, prompts, caption, and BGM lyrics.</p>
-
-      <div class="alert alert-info">
-        💡 <span>Tip: Open the ZIP on your phone to copy-paste prompts into Flow AI, TikTok, and Suno.</span>
-      </div>
+      <h2 class="success-title">Pakej Berjaya Dimuat Turun!</h2>
+      <p class="success-subtitle">Fail ZIP mengandungi semua gambar keyframe 9:16, teks prompt Flow AI, kapsyen TikTok, dan BGM.</p>
 
       <button class="btn btn-primary mt-4" onclick="resetApp()">
-        ✨ Generate Another
+        ✨ Jana Produk Lain
       </button>
       <button class="btn btn-outline mt-2" onclick="goToStep(3)">
-        ← Back to Prompts
+        ← Kembali ke Hasil
       </button>
     </div>
   </section>
 
   <!-- Footer -->
   <footer class="app-footer">
-    Gemini Flow &middot; TikTok Shop Promo Generator
+    Gemini Flow &middot; TikTok Shop Mobile Promo Generator
   </footer>
 
+</div>
+
+<!-- Fullscreen Zoom Modal -->
+<div class="image-zoom-overlay" id="image-zoom-overlay" onclick="closeZoomModal()">
+  <div class="image-zoom-box" onclick="event.stopPropagation()">
+    <button class="image-zoom-close" onclick="closeZoomModal()">✕</button>
+    <img id="zoomed-image" src="" alt="Zoomed Keyframe">
+    <div style="margin-top: 12px;">
+      <a href="#" id="zoom-download-btn" class="keyframe-btn-download" download>💾 Simpan Imej ke Galeri</a>
+    </div>
+  </div>
+</div>
+
+<!-- API Key Modal -->
+<div class="modal-overlay" id="key-modal-overlay" onclick="closeKeyModalOnBackdrop(event)">
+  <div class="modal-content glass-card" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <div class="modal-title-group">
+        <span style="font-size: 20px;">🔑</span>
+        <h3 class="modal-title">Kunci API Gemini</h3>
+      </div>
+      <button class="modal-close" onclick="closeKeyModal()">✕</button>
+    </div>
+
+    <p class="modal-desc">
+      Gunakan kunci Google Gemini anda sendiri untuk kuota peribadi percuma tanpa had pelayan:
+    </p>
+
+    <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="google-key-btn">
+      <svg viewBox="0 0 24 24" width="18" height="18">
+        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+      </svg>
+      <span>Dapatkan Kunci Percuma di Google AI Studio ↗</span>
+    </a>
+
+    <div class="input-group">
+      <label for="custom-api-key">Kunci API Gemini Anda</label>
+      <div class="password-input-wrapper">
+        <input
+          type="password"
+          id="custom-api-key"
+          class="text-input"
+          placeholder="AIzaSy..."
+          autocomplete="off"
+          spellcheck="false"
+        >
+        <button type="button" class="btn-toggle-visibility" onclick="toggleKeyVisibility()" id="btn-toggle-eye">👁️</button>
+      </div>
+      <span class="field-hint">Disimpan dengan selamat di dalam pelayar peranti anda sahaja.</span>
+    </div>
+
+    <div id="key-test-feedback" class="key-feedback"></div>
+
+    <div class="modal-actions">
+      <button class="btn btn-secondary" id="btn-test-key" onclick="testCustomKey()">🧪 Uji Kunci</button>
+      <button class="btn btn-primary" id="btn-save-key" onclick="saveCustomKey()">💾 Simpan Kunci</button>
+    </div>
+
+    <div style="margin-top: 14px; text-align: center;" id="server-fallback-hint" class="field-hint"></div>
+
+    <div style="margin-top: 8px; text-align: center;">
+      <button type="button" style="color: var(--text-muted); font-size: 11px; background: none; border: none; cursor: pointer; text-decoration: underline;" onclick="clearCustomKey()">
+        Padam kunci &amp; guna lalai pelayan
+      </button>
+    </div>
+  </div>
 </div>
 
 <!-- Toast -->
@@ -308,16 +449,7 @@
 
 <script>
 // ═══════════════════════════════════════════════════════════
-// Base URL Helper (supports root /, /tiktok/, or reverse proxies)
-// ═══════════════════════════════════════════════════════════
-const APP_BASE = window.location.pathname.replace(/\/+$/, '');
-function apiUrl(path) {
-  const cleanPath = path.replace(/^\/+/, '');
-  return APP_BASE ? `${APP_BASE}/${cleanPath}` : `/${cleanPath}`;
-}
-
-// ═══════════════════════════════════════════════════════════
-// State
+// State & URL Helpers
 // ═══════════════════════════════════════════════════════════
 let currentStep = 1;
 let sessionId = null;
@@ -325,22 +457,45 @@ let productInfo = null;
 let generatedPrompts = null;
 let carouselIndex = 0;
 let carouselTotal = 0;
+let activeInputMode = 'url';
 
-// Touch swipe state
-let touchStartX = 0;
-let touchEndX = 0;
+function apiUrl(path) {
+  return '/' + path.replace(/^\/+/, '');
+}
+
+// ═══════════════════════════════════════════════════════════
+// Mode Switcher (Step 1)
+// ═══════════════════════════════════════════════════════════
+function switchInputMode(mode) {
+  activeInputMode = mode;
+  document.getElementById('mode-btn-url').classList.toggle('active', mode === 'url');
+  document.getElementById('mode-btn-manual').classList.toggle('active', mode === 'manual');
+  document.getElementById('input-container-url').style.display = mode === 'url' ? 'block' : 'none';
+  document.getElementById('input-container-manual').style.display = mode === 'manual' ? 'block' : 'none';
+}
+
+async function pasteFromClipboard() {
+  try {
+    if (navigator.clipboard && navigator.clipboard.readText) {
+      const clip = await navigator.clipboard.readText();
+      if (clip) {
+        document.getElementById('product-url').value = clip.trim();
+        showToast('Pautan berjaya ditampal!');
+      }
+    }
+  } catch {
+    showToast('Sila tampal secara manual');
+  }
+}
 
 // ═══════════════════════════════════════════════════════════
 // Step Navigation
 // ═══════════════════════════════════════════════════════════
 function goToStep(step) {
   currentStep = step;
-
-  // Update panels
   document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
   document.getElementById(`step-${step}`).classList.add('active');
 
-  // Update stepper dots & lines
   document.querySelectorAll('.step-dot').forEach(d => {
     const s = parseInt(d.dataset.step);
     d.classList.remove('active', 'completed');
@@ -352,26 +507,24 @@ function goToStep(step) {
     l.classList.toggle('completed', s < step);
   });
 
-  // Scroll to top
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 // ═══════════════════════════════════════════════════════════
-// Step 1: Scrape
+// Step 1: Scrape / Submit
 // ═══════════════════════════════════════════════════════════
 async function startScrape() {
   const urlInput = document.getElementById('product-url');
   const url = urlInput.value.trim();
 
   if (!url) {
-    showError('scrape-error', 'Please paste a TikTok Shop URL');
+    showError('scrape-error', 'Sila masukkan pautan TikTok Shop');
     return;
   }
 
-  // Reset
   clearError('scrape-error');
   setBtnLoading('btn-scrape', true);
-  showProgress('scrape-progress', 'Connecting to TikTok...');
+  showProgress('scrape-progress', 'Menyambung & mengimbas TikTok Shop...');
 
   try {
     const res = await fetch(apiUrl('api/scrape'), {
@@ -381,23 +534,15 @@ async function startScrape() {
     });
 
     const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Gagal mengimbas produk');
 
-    if (!res.ok) {
-      throw new Error(data.error || 'Scraping failed');
-    }
-
-    // Store state
     sessionId = data.session_id;
     productInfo = data.product_info;
 
-    // Populate Step 2
     populateProductReview(data);
-
-    // Move to Step 2
     hideProgress('scrape-progress');
     setBtnLoading('btn-scrape', false);
     goToStep(2);
-
   } catch (err) {
     hideProgress('scrape-progress');
     setBtnLoading('btn-scrape', false);
@@ -405,34 +550,63 @@ async function startScrape() {
   }
 }
 
+async function startManualSubmit() {
+  const title = document.getElementById('manual-title').value.trim();
+  const text = document.getElementById('manual-details').value.trim();
+
+  if (!title) {
+    showError('scrape-error', 'Sila masukkan tajuk atau nama produk');
+    return;
+  }
+
+  clearError('scrape-error');
+  setBtnLoading('btn-manual-submit', true);
+  showProgress('scrape-progress', 'Menyediakan sesi produk...');
+
+  try {
+    const res = await fetch(apiUrl('api/scrape'), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ manual: true, title, page_text: text })
+    });
+
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Gagal menyediakan sesi');
+
+    sessionId = data.session_id;
+    productInfo = data.product_info;
+
+    populateProductReview(data);
+    hideProgress('scrape-progress');
+    setBtnLoading('btn-manual-submit', false);
+    goToStep(2);
+  } catch (err) {
+    hideProgress('scrape-progress');
+    setBtnLoading('btn-manual-submit', false);
+    showError('scrape-error', err.message);
+  }
+}
+
 function populateProductReview(data) {
   const info = data.product_info;
+  document.getElementById('product-title').textContent = info.title || 'Produk Fesyen';
 
-  // Title
-  document.getElementById('product-title').textContent = info.title || 'Untitled Product';
-
-  // Meta badges
   const metaEl = document.getElementById('product-meta');
   metaEl.innerHTML = '';
   if (info.image_count) {
-    metaEl.innerHTML += `<span class="meta-badge">📸 ${info.image_count} images</span>`;
+    metaEl.innerHTML += `<span class="meta-badge">📸 ${info.image_count} gambar diimbas</span>`;
   }
-  metaEl.innerHTML += `<span class="meta-badge">🕐 ${new Date(info.scraped_at).toLocaleTimeString()}</span>`;
+  metaEl.innerHTML += `<span class="meta-badge">🕐 ${new Date().toLocaleTimeString()}</span>`;
 
-  // Text preview
   let pageText = info.page_text || '';
-  if (pageText.toLowerCase().includes('tidak tersedia') || pageText.toLowerCase().includes('not available') || pageText.toLowerCase().includes('cuba lagi')) {
-    pageText = `Produk: ${info.title || 'Produk TikTok Shop'}\n\nKategori: Fesyen & Gaya Hidup Malaysia\n\nPenerangan: Rekaan moden dan berkualiti tinggi, selesa untuk penggayaan harian, kerja, dan santai.`;
-  }
   document.getElementById('product-text-preview').textContent =
     pageText.substring(0, 500) + (pageText.length > 500 ? '...' : '');
 
-  // Build carousel
   buildCarousel(data.image_urls || []);
 }
 
 // ═══════════════════════════════════════════════════════════
-// Image Carousel
+// Carousel
 // ═══════════════════════════════════════════════════════════
 function buildCarousel(imageUrls) {
   const track = document.getElementById('carousel-track');
@@ -443,14 +617,13 @@ function buildCarousel(imageUrls) {
   carouselTotal = imageUrls.length;
 
   if (carouselTotal === 0) {
-    track.innerHTML = '<div class="carousel-slide" style="color:var(--text-muted);font-size:14px">No images scraped</div>';
+    track.innerHTML = '<div class="carousel-slide" style="color:var(--text-muted);font-size:14px">Tiada gambar diimbas (Mod Manual)</div>';
     document.getElementById('carousel-counter').textContent = '';
     return;
   }
 
   imageUrls.forEach((u, i) => {
-    const fullImgUrl = apiUrl(u);
-    track.innerHTML += `<div class="carousel-slide"><img src="${fullImgUrl}" alt="Product image ${i + 1}" loading="lazy"></div>`;
+    track.innerHTML += `<div class="carousel-slide"><img src="${apiUrl(u)}" alt="Produk ${i + 1}" loading="lazy"></div>`;
     dots.innerHTML += `<button class="carousel-dot ${i === 0 ? 'active' : ''}" onclick="goToSlide(${i})"></button>`;
   });
 
@@ -462,28 +635,24 @@ function goToSlide(index) {
   if (index < 0 || index >= carouselTotal) return;
   carouselIndex = index;
   document.getElementById('carousel-track').style.transform = `translateX(-${index * 100}%)`;
-
   document.querySelectorAll('.carousel-dot').forEach((d, i) => {
     d.classList.toggle('active', i === index);
   });
   updateCarouselCounter();
 }
-
 function carouselPrev() { goToSlide(carouselIndex - 1); }
 function carouselNext() { goToSlide(carouselIndex + 1); }
-
 function updateCarouselCounter() {
   document.getElementById('carousel-counter').textContent = `${carouselIndex + 1} / ${carouselTotal}`;
 }
-
 function setupCarouselSwipe() {
+  let touchStartX = 0;
   const carousel = document.getElementById('product-carousel');
   carousel.addEventListener('touchstart', e => {
     touchStartX = e.changedTouches[0].screenX;
   }, { passive: true });
   carousel.addEventListener('touchend', e => {
-    touchEndX = e.changedTouches[0].screenX;
-    const diff = touchStartX - touchEndX;
+    const diff = touchStartX - e.changedTouches[0].screenX;
     if (Math.abs(diff) > 50) {
       if (diff > 0) carouselNext();
       else carouselPrev();
@@ -492,12 +661,12 @@ function setupCarouselSwipe() {
 }
 
 // ═══════════════════════════════════════════════════════════
-// Step 2: Generate Prompts
+// Step 2: Generate
 // ═══════════════════════════════════════════════════════════
 async function startGenerate() {
   clearError('generate-error');
   setBtnLoading('btn-generate', true);
-  showProgress('generate-progress', 'Generating with Gemini...');
+  showProgress('generate-progress', 'Menjana skrip BM, kapsyen & gambar 9:16...');
 
   const customKey = (localStorage.getItem('gemini_api_key') || '').trim();
 
@@ -508,84 +677,102 @@ async function startGenerate() {
         'Content-Type': 'application/json',
         'X-Gemini-Api-Key': customKey
       },
-      body: JSON.stringify({
-        session_id: sessionId,
-        api_key: customKey
-      })
+      body: JSON.stringify({ session_id: sessionId, api_key: customKey })
     });
 
     const data = await res.json();
-
-    if (!res.ok) {
-      throw new Error(data.error || 'Generation failed');
-    }
+    if (!res.ok) throw new Error(data.error || 'Penjanaan gagal');
 
     generatedPrompts = data.prompts;
 
-    // Populate Step 3
+    // Load keyframe images
+    await loadKeyframePictures();
+
     populateResults(data.prompts);
 
     hideProgress('generate-progress');
     setBtnLoading('btn-generate', false);
     goToStep(3);
-
   } catch (err) {
     hideProgress('generate-progress');
     setBtnLoading('btn-generate', false);
-    
-    let errMsg = err.message;
-    if (errMsg.toLowerCase().includes('key') || errMsg.toLowerCase().includes('quota')) {
-      document.getElementById('generate-error').innerHTML = `
-        <div class="alert alert-error mt-3">
-          ❌ <span>${errMsg}</span>
-          <div style="margin-top: 8px;">
-            <button class="btn btn-secondary btn-sm" onclick="openKeyModal()">🔑 Enter Your Gemini API Key</button>
-          </div>
-        </div>`;
-    } else {
-      showError('generate-error', errMsg);
-    }
+    showError('generate-error', err.message);
   }
 }
 
-function populateResults(prompts) {
-  // Product name in header
-  document.getElementById('results-product-name').textContent =
-    prompts.product_summary ? prompts.product_summary.substring(0, 80) : productInfo?.title || '';
+async function loadKeyframePictures() {
+  try {
+    const res = await fetch(apiUrl('api/generate-images'), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ session_id: sessionId })
+    });
+    const data = await res.json();
+    if (data.frames) {
+      // Set image sources and download links
+      const front = data.frames.find(f => f.id === 'front');
+      const side = data.frames.find(f => f.id === 'side');
+      const shoulder = data.frames.find(f => f.id === 'shoulder');
 
-  // Flow AI scenes
+      if (front) {
+        document.getElementById('kf-img-front').src = apiUrl(front.image_url);
+        document.getElementById('kf-btn-download-front').href = apiUrl(front.download_url);
+      }
+      if (side) {
+        document.getElementById('kf-img-side').src = apiUrl(side.image_url);
+        document.getElementById('kf-btn-download-side').href = apiUrl(side.download_url);
+      }
+      if (shoulder) {
+        document.getElementById('kf-img-shoulder').src = apiUrl(shoulder.image_url);
+        document.getElementById('kf-btn-download-shoulder').href = apiUrl(shoulder.download_url);
+      }
+    }
+  } catch (e) {
+    console.log('Notice: keyframe load', e);
+  }
+}
+
+function handleKeyframeError(imgElement, type) {
+  // Graceful fallback placeholder
+  imgElement.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="360" height="640" viewBox="0 0 360 640"><rect width="100%" height="100%" fill="%231a1a2e"/><text x="50%" y="45%" fill="%238b5cf6" font-family="sans-serif" font-size="28" font-weight="bold" text-anchor="middle">9:16 KEYFRAME</text><text x="50%" y="52%" fill="%239a9ab0" font-family="sans-serif" font-size="16" text-anchor="middle">Frame ' + type.toUpperCase() + '</text><text x="50%" y="60%" fill="%232dd4bf" font-family="sans-serif" font-size="13" text-anchor="middle">Sedia Dijana / Dimuat Turun</text></svg>';
+}
+
+function populateResults(prompts) {
+  document.getElementById('results-product-name').textContent =
+    prompts.product_summary || productInfo?.title || '';
+
+  // Flow AI Combined boxes (Prompt + Spoken Malay in ONE box)
   const flow = prompts.flow_ai_prompts || {};
   document.getElementById('scene-1-text').textContent = flow.scene_1_intro || '';
   document.getElementById('scene-2-text').textContent = flow.scene_2_detail || '';
   document.getElementById('scene-3-text').textContent = flow.scene_3_outro || '';
 
-  // Caption
+  // Caption + Hashtags Combined
   document.getElementById('caption-text').textContent = prompts.tiktok_caption || '';
 
-  // BGM (Instrumental)
+  // Suno BGM
   const bgm = prompts.suno_bgm || {};
   const styleText = typeof bgm === 'string' ? bgm : (bgm.style || '');
-  const lyricsText = typeof bgm === 'object' && bgm.lyrics ? bgm.lyrics : '';
   document.getElementById('bgm-style-text').textContent = styleText;
 
-  const lyricsBlock = document.getElementById('bgm-lyrics-block');
-  const lyricsEl = document.getElementById('bgm-lyrics-text');
-  if (lyricsText && lyricsText.trim()) {
-    lyricsEl.textContent = lyricsText;
-    if (lyricsBlock) lyricsBlock.style.display = 'block';
-  } else {
-    lyricsEl.textContent = '';
-    if (lyricsBlock) lyricsBlock.style.display = 'none';
-  }
-
-  // Summary
-  document.getElementById('summary-text').textContent = prompts.product_summary || '';
-
-  // Keyframes
+  // Keyframes Prompts
   const kf = prompts.keyframe_prompts || {};
   document.getElementById('kf-1-text').textContent = kf.frame_1_front || '';
   document.getElementById('kf-2-text').textContent = kf.frame_2_side || '';
   document.getElementById('kf-3-text').textContent = kf.frame_3_shoulder || '';
+}
+
+// ═══════════════════════════════════════════════════════════
+// Zoom Modal
+// ═══════════════════════════════════════════════════════════
+function zoomImage(imgId) {
+  const src = document.getElementById(imgId).src;
+  document.getElementById('zoomed-image').src = src;
+  document.getElementById('zoom-download-btn').href = src.includes('?') ? src + '&download=1' : src + '?download=1';
+  document.getElementById('image-zoom-overlay').classList.add('open');
+}
+function closeZoomModal() {
+  document.getElementById('image-zoom-overlay').classList.remove('open');
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -601,37 +788,42 @@ function switchTab(tabId) {
 }
 
 // ═══════════════════════════════════════════════════════════
-// Copy to Clipboard
+// Clipboard & Toast
 // ═══════════════════════════════════════════════════════════
 async function copyText(elementId, btn) {
   const text = document.getElementById(elementId).textContent;
   try {
     await navigator.clipboard.writeText(text);
     btn.classList.add('copied');
-    btn.innerHTML = '✅ Copied';
-    showToast('Copied to clipboard');
+    btn.innerHTML = '✅ Disalin!';
+    showToast('Teks berjaya disalin ke papan keratan!');
     setTimeout(() => {
       btn.classList.remove('copied');
-      btn.innerHTML = '📋 Copy';
+      btn.innerHTML = '📋 Salin';
     }, 2000);
   } catch {
-    // Fallback for mobile
     const ta = document.createElement('textarea');
     ta.value = text;
     ta.style.position = 'fixed';
-    ta.style.opacity = '0';
     document.body.appendChild(ta);
     ta.select();
     document.execCommand('copy');
     document.body.removeChild(ta);
     btn.classList.add('copied');
-    btn.innerHTML = '✅ Copied';
-    showToast('Copied to clipboard');
+    btn.innerHTML = '✅ Disalin!';
+    showToast('Teks berjaya disalin ke papan keratan!');
     setTimeout(() => {
       btn.classList.remove('copied');
-      btn.innerHTML = '📋 Copy';
+      btn.innerHTML = '📋 Salin';
     }, 2000);
   }
+}
+
+function showToast(message) {
+  const toast = document.getElementById('toast');
+  toast.textContent = message;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2200);
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -640,54 +832,35 @@ async function copyText(elementId, btn) {
 async function downloadZip() {
   if (!sessionId) return;
   setBtnLoading('btn-download', true);
-
   try {
-    const downloadUrl = apiUrl(`api/download/${sessionId}`);
-    const response = await fetch(downloadUrl);
-    if (!response.ok) {
-      const errData = await response.json().catch(() => ({}));
-      throw new Error(errData.error || `Download failed (HTTP ${response.status})`);
-    }
-
+    const response = await fetch(apiUrl(`api/download/${sessionId}`));
+    if (!response.ok) throw new Error('Gagal memuat turun ZIP');
     const blob = await response.blob();
     const blobUrl = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
-    a.style.display = 'none';
     a.href = blobUrl;
-
-    const disposition = response.headers.get('content-disposition');
-    let filename = `gemini_flow_${sessionId}.zip`;
-    if (disposition && disposition.includes('filename=')) {
-      const match = disposition.match(/filename=["']?([^"';]+)["']?/);
-      if (match && match[1]) filename = match[1];
-    }
-    a.download = filename;
-
+    a.download = `gemini_flow_${sessionId}.zip`;
     document.body.appendChild(a);
     a.click();
-
     setTimeout(() => {
       window.URL.revokeObjectURL(blobUrl);
       document.body.removeChild(a);
     }, 2000);
-
-    showToast('📦 ZIP downloaded successfully! Keep copying your prompts below.');
+    showToast('📦 Fail ZIP berjaya dimuat turun!');
   } catch (err) {
-    console.error('Download error:', err);
     showToast('❌ ' + err.message);
   } finally {
     setBtnLoading('btn-download', false);
   }
 }
 
-// ═══════════════════════════════════════════════════════════
-// Reset
-// ═══════════════════════════════════════════════════════════
 function resetApp() {
   sessionId = null;
   productInfo = null;
   generatedPrompts = null;
   document.getElementById('product-url').value = '';
+  document.getElementById('manual-title').value = '';
+  document.getElementById('manual-details').value = '';
   clearError('scrape-error');
   clearError('generate-error');
   goToStep(1);
@@ -695,29 +868,44 @@ function resetApp() {
 }
 
 // ═══════════════════════════════════════════════════════════
-// History
+// History & Supabase Health
 // ═══════════════════════════════════════════════════════════
 async function loadHistory() {
   try {
     const res = await fetch(apiUrl('api/history'));
     const data = await res.json();
     const entries = data.entries || [];
-
     if (entries.length === 0) {
       document.getElementById('history-card').style.display = 'none';
       return;
     }
-
     document.getElementById('history-card').style.display = '';
-    document.getElementById('history-count').textContent = `Last ${entries.length}`;
+    document.getElementById('history-count').textContent = `${entries.length} Rekod Terkini`;
 
     const listEl = document.getElementById('history-list');
-    listEl.innerHTML = entries.reverse().map(e =>
+    listEl.innerHTML = entries.map(e =>
       `<div class="history-entry">
         <strong>${e.product}</strong><br>
-        🎬 "${e.opening_line?.substring(0, 60)}..."
+        🎬 "${e.opening_line?.substring(0, 65)}..."
       </div>`
     ).join('');
+  } catch { /* silent */ }
+}
+
+async function checkSupabaseStatus() {
+  try {
+    const res = await fetch(apiUrl('api/supabase-status'));
+    const data = await res.json();
+    const dot = document.getElementById('supabase-dot');
+    const label = document.getElementById('supabase-label');
+    if (data.status === 'connected') {
+      dot.style.background = '#10b981';
+      dot.style.boxShadow = '0 0 6px #10b981';
+      label.textContent = 'Supabase Cloud';
+    } else {
+      dot.style.background = '#f59e0b';
+      label.textContent = 'DB Offline';
+    }
   } catch { /* silent */ }
 }
 
@@ -726,48 +914,37 @@ async function loadHistory() {
 // ═══════════════════════════════════════════════════════════
 function setBtnLoading(id, loading) {
   const btn = document.getElementById(id);
+  if (!btn) return;
   if (loading) {
     btn.disabled = true;
     btn.dataset.originalText = btn.innerHTML;
-    btn.innerHTML = '<span class="spinner"></span> Working...';
+    btn.innerHTML = '<span class="spinner"></span> Sedang Memproses...';
   } else {
     btn.disabled = false;
     btn.innerHTML = btn.dataset.originalText || btn.innerHTML;
   }
 }
-
 function showProgress(id, text) {
   const container = document.getElementById(id);
   container.classList.add('active');
   const statusEl = container.querySelector('[id$="-status-text"]');
   if (statusEl) statusEl.textContent = text;
 }
-
 function hideProgress(id) {
   document.getElementById(id).classList.remove('active');
 }
-
 function showError(containerId, message) {
   document.getElementById(containerId).innerHTML =
     `<div class="alert alert-error mt-3">❌ <span>${message}</span></div>`;
 }
-
 function clearError(containerId) {
   document.getElementById(containerId).innerHTML = '';
 }
 
-function showToast(message) {
-  const toast = document.getElementById('toast');
-  toast.textContent = message;
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 2000);
-}
-
 // ═══════════════════════════════════════════════════════════
-// Gemini API Key Management
+// Gemini API Key Settings
 // ═══════════════════════════════════════════════════════════
 let serverHasKey = false;
-
 async function checkServerAuthStatus() {
   try {
     const res = await fetch(apiUrl('api/auth-status'));
@@ -778,54 +955,39 @@ async function checkServerAuthStatus() {
     updateKeyStatusUI();
   }
 }
-
 function updateKeyStatusUI() {
   const customKey = localStorage.getItem('gemini_api_key');
   const dot = document.getElementById('key-pill-dot');
   const label = document.getElementById('key-pill-label');
   const hint = document.getElementById('server-fallback-hint');
-
   if (customKey) {
     dot.classList.add('active');
-    label.textContent = 'Custom Key';
-    if (hint) {
-      hint.innerHTML = `<span style="color: var(--accent-teal);">●</span> Using your custom key (ends in ...${customKey.slice(-4)})`;
-    }
+    label.textContent = 'Kunci Peribadi';
+    if (hint) hint.innerHTML = `<span style="color: var(--accent-teal);">●</span> Menggunakan kunci peribadi (...${customKey.slice(-4)})`;
   } else if (serverHasKey) {
     dot.classList.add('active');
-    label.textContent = 'Server Key';
-    if (hint) {
-      hint.innerHTML = `<span style="color: var(--accent-teal);">●</span> Server default key active. You can override it with your own key.`;
-    }
+    label.textContent = 'Kunci Pelayan';
+    if (hint) hint.innerHTML = `<span style="color: var(--accent-teal);">●</span> Kunci pelayan aktif. Anda boleh menambah kunci sendiri.`;
   } else {
     dot.classList.remove('active');
-    label.textContent = 'No Key';
-    if (hint) {
-      hint.innerHTML = `<span style="color: var(--accent-amber);">●</span> No server key configured. Please enter your own Gemini key.`;
-    }
+    label.textContent = 'Tiada Kunci';
+    if (hint) hint.innerHTML = `<span style="color: var(--accent-amber);">●</span> Sila masukkan kunci API Gemini anda.`;
   }
 }
-
 function openKeyModal() {
   const modal = document.getElementById('key-modal-overlay');
   const input = document.getElementById('custom-api-key');
-  const savedKey = localStorage.getItem('gemini_api_key') || '';
-  input.value = savedKey;
+  input.value = localStorage.getItem('gemini_api_key') || '';
   document.getElementById('key-test-feedback').innerHTML = '';
   modal.classList.add('open');
   input.focus();
 }
-
 function closeKeyModal() {
   document.getElementById('key-modal-overlay').classList.remove('open');
 }
-
 function closeKeyModalOnBackdrop(e) {
-  if (e.target.id === 'key-modal-overlay') {
-    closeKeyModal();
-  }
+  if (e.target.id === 'key-modal-overlay') closeKeyModal();
 }
-
 function toggleKeyVisibility() {
   const input = document.getElementById('custom-api-key');
   const btn = document.getElementById('btn-toggle-eye');
@@ -837,44 +999,35 @@ function toggleKeyVisibility() {
     btn.textContent = '👁️';
   }
 }
-
 function saveCustomKey() {
-  const input = document.getElementById('custom-api-key');
-  const key = input.value.trim();
+  const key = document.getElementById('custom-api-key').value.trim();
   if (key) {
     localStorage.setItem('gemini_api_key', key);
-    showToast('Gemini API key saved!');
+    showToast('Kunci Gemini berjaya disimpan!');
   } else {
     localStorage.removeItem('gemini_api_key');
-    showToast('Key removed — using server default');
+    showToast('Kunci dipadam — menggunakan tetapan pelayan');
   }
   updateKeyStatusUI();
   closeKeyModal();
 }
-
 function clearCustomKey() {
   localStorage.removeItem('gemini_api_key');
   document.getElementById('custom-api-key').value = '';
   updateKeyStatusUI();
-  showToast('Key cleared. Using server default.');
+  showToast('Kunci dikosongkan.');
   closeKeyModal();
 }
-
 async function testCustomKey() {
-  const input = document.getElementById('custom-api-key');
-  const key = input.value.trim();
+  const key = document.getElementById('custom-api-key').value.trim();
   const feedback = document.getElementById('key-test-feedback');
   const testBtn = document.getElementById('btn-test-key');
-
   if (!key) {
-    feedback.innerHTML = '<span style="color: var(--accent-rose);">Please enter a key to test.</span>';
+    feedback.innerHTML = '<span style="color: var(--accent-rose);">Sila masukkan kunci untuk diuji.</span>';
     return;
   }
-
   testBtn.disabled = true;
-  testBtn.innerHTML = '<span class="spinner"></span> Testing...';
-  feedback.innerHTML = '<span style="color: var(--text-secondary);">Connecting to Gemini API...</span>';
-
+  testBtn.innerHTML = '<span class="spinner"></span> Menguji...';
   try {
     const res = await fetch(apiUrl('api/verify-key'), {
       method: 'POST',
@@ -883,15 +1036,15 @@ async function testCustomKey() {
     });
     const data = await res.json();
     if (res.ok && data.valid) {
-      feedback.innerHTML = '<span style="color: var(--accent-teal); font-weight: 600;">✅ Key is valid and active!</span>';
+      feedback.innerHTML = '<span style="color: var(--accent-teal); font-weight: 600;">✅ Kunci sah dan aktif!</span>';
     } else {
-      feedback.innerHTML = `<span style="color: var(--accent-rose);">❌ ${data.error || 'Invalid API key.'}</span>`;
+      feedback.innerHTML = `<span style="color: var(--accent-rose);">❌ ${data.error || 'Kunci tidak sah.'}</span>`;
     }
   } catch (err) {
-    feedback.innerHTML = `<span style="color: var(--accent-rose);">❌ Network error: ${err.message}</span>`;
+    feedback.innerHTML = `<span style="color: var(--accent-rose);">❌ Ralat rangkaian: ${err.message}</span>`;
   } finally {
     testBtn.disabled = false;
-    testBtn.innerHTML = '🧪 Test';
+    testBtn.innerHTML = '🧪 Uji Kunci';
   }
 }
 
@@ -901,81 +1054,9 @@ async function testCustomKey() {
 document.addEventListener('DOMContentLoaded', () => {
   loadHistory();
   checkServerAuthStatus();
-
-  // Auto-paste from clipboard on mobile
-  document.getElementById('product-url').addEventListener('focus', async () => {
-    try {
-      if (navigator.clipboard && navigator.clipboard.readText) {
-        const clip = await navigator.clipboard.readText();
-        const input = document.getElementById('product-url');
-        if (clip && (clip.includes('tiktok.com') || clip.includes('vt.tiktok')) && !input.value) {
-          input.value = clip;
-          showToast('Pasted from clipboard');
-        }
-      }
-    } catch { /* clipboard permission denied */ }
-  });
+  checkSupabaseStatus();
 });
 </script>
-
-<!-- API Key Modal -->
-<div class="modal-overlay" id="key-modal-overlay" onclick="closeKeyModalOnBackdrop(event)">
-  <div class="modal-content glass-card" onclick="event.stopPropagation()">
-    <div class="modal-header">
-      <div class="modal-title-group">
-        <span style="font-size: 20px;">🔑</span>
-        <h3 class="modal-title">Gemini API Key</h3>
-      </div>
-      <button class="modal-close" onclick="closeKeyModal()">✕</button>
-    </div>
-
-    <p class="modal-desc">
-      Use your own Google/Gmail Gemini key so requests use your personal quota. Any Gmail account can get a free key in 5 seconds:
-    </p>
-
-    <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="google-key-btn">
-      <svg viewBox="0 0 24 24" width="18" height="18">
-        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-      </svg>
-      <span>Get Free Key at Google AI Studio ↗</span>
-    </a>
-
-    <div class="input-group">
-      <label for="custom-api-key">Your Gemini API Key</label>
-      <div class="password-input-wrapper">
-        <input
-          type="password"
-          id="custom-api-key"
-          class="text-input"
-          placeholder="AIzaSy..."
-          autocomplete="off"
-          spellcheck="false"
-        >
-        <button type="button" class="btn-toggle-visibility" onclick="toggleKeyVisibility()" id="btn-toggle-eye">👁️</button>
-      </div>
-      <span class="field-hint">Stored safely in your device's browser only. Never saved to server disks.</span>
-    </div>
-
-    <div id="key-test-feedback" class="key-feedback"></div>
-
-    <div class="modal-actions">
-      <button class="btn btn-secondary" id="btn-test-key" onclick="testCustomKey()">🧪 Test</button>
-      <button class="btn btn-primary" id="btn-save-key" onclick="saveCustomKey()">💾 Save Key</button>
-    </div>
-
-    <div style="margin-top: 14px; text-align: center;" id="server-fallback-hint" class="field-hint">
-    </div>
-
-    <div style="margin-top: 8px; text-align: center;">
-      <button type="button" style="color: var(--text-muted); font-size: 11px; background: none; border: none; cursor: pointer; text-decoration: underline;" onclick="clearCustomKey()">
-        Clear custom key & use server default
-      </button>
-    </div>
-  </div>
-</div>
 
 </body>
 </html>

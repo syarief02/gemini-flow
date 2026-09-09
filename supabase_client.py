@@ -66,7 +66,17 @@ def test_supabase_connection() -> Dict[str, Any]:
         }
 
 
-def save_generation_record(product_name: str, opening_line: str, closing_line: str, metadata: Optional[Dict[str, Any]] = None) -> bool:
+def save_generation_record(
+    product_name: str,
+    opening_line: str,
+    closing_line: str,
+    metadata: Optional[Dict[str, Any]] = None,
+    scenes: Optional[Dict[str, Any]] = None,
+    caption: Optional[str] = None,
+    hashtags: Optional[str] = None,
+    bgm_prompt: Optional[str] = None,
+    keyframe_urls: Optional[Any] = None
+) -> bool:
     """
     Save or sync a generation record to Supabase if the target table exists.
     Falls back gracefully without throwing errors if the table is not yet provisioned.
@@ -81,17 +91,50 @@ def save_generation_record(product_name: str, opening_line: str, closing_line: s
         "closing_line": closing_line,
         "metadata": metadata or {}
     }
+    if scenes is not None:
+        payload["scenes"] = scenes
+    if caption is not None:
+        payload["caption"] = caption
+    if hashtags is not None:
+        payload["hashtags"] = hashtags
+    if bgm_prompt is not None:
+        payload["bgm_prompt"] = bgm_prompt
+    if keyframe_urls is not None:
+        payload["keyframe_urls"] = keyframe_urls
 
     try:
         client.table("gemini_flow_generations").insert(payload).execute()
         print(f"Synced generation record for '{product_name}' to Supabase.")
         return True
-    except Exception:
+    except Exception as e:
+        print(f"Supabase sync notice: {e}")
         return False
+
+
+def fetch_recent_generations(limit: int = 7) -> List[Dict[str, Any]]:
+    """Fetch the latest generation records directly from Supabase."""
+    client = get_supabase_client()
+    if not client:
+        return []
+    try:
+        response = (
+            client.table("gemini_flow_generations")
+            .select("*")
+            .order("created_at", desc=True)
+            .limit(limit)
+            .execute()
+        )
+        return response.data or []
+    except Exception as e:
+        print(f"Supabase fetch notice: {e}")
+        return []
 
 
 if __name__ == "__main__":
     print("Testing Supabase connectivity...")
     res = test_supabase_connection()
     print(json.dumps(res, indent=2))
+    print("\nTesting fetch_recent_generations()...")
+    history = fetch_recent_generations(3)
+    print(f"Fetched {len(history)} entries from Supabase.")
 

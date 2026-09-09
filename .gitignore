@@ -41,6 +41,7 @@ venv/
 *.code-workspace
 .DS_Store
 Thumbs.db
+.vercel/
 
 # Web app: Keep templates & static tracked
 !templates/
