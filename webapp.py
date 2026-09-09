@@ -36,10 +36,18 @@ if (WORKSPACE_DIR / "api").is_dir() and not (WORKSPACE_DIR / "templates").is_dir
 else:
     ROOT_DIR = WORKSPACE_DIR
 
-OUTPUT_DIR = os.path.join(ROOT_DIR, "output")
-KEYFRAME_DIR = os.path.join(ROOT_DIR, "keyframes")
+IS_SERVERLESS = bool(os.environ.get("VERCEL") or os.environ.get("AWS_LAMBDA_FUNCTION_NAME"))
+
+if IS_SERVERLESS:
+    OUTPUT_DIR = "/tmp/output"
+    KEYFRAME_DIR = str(ROOT_DIR / "keyframes")
+else:
+    OUTPUT_DIR = os.path.join(ROOT_DIR, "output")
+    KEYFRAME_DIR = os.path.join(ROOT_DIR, "keyframes")
+
 os.makedirs(OUTPUT_DIR, exist_ok=True)
-os.makedirs(KEYFRAME_DIR, exist_ok=True)
+if not IS_SERVERLESS:
+    os.makedirs(KEYFRAME_DIR, exist_ok=True)
 
 # Load environment variables
 load_dotenv(ROOT_DIR / ".env")
@@ -574,8 +582,9 @@ def cleanup_old_sessions():
                         pass
 
 
-cleanup_thread = threading.Thread(target=cleanup_old_sessions, daemon=True)
-cleanup_thread.start()
+if not IS_SERVERLESS:
+    cleanup_thread = threading.Thread(target=cleanup_old_sessions, daemon=True)
+    cleanup_thread.start()
 
 
 if __name__ == "__main__":

@@ -87,9 +87,12 @@ def save_generation_history(
         "closing_line": closing_line
     })
     
-    with open(HISTORY_FILE, 'w', encoding='utf-8') as f:
-        json.dump(data, f, indent=2, ensure_ascii=False)
-    print(f"📝 Saved generation history for: {product_name}")
+    try:
+        with open(HISTORY_FILE, 'w', encoding='utf-8') as f:
+            json.dump(data, f, indent=2, ensure_ascii=False)
+        print(f"📝 Saved generation history for: {product_name}")
+    except Exception as e_hist:
+        print(f"Notice: local history file write: {e_hist}")
 
     # Optionally sync to Supabase database
     try:
