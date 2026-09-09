@@ -71,17 +71,97 @@ def clean_slug(text: str) -> str:
     return cleaned[:30] if cleaned else "product"
 
 
+def extract_spoken_dialogue(scene_text: str) -> str:
+    """Extract spoken Malay lip-sync dialogue from Flow AI prompt paragraph."""
+    if not scene_text:
+        return ""
+    m = re.search(r'Spoken Malay(?:\s*\(Lip-sync\))?:\s*["“\']?([^"”\r\n]+)["”\']?', scene_text, re.IGNORECASE)
+    if m:
+        return m.group(1).strip()
+    m = re.search(r'(?:spoken audio|into standard Malaysian Malay)[^"\':]*[:\s]+["“\']([^"”]+)["”]', scene_text, re.IGNORECASE)
+    if m:
+        return m.group(1).strip()
+    quotes = re.findall(r'["“]([^"”]{15,})["”]', scene_text)
+    if quotes:
+        return quotes[-1].strip()
+    return scene_text[:120].strip()
+
+
+def extract_hashtags(caption: str) -> str:
+    """Extract all #hashtags from the TikTok caption string."""
+    if not caption:
+        return ""
+    tags = re.findall(r'#[a-zA-Z0-9_]+', caption)
+    return " ".join(tags)
+
+
+def generate_keyframe_svg(product_name: str, frame_type: str) -> str:
+    """Generate high-definition 9:16 SVG visual guide card for the product pose."""
+    frame_titles = {
+        "front": "Frame 1: Pandangan Hadapan (Front Facing)",
+        "side": "Frame 2: Profil Sisi 3/4 (Side Drape)",
+        "shoulder": "Frame 3: Tolehan Bahu (Over Shoulder)"
+    }
+    frame_descriptions = {
+        "front": "Senyuman santai, pandangan mata natural, gaya Muslimah moden, busana penuh kepala-ke-kaki.",
+        "side": "Pusingan 3/4 menonjolkan alunan fabrik, potongan jahitan kemas, dan siluet santai.",
+        "shoulder": "Pusingan belakang sopan dengan tolehan lembut ke bahu. Tangan di sisi atau memegang beg santai. Tiada lambaian."
+    }
+    title = frame_titles.get(frame_type.lower(), f"Frame: {frame_type.capitalize()}")
+    desc = frame_descriptions.get(frame_type.lower(), "Pandangan visual 9:16 sedia untuk Flow AI / Midjourney")
+    clean_pname = (product_name or "Produk TikTok Shop")[:40]
+
+    return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 1280" width="720" height="1280">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0e0e18"/>
+      <stop offset="40%" stop-color="#161626"/>
+      <stop offset="100%" stop-color="#0a0a10"/>
+    </linearGradient>
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8b5cf6" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#2dd4bf" stop-opacity="0.15"/>
+    </linearGradient>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#bg)"/>
+  
+  <rect x="24" y="24" width="672" height="1232" rx="32" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="2"/>
+  
+  <rect x="60" y="60" width="220" height="48" rx="24" fill="rgba(139,92,246,0.2)" stroke="rgba(139,92,246,0.4)" stroke-width="1.5"/>
+  <text x="170" y="91" fill="#c4b5fd" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="20" font-weight="600" text-anchor="middle">✨ 9:16 KEYFRAME</text>
+
+  <text x="60" y="160" fill="#f0f0f5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="30" font-weight="700">{clean_pname}</text>
+  
+  <rect x="60" y="200" width="600" height="68" rx="16" fill="url(#cardGrad)" stroke="rgba(139,92,246,0.3)" stroke-width="1"/>
+  <text x="84" y="243" fill="#2dd4bf" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="22" font-weight="700">{title}</text>
+  
+  <g transform="translate(360, 620)">
+    <circle cx="0" cy="-170" r="65" fill="none" stroke="#8b5cf6" stroke-width="5" stroke-dasharray="8 6"/>
+    <path d="M-60 -150 C -80 -100, -70 -20, -50 40 C -30 90, 30 90, 50 40 C 70 -20, 80 -100, 60 -150 Z" fill="rgba(139,92,246,0.12)" stroke="#8b5cf6" stroke-width="3"/>
+    <path d="M-50 40 L-130 140 L-90 290 L90 290 L130 140 L50 40 Z" fill="rgba(45,212,191,0.08)" stroke="#2dd4bf" stroke-width="3"/>
+    <line x1="-40" y1="290" x2="-40" y2="430" stroke="rgba(255,255,255,0.4)" stroke-width="4"/>
+    <line x1="40" y1="290" x2="40" y2="430" stroke="rgba(255,255,255,0.4)" stroke-width="4"/>
+    <text x="0" y="180" fill="#2dd4bf" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="64" text-anchor="middle">📸</text>
+  </g>
+
+  <rect x="60" y="1080" width="600" height="120" rx="18" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+  <text x="80" y="1120" fill="#c4b5fd" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="20" font-weight="600">Arahan Gaya &amp; Sudut:</text>
+  <text x="80" y="1155" fill="#9a9ab0" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="16" font-weight="400">{desc[:65]}</text>
+  <text x="80" y="1182" fill="#9a9ab0" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="16" font-weight="400">{desc[65:130]}</text>
+</svg>"""
+
+
 def find_matching_keyframes(slug: str) -> Dict[str, Optional[str]]:
-    """Check if pre-generated keyframe images exist in keyframes/ for this product."""
+    """Check if pre-generated keyframe images exist in keyframes/ strictly for this product."""
     frames = {"front": None, "side": None, "shoulder": None}
-    if not os.path.isdir(KEYFRAME_DIR):
+    if not os.path.isdir(KEYFRAME_DIR) or not slug or len(slug) < 3:
         return frames
 
     for fname in os.listdir(KEYFRAME_DIR):
         if not fname.lower().endswith((".jpg", ".jpeg", ".png", ".webp")):
             continue
         lower_name = fname.lower()
-        if slug in lower_name or any(part in lower_name for part in slug.split("_") if len(part) > 3):
+        if slug in lower_name:
             if "frame1" in lower_name or "front" in lower_name:
                 frames["front"] = fname
             elif "frame2" in lower_name or "side" in lower_name:
@@ -198,7 +278,7 @@ def api_image(session_id, filename):
 
 @app.route("/api/keyframe/<session_id>/<frame_type>")
 def api_keyframe(session_id, frame_type):
-    """Serve or download a 9:16 keyframe image."""
+    """Serve or download a 9:16 keyframe image (JPG if present, SVG visual card fallback)."""
     session_id = re.sub(r"[^a-zA-Z0-9_]", "", session_id)
     frame_type = re.sub(r"[^a-zA-Z0-9_]", "", frame_type).lower()
     as_download = request.args.get("download") == "1"
@@ -222,28 +302,33 @@ def api_keyframe(session_id, frame_type):
                     target_file = os.path.join(KEYFRAME_DIR, f)
                     break
 
-    if not target_file and os.path.isdir(KEYFRAME_DIR):
-        for f in os.listdir(KEYFRAME_DIR):
-            if frame_type in f.lower():
-                target_file = os.path.join(KEYFRAME_DIR, f)
-                break
+    # If real JPG image found, serve it
+    if target_file and os.path.isfile(target_file):
+        download_name = f"keyframe_{frame_type}_{session_id}.jpg"
+        return send_file(
+            target_file,
+            mimetype="image/jpeg",
+            as_attachment=as_download,
+            download_name=download_name
+        )
 
-    if not target_file or not os.path.isfile(target_file):
-        return jsonify({"error": f"Keyframe '{frame_type}' not found"}), 404
-
-    download_name = f"keyframe_{frame_type}_{session_id}.jpg"
+    # If no real image exists, serve high-definition 9:16 SVG visual guide
+    with session_lock:
+        sess = session_store.get(session_id, {})
+        p_title = (sess.get("product_info") or {}).get("title", "Produk TikTok Shop")
+    svg_code = generate_keyframe_svg(p_title, frame_type)
     return send_file(
-        target_file,
-        mimetype="image/jpeg",
+        io.BytesIO(svg_code.encode("utf-8")),
+        mimetype="image/svg+xml",
         as_attachment=as_download,
-        download_name=download_name
+        download_name=f"keyframe_{frame_type}_{session_id}.svg"
     )
 
 
 @app.route("/api/generate-images", methods=["POST"])
 def api_generate_images():
     """
-    Generate or retrieve 3 consistent 9:16 keyframe pictures for the session.
+    Retrieve 3 consistent 9:16 keyframe pictures or guides for the session.
     """
     data = request.get_json() or {}
     session_id = data.get("session_id")
@@ -274,40 +359,49 @@ def api_generate_images():
 
     slug = session.get("slug") or clean_slug(session["product_info"].get("title", ""))
     existing = find_matching_keyframes(slug)
+    has_real_images = any(existing.values())
+
+    if has_real_images:
+        quota_status = "🟢 Status Kuota Imej: Aktif (3/3 imej sedia dipaparkan)"
+    else:
+        quota_status = "🔴 Status Kuota Imej: Had kuota percuma Google tercapai (3 Prompt 9:16 Sedia Digunakan)"
 
     frames_data = [
         {
             "id": "front",
             "frame_num": 1,
             "title": "Frame 1: Front Facing",
-            "pose": "Natural gentle smile, eye contact, modest modern styling, full outfit head-to-toe",
+            "pose": "Senyuman santai, pandangan natural, hijab kemas, busana penuh kepala-ke-kaki",
             "image_url": f"/api/keyframe/{session_id}/front",
             "download_url": f"/api/keyframe/{session_id}/front?download=1",
-            "has_image": bool(existing.get("front"))
+            "has_image": True,
+            "is_rendered": bool(existing.get("front"))
         },
         {
             "id": "side",
             "frame_num": 2,
             "title": "Frame 2: 3/4 Side Profile",
-            "pose": "3/4 side turn showcasing silhouette, fabric drape, and relaxed cut",
+            "pose": "Pusingan 3/4 menonjolkan alunan fabrik, potongan jahitan kemas, dan siluet santai",
             "image_url": f"/api/keyframe/{session_id}/side",
             "download_url": f"/api/keyframe/{session_id}/side?download=1",
-            "has_image": bool(existing.get("side"))
+            "has_image": True,
+            "is_rendered": bool(existing.get("side"))
         },
         {
             "id": "shoulder",
             "frame_num": 3,
             "title": "Frame 3: Over-the-Shoulder Glance",
-            "pose": "Modest back turn with gentle glance back, hands resting low, no waving",
+            "pose": "Pusingan belakang sopan dengan tolehan lembut ke bahu, tangan di sisi santai",
             "image_url": f"/api/keyframe/{session_id}/shoulder",
             "download_url": f"/api/keyframe/{session_id}/shoulder?download=1",
-            "has_image": bool(existing.get("shoulder"))
+            "has_image": True,
+            "is_rendered": bool(existing.get("shoulder"))
         }
     ]
 
     return jsonify({
         "status": "ready",
-        "quota_status": "🟢 Status Kuota Imej: Aktif (3/3 imej sedia dipaparkan)",
+        "quota_status": quota_status,
         "compliance_badge": "🛡️ Status Pematuhan: Disemak & Patuh (Kategori Dibenarkan)",
         "frames": frames_data
     })
@@ -400,8 +494,12 @@ def api_generate():
             pass
 
         flow = prompts.get("flow_ai_prompts", {})
-        opening = flow.get("scene_1_intro", "")[:100]
-        closing = flow.get("scene_3_outro", "")[:100]
+        raw_intro = flow.get("scene_1_intro", "")
+        raw_outro = flow.get("scene_3_outro", "")
+        opening = extract_spoken_dialogue(raw_intro) or raw_intro[:120]
+        closing = extract_spoken_dialogue(raw_outro) or raw_outro[:120]
+        caption_full = prompts.get("tiktok_caption", "")
+        hashtags_extracted = extract_hashtags(caption_full)
         product_name = prompts.get("product_summary", product_info.get("title", "Unknown"))
         bgm_style = (
             prompts.get("suno_bgm", {}).get("style", "")
@@ -410,12 +508,12 @@ def api_generate():
         )
 
         save_generation_history(
-            product_name=product_name[:60],
+            product_name=product_name[:80],
             opening_line=opening,
             closing_line=closing,
             scenes=flow,
-            caption=prompts.get("tiktok_caption", ""),
-            hashtags="",
+            caption=caption_full,
+            hashtags=hashtags_extracted,
             bgm_prompt=bgm_style
         )
 
@@ -435,12 +533,13 @@ def api_history():
     """Return recent generations from Supabase cloud database with local fallback."""
     try:
         from supabase_client import fetch_recent_generations
-        cloud_rows = fetch_recent_generations(limit=7)
+        cloud_rows = fetch_recent_generations(limit=10)
         if cloud_rows:
             return jsonify({
                 "source": "supabase",
                 "entries": [
                     {
+                        "id": str(row.get("id", "")),
                         "product": row.get("product_name", ""),
                         "opening_line": row.get("opening_line", ""),
                         "closing_line": row.get("closing_line", ""),
@@ -454,10 +553,35 @@ def api_history():
 
     try:
         from generate_prompts import load_generation_history
-        entries = load_generation_history(last_n=7)
+        entries = load_generation_history(last_n=10)
         return jsonify({"source": "local", "entries": entries})
     except Exception:
         return jsonify({"source": "none", "entries": []})
+
+
+@app.route("/api/history/<record_id>", methods=["GET"])
+def api_history_item(record_id):
+    """Retrieve full generation details for a specific record from Supabase."""
+    record_id = re.sub(r"[^a-zA-Z0-9_-]", "", record_id)
+    try:
+        from supabase_client import fetch_generation_by_id
+        record = fetch_generation_by_id(record_id)
+        if not record:
+            return jsonify({"error": "Record not found"}), 404
+        return jsonify({
+            "status": "success",
+            "record": {
+                "id": str(record.get("id", "")),
+                "product_name": record.get("product_name", ""),
+                "scenes": record.get("scenes") or {},
+                "caption": record.get("caption") or "",
+                "hashtags": record.get("hashtags") or "",
+                "bgm_prompt": record.get("bgm_prompt") or "",
+                "created_at": record.get("created_at", "")
+            }
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 @app.route("/api/supabase-status", methods=["GET"])

@@ -1,0 +1,18 @@
+{
+  "name": "Gemini Flow — TikTok Promo & Keyframes",
+  "short_name": "Gemini Flow",
+  "description": "Penjana Promosi & Gambar Produk TikTok Shop Malaysia. 3 Keyframe 9:16, skrip video Flow AI, kapsyen & Suno BGM.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a10",
+  "theme_color": "#0a0a10",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/static/icon-192.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -129,6 +129,25 @@ def fetch_recent_generations(limit: int = 7) -> List[Dict[str, Any]]:
         print(f"Supabase fetch notice: {e}")
         return []
 
+def fetch_generation_by_id(record_id: str) -> Optional[Dict[str, Any]]:
+    """Fetch a single generation record by its UUID directly from Supabase."""
+    client = get_supabase_client()
+    if not client or not record_id:
+        return None
+    try:
+        response = (
+            client.table("gemini_flow_generations")
+            .select("*")
+            .eq("id", record_id)
+            .limit(1)
+            .execute()
+        )
+        data = response.data or []
+        return data[0] if data else None
+    except Exception as e:
+        print(f"Supabase fetch by ID notice: {e}")
+        return None
+
 
 if __name__ == "__main__":
     print("Testing Supabase connectivity...")

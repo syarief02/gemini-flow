@@ -7,6 +7,14 @@
   <title>Gemini Flow — Mobile Promo & Picture Generator</title>
   <link rel="stylesheet" href="/static/style.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✨</text></svg>">
+
+  <!-- PWA & Mobile Web App Meta -->
+  <link rel="manifest" href="/static/manifest.json">
+  <meta name="theme-color" content="#0a0a10">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Gemini Flow">
+  <link rel="apple-touch-icon" href="/static/icon-192.svg">
 </head>
 <body>
 
@@ -20,10 +28,10 @@
         <span class="app-logo-text">Gemini Flow</span>
       </div>
       <div style="display: flex; gap: 8px; align-items: center;">
-        <span class="supabase-pill" id="supabase-status-pill" title="Supabase Cloud Database">
+        <button class="supabase-pill" id="supabase-status-pill" onclick="showSupabaseDetails()" title="Supabase Cloud Database" type="button" style="cursor:pointer; border:1px solid rgba(255,255,255,0.08); background:rgba(22,22,36,0.6);">
           <span class="supabase-pill-dot" id="supabase-dot"></span>
           <span id="supabase-label">Database</span>
-        </span>
+        </button>
         <button class="key-pill" id="key-pill-btn" onclick="openKeyModal()" title="Gemini API Key Settings">
           <span class="key-pill-dot" id="key-pill-dot"></span>
           <span class="key-pill-label" id="key-pill-label">Gemini Key</span>
@@ -341,10 +349,13 @@
       </div>
 
       <!-- Action Buttons -->
-      <button class="btn btn-success mt-3" id="btn-download" onclick="downloadZip()">
+      <button class="btn btn-secondary mt-3" id="btn-share-all" onclick="shareEntirePackage()" style="background: linear-gradient(135deg, #059669 0%, #10b981 100%); color: #ffffff; font-weight: 600;">
+        📲 Kongsi ke WhatsApp / Nota
+      </button>
+      <button class="btn btn-success mt-2" id="btn-download" onclick="downloadZip()">
         📦 Muat Turun Pakej Lengkap (ZIP)
       </button>
-      <button class="btn btn-outline mt-3" onclick="goToStep(1)">
+      <button class="btn btn-outline mt-2" onclick="goToStep(1)">
         🔄 Jana Produk Baharu
       </button>
     </div>
@@ -868,7 +879,7 @@ function resetApp() {
 }
 
 // ═══════════════════════════════════════════════════════════
-// History & Supabase Health
+// History, Campaign Reloading & Supabase Health
 // ═══════════════════════════════════════════════════════════
 async function loadHistory() {
   try {
@@ -884,12 +895,90 @@ async function loadHistory() {
 
     const listEl = document.getElementById('history-list');
     listEl.innerHTML = entries.map(e =>
-      `<div class="history-entry">
-        <strong>${e.product}</strong><br>
-        🎬 "${e.opening_line?.substring(0, 65)}..."
+      `<div class="history-entry ${e.id ? 'clickable' : ''}" ${e.id ? `onclick="loadHistoryCampaign('${e.id}')"` : ''} title="Ketik untuk buka promosi ini semula">
+        <div class="flex-between">
+          <strong>${e.product}</strong>
+          ${e.id ? '<span style="font-size:11px; color:var(--accent-teal); font-weight:600;">Buka ↗</span>' : ''}
+        </div>
+        <div style="font-size:11px; color:var(--text-secondary); margin-top:3px; line-height:1.4;">
+          🎬 "${e.opening_line?.substring(0, 75)}..."
+        </div>
       </div>`
     ).join('');
   } catch { /* silent */ }
+}
+
+async function loadHistoryCampaign(recordId) {
+  if (!recordId) return;
+  showToast('Memuat promosi daripada Supabase...');
+  try {
+    const res = await fetch(apiUrl(`api/history/${recordId}`));
+    const data = await res.json();
+    if (!res.ok || !data.record) throw new Error(data.error || 'Gagal memuat');
+
+    const r = data.record;
+    sessionId = r.id;
+    productInfo = { title: r.product_name, page_text: r.caption };
+    generatedPrompts = {
+      product_summary: r.product_name,
+      flow_ai_prompts: r.scenes || {},
+      tiktok_caption: r.caption || '',
+      suno_bgm: { style: r.bgm_prompt || '', lyrics: '' },
+      keyframe_prompts: {
+        frame_1_front: r.scenes?.scene_1_intro || '',
+        frame_2_side: r.scenes?.scene_2_detail || '',
+        frame_3_shoulder: r.scenes?.scene_3_outro || ''
+      }
+    };
+
+    populateResults(generatedPrompts);
+    await loadKeyframePictures();
+    goToStep(3);
+    showToast(`Kempen '${r.product_name.substring(0, 25)}...' dimuat semula!`);
+  } catch (err) {
+    showToast('❌ ' + err.message);
+  }
+}
+
+async function shareEntirePackage() {
+  if (!generatedPrompts) {
+    showToast('Tiada promosi untuk dikongsi');
+    return;
+  }
+  const title = generatedPrompts.product_summary || productInfo?.title || 'Produk TikTok Shop';
+  const flow = generatedPrompts.flow_ai_prompts || {};
+  const caption = generatedPrompts.tiktok_caption || '';
+  const bgm = typeof generatedPrompts.suno_bgm === 'string' ? generatedPrompts.suno_bgm : (generatedPrompts.suno_bgm?.style || '');
+
+  const shareText = `✨ *GEMINI FLOW — PROMOSI TIKTOK SHOP* ✨\n\n` +
+    `📌 *Produk:* ${title}\n\n` +
+    `🎬 *SCENE 1 (INTRO):*\n${flow.scene_1_intro || ''}\n\n` +
+    `🎬 *SCENE 2 (DETAIL):*\n${flow.scene_2_detail || ''}\n\n` +
+    `🎬 *SCENE 3 (OUTRO):*\n${flow.scene_3_outro || ''}\n\n` +
+    `📝 *KAPSYEN TIKTOK:*\n${caption}\n\n` +
+    `🎵 *BGM SUNO (INSTRUMENTAL):*\n${bgm}\n\n` +
+    `🛡️ _Dijana dengan Gemini Flow & Patuh Polisi TikTok AIGC_`;
+
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: `Promosi TikTok: ${title}`,
+        text: shareText
+      });
+      showToast('Berjaya dikongsi!');
+      return;
+    } catch (e) {
+      if (e.name === 'AbortError') return;
+    }
+  }
+
+  // Fallback to clipboard
+  try {
+    await navigator.clipboard.writeText(shareText);
+    showToast('📋 Semua teks kempen disalin! Boleh tampal ke WhatsApp / Nota.');
+  } catch {
+    showToast('Gagal menyalin. Sila gunakan butang salin setiap tab.');
+  }
 }
 
 async function checkSupabaseStatus() {
@@ -907,6 +996,20 @@ async function checkSupabaseStatus() {
       label.textContent = 'DB Offline';
     }
   } catch { /* silent */ }
+}
+
+async function showSupabaseDetails() {
+  try {
+    const res = await fetch(apiUrl('api/supabase-status'));
+    const data = await res.json();
+    if (data.status === 'connected') {
+      showToast(`⚡ Supabase: Bersambung (HTTP ${data.http_status}) | Cloud DB Aktif`);
+    } else {
+      showToast('⚠️ Supabase tidak bersambung atau kunci belum dikonfigurasi');
+    }
+  } catch {
+    showToast('⚠️ Status Supabase Cloud tidak dapat diakses');
+  }
 }
 
 // ═══════════════════════════════════════════════════════════
