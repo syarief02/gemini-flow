@@ -32,10 +32,10 @@ if sys.platform == "win32":
 WORKSPACE = Path(__file__).resolve().parent
 load_dotenv(WORKSPACE / ".env")
 
-WP_SITE_URL = os.getenv("WP_SITE_URL", "https://geminiflowtiktok.wordpress.com")
-WP_USER = os.getenv("WP_USER", "syarief.azman@gmail.com")
-WP_APP_PASSWORD = os.getenv("WP_APP_PASSWORD", "n6ramph4lqxer46y").replace(" ", "")
-WP_BLOG_ID = int(os.getenv("WP_BLOG_ID", "257246504"))
+WP_SITE_URL = os.getenv("WP_SITE_URL", "")
+WP_USER = os.getenv("WP_USER", "")
+WP_APP_PASSWORD = os.getenv("WP_APP_PASSWORD", "").replace(" ", "")
+WP_BLOG_ID = int(os.getenv("WP_BLOG_ID", "0")) if os.getenv("WP_BLOG_ID") else 0
 
 
 def get_site_domain() -> str:
