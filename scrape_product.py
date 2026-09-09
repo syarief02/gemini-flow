@@ -45,6 +45,9 @@ def extract_product_details_from_url(url: str) -> dict:
             details["og_image"] = og_json.get("image", "")
         except Exception:
             pass
+    return details
+
+
 def download_file(url: str, output_path: str, timeout: int = 25) -> bool:
     """Download a file with realistic browser headers to prevent CDN 403 Forbidden."""
     headers = {
