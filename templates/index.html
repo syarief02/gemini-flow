@@ -5,16 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="description" content="Gemini Flow: Penjana Promosi & Gambar Produk TikTok Shop Malaysia. Jana 3 Keyframe 9:16, skrip video Flow AI, kapsyen & Suno BGM.">
   <title>Gemini Flow — Mobile Promo & Picture Generator</title>
-  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="static/style.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✨</text></svg>">
 
   <!-- PWA & Mobile Web App Meta -->
-  <link rel="manifest" href="/static/manifest.json">
+  <link rel="manifest" href="static/manifest.json">
   <meta name="theme-color" content="#0a0a10">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Gemini Flow">
-  <link rel="apple-touch-icon" href="/static/icon-192.svg">
+  <link rel="apple-touch-icon" href="static/icon-192.svg">
 </head>
 <body>
 
@@ -470,8 +470,10 @@ let carouselIndex = 0;
 let carouselTotal = 0;
 let activeInputMode = 'url';
 
+const APP_BASE = window.location.pathname.replace(/\/+$/, '');
 function apiUrl(path) {
-  return '/' + path.replace(/^\/+/, '');
+  const cleanPath = path.replace(/^\/+/, '');
+  return APP_BASE ? `${APP_BASE}/${cleanPath}` : `/${cleanPath}`;
 }
 
 // ═══════════════════════════════════════════════════════════
