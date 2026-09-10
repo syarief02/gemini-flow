@@ -151,23 +151,53 @@ def generate_keyframe_svg(product_name: str, frame_type: str) -> str:
 </svg>"""
 
 
-def find_matching_keyframes(slug: str) -> Dict[str, Optional[str]]:
-    """Check if pre-generated keyframe images exist in keyframes/ strictly for this product."""
+def find_matching_keyframes(query_text: str) -> Dict[str, Optional[str]]:
+    """Check if pre-generated keyframe images exist in keyframes/ for this product using intelligent matching."""
     frames = {"front": None, "side": None, "shoulder": None}
-    if not os.path.isdir(KEYFRAME_DIR) or not slug or len(slug) < 3:
+    if not os.path.isdir(KEYFRAME_DIR) or not query_text:
         return frames
+
+    clean_q = query_text.lower()
+    tokens = [t for t in re.findall(r"[a-zA-Z0-9]+", clean_q) if len(t) >= 3]
+    if not tokens:
+        return frames
+
+    best_matches = {"front": (None, 0), "side": (None, 0), "shoulder": (None, 0)}
 
     for fname in os.listdir(KEYFRAME_DIR):
         if not fname.lower().endswith((".jpg", ".jpeg", ".png", ".webp")):
             continue
         lower_name = fname.lower()
-        if slug in lower_name:
-            if "frame1" in lower_name or "front" in lower_name:
-                frames["front"] = fname
-            elif "frame2" in lower_name or "side" in lower_name:
-                frames["side"] = fname
-            elif "frame3" in lower_name or "shoulder" in lower_name or "back" in lower_name:
-                frames["shoulder"] = fname
+
+        frame_cat = None
+        if "frame1" in lower_name or "front" in lower_name:
+            frame_cat = "front"
+        elif "frame2" in lower_name or "side" in lower_name:
+            frame_cat = "side"
+        elif "frame3" in lower_name or "shoulder" in lower_name or "back" in lower_name:
+            frame_cat = "shoulder"
+
+        if not frame_cat:
+            continue
+
+        name_tokens = set(re.findall(r"[a-zA-Z0-9]+", lower_name))
+        score = sum(2 for t in tokens if t in name_tokens)
+
+        if len(tokens) >= 2 and f"{tokens[0]}_{tokens[1]}" in lower_name:
+            score += 5
+        if len(tokens) >= 3 and f"{tokens[0]}_{tokens[1]}_{tokens[2]}" in lower_name:
+            score += 10
+        if clean_q[:25].strip("_") in lower_name:
+            score += 12
+
+        if score > best_matches[frame_cat][1]:
+            best_matches[frame_cat] = (fname, score)
+
+    for cat in ("front", "side", "shoulder"):
+        match_file, score = best_matches[cat]
+        if score >= 2:
+            frames[cat] = match_file
+
     return frames
 
 
@@ -279,8 +309,8 @@ def api_image(session_id, filename):
 @app.route("/api/keyframe/<session_id>/<frame_type>")
 def api_keyframe(session_id, frame_type):
     """Serve or download a 9:16 keyframe image (JPG if present, SVG visual card fallback)."""
-    session_id = re.sub(r"[^a-zA-Z0-9_]", "", session_id)
-    frame_type = re.sub(r"[^a-zA-Z0-9_]", "", frame_type).lower()
+    session_id = re.sub(r"[^a-zA-Z0-9_-]", "", session_id)
+    frame_type = re.sub(r"[^a-zA-Z0-9_-]", "", frame_type).lower()
     as_download = request.args.get("download") == "1"
 
     target_file = None
@@ -296,11 +326,30 @@ def api_keyframe(session_id, frame_type):
         with session_lock:
             sess = session_store.get(session_id, {})
             slug = sess.get("slug", "")
-        if slug:
-            for f in os.listdir(KEYFRAME_DIR):
-                if slug in f.lower() and frame_type in f.lower():
-                    target_file = os.path.join(KEYFRAME_DIR, f)
-                    break
+            title = (sess.get("product_info") or {}).get("title", "")
+            saved_kf = sess.get("keyframe_urls") or []
+
+        # 1. Check if keyframe was explicitly stored in session / Supabase
+        if saved_kf:
+            for kf_path in saved_kf:
+                kf_fname = os.path.basename(kf_path)
+                lower_kf = kf_fname.lower()
+                if frame_type in lower_kf or \
+                   (frame_type == "front" and "frame1" in lower_kf) or \
+                   (frame_type == "side" and "frame2" in lower_kf) or \
+                   (frame_type == "shoulder" and any(k in lower_kf for k in ("frame3", "shoulder", "back"))):
+                    cand = os.path.join(KEYFRAME_DIR, kf_fname)
+                    if os.path.isfile(cand):
+                        target_file = cand
+                        break
+
+        # 2. Check intelligent multi-token keyframe matching
+        if not target_file and (title or slug):
+            matched = find_matching_keyframes(title or slug)
+            if matched.get(frame_type):
+                cand = os.path.join(KEYFRAME_DIR, matched[frame_type])
+                if os.path.isfile(cand):
+                    target_file = cand
 
     # If real JPG image found, serve it
     if target_file and os.path.isfile(target_file):
@@ -329,9 +378,10 @@ def api_keyframe(session_id, frame_type):
 def api_generate_images():
     """
     Retrieve 3 consistent 9:16 keyframe pictures or guides for the session.
+    Supports both live sessions and reloaded Supabase campaign IDs.
     """
     data = request.get_json() or {}
-    session_id = data.get("session_id")
+    session_id = re.sub(r"[^a-zA-Z0-9_-]", "", data.get("session_id") or "")
     if not session_id:
         return jsonify({"error": "Missing session_id"}), 400
 
@@ -354,11 +404,52 @@ def api_generate_images():
             with session_lock:
                 session_store[session_id] = session
 
+    # Check Supabase cloud database if still not found in memory
+    if not session:
+        try:
+            from supabase_client import fetch_generation_by_id
+            rec = fetch_generation_by_id(session_id)
+            if rec:
+                session = {
+                    "product_info": {"title": rec.get("product_name", ""), "page_text": rec.get("caption", "")},
+                    "output_dir": "",
+                    "created_at": time.time(),
+                    "prompts": {
+                        "product_summary": rec.get("product_name", ""),
+                        "flow_ai_prompts": rec.get("scenes") or {},
+                        "tiktok_caption": rec.get("caption") or "",
+                        "suno_bgm": {"style": rec.get("bgm_prompt") or "", "lyrics": ""},
+                        "keyframe_prompts": {
+                            "frame_1_front": (rec.get("scenes") or {}).get("scene_1_intro", ""),
+                            "frame_2_side": (rec.get("scenes") or {}).get("scene_2_detail", ""),
+                            "frame_3_shoulder": (rec.get("scenes") or {}).get("scene_3_outro", "")
+                        }
+                    },
+                    "slug": clean_slug(rec.get("product_name", "")),
+                    "keyframe_urls": rec.get("keyframe_urls") or []
+                }
+                with session_lock:
+                    session_store[session_id] = session
+        except Exception as e_rec:
+            print(f"Notice: Supabase keyframe session restore: {e_rec}")
+
     if not session:
         return jsonify({"error": "Session not found"}), 404
 
-    slug = session.get("slug") or clean_slug(session["product_info"].get("title", ""))
-    existing = find_matching_keyframes(slug)
+    query_key = (session.get("product_info") or {}).get("title") or session.get("slug", "")
+    existing = find_matching_keyframes(query_key)
+
+    # Also check if explicit keyframe_urls exist
+    for kf_path in (session.get("keyframe_urls") or []):
+        kf_fname = os.path.basename(kf_path)
+        lower_kf = kf_fname.lower()
+        if not existing.get("front") and ("frame1" in lower_kf or "front" in lower_kf):
+            existing["front"] = kf_fname
+        elif not existing.get("side") and ("frame2" in lower_kf or "side" in lower_kf):
+            existing["side"] = kf_fname
+        elif not existing.get("shoulder") and any(k in lower_kf for k in ("frame3", "shoulder", "back")):
+            existing["shoulder"] = kf_fname
+
     has_real_images = any(existing.values())
 
     if has_real_images:
@@ -568,6 +659,28 @@ def api_history_item(record_id):
         record = fetch_generation_by_id(record_id)
         if not record:
             return jsonify({"error": "Record not found"}), 404
+
+        # Pre-seed session_store so keyframe and download endpoints work immediately
+        with session_lock:
+            session_store[record_id] = {
+                "product_info": {"title": record.get("product_name", ""), "page_text": record.get("caption", "")},
+                "output_dir": "",
+                "created_at": time.time(),
+                "prompts": {
+                    "product_summary": record.get("product_name", ""),
+                    "flow_ai_prompts": record.get("scenes") or {},
+                    "tiktok_caption": record.get("caption") or "",
+                    "suno_bgm": {"style": record.get("bgm_prompt") or "", "lyrics": ""},
+                    "keyframe_prompts": {
+                        "frame_1_front": (record.get("scenes") or {}).get("scene_1_intro", ""),
+                        "frame_2_side": (record.get("scenes") or {}).get("scene_2_detail", ""),
+                        "frame_3_shoulder": (record.get("scenes") or {}).get("scene_3_outro", "")
+                    }
+                },
+                "slug": clean_slug(record.get("product_name", "")),
+                "keyframe_urls": record.get("keyframe_urls") or []
+            }
+
         return jsonify({
             "status": "success",
             "record": {
@@ -577,11 +690,24 @@ def api_history_item(record_id):
                 "caption": record.get("caption") or "",
                 "hashtags": record.get("hashtags") or "",
                 "bgm_prompt": record.get("bgm_prompt") or "",
+                "keyframe_urls": record.get("keyframe_urls") or [],
                 "created_at": record.get("created_at", "")
             }
         })
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/health", methods=["GET"])
+def api_health():
+    """Health and runtime liveness endpoint."""
+    return jsonify({
+        "status": "healthy",
+        "service": "Gemini Flow Mobile App",
+        "timestamp": datetime.now().isoformat(),
+        "is_serverless": IS_SERVERLESS,
+        "has_gemini_key": bool(os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY"))
+    })
 
 
 @app.route("/api/supabase-status", methods=["GET"])
@@ -597,12 +723,46 @@ def api_supabase_status():
 @app.route("/api/download/<session_id>")
 def api_download(session_id):
     """Bundle scraped materials, keyframes, and generated prompts into a ZIP."""
-    session_id = re.sub(r"[^a-zA-Z0-9_]", "", session_id)
+    session_id = re.sub(r"[^a-zA-Z0-9_-]", "", session_id)
     output_dir = os.path.join(OUTPUT_DIR, session_id)
-    if not os.path.isdir(output_dir):
+
+    session = None
+    with session_lock:
+        if session_id in session_store:
+            session = session_store[session_id]
+
+    if not session:
+        try:
+            from supabase_client import fetch_generation_by_id
+            rec = fetch_generation_by_id(session_id)
+            if rec:
+                session = {
+                    "product_info": {"title": rec.get("product_name", ""), "page_text": rec.get("caption", "")},
+                    "output_dir": "",
+                    "created_at": time.time(),
+                    "prompts": {
+                        "product_summary": rec.get("product_name", ""),
+                        "flow_ai_prompts": rec.get("scenes") or {},
+                        "tiktok_caption": rec.get("caption") or "",
+                        "suno_bgm": {"style": rec.get("bgm_prompt") or "", "lyrics": ""},
+                        "keyframe_prompts": {
+                            "frame_1_front": (rec.get("scenes") or {}).get("scene_1_intro", ""),
+                            "frame_2_side": (rec.get("scenes") or {}).get("scene_2_detail", ""),
+                            "frame_3_shoulder": (rec.get("scenes") or {}).get("scene_3_outro", "")
+                        }
+                    },
+                    "slug": clean_slug(rec.get("product_name", "")),
+                    "keyframe_urls": rec.get("keyframe_urls") or []
+                }
+                with session_lock:
+                    session_store[session_id] = session
+        except Exception:
+            pass
+
+    if not session and not os.path.isdir(output_dir):
         return jsonify({"error": "Session files not found or expired."}), 404
 
-    product_info = {}
+    product_info = (session.get("product_info") if session else {}) or {}
     info_path = os.path.join(output_dir, "product_info.json")
     if os.path.isfile(info_path):
         try:
@@ -611,11 +771,7 @@ def api_download(session_id):
         except Exception:
             pass
 
-    prompts = None
-    with session_lock:
-        if session_id in session_store:
-            prompts = session_store[session_id].get("prompts")
-
+    prompts = (session.get("prompts") if session else None)
     if not prompts:
         prompts_path = os.path.join(output_dir, "generated_prompts.json")
         if os.path.isfile(prompts_path):
@@ -632,6 +788,16 @@ def api_download(session_id):
                 fpath = os.path.join(output_dir, fname)
                 if os.path.isfile(fpath) and fname.lower().endswith((".jpg", ".jpeg", ".png", ".webp")):
                     zf.write(fpath, f"images/{fname}")
+
+        # Also package real keyframe images if present in keyframes/
+        if os.path.isdir(KEYFRAME_DIR):
+            target_slug = (session.get("slug") if session else "") or clean_slug(product_info.get("title", ""))
+            kfs = find_matching_keyframes(product_info.get("title") or target_slug)
+            for cat, kf_file in kfs.items():
+                if kf_file:
+                    kf_path = os.path.join(KEYFRAME_DIR, kf_file)
+                    if os.path.isfile(kf_path):
+                        zf.write(kf_path, f"keyframes/{kf_file}")
 
         zf.writestr("product_info.json", json.dumps(product_info, indent=2, ensure_ascii=False, default=str))
 
@@ -678,7 +844,7 @@ def api_download(session_id):
     buffer.seek(0)
     product_name = prompts.get("product_summary", "")[:30] if prompts else product_info.get("title", "product")[:30]
     safe_name = re.sub(r"[^a-zA-Z0-9]+", "_", product_name).strip("_").lower()
-    zip_filename = f"gemini_flow_{safe_name}_{session_id}.zip"
+    zip_filename = f"gemini_flow_{safe_name}_{session_id[:16]}.zip"
 
     return send_file(
         buffer,
