@@ -27,7 +27,9 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from dotenv import load_dotenv
-from flask import Flask, jsonify, render_template, request, send_file
+from flask import Flask, jsonify, render_template, request, send_file, redirect
+import urllib.parse
+import urllib.request
 
 # Determine root directories
 WORKSPACE_DIR = Path(__file__).resolve().parent
@@ -51,6 +53,29 @@ if not IS_SERVERLESS:
 
 # Load environment variables
 load_dotenv(ROOT_DIR / ".env")
+
+SUPABASE_URL = os.getenv("SUPABASE_URL", "https://blqsgijvdvzwnqeltoje.supabase.co")
+SUPABASE_STORAGE_URL = f"{SUPABASE_URL}/storage/v1/object/public/gemini-flow-keyframes"
+
+_bucket_files_cache = {"timestamp": 0, "files": []}
+
+def get_supabase_bucket_files() -> List[str]:
+    """Retrieve and cache the list of image files in the gemini-flow-keyframes bucket."""
+    now = time.time()
+    if now - _bucket_files_cache["timestamp"] < 90 and _bucket_files_cache["files"]:
+        return _bucket_files_cache["files"]
+    try:
+        from supabase_client import get_supabase_client
+        client = get_supabase_client()
+        if client:
+            items = client.storage.from_("gemini-flow-keyframes").list(options={"limit": 500})
+            file_names = [it.get("name") for it in items if it.get("name")]
+            _bucket_files_cache["files"] = file_names
+            _bucket_files_cache["timestamp"] = now
+            return file_names
+    except Exception as e:
+        print(f"Notice: bucket files list: {e}")
+    return _bucket_files_cache["files"]
 
 # Initialize Flask app with explicit template and static paths
 app = Flask(
@@ -152,9 +177,9 @@ def generate_keyframe_svg(product_name: str, frame_type: str) -> str:
 
 
 def find_matching_keyframes(query_text: str) -> Dict[str, Optional[str]]:
-    """Check if pre-generated keyframe images exist in keyframes/ for this product using intelligent matching."""
+    """Check if keyframe images exist in local keyframes/ or Supabase Storage for this product using intelligent matching."""
     frames = {"front": None, "side": None, "shoulder": None}
-    if not os.path.isdir(KEYFRAME_DIR) or not query_text:
+    if not query_text:
         return frames
 
     clean_q = query_text.lower()
@@ -162,11 +187,24 @@ def find_matching_keyframes(query_text: str) -> Dict[str, Optional[str]]:
     if not tokens:
         return frames
 
+    # Gather candidate filenames from local directory and Supabase storage bucket
+    candidates = set()
+    if os.path.isdir(KEYFRAME_DIR):
+        for f in os.listdir(KEYFRAME_DIR):
+            if f.lower().endswith((".jpg", ".jpeg", ".png", ".webp")):
+                candidates.add(f)
+
+    # Always check Supabase Storage bucket as well (works on Vercel and remote clients)
+    for bf in get_supabase_bucket_files():
+        if bf.lower().endswith((".jpg", ".jpeg", ".png", ".webp")):
+            candidates.add(bf)
+
+    if not candidates:
+        return frames
+
     best_matches = {"front": (None, 0), "side": (None, 0), "shoulder": (None, 0)}
 
-    for fname in os.listdir(KEYFRAME_DIR):
-        if not fname.lower().endswith((".jpg", ".jpeg", ".png", ".webp")):
-            continue
+    for fname in candidates:
         lower_name = fname.lower()
 
         frame_cat = None
@@ -308,13 +346,14 @@ def api_image(session_id, filename):
 
 @app.route("/api/keyframe/<session_id>/<frame_type>")
 def api_keyframe(session_id, frame_type):
-    """Serve or download a 9:16 keyframe image (JPG if present, SVG visual card fallback)."""
+    """Serve or redirect to a 9:16 keyframe image (local file, Supabase CDN, or dynamic AI photorealistic generation)."""
     session_id = re.sub(r"[^a-zA-Z0-9_-]", "", session_id)
     frame_type = re.sub(r"[^a-zA-Z0-9_-]", "", frame_type).lower()
     as_download = request.args.get("download") == "1"
 
     target_file = None
 
+    # 1. Check local session directory
     sess_dir = os.path.join(OUTPUT_DIR, session_id)
     if os.path.isdir(sess_dir):
         for f in os.listdir(sess_dir):
@@ -322,36 +361,64 @@ def api_keyframe(session_id, frame_type):
                 target_file = os.path.join(sess_dir, f)
                 break
 
-    if not target_file and os.path.isdir(KEYFRAME_DIR):
-        with session_lock:
-            sess = session_store.get(session_id, {})
-            slug = sess.get("slug", "")
-            title = (sess.get("product_info") or {}).get("title", "")
-            saved_kf = sess.get("keyframe_urls") or []
+    # 2. Check session info and saved keyframe URLs
+    with session_lock:
+        sess = session_store.get(session_id, {})
 
-        # 1. Check if keyframe was explicitly stored in session / Supabase
-        if saved_kf:
-            for kf_path in saved_kf:
-                kf_fname = os.path.basename(kf_path)
-                lower_kf = kf_fname.lower()
-                if frame_type in lower_kf or \
-                   (frame_type == "front" and "frame1" in lower_kf) or \
-                   (frame_type == "side" and "frame2" in lower_kf) or \
-                   (frame_type == "shoulder" and any(k in lower_kf for k in ("frame3", "shoulder", "back"))):
-                    cand = os.path.join(KEYFRAME_DIR, kf_fname)
-                    if os.path.isfile(cand):
-                        target_file = cand
-                        break
+    # If not in memory, restore from Supabase
+    if not sess:
+        try:
+            from supabase_client import fetch_generation_by_id
+            rec = fetch_generation_by_id(session_id)
+            if rec:
+                sess = {
+                    "product_info": {"title": rec.get("product_name", ""), "page_text": rec.get("caption", "")},
+                    "prompts": {
+                        "product_summary": rec.get("product_name", ""),
+                        "flow_ai_prompts": rec.get("scenes") or {},
+                        "tiktok_caption": rec.get("caption") or "",
+                        "suno_bgm": {"style": rec.get("bgm_prompt") or "", "lyrics": ""}
+                    },
+                    "slug": clean_slug(rec.get("product_name", "")),
+                    "keyframe_urls": rec.get("keyframe_urls") or []
+                }
+                with session_lock:
+                    session_store[session_id] = sess
+        except Exception:
+            pass
 
-        # 2. Check intelligent multi-token keyframe matching
-        if not target_file and (title or slug):
-            matched = find_matching_keyframes(title or slug)
-            if matched.get(frame_type):
-                cand = os.path.join(KEYFRAME_DIR, matched[frame_type])
+    title = (sess.get("product_info") or {}).get("title", "")
+    slug = sess.get("slug", "")
+    saved_kf = sess.get("keyframe_urls") or []
+
+    # 3. Check explicit keyframe URLs in session/database
+    if saved_kf:
+        for kf_item in saved_kf:
+            if not kf_item:
+                continue
+            lower_item = str(kf_item).lower()
+            is_match = (
+                frame_type in lower_item or
+                (frame_type == "front" and "frame1" in lower_item) or
+                (frame_type == "side" and "frame2" in lower_item) or
+                (frame_type == "shoulder" and any(k in lower_item for k in ("frame3", "shoulder", "back")))
+            )
+            if is_match:
+                if str(kf_item).startswith(("http://", "https://")):
+                    return redirect(str(kf_item), code=302)
+                cand = os.path.join(KEYFRAME_DIR, os.path.basename(kf_item))
                 if os.path.isfile(cand):
                     target_file = cand
+                    break
 
-    # If real JPG image found, serve it
+    # 4. Check local KEYFRAME_DIR
+    if not target_file and os.path.isdir(KEYFRAME_DIR) and (title or slug):
+        matched = find_matching_keyframes(title or slug)
+        if matched.get(frame_type):
+            cand = os.path.join(KEYFRAME_DIR, matched[frame_type])
+            if os.path.isfile(cand):
+                target_file = cand
+
     if target_file and os.path.isfile(target_file):
         download_name = f"keyframe_{frame_type}_{session_id}.jpg"
         return send_file(
@@ -361,17 +428,30 @@ def api_keyframe(session_id, frame_type):
             download_name=download_name
         )
 
-    # If no real image exists, serve high-definition 9:16 SVG visual guide
-    with session_lock:
-        sess = session_store.get(session_id, {})
-        p_title = (sess.get("product_info") or {}).get("title", "Produk TikTok Shop")
-    svg_code = generate_keyframe_svg(p_title, frame_type)
-    return send_file(
-        io.BytesIO(svg_code.encode("utf-8")),
-        mimetype="image/svg+xml",
-        as_attachment=as_download,
-        download_name=f"keyframe_{frame_type}_{session_id}.svg"
+    # 5. Check Supabase Storage bucket for matching file
+    if title or slug:
+        matched = find_matching_keyframes(title or slug)
+        if matched.get(frame_type):
+            matched_fname = matched[frame_type]
+            supabase_cdn_url = f"{SUPABASE_STORAGE_URL}/{matched_fname}"
+            return redirect(supabase_cdn_url, code=302)
+
+    # 6. Dynamic photorealistic AI image generation (Pollinations Flux 9:16)
+    clean_title = (title or "Korean Style Modest Muslimah Blouse").replace('"', '').replace("'", "")[:80]
+    pose_prompts = {
+        "front": "front facing portrait, natural gentle smile, relaxed shoulders, comfortable eye contact",
+        "side": "3/4 side profile angle showing relaxed baggy drape and cuffed sleeve",
+        "shoulder": "over the shoulder glance, elegant back silhouette, casual natural posture, no waving"
+    }
+    pose_str = pose_prompts.get(frame_type, "front facing portrait")
+    gen_prompt = (
+        f"A 9:16 vertical full-body photorealistic fashion promo photo of an elegant Malaysian Muslim woman in her late 20s. "
+        f"Wearing {clean_title}, neat light beige chiffon hijab, paired with modern chic trousers. {pose_str}. "
+        f"Set in a brightly lit modern Kuala Lumpur cafe interior with soft bokeh, natural daylight, head-to-toe full outfit. "
+        f"Editorial realism, authentic skin texture. Strictly no text, no watermark, no logo."
     )
+    pollinations_url = f"https://image.pollinations.ai/prompt/{urllib.parse.quote(gen_prompt)}?width=720&height=1280&model=flux&nologo=true"
+    return redirect(pollinations_url, code=302)
 
 
 @app.route("/api/generate-images", methods=["POST"])
@@ -444,18 +524,14 @@ def api_generate_images():
         kf_fname = os.path.basename(kf_path)
         lower_kf = kf_fname.lower()
         if not existing.get("front") and ("frame1" in lower_kf or "front" in lower_kf):
-            existing["front"] = kf_fname
+            existing["front"] = kf_path
         elif not existing.get("side") and ("frame2" in lower_kf or "side" in lower_kf):
-            existing["side"] = kf_fname
+            existing["side"] = kf_path
         elif not existing.get("shoulder") and any(k in lower_kf for k in ("frame3", "shoulder", "back")):
-            existing["shoulder"] = kf_fname
+            existing["shoulder"] = kf_path
 
-    has_real_images = any(existing.values())
-
-    if has_real_images:
-        quota_status = "🟢 Status Kuota Imej: Aktif (3/3 imej sedia dipaparkan)"
-    else:
-        quota_status = "🔴 Status Kuota Imej: Had kuota percuma Google tercapai (3 Prompt 9:16 Sedia Digunakan)"
+    # All frames are rendered now (via Supabase storage CDN, local disk, or dynamic photorealistic AI)
+    quota_status = "🟢 Status Kuota Imej: Aktif (3/3 imej sedia dipaparkan)"
 
     frames_data = [
         {
@@ -466,7 +542,7 @@ def api_generate_images():
             "image_url": f"/api/keyframe/{session_id}/front",
             "download_url": f"/api/keyframe/{session_id}/front?download=1",
             "has_image": True,
-            "is_rendered": bool(existing.get("front"))
+            "is_rendered": True
         },
         {
             "id": "side",
@@ -476,7 +552,7 @@ def api_generate_images():
             "image_url": f"/api/keyframe/{session_id}/side",
             "download_url": f"/api/keyframe/{session_id}/side?download=1",
             "has_image": True,
-            "is_rendered": bool(existing.get("side"))
+            "is_rendered": True
         },
         {
             "id": "shoulder",
@@ -486,7 +562,7 @@ def api_generate_images():
             "image_url": f"/api/keyframe/{session_id}/shoulder",
             "download_url": f"/api/keyframe/{session_id}/shoulder?download=1",
             "has_image": True,
-            "is_rendered": bool(existing.get("shoulder"))
+            "is_rendered": True
         }
     ]
 
@@ -789,15 +865,41 @@ def api_download(session_id):
                 if os.path.isfile(fpath) and fname.lower().endswith((".jpg", ".jpeg", ".png", ".webp")):
                     zf.write(fpath, f"images/{fname}")
 
-        # Also package real keyframe images if present in keyframes/
-        if os.path.isdir(KEYFRAME_DIR):
-            target_slug = (session.get("slug") if session else "") or clean_slug(product_info.get("title", ""))
-            kfs = find_matching_keyframes(product_info.get("title") or target_slug)
-            for cat, kf_file in kfs.items():
-                if kf_file:
-                    kf_path = os.path.join(KEYFRAME_DIR, kf_file)
-                    if os.path.isfile(kf_path):
-                        zf.write(kf_path, f"keyframes/{kf_file}")
+        # Package keyframes from local disk or Supabase Storage CDN
+        target_slug = (session.get("slug") if session else "") or clean_slug(product_info.get("title", ""))
+        kfs = find_matching_keyframes(product_info.get("title") or target_slug)
+        saved_urls = (session.get("keyframe_urls") if session else []) or []
+
+        # Write matching keyframes
+        for cat, kf_ref in kfs.items():
+            if not kf_ref:
+                continue
+            # Try local file first
+            if os.path.isdir(KEYFRAME_DIR):
+                cand = os.path.join(KEYFRAME_DIR, kf_ref)
+                if os.path.isfile(cand):
+                    zf.write(cand, f"keyframes/{kf_ref}")
+                    continue
+            # Next try downloading from Supabase Storage CDN
+            try:
+                cdn_url = f"{SUPABASE_STORAGE_URL}/{kf_ref}"
+                req_img = urllib.request.Request(cdn_url, headers={"User-Agent": "Mozilla/5.0"})
+                with urllib.request.urlopen(req_img, timeout=12) as resp_img:
+                    zf.writestr(f"keyframes/{kf_ref}", resp_img.read())
+            except Exception as e_cdn:
+                print(f"Notice: zip cdn image fetch: {e_cdn}")
+
+        # Also write explicit saved URLs
+        for kf_u in saved_urls:
+            if kf_u and str(kf_u).startswith(("http://", "https://")):
+                fname = os.path.basename(str(kf_u))
+                if f"keyframes/{fname}" not in zf.namelist():
+                    try:
+                        req_img = urllib.request.Request(kf_u, headers={"User-Agent": "Mozilla/5.0"})
+                        with urllib.request.urlopen(req_img, timeout=12) as resp_img:
+                            zf.writestr(f"keyframes/{fname}", resp_img.read())
+                    except Exception:
+                        pass
 
         zf.writestr("product_info.json", json.dumps(product_info, indent=2, ensure_ascii=False, default=str))
 
