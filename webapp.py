@@ -176,6 +176,33 @@ def generate_keyframe_svg(product_name: str, frame_type: str) -> str:
 </svg>"""
 
 
+GENERIC_STOPWORDS = {
+    'baju', 'wanita', 'blouse', 'kemeja', 'outfit', 'style', 'korean', 'muslimah',
+    'viral', 'terkini', 'murah', 'cantik', 'perempuan', 'fashion', 'moden', 'elegan',
+    'labuh', 'panjang', 'lengan', 'seluar', 'casual', 'santai', 'set', 'for', 'women',
+    'plus', 'size', 'with', 'and', 'the', 'dress', 'top', 'tshirt'
+}
+
+SYNONYMS = {
+    'rajut': 'knit',
+    'knitted': 'knit',
+    'sweater': 'knit',
+    'sweatshirt': 'embossed_sweatshirt',
+    'tartan': 'plaid',
+    'kotak': 'plaid',
+    'harimau': 'leopard',
+    'leopard': 'leopard_patchwork_blouse',
+    'parit': 'trench',
+    'trench': 'trench26',
+    'fleece': 'quilted',
+    'jogger': 'fuyogi_sportspants',
+    'yoga': 'omcore_yoga_zipup',
+    'flare': 'clashe_flare_jeans',
+    'jeans': 'clashe_flare_jeans',
+    'denim': 'clashe_flare_jeans'
+}
+
+
 def find_matching_keyframes(query_text: str) -> Dict[str, Optional[str]]:
     """Check if keyframe images exist in local keyframes/ or Supabase Storage for this product using intelligent matching."""
     frames = {"front": None, "side": None, "shoulder": None}
@@ -183,9 +210,16 @@ def find_matching_keyframes(query_text: str) -> Dict[str, Optional[str]]:
         return frames
 
     clean_q = query_text.lower()
-    tokens = [t for t in re.findall(r"[a-zA-Z0-9]+", clean_q) if len(t) >= 3]
-    if not tokens:
+    q_words = set(re.findall(r"[a-zA-Z0-9]+", clean_q))
+    if not q_words:
         return frames
+
+    expanded_q = set(q_words)
+    for w in q_words:
+        if w in SYNONYMS:
+            syn_target = SYNONYMS[w]
+            expanded_q.add(syn_target)
+            expanded_q.update(syn_target.split('_'))
 
     # Gather candidate filenames from local directory and Supabase storage bucket
     candidates = set()
@@ -218,22 +252,27 @@ def find_matching_keyframes(query_text: str) -> Dict[str, Optional[str]]:
         if not frame_cat:
             continue
 
-        name_tokens = set(re.findall(r"[a-zA-Z0-9]+", lower_name))
-        score = sum(2 for t in tokens if t in name_tokens)
+        prefix = lower_name.split('_frame')[0]
+        prefix_words = set(re.findall(r"[a-zA-Z0-9]+", prefix))
 
-        if len(tokens) >= 2 and f"{tokens[0]}_{tokens[1]}" in lower_name:
-            score += 5
-        if len(tokens) >= 3 and f"{tokens[0]}_{tokens[1]}_{tokens[2]}" in lower_name:
-            score += 10
-        if clean_q[:25].strip("_") in lower_name:
-            score += 12
+        # Calculate overlap score
+        overlap = expanded_q.intersection(prefix_words)
+        score = 0
+        for w in overlap:
+            score += 4 if w in GENERIC_STOPWORDS else 25
+
+        clean_prefix_joined = prefix.replace('_', ' ')
+        if clean_prefix_joined in clean_q or prefix.replace('_', '') in clean_q:
+            score += 50
+        elif any(pw in clean_q for pw in prefix_words if pw not in GENERIC_STOPWORDS and len(pw) >= 4):
+            score += 15
 
         if score > best_matches[frame_cat][1]:
             best_matches[frame_cat] = (fname, score)
 
     for cat in ("front", "side", "shoulder"):
         match_file, score = best_matches[cat]
-        if score >= 2:
+        if score >= 10:
             frames[cat] = match_file
 
     return frames
@@ -674,14 +713,27 @@ def api_generate():
             else str(prompts.get("suno_bgm", ""))
         )
 
+        # Determine keyframe URLs for Supabase cloud storage
+        kf_urls = []
+        matched_kf = find_matching_keyframes(product_name)
+        if matched_kf.get("front") and matched_kf.get("side") and matched_kf.get("shoulder"):
+            kf_urls = [
+                f"{SUPABASE_STORAGE_URL}/{matched_kf['front']}",
+                f"{SUPABASE_STORAGE_URL}/{matched_kf['side']}",
+                f"{SUPABASE_STORAGE_URL}/{matched_kf['shoulder']}"
+            ]
+        elif session.get("keyframe_urls"):
+            kf_urls = session.get("keyframe_urls")
+
         save_generation_history(
-            product_name=product_name[:80],
+            product_name=product_name[:300],
             opening_line=opening,
             closing_line=closing,
             scenes=flow,
             caption=caption_full,
             hashtags=hashtags_extracted,
-            bgm_prompt=bgm_style
+            bgm_prompt=bgm_style,
+            keyframe_urls=kf_urls
         )
 
         return jsonify({"prompts": prompts})
@@ -736,6 +788,16 @@ def api_history_item(record_id):
         if not record:
             return jsonify({"error": "Record not found"}), 404
 
+        resolved_kfs = record.get("keyframe_urls") or []
+        if not resolved_kfs:
+            matched_kf = find_matching_keyframes(record.get("product_name", ""))
+            if matched_kf.get("front") and matched_kf.get("side") and matched_kf.get("shoulder"):
+                resolved_kfs = [
+                    f"{SUPABASE_STORAGE_URL}/{matched_kf['front']}",
+                    f"{SUPABASE_STORAGE_URL}/{matched_kf['side']}",
+                    f"{SUPABASE_STORAGE_URL}/{matched_kf['shoulder']}"
+                ]
+
         # Pre-seed session_store so keyframe and download endpoints work immediately
         with session_lock:
             session_store[record_id] = {
@@ -754,7 +816,7 @@ def api_history_item(record_id):
                     }
                 },
                 "slug": clean_slug(record.get("product_name", "")),
-                "keyframe_urls": record.get("keyframe_urls") or []
+                "keyframe_urls": resolved_kfs
             }
 
         return jsonify({
@@ -766,7 +828,7 @@ def api_history_item(record_id):
                 "caption": record.get("caption") or "",
                 "hashtags": record.get("hashtags") or "",
                 "bgm_prompt": record.get("bgm_prompt") or "",
-                "keyframe_urls": record.get("keyframe_urls") or [],
+                "keyframe_urls": resolved_kfs,
                 "created_at": record.get("created_at", "")
             }
         })

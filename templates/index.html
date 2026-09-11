@@ -229,7 +229,7 @@
           <div class="keyframe-card">
             <div class="keyframe-preview-box" onclick="zoomImage('kf-img-front')">
               <span class="keyframe-badge-pose">Frame 1: Front</span>
-              <img id="kf-img-front" src="" alt="Frame 1 Front" onerror="handleKeyframeError(this, 'front')">
+              <img id="kf-img-front" src="data:image/svg+xml;utf8,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 720 1280' fill='%2312121c'&gt;&lt;rect width='720' height='1280'/&gt;&lt;text x='50%' y='48%' fill='%238b5cf6' font-family='sans-serif' font-size='32' font-weight='600' text-anchor='middle'&gt;9:16 KEYFRAME&lt;/text&gt;&lt;text x='50%' y='53%' fill='%236b7280' font-family='sans-serif' font-size='20' text-anchor='middle'&gt;Frame 1 (Hadapan)&lt;/text&gt;&lt;/svg&gt;" alt="Frame 1 Front" onerror="handleKeyframeError(this, 'front')">
               <span class="keyframe-badge-zoom">🔍 Zoom</span>
             </div>
             <div class="keyframe-meta-title">Frame 1: Front Facing</div>
@@ -248,7 +248,7 @@
           <div class="keyframe-card">
             <div class="keyframe-preview-box" onclick="zoomImage('kf-img-side')">
               <span class="keyframe-badge-pose">Frame 2: 3/4 Side</span>
-              <img id="kf-img-side" src="" alt="Frame 2 Side" onerror="handleKeyframeError(this, 'side')">
+              <img id="kf-img-side" src="data:image/svg+xml;utf8,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 720 1280' fill='%2312121c'&gt;&lt;rect width='720' height='1280'/&gt;&lt;text x='50%' y='48%' fill='%238b5cf6' font-family='sans-serif' font-size='32' font-weight='600' text-anchor='middle'&gt;9:16 KEYFRAME&lt;/text&gt;&lt;text x='50%' y='53%' fill='%236b7280' font-family='sans-serif' font-size='20' text-anchor='middle'&gt;Frame 2 (Sisi)&lt;/text&gt;&lt;/svg&gt;" alt="Frame 2 Side" onerror="handleKeyframeError(this, 'side')">
               <span class="keyframe-badge-zoom">🔍 Zoom</span>
             </div>
             <div class="keyframe-meta-title">Frame 2: Profil Sisi (3/4)</div>
@@ -267,7 +267,7 @@
           <div class="keyframe-card">
             <div class="keyframe-preview-box" onclick="zoomImage('kf-img-shoulder')">
               <span class="keyframe-badge-pose">Frame 3: Shoulder</span>
-              <img id="kf-img-shoulder" src="" alt="Frame 3 Shoulder" onerror="handleKeyframeError(this, 'shoulder')">
+              <img id="kf-img-shoulder" src="data:image/svg+xml;utf8,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 720 1280' fill='%2312121c'&gt;&lt;rect width='720' height='1280'/&gt;&lt;text x='50%' y='48%' fill='%238b5cf6' font-family='sans-serif' font-size='32' font-weight='600' text-anchor='middle'&gt;9:16 KEYFRAME&lt;/text&gt;&lt;text x='50%' y='53%' fill='%236b7280' font-family='sans-serif' font-size='20' text-anchor='middle'&gt;Frame 3 (Bahu)&lt;/text&gt;&lt;/svg&gt;" alt="Frame 3 Shoulder" onerror="handleKeyframeError(this, 'shoulder')">
               <span class="keyframe-badge-zoom">🔍 Zoom</span>
             </div>
             <div class="keyframe-meta-title">Frame 3: Pandangan Bahu</div>
@@ -472,6 +472,10 @@ let activeInputMode = 'url';
 
 const APP_BASE = window.location.pathname.replace(/\/+$/, '');
 function apiUrl(path) {
+  if (!path) return '';
+  if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('data:') || path.startsWith('blob:')) {
+    return path;
+  }
   const cleanPath = path.replace(/^\/+/, '');
   return APP_BASE ? `${APP_BASE}/${cleanPath}` : `/${cleanPath}`;
 }
@@ -746,7 +750,7 @@ async function loadKeyframePictures() {
 }
 
 function handleKeyframeError(imgElement, type) {
-  // Graceful fallback placeholder
+  imgElement.onerror = null;
   imgElement.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="360" height="640" viewBox="0 0 360 640"><rect width="100%" height="100%" fill="%231a1a2e"/><text x="50%" y="45%" fill="%238b5cf6" font-family="sans-serif" font-size="28" font-weight="bold" text-anchor="middle">9:16 KEYFRAME</text><text x="50%" y="52%" fill="%239a9ab0" font-family="sans-serif" font-size="16" text-anchor="middle">Frame ' + type.toUpperCase() + '</text><text x="50%" y="60%" fill="%232dd4bf" font-family="sans-serif" font-size="13" text-anchor="middle">Sedia Dijana / Dimuat Turun</text></svg>';
 }
 
@@ -934,7 +938,18 @@ async function loadHistoryCampaign(recordId) {
     };
 
     populateResults(generatedPrompts);
-    await loadKeyframePictures();
+
+    if (r.keyframe_urls && r.keyframe_urls.length >= 3) {
+      document.getElementById('kf-img-front').src = apiUrl(r.keyframe_urls[0]);
+      document.getElementById('kf-btn-download-front').href = apiUrl(r.keyframe_urls[0]);
+      document.getElementById('kf-img-side').src = apiUrl(r.keyframe_urls[1]);
+      document.getElementById('kf-btn-download-side').href = apiUrl(r.keyframe_urls[1]);
+      document.getElementById('kf-img-shoulder').src = apiUrl(r.keyframe_urls[2]);
+      document.getElementById('kf-btn-download-shoulder').href = apiUrl(r.keyframe_urls[2]);
+    } else {
+      await loadKeyframePictures();
+    }
+
     goToStep(3);
     showToast(`Kempen '${r.product_name.substring(0, 25)}...' dimuat semula!`);
   } catch (err) {

@@ -31,6 +31,11 @@ def get_supabase_client():
         return None
 
 
+# Alias for backward compatibility
+get_supabase = get_supabase_client
+
+
+
 def test_supabase_connection() -> Dict[str, Any]:
     """Test and report connectivity to the configured Supabase database."""
     client = get_supabase_client()
