@@ -4,7 +4,7 @@
 # AI agents MUST check this file AND search online for the latest updates
 # BEFORE generating any content. If new rules are found, update this file.
 #
-# Last Verified: 2026-09-07
+# Last Verified: 2026-09-14
 
 ---
 
@@ -119,6 +119,7 @@ These are rules we enforce on ourselves to maintain a clean account health:
 
 | Date | Change | Source |
 |------|--------|--------|
+| 2026-09-14 | Weekly compliance review: Re-confirmed mandatory AIGC disclosure toggle, PPS >= 4.5 operational benchmark, zero direct pricing rule, and strict prohibition on generic spam hashtags (#fyp, #viral, #RacunTikTok). | TikTok Shop Creator Policy & Community Guidelines Malaysia |
 | 2026-09-07 | Re-verified Malaysia creator campaign eligibility: Affiliate Creators need PPS at least 3.5 and CHR at least 150 for campaign enrolment. Retained stricter internal PPS target of 4.5 for account health. | TikTok Shop Malaysia, Campaign Season Policy Tips & Tricks for Creators, 2026-09-04 |
 | 2026-09-06 | Re-verified Malaysia TikTok Shop Creator Policies: Validated "Three Golden Rules" of AIGC (no product misrepresentation, no deceptive result edits, no fabricated stories), mandatory C2PA / AIGC disclosure toggle, and Creator Health Rating (CHR) 7-day rolling compliance monitoring. | Web search (TikTok Shop Malaysia Seller Center & Policy Guidelines) |
 | 2026-09-03 | Added Promotion Performance Score (PPS) policy launched Aug 27, 2026 replacing PQP. Requires PPS >= 4.5; under 3.0 reduces visibility. Updated weekly cap (7 videos/week) for 5+ misleading flags. | Web search (TikTok Shop Malaysia Seller Center & Affiliate Portal) |
