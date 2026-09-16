@@ -25,18 +25,20 @@ FRAME_1_FRONT = """Photorealistic portrait photo of a cute adult 25-year-old Mal
 wearing a modern stylish hijab and {product_description}. \
 She is standing outdoors on a clean modern urban street in Kuala Lumpur, \
 looking directly at the camera with a warm smile. \
+Both arms rest naturally and relaxed by her sides with empty hands. \
 Full outfit visible from head to toe, 9:16 vertical portrait, \
 shot on 35mm lens, natural golden hour daylight, photorealistic, \
-cinematic lighting, sharp focus, no text overlay, no watermark."""
+cinematic lighting, sharp focus, no handbag, no tote bag, no purse, no props, no text overlay, no watermark."""
 
 FRAME_2_SIDE = """The same Malaysian woman wearing the exact same hijab and \
 {product_description} from the reference image. \
 She is now turned to her left in a 3/4 side profile view, \
 showcasing how the outfit drapes and the cut creates a flattering silhouette. \
 Same outdoor KL urban street background. \
+Arms rest relaxed at her sides with empty hands, one hand may lightly touch the side garment seam. \
 Full outfit visible from head to toe, 9:16 vertical portrait, \
 consistent face, outfit, and styling, cinematic golden hour lighting, \
-sharp focus, no text overlay, no watermark."""
+sharp focus, no handbag, no tote bag, no purse, no props, no text overlay, no watermark."""
 
 FRAME_3_SHOULDER = """The same Malaysian woman wearing the exact same hijab and \
 {product_description} from the reference images. \
@@ -44,9 +46,10 @@ She has turned around with her back to the camera, \
 looking over her right shoulder towards the viewer with a charming warm smile. \
 Showcasing the back structure and silhouette of the outfit. \
 Same outdoor KL urban street background. \
+Both arms remain naturally low by her sides with empty hands. Strictly zero props. \
 Full outfit visible, 9:16 vertical portrait, \
-consistent face and styling, cinematic golden hour lighting, \
-sharp focus, no text overlay, no watermark."""
+consistent face, identical outfit, and styling, cinematic golden hour lighting, \
+sharp focus, no handbag, no tote bag, no purse, no tumbler, no props, no text overlay, no watermark."""
 
 
 # =============================================================================
@@ -67,6 +70,7 @@ FLOW_SCENE_1_INTRO = """Generate an 8-second video from the provided frame of an
 Malaysian woman wearing a hijab and {product_description}. \
 The camera maintains a stable, smooth framing with a gentle subtle zoom towards her. \
 She has a relaxed, confident posture and gives a natural, pleasant smile with comfortable eye contact towards the camera. \
+Both arms rest naturally at her sides with empty hands. Strictly no handbag or props. \
 Ensure there are no text overlays or watermarks in the video. \
 The subject speaks with subtle, natural facial expressions and accurate lip-syncing. \
 Her tone is calm, warm, and conversational—effortless and relatable. \
@@ -79,8 +83,8 @@ for the spoken audio: "{dialogue_scene_1}" """
 FLOW_SCENE_2_PRODUCT = """Generate an 8-second video from the provided frame of the woman \
 in {product_description} turned to a 3/4 side profile view. \
 The camera performs a slow, smooth cinematic pan across the outfit to showcase the clean silhouette and fabric texture. \
-She gestures naturally and casually towards the garment with relaxed, subtle hand movements. \
-Ensure there are no text overlays or watermarks in the video. \
+She gestures naturally and casually towards the garment with relaxed, subtle hand movements with empty hands. \
+Strictly no handbag or props. Ensure there are no text overlays or watermarks in the video. \
 The subject speaks towards the camera with a calm, friendly, and informative tone with accurate lip-syncing. \
 For the audio, generate a highly realistic female voice with a standard \
 Malaysian Malay (Bahasa Melayu Malaysia) accent—strictly NOT an Indonesian accent. \
@@ -91,7 +95,7 @@ for the spoken audio: "{dialogue_scene_2}" """
 FLOW_SCENE_3_OUTRO = """Generate an 8-second video from the provided frame of the woman \
 in {product_description} turning to glance back over her shoulder with a relaxed, soft smile. \
 Add a gentle cinematic soft-focus effect with natural lighting. \
-Her arms and hands rest naturally at her side or hold her bag casually without any awkward waving gestures. \
+Her arms and hands rest naturally low at her sides with empty hands without any bag, props, or awkward waving gestures. \
 Ensure there are no text overlays or watermarks in the video. \
 The subject speaks with warm, friendly sincerity and accurate lip-syncing. \
 For the audio, generate a highly realistic female voice with a standard \

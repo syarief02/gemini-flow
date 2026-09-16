@@ -96,12 +96,14 @@ python scrape_product.py "https://vt.tiktok.com/..."
   4. **If a Provider Is Unavailable for Another Reason**: State the provider and cause, such as tool not exposed, unsupported model, missing credential, or permission restriction. Do not call it a quota limit or invent a reset time.
   5. **Only When All Options Are Exhausted**: State how many images could not be generated and provide the three ready-to-use 9:16 fallback prompts for external generation. Include the attempted providers and the actual reason each was unavailable.
 
-**CRITICAL KEYFRAME RULES:**
+**CRITICAL KEYFRAME RULES (INVARIANT CONTINUITY ARCHITECTURE):**
 - Model styling: Malaysian Muslimah wearing a neat, matching modern hijab (e.g. chiffon/bawal) and modest chic outfit.
-- Frame 1: Front-facing, relaxed natural smile, comfortable eye contact.
-- Frame 2: 3/4 side profile, showing fabric drape and cut.
-- Frame 3: Over-the-shoulder glance. Arms and hands rest naturally at sides or holding bag casually. **NO WAVING. NO RAISED HANDS.**
-- All frames: Same model, same hijab, same outfit, same background. Full outfit head-to-toe visible.
+- Frame 1: Front-facing, relaxed natural smile, comfortable eye contact. Empty hands resting naturally at sides.
+- Frame 2: 3/4 side profile, showing fabric drape and cut. Empty hands (one hand may lightly touch garment seam).
+- Frame 3: Over-the-shoulder glance. Both arms resting naturally low at sides with EMPTY hands.
+- **STRICT ZERO-PROP & EMPTY-HANDS RULE**: Never introduce any handbag, tote bag, purse, tumbler, cup, phone, or props in ANY frame. Inconsistent props between Frame 1 and Frame 3 ruin video generation and create popping/morphing artifacts.
+- **ALL FRAMES INVARIANT ANCHOR**: Same model face, same hijab wrap & color, same garment details, same bottoms (pants/skirt), same shoes, same empty hands, and same background environment across all 3 frames. Full outfit head-to-toe visible.
+- **NO WAVING. NO RAISED HANDS.**
 
 ### Step 4: Write Organic Spoken Dialogue (Check History First!)
 Before writing ANY dialogue:
@@ -175,8 +177,8 @@ git push
   - Niche Community (e.g. `#MuslimahStyleMY`)
 
 ### Scene 3 Body Language
-- Arms rest naturally at sides or holding bag casually.
-- **NO awkward waving. NO raised hands.**
+- Both arms rest naturally low at sides with EMPTY hands.
+- **STRICTLY NO bags, NO totes, NO props, NO awkward waving, NO raised hands.**
 
 ### AIGC Compliance
 - All keyframe images and Flow AI videos are AI-generated synthetic media.

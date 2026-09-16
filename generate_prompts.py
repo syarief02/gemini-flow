@@ -173,8 +173,8 @@ STRICT RULES
    ║ • Camera: Soft, natural lighting with gentle slow-mo.    ║
    ║ • Tone: Friendly, effortless, polite recommendation.     ║
    ║ • Body Language: Natural relaxed over-the-shoulder       ║
-   ║   glance, soft pleasant smile, arms resting naturally at  ║
-   ║   her side or carrying bag casually. NO AWKWARD WAVING.  ║
+   ║   glance, soft pleasant smile, arms resting naturally low ║
+   ║   at her sides with empty hands. STRICTLY NO BAGS/PROPS. ║
    ╚══════════════════════════════════════════════════════════╝
 
 4. FLOW AI PROMPT FORMAT:
