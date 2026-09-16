@@ -850,10 +850,10 @@ def api_health():
 
 @app.route("/api/supabase-status", methods=["GET"])
 def api_supabase_status():
-    """Health check for Supabase cloud database."""
+    """Health check for Supabase cloud database and storage."""
     try:
-        from supabase_client import test_supabase_connection
-        return jsonify(test_supabase_connection())
+        from supabase_client import get_database_health
+        return jsonify(get_database_health())
     except Exception as e:
         return jsonify({"status": "error", "error": str(e)}), 500
 

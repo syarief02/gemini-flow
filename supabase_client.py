@@ -84,7 +84,7 @@ def save_generation_record(
 ) -> bool:
     """
     Save or sync a generation record to Supabase if the target table exists.
-    Falls back gracefully without throwing errors if the table is not yet provisioned.
+    Uses intelligent upsert/update to prevent duplicate rows when called multiple times.
     """
     client = get_supabase_client()
     if not client:
@@ -108,12 +108,154 @@ def save_generation_record(
         payload["keyframe_urls"] = keyframe_urls
 
     try:
+        # Check if a record already exists with the same product_name and opening_line to prevent duplicates
+        existing = (
+            client.table("gemini_flow_generations")
+            .select("id, keyframe_urls")
+            .eq("product_name", product_name)
+            .order("created_at", desc=True)
+            .limit(3)
+            .execute()
+        )
+        match_id = None
+        for row in (existing.data or []):
+            if row.get("id"):
+                match_id = row["id"]
+                break
+
+        if match_id:
+            client.table("gemini_flow_generations").update(payload).eq("id", match_id).execute()
+            print(f"Updated existing generation record ({match_id}) for '{product_name}' in Supabase.")
+            return True
+
         client.table("gemini_flow_generations").insert(payload).execute()
-        print(f"Synced generation record for '{product_name}' to Supabase.")
+        print(f"Synced new generation record for '{product_name}' to Supabase.")
         return True
     except Exception as e:
         print(f"Supabase sync notice: {e}")
         return False
+
+
+def upload_keyframe_to_supabase(
+    local_path: str | Path,
+    remote_filename: Optional[str] = None
+) -> Optional[str]:
+    """
+    Upload a local keyframe image to Supabase Storage bucket 'gemini-flow-keyframes'.
+    Returns the public CDN URL or None on failure.
+    """
+    client = get_supabase_client()
+    if not client:
+        return None
+
+    path_obj = Path(local_path)
+    if not path_obj.is_file():
+        print(f"File not found for upload: {local_path}")
+        return None
+
+    fname = remote_filename or path_obj.name
+    try:
+        file_bytes = path_obj.read_bytes()
+        mime = "image/jpeg" if fname.lower().endswith((".jpg", ".jpeg")) else "image/png"
+        client.storage.from_("gemini-flow-keyframes").upload(
+            fname,
+            file_bytes,
+            {"content-type": mime, "upsert": "true"}
+        )
+        cdn_url = f"{SUPABASE_URL}/storage/v1/object/public/gemini-flow-keyframes/{fname}"
+        return cdn_url
+    except Exception as err:
+        print(f"Supabase storage upload notice for {fname}: {err}")
+        return None
+
+
+def sync_all_keyframes_to_supabase(
+    keyframes_dir: Optional[str | Path] = None
+) -> Dict[str, Any]:
+    """
+    Inspect local keyframes directory and ensure all images are uploaded
+    to Supabase Storage 'gemini-flow-keyframes'.
+    """
+    client = get_supabase_client()
+    if not client:
+        return {"status": "error", "message": "Supabase client not initialized"}
+
+    target_dir = Path(keyframes_dir) if keyframes_dir else Path(__file__).resolve().parent / "keyframes"
+    if not target_dir.is_dir():
+        return {"status": "error", "message": f"Directory not found: {target_dir}"}
+
+    try:
+        remote_items = client.storage.from_("gemini-flow-keyframes").list(options={"limit": 1000})
+        remote_filenames = set(it.get("name") for it in (remote_items or []) if it.get("name"))
+    except Exception as e:
+        return {"status": "error", "message": f"Failed to list remote bucket: {e}"}
+
+    local_files = [f for f in target_dir.glob("*.jpg")] + [f for f in target_dir.glob("*.jpeg")] + [f for f in target_dir.glob("*.png")]
+    uploaded = []
+    skipped = []
+
+    for f in local_files:
+        if f.name not in remote_filenames:
+            url = upload_keyframe_to_supabase(f)
+            if url:
+                uploaded.append(f.name)
+        else:
+            skipped.append(f.name)
+
+    return {
+        "status": "success",
+        "total_local": len(local_files),
+        "already_synced": len(skipped),
+        "newly_uploaded": len(uploaded),
+        "uploaded_files": uploaded
+    }
+
+
+def cleanup_duplicate_generations() -> int:
+    """
+    Find and delete duplicate generation records in 'gemini_flow_generations',
+    retaining the most complete record (with keyframe_urls or newest).
+    """
+    client = get_supabase_client()
+    if not client:
+        return 0
+
+    try:
+        rows = (
+            client.table("gemini_flow_generations")
+            .select("id, product_name, opening_line, created_at, keyframe_urls")
+            .order("created_at", desc=True)
+            .execute()
+            .data
+            or []
+        )
+
+        seen: Dict[tuple, Dict[str, Any]] = {}
+        to_delete: List[str] = []
+
+        for row in rows:
+            key = (row.get("product_name"), row.get("opening_line"))
+            if key not in seen:
+                seen[key] = row
+            else:
+                existing = seen[key]
+                # If the current row has keyframe_urls but existing does not, keep current and delete existing
+                if row.get("keyframe_urls") and not existing.get("keyframe_urls"):
+                    to_delete.append(existing["id"])
+                    seen[key] = row
+                else:
+                    to_delete.append(row["id"])
+
+        deleted_count = 0
+        for rid in to_delete:
+            client.table("gemini_flow_generations").delete().eq("id", rid).execute()
+            deleted_count += 1
+            print(f"Deleted duplicate record: {rid}")
+
+        return deleted_count
+    except Exception as e:
+        print(f"Error during duplicate cleanup: {e}")
+        return 0
 
 
 def fetch_recent_generations(limit: int = 7) -> List[Dict[str, Any]]:
@@ -154,11 +296,49 @@ def fetch_generation_by_id(record_id: str) -> Optional[Dict[str, Any]]:
         return None
 
 
+def get_database_health() -> Dict[str, Any]:
+    """Comprehensive health check across REST API, database tables, and Storage bucket."""
+    client = get_supabase_client()
+    if not client:
+        return {"status": "unconfigured", "message": "Missing credentials"}
+
+    start_t = time.time()
+    conn_info = test_supabase_connection()
+    latency_ms = round((time.time() - start_t) * 1000, 1)
+
+    table_counts = {}
+    storage_counts = {}
+    try:
+        res = client.table("gemini_flow_generations").select("id", count="exact").limit(1).execute()
+        table_counts["gemini_flow_generations"] = res.count
+    except Exception as e_tbl:
+        table_counts["gemini_flow_generations"] = f"error: {e_tbl}"
+
+    try:
+        items = client.storage.from_("gemini-flow-keyframes").list(options={"limit": 1000})
+        storage_counts["gemini-flow-keyframes"] = len(items or [])
+    except Exception as e_str:
+        storage_counts["gemini-flow-keyframes"] = f"error: {e_str}"
+
+    return {
+        "status": conn_info.get("status"),
+        "latency_ms": latency_ms,
+        "table_counts": table_counts,
+        "storage_bucket_counts": storage_counts,
+        "available_tables": conn_info.get("available_tables", []),
+    }
+
+
 if __name__ == "__main__":
+    import time
     print("Testing Supabase connectivity...")
     res = test_supabase_connection()
     print(json.dumps(res, indent=2))
-    print("\nTesting fetch_recent_generations()...")
-    history = fetch_recent_generations(3)
-    print(f"Fetched {len(history)} entries from Supabase.")
+    print("\nTesting get_database_health()...")
+    health = get_database_health()
+    print(json.dumps(health, indent=2))
+    print("\nChecking and cleaning duplicate records...")
+    cleaned = cleanup_duplicate_generations()
+    print(f"Cleaned {cleaned} duplicate records.")
+
 

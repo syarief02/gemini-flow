@@ -83,12 +83,23 @@ def save_generation_history(
             "generations": []
         }
     
-    data["generations"].append({
-        "product": product_name,
-        "timestamp": datetime.now(timezone.utc).astimezone().isoformat(),
-        "opening_line": opening_line,
-        "closing_line": closing_line
-    })
+    # Deduplicate against existing entries to prevent redundant rows
+    existing_entry = None
+    for entry in reversed(data.get("generations", [])):
+        if entry.get("product") == product_name and entry.get("opening_line") == opening_line:
+            existing_entry = entry
+            break
+
+    if existing_entry:
+        existing_entry["timestamp"] = datetime.now(timezone.utc).astimezone().isoformat()
+        existing_entry["closing_line"] = closing_line
+    else:
+        data["generations"].append({
+            "product": product_name,
+            "timestamp": datetime.now(timezone.utc).astimezone().isoformat(),
+            "opening_line": opening_line,
+            "closing_line": closing_line
+        })
     
     try:
         with open(HISTORY_FILE, 'w', encoding='utf-8') as f:
