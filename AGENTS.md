@@ -105,15 +105,24 @@ python scrape_product.py "https://vt.tiktok.com/..."
 - **ALL FRAMES INVARIANT ANCHOR**: Same model face, same hijab wrap & color, same garment details, same bottoms (pants/skirt), same shoes, same empty hands, and same background environment across all 3 frames. Full outfit head-to-toe visible.
 - **NO WAVING. NO RAISED HANDS.**
 
-### Step 4: Write Organic Spoken Dialogue (Check History First!)
-Before writing ANY dialogue:
+### Step 4: Craft Viral Hooks & Organic Spoken Dialogue (Search Internet Data First!)
+
+**Strict Rule: NEVER BAN ANY HOOKS**:
+- **Do NOT ban any hooks, opener styles, or formulas.** All hook structures are valid (e.g. relatable dilemma, direct question, visual pattern interrupt, bold confession, viral curiosity gap, aesthetic lifestyle comparison).
+- **We simply record every used hook so they do not repeat within the recent 7-entry window.**
+- Hooks older than the 7-entry window can be freely reused and refreshed.
+
+**Mandatory Internet Data Search for Best Hooks**:
+- Before writing Scene 1 dialogue, search the internet for top-performing, high-converting TikTok e-commerce hooks in Malaysia / Southeast Asia tailored to the specific product category.
+- Apply the strongest, data-backed hook angle to maximize 2-second retention and stop the scroll.
+
+**Check History Window**:
 ```python
 from generate_prompts import get_recently_used_phrases
 print(get_recently_used_phrases())
 ```
-This shows the last 7 used opening lines and closing lines. The new dialogue **MUST differ from all 7**.  Phrases older than 7 entries are fine to reuse.
+Ensure the selected hook and closing line differ from the last 7 recorded entries.
 
-**Any opener style is valid** — "Kalau korang", "Hari ni saya nak share", "Saya baru je cuba", etc. — as long as it's not in the recent 7 history.
 
 ### Step 5: Compose the Full Deliverable Package
 Deliver to the user in this exact order:
@@ -219,16 +228,16 @@ git push
 
 ---
 
-## Anti-Repetition System
+## Anti-Repetition & Viral Hook System
 
-- **File:** `generation_history.json`
-- **Window:** Last **7** entries only.  Older entries can be freely reused.
+- **File:** `generation_history.json` & Supabase Database
+- **Window:** Last **7** entries only. Older entries can be freely reused.
 - **How it works:**
-  1. `get_recently_used_phrases(last_n=7)` loads the 7 most recent entries.
-  2. The output is injected into the Gemini prompt as context.
-  3. The AI must write dialogue that differs from all 7.
-  4. After generation, `save_generation_history()` appends the new entry.
-- **No fixed rotation scripts.** No banned phrases.  Just awareness of what was recently said.
+  1. **Zero Banned Hooks**: NEVER ban any hook styles or formulas. All hook techniques (pain-point questions, relatable confessions, visual pattern interrupts, curiosity gap) are valid.
+  2. **Search Internet Data for Best Hooks**: Before writing, search current TikTok e-commerce data and viral retail trends for high-converting hook formulas in Malaysia.
+  3. **Record to Avoid Repetition**: `get_recently_used_phrases(last_n=7)` retrieves the last 7 recorded openers and closers. The new dialogue simply avoids repeating those 7.
+  4. **Auto-Logging**: After generation, `save_generation_history()` logs the newly created hook and CTA to both local history and Supabase.
+- **No fixed rotation scripts.** No banned hooks. Data-driven viral hooks with recent history awareness.
 
 ---
 
