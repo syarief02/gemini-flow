@@ -130,7 +130,7 @@ def generate_keyframe_svg(product_name: str, frame_type: str) -> str:
     frame_descriptions = {
         "front": "Senyuman santai, pandangan mata natural, gaya Muslimah moden, busana penuh kepala-ke-kaki.",
         "side": "Pusingan 3/4 menonjolkan alunan fabrik, potongan jahitan kemas, dan siluet santai.",
-        "shoulder": "Pusingan belakang sopan dengan tolehan lembut ke bahu. Tangan di sisi atau memegang beg santai. Tiada lambaian."
+        "shoulder": "Pusingan belakang sopan dengan tolehan lembut ke bahu. Kedua-dua tangan santai rendah di sisi dengan tangan kosong tanpa sebarang beg atau props. Tiada lambaian."
     }
     title = frame_titles.get(frame_type.lower(), f"Frame: {frame_type.capitalize()}")
     desc = frame_descriptions.get(frame_type.lower(), "Pandangan visual 9:16 sedia untuk Flow AI / Midjourney")

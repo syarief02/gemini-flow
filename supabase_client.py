@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import os
 import json
+import time
 from pathlib import Path
 from typing import Optional, Dict, Any, List
 from dotenv import load_dotenv
@@ -17,6 +18,11 @@ load_dotenv(Path(__file__).resolve().parent / ".env")
 
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY") or os.getenv("SUPABASE_ANON_KEY")
+
+
+def is_supabase_enabled() -> bool:
+    """Check if Supabase credentials are configured."""
+    return bool(SUPABASE_URL and SUPABASE_KEY)
 
 
 def get_supabase_client():
@@ -31,8 +37,10 @@ def get_supabase_client():
         return None
 
 
-# Alias for backward compatibility
+# Aliases for backward compatibility
 get_supabase = get_supabase_client
+check_supabase_health = lambda: get_database_health()
+
 
 
 

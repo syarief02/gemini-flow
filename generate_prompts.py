@@ -254,12 +254,12 @@ Generate completely unique, non-repeating prompts and copy tailored specifically
 {anti_repetition}"""
 
         candidate_models = [
-            'gemini-3.5-flash',
+            'gemini-3.6-flash',
             'gemini-flash-lite-latest',
             'gemini-3.5-flash-lite',
-            'gemini-3.6-flash',
-            'gemini-3.7-flash',
-            'gemini-3.8-flash',
+            'gemini-3.5-flash',
+            'gemini-flash-latest',
+            'gemini-3.1-pro-preview',
             'gemini-pro-latest',
         ]
 
