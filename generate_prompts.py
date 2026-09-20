@@ -28,7 +28,7 @@ except ImportError:
 
 HISTORY_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "generation_history.json")
 
-def load_generation_history(last_n: int = 5) -> list:
+def load_generation_history(last_n: int = 7) -> list:
     """Load the last N generation entries from history file."""
     try:
         with open(HISTORY_FILE, 'r', encoding='utf-8') as f:
