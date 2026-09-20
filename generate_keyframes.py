@@ -79,7 +79,29 @@ def generate_one(client: genai.Client, prompt: str, references: list[Path], outp
         except Exception as error:
             last_error = error
             print(f"FAILED {model}: {error}", flush=True)
-    raise RuntimeError(f"All configured Gemini image models failed for {output_path.name}: {last_error}")
+
+    # Secondary Fallback: Imagen 3 via client.models.generate_images
+    try:
+        print(f"Attempting Imagen 3 fallback for {output_path.name}...", flush=True)
+        from google.genai import types
+        resp = client.models.generate_images(
+            model="imagen-3.0-generate-002",
+            prompt=prompt,
+            config=types.GenerateImagesConfig(
+                number_of_images=1,
+                aspect_ratio="9:16",
+                output_mime_type="image/jpeg",
+            )
+        )
+        if resp.generated_images and resp.generated_images[0].image.image_bytes:
+            output_path.write_bytes(resp.generated_images[0].image.image_bytes)
+            print(f"SUCCESS imagen-3.0-generate-002: {output_path}", flush=True)
+            return "imagen-3.0-generate-002"
+    except Exception as err_imagen:
+        print(f"FAILED imagen-3.0-generate-002: {err_imagen}", flush=True)
+        last_error = err_imagen
+
+    raise RuntimeError(f"All configured Gemini and Imagen image models failed for {output_path.name}: {last_error}")
 
 
 def run_generation(source_dir: Path, prefix: Optional[str] = None, force: bool = False):

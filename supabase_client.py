@@ -44,8 +44,49 @@ check_supabase_health = lambda: get_database_health()
 
 
 
+def get_keyframe_cdn_url(filename: str) -> str:
+    """Generate the full public CDN URL for a keyframe stored in Supabase Storage."""
+    clean_name = Path(filename).name
+    return f"{SUPABASE_URL}/storage/v1/object/public/gemini-flow-keyframes/{clean_name}"
+
+
+def get_product_keyframes(slug_or_prefix: str, keyframes_dir: Optional[str | Path] = None) -> Dict[str, Any]:
+    """Find local and Supabase CDN URLs for keyframe images of a given product."""
+    target_dir = Path(keyframes_dir) if keyframes_dir else Path(__file__).resolve().parent / "keyframes"
+    prefix = slug_or_prefix.lower().replace("-", "_").replace(" ", "_").strip("_")
+    
+    frames = {
+        "frame_1_front": f"{prefix}_frame1_front.jpg",
+        "frame_2_side": f"{prefix}_frame2_side.jpg",
+        "frame_3_shoulder": f"{prefix}_frame3_shoulder.jpg",
+    }
+    
+    result = {
+        "prefix": prefix,
+        "frames": {},
+        "all_present": True,
+        "cdn_urls": []
+    }
+    
+    for key, fname in frames.items():
+        local_p = target_dir / fname
+        cdn_url = get_keyframe_cdn_url(fname)
+        exists_locally = local_p.is_file()
+        if not exists_locally:
+            result["all_present"] = False
+        result["frames"][key] = {
+            "filename": fname,
+            "local_path": str(local_p) if exists_locally else None,
+            "cdn_url": cdn_url,
+            "exists_locally": exists_locally
+        }
+        result["cdn_urls"].append(cdn_url)
+        
+    return result
+
+
 def test_supabase_connection() -> Dict[str, Any]:
-    """Test and report connectivity to the configured Supabase database."""
+    """Test and report connectivity to the configured Supabase database and storage."""
     client = get_supabase_client()
     if not client:
         return {
@@ -64,12 +105,27 @@ def test_supabase_connection() -> Dict[str, Any]:
         with urllib.request.urlopen(req, timeout=10) as resp:
             data = json.loads(resp.read().decode("utf-8"))
             available_paths = list(data.get("paths", {}).keys())
+            
+            # Check storage bucket health
+            storage_info = {"status": "unavailable", "bucket": "gemini-flow-keyframes"}
+            try:
+                storage_items = client.storage.from_("gemini-flow-keyframes").list(options={"limit": 5})
+                storage_info = {
+                    "status": "connected",
+                    "bucket": "gemini-flow-keyframes",
+                    "sample_count": len(storage_items or []),
+                    "cdn_base": f"{SUPABASE_URL}/storage/v1/object/public/gemini-flow-keyframes"
+                }
+            except Exception as e_s:
+                storage_info["error"] = str(e_s)
+
             return {
                 "status": "connected",
                 "url": SUPABASE_URL,
                 "http_status": resp.getcode(),
                 "available_tables": [p.lstrip("/") for p in available_paths if p != "/" and not p.startswith("/rpc")],
-                "rpc_functions": [p.split("/")[-1] for p in available_paths if p.startswith("/rpc")]
+                "rpc_functions": [p.split("/")[-1] for p in available_paths if p.startswith("/rpc")],
+                "storage": storage_info
             }
     except Exception as err:
         return {
