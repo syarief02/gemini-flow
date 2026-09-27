@@ -61,6 +61,58 @@ def get_recently_used_phrases(last_n: int = 7) -> str:
     lines.append("Write genuinely different phrasing — not just rearranging the same words or swapping synonyms.")
     return "\n".join(lines)
 
+def detect_hook_archetype(opening_line: str) -> str:
+    """Classify an opening hook into one of the proven viral TikTok e-commerce archetypes."""
+    if not opening_line:
+        return "Unclassified / Organic Intro"
+    line = opening_line.lower()
+    if any(k in line for k in ['sauna', 'cuaca', 'panas', 'hujan', 'berkuap', 'angin sejuk']):
+        return "The Unspoken Daily Dilemma (Tropical Climate / Comfort)"
+    elif any(k in line for k in ['peha', 'tenggelam', 'nampak besar', 'gemuk', 'cutting', 'kurus', 'lampai', 'buncit']):
+        return "The Flattering Silhouette / Visual Insecurity Solution"
+    elif any(k in line for k in ['ratusan ringgit', 'mahal', 'murah', 'jenama', 'mampu milik', 'silap besar', 'ramai orang ingat', 'ramai ingat', 'sangka']):
+        return "The Price-Quality Myth-Buster"
+    elif any(k in line for k in ['rahsia', 'terlepas pandang', 'hidden gem', 'jumpa', 'dua saat', 'on-point']):
+        return "The Hidden Gem / Secret Discovery"
+    elif any(k in line for k in ['seterika', 'gosok', 'lambat', 'keluar cepat', 'malas', 'pagi-pagi', 'serabut']):
+        return "The Relatable Lifestyle Dilemma (Morning Rush / Easy Prep)"
+    elif any(k in line for k in ['perasan tak', 'tahu tak', 'siapa dekat sini', 'pernah tak', 'tengok betul']):
+        return "The Visual Pattern Interrupt / Direct Question"
+    return "Conversational Organic Recommendation"
+
+def verify_hook_quality(opening_line: str, last_7_entries: list = None) -> dict:
+    """Verify that the opening hook satisfies 2-second viral retention and policy standards."""
+    issues = []
+    if not opening_line or len(opening_line.strip()) < 20:
+        return {'status': 'fail', 'issues': ['Hook is missing or too short.'], 'hook_score': 0, 'archetype': 'Unknown'}
+
+    line_lower = opening_line.lower()
+
+    # Blacklist Indonesian slang
+    indo_words = ['banget', 'bgt', 'keren', 'emang', 'nggak', 'gak', 'beneran', 'dong']
+    found_indo = [w for w in indo_words if re.search(r'\b' + re.escape(w) + r'\b', line_lower)]
+    if found_indo:
+        issues.append(f"Contains Indonesian vocabulary: {found_indo}")
+
+    # Pronoun check
+    if re.search(r'\baku\b', line_lower):
+        issues.append("Uses 'aku' instead of professional/friendly 'saya'")
+
+    # 2-second retention hook trigger
+    triggers = ['korang', 'perasan tak', 'tahu tak', 'susah betul', 'ramai orang', 'siapa dekat sini', 'dengan cuaca', 'pagi-pagi', 'kadang-kadang', 'pernah tak', 'tengok']
+    has_trigger = any(t in line_lower for t in triggers)
+    if not has_trigger:
+        issues.append("Lacks a clear 2-second scroll-stopping trigger phrase.")
+
+    archetype = detect_hook_archetype(opening_line)
+
+    return {
+        'status': 'pass' if not issues else 'warn',
+        'issues': issues,
+        'hook_score': max(0, 100 - len(issues) * 20),
+        'archetype': archetype
+    }
+
 def save_generation_history(
     product_name: str,
     opening_line: str,
@@ -69,7 +121,8 @@ def save_generation_history(
     caption: str = None,
     hashtags: str = None,
     bgm_prompt: str = None,
-    keyframe_urls: list = None
+    keyframe_urls: list = None,
+    metadata: dict = None
 ):
     """Append a new entry to the generation history file.
     
@@ -85,6 +138,9 @@ def save_generation_history(
             "generations": []
         }
     
+    # Compute hook quality audit
+    hook_audit = verify_hook_quality(opening_line)
+    
     # Deduplicate against existing entries to prevent redundant rows
     existing_entry = None
     for entry in reversed(data.get("generations", [])):
@@ -95,28 +151,39 @@ def save_generation_history(
     if existing_entry:
         existing_entry["timestamp"] = datetime.now(timezone.utc).astimezone().isoformat()
         existing_entry["closing_line"] = closing_line
+        existing_entry["hook_archetype"] = hook_audit.get("archetype")
+        existing_entry["hook_score"] = hook_audit.get("hook_score")
     else:
         data["generations"].append({
             "product": product_name,
             "timestamp": datetime.now(timezone.utc).astimezone().isoformat(),
             "opening_line": opening_line,
-            "closing_line": closing_line
+            "closing_line": closing_line,
+            "hook_archetype": hook_audit.get("archetype"),
+            "hook_score": hook_audit.get("hook_score")
         })
     
     try:
         with open(HISTORY_FILE, 'w', encoding='utf-8') as f:
             json.dump(data, f, indent=2, ensure_ascii=False)
-        print(f"📝 Saved generation history for: {product_name}")
+        print(f"📝 Saved generation history for: {product_name} (Hook: {hook_audit.get('archetype')}, Score: {hook_audit.get('hook_score')}/100)")
     except Exception as e_hist:
         print(f"Notice: local history file write: {e_hist}")
 
     # Optionally sync to Supabase database
     try:
         from supabase_client import save_generation_record
+        meta = metadata or {}
+        meta.setdefault("hook_archetype", hook_audit.get("archetype"))
+        meta.setdefault("hook_score", hook_audit.get("hook_score"))
+        meta.setdefault("hook_status", hook_audit.get("status"))
+        meta.setdefault("hook_issues", hook_audit.get("issues"))
+
         save_generation_record(
             product_name=product_name,
             opening_line=opening_line,
             closing_line=closing_line,
+            metadata=meta,
             scenes=scenes,
             caption=caption,
             hashtags=hashtags,
@@ -142,13 +209,20 @@ STRICT RULES
    - Use natural Malaysian slang & filler ("korang", "gila", "serious", "tau tak", "eh", "kan").
    - ALWAYS use "saya" (NOT "aku") as the first-person pronoun. "Saya" sounds more polished and professional while still being friendly.
 
-2. SPEAKING PERSONALITY (NATURAL, RELAXED & EFFORTLESS):
+2. SPEAKING PERSONALITY & VIRAL HOOK ENGINE (2-SECOND RETENTION RULE):
+   - You MUST craft the most compelling, scroll-stopping hook angle for this specific product.
+   - Stop the scroll in the first 2 seconds! Choose one of the 6 proven Malaysian TikTok Shop viral hook archetypes:
+     1. The Unspoken Daily Dilemma / Tropical Climate Dilemma (e.g. cuaca panas rasa macam sauna vs material kalis air sejuk selesa).
+     2. The Flattering Silhouette / Visual Insecurity Solution (e.g. takut peha nampak besar / cutting kembang vs efek auto-slimming).
+     3. The Price-Quality Myth-Buster (e.g. sangka kena berhabis ratusan ringgit dekat outdoor brand vs kualiti padu mampu milik).
+     4. The Hidden Gem / Secret Discovery (e.g. rahsia bersiap kemas dalam 2 saat / cutting rahsia yang ramai terlepas pandang).
+     5. The Visual Pattern Interrupt / Direct Question (e.g. "Korang perasan tak...", "Tahu tak kenapa...", "Siapa dekat sini yang...").
+     6. The Relatable Lifestyle Dilemma (e.g. bangun lambat, malas nak iron baju, nak cepat pergi kerja/kuliah).
+   - Ensure the hook IMMEDIATELY hooks the viewer, connects directly to the product's #1 USP, and feels completely organic.
+   - DO NOT repeat any angle or phrasing from the last 7 recorded entries in the anti-repetition list.
    - Speak in a CALM, FRIENDLY, and EFFORTLESS tone—like a creator sharing an honest daily outfit recommendation.
    - AVOID forced hyper-excitement, exaggerated whispers, dramatic screaming, or fake hype.
    - Natural, smooth conversational flow (steady pace, pleasant rhythm, clear pronunciation).
-   - You will be given a list of PREVIOUSLY USED opening lines and sign-off lines.
-   - You MUST write something different from all of them — not just rearranging the same words, but genuinely new phrasing and angles.
-   - Any opener style is allowed (including "Kalau korang", "Hari ni saya nak share", etc.) as long as it was not used in the recent history provided.
 
 3. THE 3-ACT NATURAL VIDEO STRUCTURE (8 seconds each):
 

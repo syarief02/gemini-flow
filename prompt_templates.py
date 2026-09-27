@@ -7,10 +7,17 @@ Templates used to generate:
 - TikTok caption & hashtags (Bahasa Melayu Malaysia)
 - Suno BGM prompt & lyrics
 
-ANTI-REPETITION SYSTEM (generation_history.json):
+ANTI-REPETITION & VIRAL HOOK SYSTEM (generation_history.json):
 - Tracks all previously used opening hooks and sign-off CTAs across sessions.
 - Before generating new content, check the last 7 entries in the history file
   and ensure the new generation uses genuinely different phrasing and angles.
+- 6 Proven Viral Hook Archetypes (2-Second Retention Rule):
+  1. The Unspoken Daily Dilemma (Tropical Climate / Comfort / Sauna Effect)
+  2. The Flattering Silhouette / Visual Insecurity Solution (Auto-slimming, hiding tummy, thigh cuts)
+  3. The Price-Quality Myth-Buster (Expensive outdoor brands vs high-quality affordable items)
+  4. The Hidden Gem / Secret Discovery (Effortless 2-second styling secret, overlooked cut)
+  5. The Visual Pattern Interrupt / Direct Question ("Korang perasan tak...", "Tahu tak kenapa...")
+  6. The Relatable Lifestyle Dilemma (Waking up late, rushed mornings, ironless prep)
 - After generating, ALWAYS log the new entry with save_generation_history() from generate_prompts.py.
 - NO fixed rotation scripts — just be aware of what was already used and create fresh words on the spot.
 """

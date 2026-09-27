@@ -116,12 +116,25 @@ python scrape_product.py "https://vt.tiktok.com/..."
 - Before writing Scene 1 dialogue, search the internet for top-performing, high-converting TikTok e-commerce hooks in Malaysia / Southeast Asia tailored to the specific product category.
 - Apply the strongest, data-backed hook angle to maximize 2-second retention and stop the scroll.
 
-**Check History Window**:
+**6 Proven Viral Hook Archetypes (2-Second Retention Rule)**:
+1. **The Unspoken Daily Dilemma (Tropical Climate / Comfort)**: e.g. Hot weather sauna effect, humid sweat, stuffy fabrics vs breathable water-resistant protection.
+2. **The Flattering Silhouette / Visual Insecurity Solution**: e.g. Afraid loose cut looks frumpy or thighs look wide vs auto-slimming elongating drape.
+3. **The Price-Quality Myth-Buster**: e.g. Expecting to pay hundreds at branded outdoor stores vs premium durable quality at affordable price.
+4. **The Hidden Gem / Secret Discovery**: e.g. Effortless 2-second styling secret, the hidden gem cutting nobody is talking about.
+5. **The Visual Pattern Interrupt / Direct Question**: e.g. "Korang perasan tak...", "Tahu tak kenapa...", "Siapa dekat sini yang...".
+6. **The Relatable Lifestyle Dilemma**: e.g. Waking up late, rushing to office/campus, hating ironing clothes.
+
+**Check History Window & Verify Hook Quality**:
 ```python
-from generate_prompts import get_recently_used_phrases
+from generate_prompts import get_recently_used_phrases, verify_hook_quality, detect_hook_archetype
 print(get_recently_used_phrases())
+
+# Audit hook before finalizing
+audit = verify_hook_quality(selected_scene_1_opening)
+print("Hook Archetype:", audit["archetype"])
+print("Quality Audit:", audit)
 ```
-Ensure the selected hook and closing line differ from the last 7 recorded entries.
+Ensure the selected hook and closing line differ from the last 7 recorded entries and achieve a passing quality score.
 
 
 ### Step 5: Compose the Full Deliverable Package
