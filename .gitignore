@@ -50,8 +50,10 @@ Thumbs.db
 # Output directory
 output/
 
-# Temp scripts from scraping
+# Temp scripts and scratch folder
 fetch_gemini_chat.js
 parse_share.py
 scrape_gemini.py
+scratch/
+
 
