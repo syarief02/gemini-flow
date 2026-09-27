@@ -23,7 +23,8 @@ import subprocess
 import sys
 import urllib.request
 from datetime import datetime
-from urllib.parse import unquote
+from urllib.parse import unquote, quote
+import urllib.parse
 
 from PIL import Image
 
@@ -40,6 +41,7 @@ if sys.platform == "win32":
 
 def extract_product_details_from_url(url: str) -> dict:
     """Extract product title and metadata from the resolved TikTok Shop URL."""
+    import re
     details = {}
     if "og_info=" in url:
         try:
@@ -49,7 +51,11 @@ def extract_product_details_from_url(url: str) -> dict:
             details["og_image"] = og_json.get("image", "")
         except Exception:
             pass
+    pid_m = re.search(r"product_id=(\d+)", url) or re.search(r"/pdp/(\d+)", url) or re.search(r"product/(\d+)", url)
+    if pid_m:
+        details["product_id"] = pid_m.group(1)
     return details
+
 
 
 def download_file(url: str, output_path: str, timeout: int = 25) -> bool:
@@ -404,16 +410,52 @@ async def _scrape_tiktok_playwright(tiktok_url: str, output_dir: str) -> dict:
                     if download_file(og_src, webp_path):
                         im = Image.open(webp_path)
                         im.convert("RGB").save(jpg_path, "JPEG", quality=95)
-                        os.remove(webp_path)
                         image_paths.append(jpg_path)
-                        print(
-                            f"  📸 product_{count}.jpg (from og_image, {im.size[0]}x{im.size[1]})",
-                            flush=True,
-                        )
+                        print(f"  📸 product_{count}.jpg (from og_image, {im.size[0]}x{im.size[1]})", flush=True)
                 except Exception as err:
+
                     print(f"  ❌ Failed og_image product_{count}: {err}", flush=True)
 
+
+            # Fallback for alliance voucher links or zero images: Search for product details/images
+            if len(image_paths) == 0:
+
+                pid = url_details.get("product_id")
+                search_term = clean_title if clean_title and len(clean_title) > 3 else (pid or "")
+                if search_term:
+                    print(f"🔍 Zero images found on PDP. Running Playwright fallback search for '{search_term}'...", flush=True)
+                    try:
+                        search_page = await context.new_page()
+                        search_url = f"https://www.bing.com/images/search?q={urllib.parse.quote(search_term + ' shopee tiktok')}"
+                        await search_page.goto(search_url, wait_until="domcontentloaded", timeout=20000)
+                        await asyncio.sleep(2)
+                        s_content = await search_page.content()
+                        murls = re.findall(r'&quot;murl&quot;:&quot;(https?://[^&]+)&quot;', s_content)
+                        for m_url in murls:
+                            if any(k in m_url for k in ["susercontent.com", "ibyteimg.com", "shopee"]):
+                                count += 1
+                                jpg_path = os.path.join(output_dir, f"product_{count}.jpg")
+                                temp_path = os.path.join(output_dir, f"temp_s_{count}.jpg")
+                                try:
+                                    if download_file(m_url, temp_path):
+                                        with Image.open(temp_path) as im:
+                                            if im.size[0] >= 250 and im.size[1] >= 250:
+                                                im.convert("RGB").save(jpg_path, "JPEG", quality=95)
+                                                image_paths.append(jpg_path)
+                                                print(f"  📸 product_{count}.jpg (from fallback search, {im.size[0]}x{im.size[1]})", flush=True)
+                                        if os.path.exists(temp_path):
+                                            os.remove(temp_path)
+                                except Exception:
+                                    if os.path.exists(temp_path):
+                                        os.remove(temp_path)
+                                if len(image_paths) >= 5:
+                                    break
+                        await search_page.close()
+                    except Exception as e_fb:
+                        print(f"⚠️ Fallback search notice: {e_fb}", flush=True)
+
             # Check policy compliance for the product title
+
             from check_policy import check_policy
             is_compliant, compliance_badge, verified_date = check_policy(clean_title or "Pakaian & Fesyen")
 
