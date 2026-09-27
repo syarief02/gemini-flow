@@ -68,7 +68,7 @@ def detect_hook_archetype(opening_line: str) -> str:
     line = opening_line.lower()
     if any(k in line for k in ['sauna', 'cuaca', 'panas', 'hujan', 'berkuap', 'angin sejuk']):
         return "The Unspoken Daily Dilemma (Tropical Climate / Comfort)"
-    elif any(k in line for k in ['peha', 'tenggelam', 'nampak besar', 'gemuk', 'cutting', 'kurus', 'lampai', 'buncit']):
+    elif any(k in line for k in ['peha', 'tenggelam', 'nampak besar', 'gemuk', 'cutting', 'kurus', 'lampai', 'buncit', 'punggung', 'skirt extender', 'melekat']):
         return "The Flattering Silhouette / Visual Insecurity Solution"
     elif any(k in line for k in ['ratusan ringgit', 'mahal', 'murah', 'jenama', 'mampu milik', 'silap besar', 'ramai orang ingat', 'ramai ingat', 'sangka']):
         return "The Price-Quality Myth-Buster"
