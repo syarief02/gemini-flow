@@ -4,7 +4,7 @@
 # AI agents MUST check this file AND search online for the latest updates
 # BEFORE generating any content. If new rules are found, update this file.
 #
-# Last Verified: 2026-09-21
+# Last Verified: 2026-09-27
 
 ---
 
@@ -55,6 +55,7 @@
 | **Deepfakes Banned** | Impersonating real people (public figures, celebrities) via AI is strictly prohibited. | Immediate removal + ban |
 | **Private Individuals** | Synthetic media featuring real private individuals is entirely banned. | Immediate removal + ban |
 | **Ads: Mandatory Since July 2026** | All AI-generated content in paid advertisements must carry disclosure labels. | Ad rejection + penalties |
+| **AIGC Seller Playbook (Sep 2026)** | AI imagery must not alter key physical product attributes (size, color, material, cut, or safety features) in a manner that misrepresents the actual physical item. | Listing deactivation + points |
 | **Our Workflow Note** | Our keyframe images and Flow AI videos are AI-generated. When posting, user MUST enable the "AI-generated content" toggle in TikTok's posting settings. | Self-imposed |
 
 ---
@@ -84,6 +85,7 @@
 | **5-Video Misleading Threshold** | If 5+ "misleading" or "non-interactive" videos are posted in 7 days, posting limits cap creators to only 7 shoppable videos/week. |
 | **90-Day Violation Window** | Repeated violations within 90 days → content removal, suspension, or permanent e-commerce ban. |
 | **Engagement Bait Detection** | Algorithm detects and suppresses "like-for-like", fake incentives, and engagement bait. |
+| **Inactive Shop Policy (Sep 17, 2026)** | Accounts inactive for 30 calendar days face chat restrictions and product listing deactivation. Sellers must process orders promptly to Ready to Ship (RTS) or actively interact via Seller Center/API. Holiday Mode must be toggled if taking a break. |
 | **Health Claims (Updated July 2026)** | Stricter restrictions on body structure alteration claims, GLP-1/Ozempic medicine comparisons, and exceeding dosage guidelines. |
 | **Appeals** | Creators can appeal removals through the app's "Content violations and bans" section. |
 
@@ -119,6 +121,7 @@ These are rules we enforce on ourselves to maintain a clean account health:
 
 | Date | Change | Source |
 |------|--------|--------|
+| 2026-09-27 | Live compliance review: Verified newly introduced Inactive Shop Policy (30-day activity threshold & prompt Ready to Ship / RTS requirement effective Sep 17, 2026) and latest AIGC Seller Playbook guidelines (strict prohibition on using AI to alter core physical product attributes like size, color, or material). Content pipeline strictly conforms. | TikTok Shop Malaysia Seller Center & Creator Compliance Bulletin (Sep 2026) |
 | 2026-09-21 | Weekly compliance review: Re-verified TikTok Shop Malaysia AIGC disclosure rules (mandatory toggle for synthetic faces/voices, C2PA automated detection, truth in advertising without fabricated effects). All content pipeline rules strictly compliant. | TikTok Shop Malaysia Seller Center & Creator Compliance Guidelines (Sep 2026) |
 | 2026-09-14 | Weekly compliance review: Re-confirmed mandatory AIGC disclosure toggle, PPS >= 4.5 operational benchmark, zero direct pricing rule, and strict prohibition on generic spam hashtags (#fyp, #viral, #RacunTikTok). | TikTok Shop Creator Policy & Community Guidelines Malaysia |
 | 2026-09-07 | Re-verified Malaysia creator campaign eligibility: Affiliate Creators need PPS at least 3.5 and CHR at least 150 for campaign enrolment. Retained stricter internal PPS target of 4.5 for account health. | TikTok Shop Malaysia, Campaign Season Policy Tips & Tricks for Creators, 2026-09-04 |
