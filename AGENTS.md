@@ -112,17 +112,36 @@ python scrape_product.py "https://vt.tiktok.com/..."
 - **We simply record every used hook so they do not repeat within the recent 7-entry window.**
 - Hooks older than the 7-entry window can be freely reused and refreshed.
 
-**Mandatory Internet Data Search for Best Hooks**:
-- Before writing Scene 1 dialogue, search the internet for top-performing, high-converting TikTok e-commerce hooks in Malaysia / Southeast Asia tailored to the specific product category.
-- Apply the strongest, data-backed hook angle to maximize 2-second retention and stop the scroll.
+**MANDATORY: Live Search → Rank → Pick Top 1 (NEVER SKIP)**:
+Before writing Scene 1 dialogue, the agent MUST follow this exact 3-step process:
 
-**6 Proven Viral Hook Archetypes (2-Second Retention Rule)**:
+> **Step 4a. Live Web Search (MANDATORY EVERY RUN)**:
+> Search the internet for **at least 2 different queries** tailored to the specific product:
+> - Query 1: Top-performing TikTok e-commerce hooks for the specific product category in Malaysia / Southeast Asia.
+> - Query 2: Highest retention rate hook formulas for fashion/outerwear/[product type] TikTok 2026.
+> The agent MUST NOT skip the live search and rely solely on the internal archetype list.
+
+> **Step 4b. Rank Candidate Hooks (MANDATORY EVERY RUN)**:
+> From the live search results combined with the 8 proven archetypes below, create **at least 3 candidate hooks** in Malaysian Malay. Rank them by:
+> 1. **Immediacy** (30%): Does it deliver value in <2 seconds?
+> 2. **Specificity** (25%): Does it name a concrete pain point + product differentiator?
+> 3. **Social proof / pattern interrupt power** (20%)
+> 4. **Malaysian locale resonance** (15%): Relatable local scenario
+> 5. **Non-repetition vs last 7 entries** (10%)
+> Run `verify_hook_quality()` on each candidate and display results.
+
+> **Step 4c. Select Winner (MANDATORY EVERY RUN)**:
+> Pick the **#1 ranked hook** as the Scene 1 opening line. Display the ranking table to the user.
+
+**8 Proven Viral Hook Archetypes (2-Second Retention Rule)**:
 1. **The Unspoken Daily Dilemma (Tropical Climate / Comfort)**: e.g. Hot weather sauna effect, humid sweat, stuffy fabrics vs breathable water-resistant protection.
 2. **The Flattering Silhouette / Visual Insecurity Solution**: e.g. Afraid loose cut looks frumpy or thighs look wide vs auto-slimming elongating drape.
 3. **The Price-Quality Myth-Buster**: e.g. Expecting to pay hundreds at branded outdoor stores vs premium durable quality at affordable price.
 4. **The Hidden Gem / Secret Discovery**: e.g. Effortless 2-second styling secret, the hidden gem cutting nobody is talking about.
 5. **The Visual Pattern Interrupt / Direct Question**: e.g. "Korang perasan tak...", "Tahu tak kenapa...", "Siapa dekat sini yang...".
 6. **The Relatable Lifestyle Dilemma**: e.g. Waking up late, rushing to office/campus, hating ironing clothes.
+7. **The Stereotype-Buster / Pain-Point Contrast**: e.g. "Siapa cakap jaket kalis air mesti nampak boyish?" challenging common assumptions about the product category.
+8. **The FOMO / FYP Social Proof Trend**: e.g. "Patutlah asyik lalu dekat FYP..." leveraging social proof and trend awareness.
 
 **Check History Window & Verify Hook Quality**:
 ```python

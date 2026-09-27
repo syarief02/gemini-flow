@@ -78,6 +78,10 @@ def detect_hook_archetype(opening_line: str) -> str:
         return "The Relatable Lifestyle Dilemma (Morning Rush / Easy Prep)"
     elif any(k in line for k in ['perasan tak', 'tahu tak', 'siapa dekat sini', 'pernah tak', 'tengok betul']):
         return "The Visual Pattern Interrupt / Direct Question"
+    elif any(k in line for k in ['siapa cakap', 'mesti ke', 'boyish', 'maskulin', 'gelap je', 'ingat mesti']):
+        return "The Stereotype-Buster / Pain-Point Contrast"
+    elif any(k in line for k in ['patutlah', 'asyik lalu', 'fyp', 'viral', 'ramai cari']):
+        return "The FOMO / FYP Social Proof Trend"
     return "Conversational Organic Recommendation"
 
 def verify_hook_quality(opening_line: str, last_7_entries: list = None) -> dict:
@@ -98,8 +102,13 @@ def verify_hook_quality(opening_line: str, last_7_entries: list = None) -> dict:
     if re.search(r'\baku\b', line_lower):
         issues.append("Uses 'aku' instead of professional/friendly 'saya'")
 
-    # 2-second retention hook trigger
-    triggers = ['korang', 'perasan tak', 'tahu tak', 'susah betul', 'ramai orang', 'siapa dekat sini', 'dengan cuaca', 'pagi-pagi', 'kadang-kadang', 'pernah tak', 'tengok']
+    # 2-second retention hook trigger (expanded with live-search-derived patterns)
+    triggers = [
+        'korang', 'perasan tak', 'tahu tak', 'susah betul', 'ramai orang',
+        'siapa dekat sini', 'dengan cuaca', 'pagi-pagi', 'kadang-kadang',
+        'pernah tak', 'tengok', 'siapa cakap', 'patutlah', 'mesti ke',
+        'selalu sangat', 'jangan', 'stop', 'satu je', 'ubah terus',
+    ]
     has_trigger = any(t in line_lower for t in triggers)
     if not has_trigger:
         issues.append("Lacks a clear 2-second scroll-stopping trigger phrase.")
