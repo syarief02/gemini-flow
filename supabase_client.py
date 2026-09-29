@@ -177,8 +177,9 @@ def save_generation_record(
             client.table("gemini_flow_generations")
             .select("id, keyframe_urls")
             .eq("product_name", product_name)
+            .eq("opening_line", opening_line)
             .order("created_at", desc=True)
-            .limit(3)
+            .limit(1)
             .execute()
         )
         match_id = None
@@ -198,6 +199,72 @@ def save_generation_record(
     except Exception as e:
         print(f"Supabase sync notice: {e}")
         return False
+
+
+def sync_local_history_to_supabase(history_path: Optional[str | Path] = None) -> Dict[str, Any]:
+    """
+    Scan generation_history.json and sync any missing records to Supabase gemini_flow_generations.
+    """
+    client = get_supabase_client()
+    if not client:
+        return {"status": "error", "message": "Supabase client not initialized"}
+
+    target_path = Path(history_path) if history_path else Path(__file__).resolve().parent / "generation_history.json"
+    if not target_path.is_file():
+        return {"status": "error", "message": f"File not found: {target_path}"}
+
+    try:
+        with open(target_path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        generations = data.get("generations", [])
+    except Exception as e:
+        return {"status": "error", "message": f"Failed to read history: {e}"}
+
+    try:
+        existing_res = client.table("gemini_flow_generations").select("product_name, opening_line").execute()
+        existing_keys = {
+            (r.get("product_name"), r.get("opening_line")) for r in (existing_res.data or [])
+        }
+    except Exception as e:
+        return {"status": "error", "message": f"Failed to fetch Supabase existing records: {e}"}
+
+    synced_count = 0
+    skipped_count = 0
+    for gen in generations:
+        p_name = gen.get("product")
+        o_line = gen.get("opening_line")
+        c_line = gen.get("closing_line", "")
+        if not p_name or not o_line:
+            continue
+
+        if (p_name, o_line) in existing_keys:
+            skipped_count += 1
+            continue
+
+        payload = {
+            "product_name": p_name,
+            "opening_line": o_line,
+            "closing_line": c_line,
+            "metadata": {
+                "timestamp": gen.get("timestamp"),
+                "hook_archetype": gen.get("hook_archetype"),
+                "hook_score": gen.get("hook_score"),
+                "synced_from_history": True,
+            }
+        }
+        try:
+            client.table("gemini_flow_generations").insert(payload).execute()
+            existing_keys.add((p_name, o_line))
+            synced_count += 1
+        except Exception as e_ins:
+            print(f"Failed to sync record for '{p_name}': {e_ins}")
+
+    return {
+        "status": "success",
+        "total_local": len(generations),
+        "already_synced": skipped_count,
+        "newly_synced": synced_count
+    }
 
 
 def upload_keyframe_to_supabase(

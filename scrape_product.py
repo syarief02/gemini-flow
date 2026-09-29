@@ -250,8 +250,8 @@ async def _scrape_tiktok_playwright(tiktok_url: str, output_dir: str) -> dict:
             # Extract details from URL params
             url_details = extract_product_details_from_url(final_url)
 
-            raw_title = url_details.get("title") or page_title
-            clean_title = unquote(raw_title).replace("+", " ").strip()
+            raw_title = url_details.get("title") or (page_title if "security check" not in page_title.lower() else "")
+            clean_title = unquote(raw_title).replace("+", " ").strip() if raw_title else "Produk TikTok Shop"
             import re
             clean_title = re.sub(r"\s+", " ", clean_title)
 
@@ -265,8 +265,9 @@ async def _scrape_tiktok_playwright(tiktok_url: str, output_dir: str) -> dict:
                 "verify to continue",
                 "sila cuba lagi",
                 "connect to the internet and try again",
+                "security check",
             ]
-            is_blocked = any(k in body_text.lower() for k in blocked_keywords)
+            is_blocked = any(k in body_text.lower() for k in blocked_keywords) or ("security check" in page_title.lower())
 
             if is_blocked:
                 # 1. Try extracting meta description tag from page HTML
@@ -311,12 +312,34 @@ async def _scrape_tiktok_playwright(tiktok_url: str, output_dir: str) -> dict:
             image_paths = []
             count = 0
 
+            # Prioritize og_image from URL parameters if available
+            if url_details.get("og_image"):
+                og_img = url_details["og_image"]
+                og_base = og_img.split("~")[0]
+                seen_bases.add(og_base)
+                jpg_dest = os.path.join(output_dir, f"product_{count + 1}.jpg")
+                if download_file(og_img, jpg_dest):
+                    try:
+                        with Image.open(jpg_dest) as im:
+                            if im.size[0] >= 250 and im.size[1] >= 250:
+                                count += 1
+                                image_paths.append(jpg_dest)
+                                print(f"  📸 product_{count}.jpg ({im.size[0]}x{im.size[1]}) [from og_image]", flush=True)
+                            else:
+                                if os.path.exists(jpg_dest):
+                                    os.remove(jpg_dest)
+                    except Exception:
+                        pass
+
             for img in imgs:
+                if is_blocked:
+                    # Do not extract images from captcha or security check interstitial pages
+                    break
                 src = img["src"]
                 is_product = any(k in src for k in ["p16-oec", "p19-oec", "tos-maliva", "tos-alisg"])
                 if not is_product:
                     continue
-                if any(bad in src.lower() for bad in ["avatar", "logo", "icon", "100x100", "50x50", "common-sign"]):
+                if any(bad in src.lower() for bad in ["avatar", "logo", "icon", "100x100", "50x50", "common-sign", "captcha", "security", "puzzle"]):
                     continue
 
                 base = src.split("~")[0]
@@ -355,7 +378,7 @@ async def _scrape_tiktok_playwright(tiktok_url: str, output_dir: str) -> dict:
                         print(f"  ❌ Failed image download: {err}", flush=True)
 
             # Deep Scan: If fewer than 3 images found, search HTML & embedded scripts for ByteDance image CDN URLs
-            if len(image_paths) < 3:
+            if len(image_paths) < 3 and not is_blocked:
                 try:
                     import re
                     html_content = await page.content()
@@ -365,7 +388,7 @@ async def _scrape_tiktok_playwright(tiktok_url: str, output_dir: str) -> dict:
                     )
                     for raw_src in found_urls:
                         src = raw_src.replace(r"\/", "/").replace("\\", "")
-                        if any(bad in src.lower() for bad in ["avatar", "logo", "icon", "100x100", "50x50", "common-sign"]):
+                        if any(bad in src.lower() for bad in ["avatar", "logo", "icon", "100x100", "50x50", "common-sign", "captcha", "security", "puzzle"]):
                             continue
                         base = src.split("~")[0]
                         if base not in seen_bases:
