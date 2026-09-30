@@ -25,6 +25,8 @@ archived_assets/
 extracted_flow_video/
 *.zip
 *.mp4
+*.wav
+*.mp3
 
 # Environment variables / Secrets
 .env
