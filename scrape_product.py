@@ -170,6 +170,60 @@ async def scrape_tiktok_product(tiktok_url: str, output_dir: str) -> dict:
         return scrape_lightweight(tiktok_url, output_dir)
 
 
+def _can_launch_headed() -> bool:
+    """Headed Chrome needs a desktop session (Windows / macOS, or Linux with a display)."""
+    return sys.platform in ("win32", "darwin") or bool(os.environ.get("DISPLAY"))
+
+
+async def _open_pdp_in_headed_chrome(p, product_id: str):
+    """
+    TikTok serves a 'Security Check' captcha to headless browsers and to affiliate
+    voucher links opened outside the app. A real, headed Chrome window loads the
+    PDP normally, so retry there with the window parked off-screen.
+    Returns (browser, page) or (None, None) on failure.
+    """
+    pdp_url = f"https://shop.tiktok.com/my/pdp/{product_id}"
+    print(f"🔁 Retrying in headed Chrome: {pdp_url}", flush=True)
+    try:
+        browser = await p.chromium.launch(
+            channel="chrome",
+            headless=False,
+            args=[
+                "--disable-blink-features=AutomationControlled",
+                "--window-position=-32000,-32000",
+            ],
+        )
+    except Exception:
+        try:
+            browser = await p.chromium.launch(
+                headless=False,
+                args=[
+                    "--disable-blink-features=AutomationControlled",
+                    "--window-position=-32000,-32000",
+                ],
+            )
+        except Exception as e:
+            print(f"⚠️ Headed Chrome/Chromium launch failed: {e}", flush=True)
+            return None, None
+    context = await browser.new_context(
+        locale="ms-MY",
+        timezone_id="Asia/Kuala_Lumpur",
+        viewport={"width": 1280, "height": 800},
+    )
+    await context.add_init_script(
+        "Object.defineProperty(navigator, 'webdriver', { get: () => undefined });"
+    )
+    page = await context.new_page()
+    try:
+        await page.goto(pdp_url, wait_until="domcontentloaded", timeout=45000)
+        await asyncio.sleep(8)
+    except Exception as e:
+        print(f"⚠️ Headed Chrome navigation failed: {e}", flush=True)
+        await browser.close()
+        return None, None
+    return browser, page
+
+
 async def _scrape_tiktok_playwright(tiktok_url: str, output_dir: str) -> dict:
     async with async_playwright() as p:
         container_args = [
@@ -236,6 +290,7 @@ async def _scrape_tiktok_playwright(tiktok_url: str, output_dir: str) -> dict:
         page = await context.new_page()
 
         print(f"🔗 Navigating to: {tiktok_url}", flush=True)
+        extra_browsers = []
 
         try:
             await page.goto(tiktok_url, wait_until="domcontentloaded", timeout=30000)
@@ -268,6 +323,24 @@ async def _scrape_tiktok_playwright(tiktok_url: str, output_dir: str) -> dict:
                 "security check",
             ]
             is_blocked = any(k in body_text.lower() for k in blocked_keywords) or ("security check" in page_title.lower())
+
+            # Voucher links and captcha pages never expose the PDP: retry in headed Chrome
+            is_voucher = "/alliance/" in final_url and "og_info=" not in final_url
+            pid = url_details.get("product_id")
+            if (is_blocked or is_voucher) and pid and _can_launch_headed():
+                headed_browser, headed_page = await _open_pdp_in_headed_chrome(p, pid)
+                if headed_page:
+                    h_title = await headed_page.title()
+                    h_body = await headed_page.evaluate("() => document.body.innerText")
+                    if "security check" in h_title.lower() or any(k in h_body.lower() for k in blocked_keywords):
+                        print("⚠️ Headed Chrome was also blocked.", flush=True)
+                        await headed_browser.close()
+                    else:
+                        extra_browsers.append(headed_browser)
+                        page = headed_page
+                        page_title, body_text, is_blocked = h_title, h_body, False
+                        clean_title = re.sub(r"\s+", " ", re.sub(r"\s*-\s*TikTok Shop.*$", "", h_title)).strip()
+                        print(f"📄 Product: {clean_title}", flush=True)
 
             if is_blocked:
                 # 1. Try extracting meta description tag from page HTML
@@ -503,6 +576,8 @@ async def _scrape_tiktok_playwright(tiktok_url: str, output_dir: str) -> dict:
             return product_info
 
         finally:
+            for extra in extra_browsers:
+                await extra.close()
             await browser.close()
 
 
