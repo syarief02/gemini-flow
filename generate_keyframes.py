@@ -57,25 +57,34 @@ def clean_slug(text: str) -> str:
 def generate_one(client: genai.Client, prompt: str, references: list[Path], output_path: Path) -> str:
     last_error: Exception | None = None
     inputs = [{"type": "text", "text": prompt}, *(image_input(path) for path in references)]
+    import concurrent.futures
+
+    def _call_model(m):
+        return client.interactions.create(
+            model=m,
+            input=inputs,
+            response_format={
+                "type": "image",
+                "mime_type": "image/jpeg",
+                "aspect_ratio": "9:16",
+                "image_size": "1K",
+            },
+        )
+
     for model in MODEL_CANDIDATES:
         try:
             print(f"Generating {output_path.name} with {model}...", flush=True)
-            interaction = client.interactions.create(
-                model=model,
-                input=inputs,
-                response_format={
-                    "type": "image",
-                    "mime_type": "image/jpeg",
-                    "aspect_ratio": "9:16",
-                    "image_size": "1K",
-                },
-            )
+            with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
+                future = executor.submit(_call_model, model)
+                interaction = future.result(timeout=35)
             generated = interaction.output_image
             if not generated or not generated.data:
                 raise RuntimeError("The model returned no image data.")
             output_path.write_bytes(base64.b64decode(generated.data))
             print(f"SUCCESS {model}: {output_path}", flush=True)
             return model
+        except concurrent.futures.TimeoutError:
+            print(f"FAILED {model}: Request timed out after 35s", flush=True)
         except Exception as error:
             last_error = error
             print(f"FAILED {model}: {error}", flush=True)
@@ -209,12 +218,12 @@ def main():
         session_p = Path(args.session)
         target_dir = session_p if session_p.is_dir() else (output_dir / args.session)
     elif args.latest:
-        subdirs = sorted([d for d in output_dir.iterdir() if d.is_dir()], reverse=True)
+        subdirs = sorted([d for d in output_dir.iterdir() if d.is_dir()], key=lambda d: d.stat().st_mtime, reverse=True)
         if subdirs:
             target_dir = subdirs[0]
     else:
         # Default to latest if no argument passed
-        subdirs = sorted([d for d in output_dir.iterdir() if d.is_dir()], reverse=True)
+        subdirs = sorted([d for d in output_dir.iterdir() if d.is_dir()], key=lambda d: d.stat().st_mtime, reverse=True)
         if subdirs:
             target_dir = subdirs[0]
 
