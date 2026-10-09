@@ -12,6 +12,9 @@ import json
 import time
 from pathlib import Path
 from typing import Optional, Dict, Any, List
+import warnings
+warnings.filterwarnings("ignore", message=r"urllib3.*doesn't match a supported version")
+
 from dotenv import load_dotenv
 
 load_dotenv(Path(__file__).resolve().parent / ".env")

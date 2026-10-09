@@ -22,6 +22,9 @@ if sys.platform == "win32":
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 
+import warnings
+warnings.filterwarnings("ignore", message=r"urllib3.*doesn't match a supported version")
+
 try:
     from dotenv import load_dotenv
     load_dotenv()
