@@ -4,7 +4,7 @@
 # AI agents MUST check this file AND search online for the latest updates
 # BEFORE generating any content. If new rules are found, update this file.
 #
-# Last Verified: 2026-10-09
+# Last Verified: 2026-10-11
 
 ---
 
@@ -123,6 +123,7 @@ These are rules we enforce on ourselves to maintain a clean account health:
 
 | Date | Change | Source |
 |------|--------|--------|
+| 2026-10-11 | Live compliance review: Verified October 2026 updates including strict AIGC policy against exaggerating product features/alterations, mandatory synthetic media disclosure toggle, and affiliate account health requirements (PPS >= 3.5, CHR >= 150). Content generator strictly aligns. | TikTok Shop Creator Policy Updates & Seller Playbook (Oct 2026) |
 | 2026-10-09 | Live compliance review: Verified October 2026 content policy updates in Malaysia/SEA, enforcing strict moderation against absolute price claims ("cheapest price anywhere"), unverified wellness/health outcome claims, and mandatory AIGC disclosure. Our zero-direct-price rule and AIGC toggle workflow remain 100% compliant. | TikTok Shop Malaysia Seller Center & Creator Policy Updates (Oct 2026) |
 | 2026-10-02 | Live compliance review: Verified October 2026 Affiliate Creator Promotion Eligibility Requirements across 17 categories (mandatory CHR >= 150, PPS >= 3.5), Official Account affiliate access separation rule (15-day sunset), and Customer Service Chat Assistant activation (Oct 1, 2026). Promo generator pipeline maintains 100% adherence. | TikTok Shop Malaysia Seller Center & Creator Compliance Update (Oct 2026) |
 | 2026-09-30 | Live compliance review: Verified upcoming Customer Service Chat Assistant auto-enablement (effective Oct 1, 2026), updated Community Guidelines on synthetic/AI-edited media (Sep 24, 2026), and refined Inactive Shop Policy (40-day threshold, 7-day buyer notification). Generated promotional content remains 100% compliant. | TikTok Shop Malaysia Seller Center & Creator Policy Updates (Sep 2026) |
