@@ -541,3 +541,10 @@ if __name__ == "__main__":
             except Exception as e_hist:
                 print(f"History sync notice: {e_hist}")
 
+            # Auto-log human coding activity to WakaTime
+            try:
+                from waka_human_sync import sync_recent_files
+                sync_recent_files(since_minutes=30)
+            except Exception as e_waka:
+                print(f"WakaTime sync notice: {e_waka}")
+
