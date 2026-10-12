@@ -200,8 +200,49 @@ def save_generation_record(
         print(f"Synced new generation record for '{product_name}' to Supabase.")
         return True
     except Exception as e:
-        print(f"Supabase sync notice: {e}")
-        return False
+        # Fallback to direct HTTP/1.1 REST call if supabase-py HTTP/2 connection terminated
+        try:
+            import urllib.request
+            import urllib.parse
+            headers = {
+                "apikey": SUPABASE_KEY,
+                "Authorization": f"Bearer {SUPABASE_KEY}",
+                "Content-Type": "application/json",
+                "Prefer": "return=representation"
+            }
+            # Query existing via REST
+            encoded_product = urllib.parse.quote(product_name)
+            encoded_line = urllib.parse.quote(opening_line)
+            q_url = f"{SUPABASE_URL}/rest/v1/gemini_flow_generations?product_name=eq.{encoded_product}&opening_line=eq.{encoded_line}&select=id&limit=1"
+            req_check = urllib.request.Request(q_url, headers=headers)
+            with urllib.request.urlopen(req_check, timeout=10) as r_check:
+                existing_rows = json.loads(r_check.read().decode("utf-8"))
+            
+            if existing_rows and existing_rows[0].get("id"):
+                match_id = existing_rows[0]["id"]
+                req_up = urllib.request.Request(
+                    f"{SUPABASE_URL}/rest/v1/gemini_flow_generations?id=eq.{match_id}",
+                    headers=headers,
+                    data=json.dumps(payload).encode("utf-8"),
+                    method="PATCH"
+                )
+                with urllib.request.urlopen(req_up, timeout=10) as r_up:
+                    print(f"Updated existing generation record ({match_id}) for '{product_name}' via REST fallback.")
+                    return True
+            else:
+                req_ins = urllib.request.Request(
+                    f"{SUPABASE_URL}/rest/v1/gemini_flow_generations",
+                    headers=headers,
+                    data=json.dumps(payload).encode("utf-8"),
+                    method="POST"
+                )
+                with urllib.request.urlopen(req_ins, timeout=10) as r_ins:
+                    print(f"Synced new generation record for '{product_name}' to Supabase via REST fallback.")
+                    return True
+        except Exception as e_fb:
+            print(f"Supabase sync notice: {e} (REST fallback error: {e_fb})")
+            return False
+
 
 
 def sync_local_history_to_supabase(history_path: Optional[str | Path] = None) -> Dict[str, Any]:
