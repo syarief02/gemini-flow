@@ -27,6 +27,8 @@ Every AI agent operating in this repository MUST memorize and adhere strictly to
 | **Brave CDP Connection** | Attempting to connect to an existing Brave instance without flags or launching without `--remote-allow-origins=*`, or calling `browser.close()` which kills the user's window. | Always launch with `--remote-debugging-port=9222 --remote-allow-origins=*`. **NEVER call `browser.close()`** so the user's visible interactive window stays open on desktop. |
 | **Keyframe Consistency** | Adding handbags, totes, phones, coffee cups, tumblers, waving hands, or changing hijab/bottoms between frames. | **Strict Zero-Prop & Empty-Hands Rule.** Both hands empty at sides. Same model, same modest hijab, same outfit head-to-toe, same background across all 3 frames. |
 | **Flow AI Parameters** | Using 5s/8s duration, landscape 16:9, or text-to-video mode. | **Duration = 10s**, **Orientation = Portrait (9:16)**, **Model = Omni Flash**, **Mode = Frame-to-Video** (Frame 1➡️2, Frame 2➡️3, Frame 3➡️1). |
+| **Flow AI Frame Pairing** | Reversing Start/End frames (e.g. putting Side as Start in Scene 1), uploading mismatched files, or guessing frame order. | **STRICT DIRECTIONAL CONTINUITY:** **Scene 1:** Start = Frame 1 (Front) ➡️ End = Frame 2 (Side); **Scene 2:** Start = Frame 2 (Side) ➡️ End = Frame 3 (Shoulder); **Scene 3:** Start = Frame 3 (Shoulder) ➡️ End = Frame 1 (Front 360° Loop). Verify thumbnails visually before rendering. |
+| **Flow AI Spoken Lip-Sync** | Submitting English-only visual prompt to Flow AI without the spoken dialogue, or separating dialogue outside the composer. | **MANDATORY VERBATIM LIP-SYNC IN COMPOSER:** The prompt entered into Flow AI's composer MUST explicitly include BOTH the English camera/visual instructions AND the verbatim Malaysian Malay dialogue block: `Spoken Malay (Lip-sync): "<dialogue>"`. Flow AI generates character lip-sync directly from this text. |
 | **Suno AI BGM** | Generating songs with vocal lyrics or background singing. | **Instrumental mode MUST be toggled ON.** TikTok promos use spoken Malay lip-sync voiceovers; vocals clash with speech. |
 | **Spoken Dialogue & Caption** | Using Indonesian words ("banget", "emang", "bgt"), em-dashes (`—`), or mentioning direct prices. | **Standard Malaysian Malay (KL accent)**, pronoun "saya" (never "aku"), zero em-dashes (use `:` or `,`), zero prices (direct to "beg kuning"). |
 | **Hook Selection** | Banning valid hook formulas or reusing openers from the last 7 recorded entries. | **Never ban valid hooks.** Live search MY TikTok data, rank candidate hooks, audit with `verify_hook_quality()`, and avoid the last 7 entries. |
@@ -217,25 +219,61 @@ Deliver to the user in this exact order:
    - **Duration:** Exactly **10 seconds** (10s) — NOT 5s, NOT 8s.
    - **Orientation:** Exactly **Portrait (9:16)** — NOT landscape 16:9.
    - **Model:** **Omni Flash** (Omni 1.1 Flash) or latest available fast video model.
-   - **Generation Mode:** **Frame to Video** (Start Frame + End Frame).
+   - **Generation Mode:** **Frame to Video** (Start Frame + End Frame). Ensure the composer displays both `Start` and `End` frame attachment slots.
 
-4. **Upload Keyframe Pairs and Enter Scene Prompts:**
-   - **Scene 1 (Front to Side Profile):**
-     - Start Frame: `keyframes/<product_prefix>_frame1_front.jpg`
-     - End Frame: `keyframes/<product_prefix>_frame2_side.jpg`
-     - Prompt: Scene 1 English visual prompt + Malaysian Malay translation lip-sync instruction.
-   - **Scene 2 (Side Profile to Over-Shoulder):**
-     - Start Frame: `keyframes/<product_prefix>_frame2_side.jpg`
-     - End Frame: `keyframes/<product_prefix>_frame3_shoulder.jpg`
-     - Prompt: Scene 2 English visual prompt + Malaysian Malay translation lip-sync instruction.
-   - **Scene 3 (Over-Shoulder to Front Standing — 360 Seamless Loop):**
-     - Start Frame: `keyframes/<product_prefix>_frame3_shoulder.jpg`
-     - End Frame: `keyframes/<product_prefix>_frame1_front.jpg`
-     - Prompt: Scene 3 English visual prompt + Malaysian Malay translation lip-sync instruction.
+4. **⛔ CRITICAL ZERO-MISTAKE RULES FOR FLOW AI (FRAMES & LIP-SYNC):**
 
-5. **Trigger Rendering & Verification:**
-   - Submit each scene sequence to Flow's render queue.
-   - Wait 3-5 seconds and capture progress screenshot `flow_renders_progress.png`.
+   #### 4a. STRICT FRAME DIRECTIONAL CONTINUITY (360° SEAMLESS LOOP)
+   Never reverse or guess the frame slots. The 3 scenes MUST follow this invariant circular progression:
+
+   ```mermaid
+   flowchart LR
+     F1["Frame 1 (Front View)"] -->|"Scene 1 (10s)"| F2["Frame 2 (Side Profile)"]
+     F2 -->|"Scene 2 (10s)"| F3["Frame 3 (Over-Shoulder)"]
+     F3 -->|"Scene 3 (10s)"| F1
+   ```
+
+   | Scene | Start Frame Slot | End Frame Slot | Narrative & Visual Purpose |
+   | :--- | :--- | :--- | :--- |
+   | **Scene 1** | `keyframes/<prefix>_frame1_front.jpg` *(Front View)* | `keyframes/<prefix>_frame2_side.jpg` *(3/4 Side Profile)* | Establishes model identity, eye contact, and 2-second viral hook question. Transitions from front facing to 3/4 side angle. |
+   | **Scene 2** | `keyframes/<prefix>_frame2_side.jpg` *(3/4 Side Profile)* | `keyframes/<prefix>_frame3_shoulder.jpg` *(Over-the-Shoulder)* | Demonstrates fabric texture, cut, waistline, and pockets. Transitions from side angle around to the back. |
+   | **Scene 3** | `keyframes/<prefix>_frame3_shoulder.jpg` *(Over-the-Shoulder)* | `keyframes/<prefix>_frame1_front.jpg` *(Front View)* | Model glances warmly over shoulder, then turns smoothly back to face camera front-standing with yellow basket CTA. **Completes the 360° loop.** |
+
+   > ❌ **CRITICAL MISTAKE TO AVOID:** Putting Frame 2 (Side) as Start in Scene 1! That causes the video to play backwards (Side ➡️ Front) and breaks viewer immersion.
+   > ✅ **PRE-RENDER FRAME VERIFICATION:** Always verify visually in the Flow UI that the left thumbnail is `Start` and the right thumbnail is `End`. If uploading new frames, ensure `_frame1_front.jpg` is clicked first into `Start`, and `_frame2_side.jpg` into `End`.
+
+   #### 4b. MANDATORY SPOKEN MALAY LIP-SYNC IN FLOW COMPOSER
+   Google Flow AI / Veo generates character mouth lip-sync and audio directly from the prompt text entered into the composer. If you only provide visual descriptions, Flow generates a silent or muddled video!
+
+   **The prompt entered into Flow AI's composer (`div.ProseMirror[role='textbox']`) MUST ALWAYS contain BOTH:**
+   1. The English camera and visual motion instructions.
+   2. The explicit Malaysian Malay spoken lip-sync dialogue block formatted with the header `Spoken Malay (Lip-sync): "<dialogue>"`.
+
+   **Exact Template for Each Scene in Flow AI:**
+   ```text
+   {english_visual_camera_and_lighting_prompt} For the audio, generate a highly realistic female voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent—strictly NOT an Indonesian accent. Ensure there are no text overlays or watermarks.
+
+   Spoken Malay (Lip-sync): "{exact_malaysian_malay_spoken_dialogue}"
+   ```
+
+   **Concrete Example for Scene 1 (W629 Striped Cropped Shirt):**
+   ```text
+   A smooth subtle slow zoom-in on a young Malaysian Muslim woman facing the camera warmly in a sunlit modern aesthetic interior, wearing a chic Korean striped cropped long-sleeved shirt in dark navy with crisp white pinstripes, tailored spread collar, and chest flap pockets, seamlessly paired with high-waisted black trousers. Gentle head nod with natural eye contact and empty hands resting low at sides. Camera glides smoothly into a three-quarter side profile angle. For the audio, generate a highly realistic female voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent—strictly NOT an Indonesian accent. Ensure there are no text overlays or watermarks.
+
+   Spoken Malay (Lip-sync): "Stop beli kemeja baggy yang buat badan korang nampak tenggelam atau petak! Korang tengok kemeja jalur krop ala Korea rona navy ni: potongan pinggang berstruktur dengan poket dada berpenutup ni auto bagi efek kaki nampak tinggi lampai dan pinggang terus nampak ramping!"
+   ```
+
+5. **Automated Playwright Flow Execution (`automate_flow.py`):**
+   - Run the unified automation script to queue all 3 scenes or an individual scene:
+     ```bash
+     # Render all 3 scenes consecutively with exact frame pairings & lip-sync:
+     python automate_flow.py --all
+
+     # Or render a specific scene:
+     python automate_flow.py --scene 1
+     ```
+   - The script connects over port 9222, ensures 10s portrait orientation, uploads the exact keyframe pair, types the combined visual + Spoken Malay lip-sync text via `page.keyboard.insert_text()`, and clicks `button[aria-label='Start generation']`.
+   - Wait 4-6 seconds and capture verification screenshot `flow_renders_progress.png`.
 
 ---
 

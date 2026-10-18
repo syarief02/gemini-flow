@@ -244,8 +244,28 @@ async def configure_and_render_scene(
     return True
 
 
+def format_flow_prompt_with_lipsync(visual_prompt: str, spoken_dialogue: str = None) -> str:
+    """Ensure the prompt contains both visual directions and explicit Spoken Malay lip-sync block."""
+    prompt = visual_prompt.strip()
+    if "Spoken Malay (Lip-sync):" in prompt:
+        return prompt
+
+    if spoken_dialogue:
+        clean_spoken = spoken_dialogue.strip().strip('"')
+        return f'{prompt}\n\nSpoken Malay (Lip-sync): "{clean_spoken}"'
+
+    # If dialogue not provided separately, attempt to extract quoted speech from prompt
+    quotes = re.findall(r'"([^"]{15,})"', prompt)
+    if quotes:
+        extracted_dialogue = quotes[-1]
+        return f'{prompt}\n\nSpoken Malay (Lip-sync): "{extracted_dialogue}"'
+
+    return prompt
+
+
 async def run_flow_pipeline(
     scene_num: int = 1,
+    render_all: bool = False,
     prompt_override: str | None = None,
     start_frame_override: str | None = None,
     end_frame_override: str | None = None
@@ -263,42 +283,56 @@ async def run_flow_pipeline(
         scenes = gen_data.get("scenes") or {}
 
         # Default prompts
-        scene_prompts = {
+        raw_prompts = {
             1: scenes.get("scene_1_intro") or (
                 'A smooth front-facing medium camera shot transitioning gracefully into a three-quarter side profile '
                 'of the Malaysian Muslim woman wearing the chic modest outfit in the sunlit courtyard. '
-                'Natural motion, empty hands resting at sides. Clear natural Malaysian Malay voiceover lip-sync.'
+                'Natural motion, empty hands resting at sides. For the audio, generate a highly realistic female voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent—strictly NOT an Indonesian accent. Ensure there are no text overlays or watermarks.'
             ),
             2: scenes.get("scene_2_detail") or (
                 'A smooth camera glide continuing from three-quarter side profile into an over-the-shoulder view '
                 'in the courtyard, showcasing the fabric drape and styling details with empty hands resting low at sides. '
-                'Clear natural Malaysian Malay voiceover lip-sync.'
+                'For the audio, generate a highly realistic female voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent—strictly NOT an Indonesian accent. Ensure there are no text overlays or watermarks.'
             ),
             3: scenes.get("scene_3_outro") or (
                 'A seamless circular camera motion from the over-the-shoulder angle turning back gracefully to face front '
-                'towards the camera with a warm smile. Empty hands resting low. Clear natural Malaysian Malay voiceover lip-sync.'
+                'towards the camera with a warm smile. Empty hands resting low. For the audio, generate a highly realistic female voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent—strictly NOT an Indonesian accent. Ensure there are no text overlays or watermarks.'
             )
         }
 
-        # Frame pairings
+        # Frame pairings: Scene 1: F1->F2 | Scene 2: F2->F3 | Scene 3: F3->F1
         pairings = {
             1: (f1, f2),
             2: (f2, f3),
             3: (f3, f1)
         }
 
-        start_f = Path(start_frame_override) if start_frame_override else pairings.get(scene_num, (f1, f2))[0]
-        end_f = Path(end_frame_override) if end_frame_override else pairings.get(scene_num, (f1, f2))[1]
-        active_prompt = prompt_override or scene_prompts.get(scene_num)
+        scenes_to_run = [1, 2, 3] if render_all else [scene_num]
 
-        success = await configure_and_render_scene(
-            page=page,
-            scene_index=scene_num,
-            prompt=active_prompt,
-            start_frame_path=start_f,
-            end_frame_path=end_f
-        )
-        return success
+        for s_idx in scenes_to_run:
+            start_f = Path(start_frame_override) if (start_frame_override and not render_all) else pairings[s_idx][0]
+            end_f = Path(end_frame_override) if (end_frame_override and not render_all) else pairings[s_idx][1]
+            base_prompt = prompt_override if (prompt_override and not render_all) else raw_prompts.get(s_idx)
+
+            active_prompt = format_flow_prompt_with_lipsync(base_prompt)
+
+            success = await configure_and_render_scene(
+                page=page,
+                scene_index=s_idx,
+                prompt=active_prompt,
+                start_frame_path=start_f,
+                end_frame_path=end_f,
+                wait_after_submit=6000
+            )
+            if not success:
+                print(f"Failed to queue Scene {s_idx}.")
+                return False
+
+            if render_all and s_idx < 3:
+                print("Waiting 8 seconds before queuing next scene...")
+                await asyncio.sleep(8)
+
+        return True
     finally:
         # Never close the user's browser
         await p.stop()
@@ -307,6 +341,7 @@ async def run_flow_pipeline(
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Automate Flow AI 10s portrait video rendering in Brave")
     parser.add_argument("--scene", type=int, default=1, choices=[1, 2, 3], help="Scene number to render (1, 2, or 3)")
+    parser.add_argument("--all", action="store_true", help="Queue all 3 scenes sequentially (Frame 1->2, 2->3, 3->1)")
     parser.add_argument("--prompt", type=str, help="Custom scene prompt")
     parser.add_argument("--start-frame", type=str, help="Path to start frame image")
     parser.add_argument("--end-frame", type=str, help="Path to end frame image")
@@ -316,6 +351,7 @@ if __name__ == "__main__":
     try:
         ok = asyncio.run(run_flow_pipeline(
             scene_num=args.scene,
+            render_all=args.all,
             prompt_override=args.prompt,
             start_frame_override=args.start_frame,
             end_frame_override=args.end_frame
@@ -324,3 +360,4 @@ if __name__ == "__main__":
     except Exception as exc:
         print("Flow automation error:", exc)
         sys.exit(1)
+
