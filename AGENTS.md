@@ -17,6 +17,23 @@ Given a single TikTok Shop product URL, the complete pipeline automatically exec
 
 ---
 
+## 🛑 MANDATORY ZERO-MISTAKE RULES (READ BEFORE RUNNING)
+
+Every AI agent operating in this repository MUST memorize and adhere strictly to these critical rules. These rules prevent the most frequent past mistakes:
+
+| Area | ❌ FATAL MISTAKE (NEVER DO THIS) | ✅ CORRECT BEHAVIOR (MANDATORY) |
+|------|-----------------------------------|----------------------------------|
+| **Gmail Promo Reply** | Adding greetings ("Salam Syarief"), section headers ("MAKLUMAT PRODUK"), Flow video prompts, Suno prompts, dividers (`===`), or CDN links. | **STRICTLY AND ONLY THE CLEAN TIKTOK CAPTION + HASHTAGS.** No greetings, no headers, no prompts, no dividers. The user 1-click copies this directly on their phone into TikTok. |
+| **Brave CDP Connection** | Attempting to connect to an existing Brave instance without flags or launching without `--remote-allow-origins=*`, or calling `browser.close()` which kills the user's window. | Always launch with `--remote-debugging-port=9222 --remote-allow-origins=*`. **NEVER call `browser.close()`** so the user's visible interactive window stays open on desktop. |
+| **Keyframe Consistency** | Adding handbags, totes, phones, coffee cups, tumblers, waving hands, or changing hijab/bottoms between frames. | **Strict Zero-Prop & Empty-Hands Rule.** Both hands empty at sides. Same model, same modest hijab, same outfit head-to-toe, same background across all 3 frames. |
+| **Flow AI Parameters** | Using 5s/8s duration, landscape 16:9, or text-to-video mode. | **Duration = 10s**, **Orientation = Portrait (9:16)**, **Model = Omni Flash**, **Mode = Frame-to-Video** (Frame 1➡️2, Frame 2➡️3, Frame 3➡️1). |
+| **Suno AI BGM** | Generating songs with vocal lyrics or background singing. | **Instrumental mode MUST be toggled ON.** TikTok promos use spoken Malay lip-sync voiceovers; vocals clash with speech. |
+| **Spoken Dialogue & Caption** | Using Indonesian words ("banget", "emang", "bgt"), em-dashes (`—`), or mentioning direct prices. | **Standard Malaysian Malay (KL accent)**, pronoun "saya" (never "aku"), zero em-dashes (use `:` or `,`), zero prices (direct to "beg kuning"). |
+| **Hook Selection** | Banning valid hook formulas or reusing openers from the last 7 recorded entries. | **Never ban valid hooks.** Live search MY TikTok data, rank candidate hooks, audit with `verify_hook_quality()`, and avoid the last 7 entries. |
+| **Supabase Cloud Sync** | Leaving generations only in local JSON or forgetting to upload keyframes to CDN. | Upload all 3 keyframes to bucket `gemini-flow-keyframes`, obtain public CDN URLs, and sync full generation record to `gemini_flow_generations`. |
+
+---
+
 ## End-to-End Workflow (Step by Step)
 
 > ⛔ **MANDATORY PRE-FLIGHT GATE — NEVER SKIP STEP 0**:
@@ -177,73 +194,193 @@ Deliver to the user in this exact order:
    > **Reminder:** This content is AI-generated. When posting to TikTok, enable the "AI-generated content" toggle in posting settings to comply with TikTok's AIGC disclosure policy.
 
 ### Step 6: Automate Flow AI Video Generation in Browser (Brave)
-- Connect to Brave running with `--remote-debugging-port=9222 --remote-allow-origins=*` using Playwright CDP (`automate_flow.py`).
-- If Brave is not currently running with debugging flags, restart it with debugging enabled:
-  ```powershell
-  Stop-Process -Name brave -Force -ErrorAction SilentlyContinue ; Start-Sleep -Seconds 2 ; Start-Process "C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe" -ArgumentList "--remote-debugging-port=9222", "--remote-allow-origins=*", "https://flow.google.com/?pli=1&authuser=5" ; Start-Sleep -Seconds 4
-  ```
-- Navigate to Google Flow AI project (`https://flow.google.com/`).
-- Set video parameters: **Duration = 10s**, **Orientation = Portrait (9:16)**, **Model = Omni Flash**, **Mode = Frame to Video**.
-- Configure the 3 scene sequences:
-  - **Scene 1**: Start = `Frame 1 (Front)`, End = `Frame 2 (Side)` + Scene 1 Prompt
-  - **Scene 2**: Start = `Frame 2 (Side)`, End = `Frame 3 (Shoulder)` + Scene 2 Prompt
-  - **Scene 3**: Start = `Frame 3 (Shoulder)`, End = `Frame 1 (Front)` [Seamless 360 Loop] + Scene 3 Prompt
-- Trigger video rendering and capture progress screenshot (`flow_renders_progress.png`).
 
-### Step 7: Automate Gmail Promo Reply in Browser (Brave)
-- Connect to Brave on port 9222 using `reply_gmail.py`.
-- Find or navigate to the user's active promo email thread (`(no subject)` or promo email with the TikTok link in `syarief.azman@gmail.com`).
-- Click **Reply** button or press keyboard shortcut `r`.
-- Insert the email reply:
-  - **CRITICAL FORMAT RULE**: The email reply body MUST contain **STRICTLY AND ONLY THE CLEAN TIKTOK CAPTION + HASHTAGS**.
-  - ⛔ NO greetings (e.g. "Salam Syarief")
-  - ⛔ NO section headers or metadata (e.g. "MAKLUMAT PRODUK", "PAUTAN PROJEK")
-  - ⛔ NO Flow AI video prompts or lip-sync breakdowns
-  - ⛔ NO Suno AI BGM prompts
-  - ⛔ NO dividers or horizontal rules (`===`, `---`)
-  - ✅ ONLY the exact ready-to-post TikTok caption and 4–6 SEO hashtags.
-  - **Rationale**: The user opens the email on their mobile device to 1-click select and copy directly into TikTok's video posting screen. Any additional text forces manual phone editing.
-- Click **Send** to immediately dispatch the reply inside the browser.
-- Capture sent confirmation screenshot (`gmail_reply_sent_clean.png`).
+**Goal:** Automatically configure and trigger 3 consecutive 10-second 9:16 portrait video renders in Google Flow AI using the generated keyframe pairs.
+
+1. **Launch Brave with Remote Debugging Enabled:**
+   - Brave MUST be running with `--remote-debugging-port=9222` and `--remote-allow-origins=*` (Chromium 130+ requirement).
+   - If Brave is already open without these flags, you MUST restart it using this exact PowerShell command:
+     ```powershell
+     Stop-Process -Name brave -Force -ErrorAction SilentlyContinue ; Start-Sleep -Seconds 2 ; Start-Process "C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe" -ArgumentList "--remote-debugging-port=9222", "--remote-allow-origins=*", "https://flow.google.com/?pli=1&authuser=5" ; Start-Sleep -Seconds 4
+     ```
+   - **CRITICAL:** NEVER call `browser.close()` in Playwright scripts when attaching to the user's browser, as that terminates the interactive desktop window. Call `await p.stop()` or simply exit Python without closing the browser.
+
+2. **Connect via Playwright CDP (`automate_flow.py`):**
+   ```python
+   from playwright.async_api import async_playwright
+   p = await async_playwright().start()
+   browser = await p.chromium.connect_over_cdp("http://127.0.0.1:9222")
+   context = browser.contexts[0]
+   ```
+
+3. **Verify Video Configuration Parameters:**
+   - **Duration:** Exactly **10 seconds** (10s) — NOT 5s, NOT 8s.
+   - **Orientation:** Exactly **Portrait (9:16)** — NOT landscape 16:9.
+   - **Model:** **Omni Flash** (Omni 1.1 Flash) or latest available fast video model.
+   - **Generation Mode:** **Frame to Video** (Start Frame + End Frame).
+
+4. **Upload Keyframe Pairs and Enter Scene Prompts:**
+   - **Scene 1 (Front to Side Profile):**
+     - Start Frame: `keyframes/<product_prefix>_frame1_front.jpg`
+     - End Frame: `keyframes/<product_prefix>_frame2_side.jpg`
+     - Prompt: Scene 1 English visual prompt + Malaysian Malay translation lip-sync instruction.
+   - **Scene 2 (Side Profile to Over-Shoulder):**
+     - Start Frame: `keyframes/<product_prefix>_frame2_side.jpg`
+     - End Frame: `keyframes/<product_prefix>_frame3_shoulder.jpg`
+     - Prompt: Scene 2 English visual prompt + Malaysian Malay translation lip-sync instruction.
+   - **Scene 3 (Over-Shoulder to Front Standing — 360 Seamless Loop):**
+     - Start Frame: `keyframes/<product_prefix>_frame3_shoulder.jpg`
+     - End Frame: `keyframes/<product_prefix>_frame1_front.jpg`
+     - Prompt: Scene 3 English visual prompt + Malaysian Malay translation lip-sync instruction.
+
+5. **Trigger Rendering & Verification:**
+   - Submit each scene sequence to Flow's render queue.
+   - Wait 3-5 seconds and capture progress screenshot `flow_renders_progress.png`.
+
+---
+
+### Step 7: Automate Gmail Promo Reply in Browser (Brave) — ⚠️ STRICT CLEAN FORMAT
+
+**Goal:** Automatically reply to the user's promo email thread in Gmail with the ready-to-post TikTok caption and hashtags, allowing instant 1-tap copy-pasting on mobile.
+
+1. **Locate Target Email Thread in Brave:**
+   - Connect via CDP on port 9222.
+   - Locate the Gmail tab (`https://mail.google.com/mail/u/0/#inbox`) or navigate directly to the thread.
+   - The thread is typically sent by `Syarief Azman <hello@syariefazman.com>` with subject `(no subject)` containing the product name and TikTok link (`vt.tiktok.com`).
+
+2. **Trigger Reply Composer:**
+   - Click the Reply button:
+     ```python
+     reply_btn = gmail_page.locator("span[role='button']:has-text('Reply'), div[role='button']:has-text('Reply'), [aria-label*='Reply']").last
+     await reply_btn.click()
+     # Or press 'r' keyboard shortcut
+     ```
+
+3. **⛔ CRITICAL ZERO-MISTAKE FORMAT RULE (NEVER VIOLATE):**
+   - The email reply body MUST contain **EXCLUSIVELY AND ONLY THE CLEAN TIKTOK CAPTION + 4–6 SEO HASHTAGS**.
+   - ❌ **ABSOLUTELY NO GREETINGS:** Do NOT write "Salam Syarief", "Hi", "Hello", etc.
+   - ❌ **ABSOLUTELY NO SECTION HEADERS:** Do NOT write "MAKLUMAT PRODUK", "PAUTAN PROJEK", "KAPSYEN TIKTOK", etc.
+   - ❌ **ABSOLUTELY NO VIDEO PROMPTS:** Do NOT include Flow AI prompts or English scene descriptions.
+   - ❌ **ABSOLUTELY NO SUNO BGM PROMPTS:** Do NOT include music style prompts in the email.
+   - ❌ **ABSOLUTELY NO MEDIA LINKS OR METADATA:** Do NOT include CDN image URLs, PDP URLs, or timestamps.
+   - ❌ **ABSOLUTELY NO DIVIDERS:** Do NOT use dashed lines or equals signs (`===`, `---`, `___`).
+   - ✅ **ONLY THE PURE READY-TO-POST CAPTION:**
+     ```text
+     {relatable_hook_question} ✨
+
+     {product_pitch_paragraph}
+
+     Kelebihan [product] ni yang buat saya suka:
+     ✨ Feature 1: Description
+     ✨ Feature 2: Description
+     ✨ Feature 3: Description
+     ✨ Feature 4: Description
+     ✨ Feature 5: Description
+
+     {styling_tips} 💛
+
+     {CTA pointing to beg kuning} 👇💛
+
+     #Hashtag1 #Hashtag2 #Hashtag3 #Hashtag4 #Hashtag5 #Hashtag6
+     ```
+   - **WHY THIS RULE EXISTS:** The user receives this email on their mobile smartphone, taps "Select All" ➡️ "Copy", and pastes it straight into the TikTok app's video description box. Any greeting, divider, or prompt metadata forces the user to manually select and delete lines on a mobile touch screen, completely breaking their rapid workflow.
+
+4. **Insert Content and Send:**
+   - Locate composer textbox: `div[role='textbox'][aria-label*='Message Body'], div[role='textbox']`.
+   - Fill with the clean caption string.
+   - Click the Send button: `div[role='button']:has-text('Send'), [data-tooltip*='Send']`.
+   - Wait 3 seconds and capture verification screenshot `gmail_reply_sent_clean.png`.
+
+---
 
 ### Step 8: Automate Suno AI Instrumental BGM Generation in Browser (Brave)
-- Connect to Brave on port 9222 using `create_suno.py`.
-- Navigate to `https://suno.com/create`.
-- Ensure **Instrumental mode is toggled ON** (strictly no vocals to avoid clashing with Flow AI spoken dialogue).
-- Enter the tailored BGM style prompt into the style textarea.
-- Enter a clear descriptive title for the track.
-- Click **Create** to initiate song generation.
-- Capture generation confirmation screenshot (`suno_generating.png`).
+
+**Goal:** Configure and trigger the creation of two custom instrumental background music tracks tailored specifically for the product promo on `suno.com/create`.
+
+1. **Navigate to Suno in Brave:**
+   - Connect via CDP on port 9222.
+   - Open or bring to front `https://suno.com/create`.
+   - Wait 4-5 seconds for page elements and user session to settle.
+   - Dismiss any cookie banners, promotional dialogs, or popups if visible.
+
+2. **⛔ CRITICAL ZERO-MISTAKE SUNO RULE — PURE INSTRUMENTAL ONLY:**
+   - The **Instrumental toggle switch MUST be active/checked ON**.
+     ```python
+     instrumental_toggle = suno_page.locator("button[role='switch']:has-text('Instrumental'), label:has-text('Instrumental') input[type='checkbox'], div:has-text('Instrumental') button[role='switch']").first
+     checked = await instrumental_toggle.get_attribute("aria-checked")
+     if checked != "true":
+         await instrumental_toggle.click()
+     ```
+   - **WHY:** TikTok Shop fashion promos rely on clear, spoken Malaysian Malay lip-sync voiceovers from Flow AI. Background music with vocal lyrics or singing clashes with the spoken audio and confuses the viewer.
+
+3. **Input Tailored Style Prompt & Title:**
+   - Locate style/prompt textarea:
+     `textarea[placeholder*='Style of Music'], textarea[placeholder*='style'], textarea[placeholder*='Song Description'], textarea`
+   - Paste the comprehensive style prompt (108–115 BPM, lo-fi indie acoustic cafe pop, bright fingerpicked guitar, Rhodes piano, soft shaker, Malaysian aesthetic lifestyle vibe).
+   - Enter descriptive title in Title input: `<Product Title> - Soft Chill BGM`.
+
+4. **Trigger Generation & Verification:**
+   - Click the **Create** button: `button:has-text('Create'), button[aria-label='Create']`.
+   - Wait 5-6 seconds for the 2 new tracks with loading spinners to appear under the **Today** workspace section.
+   - Capture verification screenshot `suno_generating.png`.
+
+---
 
 ### Step 9: Sync to Supabase & Log Generation History
-- Log the new entry to `generation_history.json` to prevent repetition in the recent 7-entry window:
-  ```python
-  from generate_prompts import save_generation_history
-  save_generation_history(
-      product_name="Product Name Here",
-      opening_line="The exact Scene 1 opening line used",
-      closing_line="The exact Scene 3 closing line used"
-  )
-  ```
-- Sync generation record, scenes, caption, hashtags, and Supabase CDN keyframe URLs to Supabase `gemini_flow_generations`:
-  ```python
-  import supabase_client
-  supabase_client.save_generation_record(
-      product_name="Product Name Here",
-      opening_line="...",
-      closing_line="...",
-      caption="...",
-      hashtags="...",
-      bgm_prompt="...",
-      keyframe_urls=[...],
-      metadata={...}
-  )
-  ```
 
-### Step 10: Commit & Push
+**Goal:** Ensure absolute data persistence, prevent hook fatigue across generation runs, and keep cloud records synchronized with Supabase CDN keyframe assets.
+
+1. **Update Local Anti-Repetition History:**
+   - Append to `generation_history.json`:
+     ```python
+     from generate_prompts import save_generation_history
+     save_generation_history(
+         product_name="Product Name Here",
+         opening_line="The exact Scene 1 opening line used",
+         closing_line="The exact Scene 3 closing line used"
+     )
+     ```
+   - This prevents repeating the same opening question or closing CTA within the last 7 recorded entries.
+
+2. **Sync Full Generation Record to Supabase Cloud:**
+   - Synchronize via `supabase_client.save_generation_record()`:
+     ```python
+     import supabase_client
+     supabase_client.save_generation_record(
+         product_name="Product Name Here",
+         opening_line="...",
+         closing_line="...",
+         caption="...",
+         hashtags="...",
+         bgm_prompt="...",
+         scenes={
+             "scene1": {"frame_visual": "...", "opening_line": "..."},
+             "scene2": {"frame_visual": "...", "dialogue": "..."},
+             "scene3": {"frame_visual": "...", "closing_line": "..."}
+         },
+         keyframe_urls=[
+             supabase_client.get_keyframe_cdn_url("<prefix>_frame1.jpg"),
+             supabase_client.get_keyframe_cdn_url("<prefix>_frame2.jpg"),
+             supabase_client.get_keyframe_cdn_url("<prefix>_frame3.jpg")
+         ],
+         metadata={
+             "pdp_url": "https://shop.tiktok.com/my/pdp/...",
+             "tiktok_url": "https://vt.tiktok.com/...",
+             "local_keyframes": [...]
+         }
+     )
+     ```
+   - Verify that table `gemini_flow_generations` records the upserted row without errors.
+
+---
+
+### Step 10: Git Commit & Push
+
+**Goal:** Ensure every generated script, history log, and automation artifact is version-controlled and pushed to GitHub.
+
 ```bash
-git add generation_history.json automate_flow.py reply_gmail.py create_suno.py
-git commit -m "feat: complete end-to-end promo generation for <product name>"
+git add generation_history.json automate_flow.py reply_gmail.py create_suno.py AGENTS.md
+git commit -m "feat: complete end-to-end automated promo generation for <product name>"
 git push
 ```
 
@@ -435,4 +572,46 @@ Whenever the user supplies a TikTok Shop product link:
    - Tab: `https://suno.com/create`
    - Sets mode to **Instrumental** (strictly no vocals).
    - Pastes the generated acoustic/lo-fi style prompt and title, then clicks **Create**.
+
+---
+
+## 🛠️ Troubleshooting & Zero-Mistake Recovery Playbook
+
+### 1. Brave CDP Connection Refused / 404 Not Found on `/json/version`
+* **Symptoms:** `BrowserType.connect_over_cdp: Unexpected status 404` or `connect ECONNREFUSED 127.0.0.1:9222`.
+* **Root Cause:** Brave was launched normally (e.g. from taskbar or desktop) without debugging flags, or an unflagged background process is holding the user profile lock.
+* **Guaranteed Solution:** Force-stop all running Brave processes and relaunch with both `--remote-debugging-port=9222` AND `--remote-allow-origins=*`:
+  ```powershell
+  Stop-Process -Name brave -Force -ErrorAction SilentlyContinue
+  Start-Sleep -Seconds 2
+  Start-Process "C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe" -ArgumentList "--remote-debugging-port=9222", "--remote-allow-origins=*", "<target_url>"
+  Start-Sleep -Seconds 4
+  ```
+
+### 2. Accidental Browser Window Closure
+* **Symptoms:** The user complains that Brave disappeared or closed after automation ran.
+* **Root Cause:** Calling `await browser.close()` in Playwright CDP scripts.
+* **Guaranteed Solution:** NEVER call `browser.close()` on CDP sessions. Simply let the Python script end or call `await p.stop()`. This cleanly detaches the automation listener while keeping the user's interactive browser window alive and visible on their desktop.
+
+### 3. Gmail Reply Formatting Violations
+* **Symptoms:** The user rejects the email reply because it contains greetings, headers, prompt boxes, or dividers.
+* **Root Cause:** Confusing chat deliverable layout with email reply content.
+* **Guaranteed Solution:** The email reply MUST contain **ONLY THE RAW TIKTOK CAPTION + HASHTAGS**.
+  - No "Salam Syarief"
+  - No "MAKLUMAT PRODUK"
+  - No "FLOW AI PROMPT"
+  - No "SUNO BGM"
+  - No "===" or "---"
+  - Pure, direct copy box content only.
+
+### 4. Suno AI Generating Songs with Vocals
+* **Symptoms:** Suno generates songs with singing, which clashes with the Flow AI voiceover.
+* **Root Cause:** Instrumental mode was not toggled ON before clicking Create.
+* **Guaranteed Solution:** Always inspect and verify the `aria-checked` attribute on the Instrumental switch (`button[role='switch']:has-text('Instrumental')`). If `aria-checked != "true"`, click it before entering the prompt or clicking Create.
+
+### 5. Supabase HTTP/2 Stream Terminated
+* **Symptoms:** `supabase.table().upsert()` throws `ConnectionTerminated` or timeout.
+* **Root Cause:** HTTP/2 multiplexing drop on long-lived connections.
+* **Guaranteed Solution:** The built-in REST fallback in `supabase_client.save_generation_record()` automatically retries via HTTP/1.1 `urllib.request`. If testing manually, use `supabase_client.test_supabase_connection()`.
+
 
