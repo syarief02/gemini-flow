@@ -23,7 +23,7 @@ Every AI agent operating in this repository MUST memorize and adhere strictly to
 
 | Area | ❌ FATAL MISTAKE (NEVER DO THIS) | ✅ CORRECT BEHAVIOR (MANDATORY) |
 |------|-----------------------------------|----------------------------------|
-| **Gmail Promo Reply** | Adding greetings ("Salam Syarief"), section headers ("MAKLUMAT PRODUK"), Flow video prompts, Suno prompts, dividers (`===`), or CDN links. | **STRICTLY AND ONLY THE CLEAN TIKTOK CAPTION + HASHTAGS.** No greetings, no headers, no prompts, no dividers. The user 1-click copies this directly on their phone into TikTok. |
+| **Gmail Promo Reply** | Adding greetings ("Salam Syarief"), section headers ("MAKLUMAT PRODUK"), Flow video prompts, Suno prompts, dividers (`===`), CDN links, or leaving Gmail quoted text / previous thread content. | **STRICTLY AND ONLY THE CLEAN TIKTOK CAPTION + HASHTAGS.** Always expand and delete quoted text (`div.gmail_quote` / `div.ajR`) before typing. No greetings, headers, prompts, dividers, or quoted text. |
 | **Brave CDP Connection** | Attempting to connect to an existing Brave instance without flags or launching without `--remote-allow-origins=*`, or calling `browser.close()` which kills the user's window. | Always launch with `--remote-debugging-port=9222 --remote-allow-origins=*`. **NEVER call `browser.close()`** so the user's visible interactive window stays open on desktop. |
 | **Keyframe Consistency** | Adding handbags, totes, phones, coffee cups, tumblers, waving hands, or changing hijab/bottoms between frames. | **Strict Zero-Prop & Empty-Hands Rule.** Both hands empty at sides. Same model, same modest hijab, same outfit head-to-toe, same background across all 3 frames. |
 | **Flow AI Parameters** | Using 5s/8s duration, landscape 16:9, or text-to-video mode. | **Duration = 10s**, **Orientation = Portrait (9:16)**, **Model = Omni Flash**, **Mode = Frame-to-Video** (Frame 1➡️2, Frame 2➡️3, Frame 3➡️1). |
@@ -327,13 +327,26 @@ Deliver to the user in this exact order:
 
      #Hashtag1 #Hashtag2 #Hashtag3 #Hashtag4 #Hashtag5 #Hashtag6
      ```
-   - **WHY THIS RULE EXISTS:** The user receives this email on their mobile smartphone, taps "Select All" ➡️ "Copy", and pastes it straight into the TikTok app's video description box. Any greeting, divider, or prompt metadata forces the user to manually select and delete lines on a mobile touch screen, completely breaking their rapid workflow.
+   - ❌ **ABSOLUTELY NO QUOTED TEXT:** Do NOT leave Gmail's default quoted message (`div.gmail_quote`, `blockquote`, or hidden trimmed content) in the reply body.
+   - **WHY THIS RULE EXISTS:** The user receives this email on their mobile smartphone, taps "Select All" ➡️ "Copy", and pastes it straight into the TikTok app's video description box. Any greeting, divider, prompt metadata, or quoted past email forces the user to manually select and delete lines on a mobile touch screen, completely breaking their rapid workflow.
 
-4. **Insert Content and Send:**
+4. **Mandatory Quoted Text Removal Procedure (Before Typing):**
+   - After clicking Reply, inspect for the "Show trimmed content" button (`div[aria-label*='Show trimmed content']`, `div.ajR`, `span[data-tooltip*='trimmed']`).
+   - If present, click it to expand the quoted message block.
+   - Remove any quote elements from the composer DOM:
+     ```javascript
+     const bodyBox = document.querySelector("div[role='textbox'][aria-label*='Message Body'], div[role='textbox']");
+     if (bodyBox) {
+       bodyBox.querySelectorAll("div.gmail_quote, div.gmail_extra, blockquote, .gmail_quote").forEach(q => q.remove());
+     }
+     ```
+   - Click the textbox, press `Control+A`, and press `Backspace` to guarantee a 100% clean, blank slate.
+
+5. **Insert Clean Caption and Send:**
    - Locate composer textbox: `div[role='textbox'][aria-label*='Message Body'], div[role='textbox']`.
-   - Fill with the clean caption string.
+   - Fill with the pure clean caption + hashtags string.
    - Click the Send button: `div[role='button']:has-text('Send'), [data-tooltip*='Send']`.
-   - Wait 3 seconds and capture verification screenshot `gmail_reply_sent_clean.png`.
+   - Wait 3-4 seconds and capture verification screenshot `gmail_reply_sent_clean.png`.
 
 ---
 

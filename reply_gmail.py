@@ -68,7 +68,7 @@ def get_latest_caption() -> str:
 
 
 async def reply_with_clean_format(caption_text: str = None, thread_url: str = None):
-    target_caption = (caption_text or CLEAN_KAPSYEN).strip()
+    target_caption = (caption_text or get_latest_caption()).strip()
 
     print("Step 1: Connecting to Brave over CDP on port 9222...")
     p = await async_playwright().start()
@@ -132,9 +132,38 @@ async def reply_with_clean_format(caption_text: str = None, thread_url: str = No
     # Locate composer body
     body_box = gmail_page.locator("div[role='textbox'][aria-label*='Message Body'], div[role='textbox']").last
     if await body_box.is_visible(timeout=4000):
-        print("Composer body located. Entering pure caption content...")
+        print("Composer body located.")
+
+        # Step 2a: Check and click "Show trimmed content" button (the '...' button) to expose any quoted text
+        trimmed_btn = gmail_page.locator("div[aria-label*='Show trimmed content'], div[aria-label*='trimmed'], div[aria-label*='potong'], div.ajR").last
+        if await trimmed_btn.is_visible(timeout=1500):
+            print("Found 'Show trimmed content' button. Clicking to expand quoted text...")
+            try:
+                await trimmed_btn.click()
+                await gmail_page.wait_for_timeout(1000)
+            except Exception as e_trim:
+                print(f"Notice expanding trimmed content: {e_trim}")
+
+        # Step 2b: Remove all quoted text elements from the composer DOM
+        await gmail_page.evaluate("""() => {
+            const bodyBox = document.querySelector("div[role='textbox'][aria-label*='Message Body'], div[role='textbox']");
+            if (bodyBox) {
+                const quotes = Array.from(bodyBox.querySelectorAll("div.gmail_quote, div.gmail_extra, blockquote, .gmail_quote, [class*='quote']"));
+                quotes.forEach(q => q.remove());
+            }
+        }""")
+
+        # Step 2c: Focus and select all to completely wipe any residual text or quotes
+        print("Clearing composer completely of any quoted text...")
         await body_box.click()
-        await body_box.fill("")
+        await gmail_page.wait_for_timeout(300)
+        await gmail_page.keyboard.press("Control+A")
+        await gmail_page.wait_for_timeout(300)
+        await gmail_page.keyboard.press("Backspace")
+        await gmail_page.wait_for_timeout(500)
+
+        # Step 2d: Enter pure clean caption content
+        print("Entering pure clean caption content...")
         await body_box.fill(target_caption)
         await gmail_page.wait_for_timeout(1000)
 
@@ -179,7 +208,7 @@ if __name__ == "__main__":
                 chosen_caption = f"{cap}\n\n{tags}".strip() if tags and tags not in cap else cap
             except Exception:
                 chosen_caption = content
-    elif args.latest:
+    else:
         chosen_caption = get_latest_caption()
 
     success = asyncio.run(reply_with_clean_format(caption_text=chosen_caption, thread_url=args.thread_url))

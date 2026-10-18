@@ -42,6 +42,8 @@ def get_latest_generation_data() -> dict:
                 return {
                     "product": row.get("product_name"),
                     "scenes": row.get("scenes") or {},
+                    "opening_line": row.get("opening_line"),
+                    "closing_line": row.get("closing_line"),
                     "keyframe_urls": row.get("keyframe_urls") or [],
                 }
     except Exception as e:
@@ -282,19 +284,34 @@ async def run_flow_pipeline(
         gen_data = get_latest_generation_data()
         scenes = gen_data.get("scenes") or {}
 
+        def get_clean_scene_prompt(scene_idx: int, default_str: str) -> str:
+            keys = {
+                1: ["scene_1_intro", "scene_1", "1"],
+                2: ["scene_2_detail", "scene_2", "2"],
+                3: ["scene_3_outro", "scene_3", "3"]
+            }.get(scene_idx, [])
+            for k in keys:
+                val = scenes.get(k)
+                if isinstance(val, str) and len(val.strip()) > 30 and not re.match(r"^scene\s*\d+$", val.strip(), re.I):
+                    return val.strip()
+            return default_str
+
         # Default prompts
         raw_prompts = {
-            1: scenes.get("scene_1_intro") or (
+            1: get_clean_scene_prompt(
+                1,
                 'A smooth front-facing medium camera shot transitioning gracefully into a three-quarter side profile '
                 'of the Malaysian Muslim woman wearing the chic modest outfit in the sunlit courtyard. '
                 'Natural motion, empty hands resting at sides. For the audio, generate a highly realistic female voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent—strictly NOT an Indonesian accent. Ensure there are no text overlays or watermarks.'
             ),
-            2: scenes.get("scene_2_detail") or (
+            2: get_clean_scene_prompt(
+                2,
                 'A smooth camera glide continuing from three-quarter side profile into an over-the-shoulder view '
                 'in the courtyard, showcasing the fabric drape and styling details with empty hands resting low at sides. '
                 'For the audio, generate a highly realistic female voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent—strictly NOT an Indonesian accent. Ensure there are no text overlays or watermarks.'
             ),
-            3: scenes.get("scene_3_outro") or (
+            3: get_clean_scene_prompt(
+                3,
                 'A seamless circular camera motion from the over-the-shoulder angle turning back gracefully to face front '
                 'towards the camera with a warm smile. Empty hands resting low. For the audio, generate a highly realistic female voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent—strictly NOT an Indonesian accent. Ensure there are no text overlays or watermarks.'
             )
@@ -314,7 +331,13 @@ async def run_flow_pipeline(
             end_f = Path(end_frame_override) if (end_frame_override and not render_all) else pairings[s_idx][1]
             base_prompt = prompt_override if (prompt_override and not render_all) else raw_prompts.get(s_idx)
 
-            active_prompt = format_flow_prompt_with_lipsync(base_prompt)
+            fallback_spoken = {
+                1: scenes.get("spoken_dialogue", {}).get("scene_1") or gen_data.get("opening_line"),
+                2: scenes.get("spoken_dialogue", {}).get("scene_2"),
+                3: scenes.get("spoken_dialogue", {}).get("scene_3") or gen_data.get("closing_line")
+            }.get(s_idx)
+
+            active_prompt = format_flow_prompt_with_lipsync(base_prompt, spoken_dialogue=fallback_spoken)
 
             success = await configure_and_render_scene(
                 page=page,

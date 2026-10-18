@@ -51,8 +51,13 @@ def get_latest_bgm_info() -> tuple[str, str]:
 
 
 async def setup_suno(prompt_text: str = None, title_text: str = None):
-    target_prompt = (prompt_text or BGM_PROMPT).strip()
-    target_title = (title_text or BGM_TITLE).strip()
+    if not prompt_text or not title_text:
+        latest_prompt, latest_title = get_latest_bgm_info()
+        target_prompt = (prompt_text or latest_prompt).strip()
+        target_title = (title_text or latest_title).strip()
+    else:
+        target_prompt = prompt_text.strip()
+        target_title = title_text.strip()
 
     print("Step 1: Connecting to Brave over CDP...")
     p = await async_playwright().start()
@@ -217,7 +222,7 @@ if __name__ == "__main__":
                 chosen_title = f"{data.get('title', 'Product')[:35]} - BGM"
             except Exception:
                 chosen_prompt = file_path.read_text(encoding="utf-8")
-    elif args.latest:
+    else:
         chosen_prompt, chosen_title = get_latest_bgm_info()
 
     if args.title and not chosen_title:

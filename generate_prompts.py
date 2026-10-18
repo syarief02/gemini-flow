@@ -530,11 +530,29 @@ if __name__ == "__main__":
             try:
                 open_line = res.get("spoken_malay_dialogue", {}).get("scene_1_intro") or res.get("flow_ai_prompts", {}).get("scene_1_intro", "")[:100]
                 close_line = res.get("spoken_malay_dialogue", {}).get("scene_3_outro") or res.get("flow_ai_prompts", {}).get("scene_3_outro", "")[:100]
+                flow_prompts = res.get("flow_ai_prompts", {})
+                spoken_dialogues = res.get("spoken_malay_dialogue", {})
+
+                s1_p = flow_prompts.get("scene_1_intro", "")
+                s1_s = spoken_dialogues.get("scene_1_intro", "")
+                s2_p = flow_prompts.get("scene_2_detail", "")
+                s2_s = spoken_dialogues.get("scene_2_detail", "")
+                s3_p = flow_prompts.get("scene_3_outro", "")
+                s3_s = spoken_dialogues.get("scene_3_outro", "")
+
+                scenes_payload = {
+                    "scene_1_intro": f"{s1_p}\n\nSpoken Malay (Lip-sync): \"{s1_s}\"" if (s1_s and "Spoken Malay" not in s1_p) else s1_p,
+                    "scene_2_detail": f"{s2_p}\n\nSpoken Malay (Lip-sync): \"{s2_s}\"" if (s2_s and "Spoken Malay" not in s2_p) else s2_p,
+                    "scene_3_outro": f"{s3_p}\n\nSpoken Malay (Lip-sync): \"{s3_s}\"" if (s3_s and "Spoken Malay" not in s3_p) else s3_p,
+                    "visual_prompts": flow_prompts,
+                    "spoken_dialogue": spoken_dialogues
+                }
+
                 save_generation_history(
                     product_name=data.get("title", "Product"),
                     opening_line=open_line,
                     closing_line=close_line,
-                    scenes=res.get("flow_ai_prompts"),
+                    scenes=scenes_payload,
                     caption=res.get("tiktok_caption"),
                     hashtags=res.get("hashtags"),
                     bgm_prompt=res.get("suno_bgm", {}).get("style"),
