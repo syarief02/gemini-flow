@@ -194,15 +194,17 @@ Deliver to the user in this exact order:
 - Connect to Brave on port 9222 using `reply_gmail.py`.
 - Find or navigate to the user's active promo email thread (`(no subject)` or promo email with the TikTok link in `syarief.azman@gmail.com`).
 - Click **Reply** button or press keyboard shortcut `r`.
-- Insert the complete promo package in clean formatted text:
-  - Product title & TikTok Shop links
-  - Flow AI Project URL & settings
-  - Complete TikTok Caption + Hashtags (zero em-dashes, zero direct prices)
-  - Spoken Malay Lip-sync breakdown
-  - Supabase CDN keyframe image links
-  - Suno AI Instrumental BGM prompt
+- Insert the email reply:
+  - **CRITICAL FORMAT RULE**: The email reply body MUST contain **STRICTLY AND ONLY THE CLEAN TIKTOK CAPTION + HASHTAGS**.
+  - ⛔ NO greetings (e.g. "Salam Syarief")
+  - ⛔ NO section headers or metadata (e.g. "MAKLUMAT PRODUK", "PAUTAN PROJEK")
+  - ⛔ NO Flow AI video prompts or lip-sync breakdowns
+  - ⛔ NO Suno AI BGM prompts
+  - ⛔ NO dividers or horizontal rules (`===`, `---`)
+  - ✅ ONLY the exact ready-to-post TikTok caption and 4–6 SEO hashtags.
+  - **Rationale**: The user opens the email on their mobile device to 1-click select and copy directly into TikTok's video posting screen. Any additional text forces manual phone editing.
 - Click **Send** to immediately dispatch the reply inside the browser.
-- Capture sent confirmation screenshot (`gmail_reply_sent.png`).
+- Capture sent confirmation screenshot (`gmail_reply_sent_clean.png`).
 
 ### Step 8: Automate Suno AI Instrumental BGM Generation in Browser (Brave)
 - Connect to Brave on port 9222 using `create_suno.py`.
@@ -428,7 +430,7 @@ Whenever the user supplies a TikTok Shop product link:
 2. **Gmail Promo Package Reply (`reply_gmail.py`)**:
    - Tab: `https://mail.google.com/mail/u/0/#inbox`
    - Finds the active promo thread (`(no subject)` or product link thread).
-   - Clicks **Reply**, fills the formatted caption + hashtag package + video links, and clicks **Send**.
+   - Clicks **Reply**, fills **STRICTLY AND ONLY THE CLEAN TIKTOK CAPTION + HASHTAGS** (zero greetings, zero metadata headers, zero prompts), and clicks **Send**.
 3. **Suno AI Instrumental BGM (`create_suno.py`)**:
    - Tab: `https://suno.com/create`
    - Sets mode to **Instrumental** (strictly no vocals).
