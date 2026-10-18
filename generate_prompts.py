@@ -33,14 +33,23 @@ except ImportError:
 
 HISTORY_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "generation_history.json")
 
+def _read_history_file() -> dict:
+    """Read generation_history.json. Raises FileNotFoundError, or ValueError if it is unreadable."""
+    with open(HISTORY_FILE, 'r', encoding='utf-8-sig') as f:
+        data = json.load(f)  # json.JSONDecodeError is a ValueError
+    if not isinstance(data, dict) or not isinstance(data.get("generations"), list):
+        raise ValueError("missing 'generations' list")
+    return data
+
 def load_generation_history(last_n: int = 7) -> list:
     """Load the last N generation entries from history file."""
     try:
-        with open(HISTORY_FILE, 'r', encoding='utf-8') as f:
-            data = json.load(f)
-        entries = data.get("generations", [])
+        entries = _read_history_file()["generations"]
         return entries[-last_n:]  # return only the last N
-    except (FileNotFoundError, json.JSONDecodeError):
+    except FileNotFoundError:
+        return []
+    except ValueError as e_read:
+        print(f"WARNING: {HISTORY_FILE} is unreadable ({e_read}); anti-repetition check has NO history.")
         return []
 
 def get_recently_used_phrases(last_n: int = 7) -> str:
@@ -141,46 +150,54 @@ def save_generation_history(
     Just stores the raw opening and closing text — no rigid categories.
     The point is simply to know what was already said so the next generation avoids it.
     """
+    # Compute hook quality audit
+    hook_audit = verify_hook_quality(opening_line)
+
     try:
-        with open(HISTORY_FILE, 'r', encoding='utf-8') as f:
-            data = json.load(f)
-    except (FileNotFoundError, json.JSONDecodeError):
+        data = _read_history_file()
+    except FileNotFoundError:
         data = {
             "_description": "Tracks previously used opening hooks and sign-off CTAs to prevent repetition across sessions.",
             "generations": []
         }
-    
-    # Compute hook quality audit
-    hook_audit = verify_hook_quality(opening_line)
-    
-    # Deduplicate against existing entries to prevent redundant rows
-    existing_entry = None
-    for entry in reversed(data.get("generations", [])):
-        if entry.get("product") == product_name and entry.get("opening_line") == opening_line:
-            existing_entry = entry
-            break
+    except ValueError as e_read:
+        # Never replace an existing history with a fresh one: that would wipe every past entry.
+        data = None
+        print(f"ERROR: {HISTORY_FILE} is unreadable ({e_read}). Local history NOT updated; "
+              "fix the file by hand (or restore it with `git checkout generation_history.json`).")
 
-    if existing_entry:
-        existing_entry["timestamp"] = datetime.now(timezone.utc).astimezone().isoformat()
-        existing_entry["closing_line"] = closing_line
-        existing_entry["hook_archetype"] = hook_audit.get("archetype")
-        existing_entry["hook_score"] = hook_audit.get("hook_score")
-    else:
-        data["generations"].append({
-            "product": product_name,
-            "timestamp": datetime.now(timezone.utc).astimezone().isoformat(),
-            "opening_line": opening_line,
-            "closing_line": closing_line,
-            "hook_archetype": hook_audit.get("archetype"),
-            "hook_score": hook_audit.get("hook_score")
-        })
-    
-    try:
-        with open(HISTORY_FILE, 'w', encoding='utf-8') as f:
-            json.dump(data, f, indent=2, ensure_ascii=False)
-        print(f"📝 Saved generation history for: {product_name} (Hook: {hook_audit.get('archetype')}, Score: {hook_audit.get('hook_score')}/100)")
-    except Exception as e_hist:
-        print(f"Notice: local history file write: {e_hist}")
+    if data is not None:
+        # Deduplicate against existing entries to prevent redundant rows
+        existing_entry = None
+        for entry in reversed(data["generations"]):
+            if entry.get("product") == product_name and entry.get("opening_line") == opening_line:
+                existing_entry = entry
+                break
+
+        if existing_entry:
+            existing_entry["timestamp"] = datetime.now(timezone.utc).astimezone().isoformat()
+            existing_entry["closing_line"] = closing_line
+            existing_entry["hook_archetype"] = hook_audit.get("archetype")
+            existing_entry["hook_score"] = hook_audit.get("hook_score")
+        else:
+            data["generations"].append({
+                "product": product_name,
+                "timestamp": datetime.now(timezone.utc).astimezone().isoformat(),
+                "opening_line": opening_line,
+                "closing_line": closing_line,
+                "hook_archetype": hook_audit.get("archetype"),
+                "hook_score": hook_audit.get("hook_score")
+            })
+
+        try:
+            # Write to a temp file and swap it in, so an interrupted write can't truncate the history.
+            tmp_path = HISTORY_FILE + ".tmp"
+            with open(tmp_path, 'w', encoding='utf-8') as f:
+                json.dump(data, f, indent=2, ensure_ascii=False)
+            os.replace(tmp_path, HISTORY_FILE)
+            print(f"📝 Saved generation history for: {product_name} (Hook: {hook_audit.get('archetype')}, Score: {hook_audit.get('hook_score')}/100)")
+        except Exception as e_hist:
+            print(f"Notice: local history file write: {e_hist}")
 
     # Optionally sync to Supabase database
     try:
