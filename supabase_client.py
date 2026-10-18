@@ -8,12 +8,17 @@ for Gemini Flow TikTok product promo generations.
 from __future__ import annotations
 
 import os
+import sys
 import json
 import time
 from pathlib import Path
 from typing import Optional, Dict, Any, List
 import warnings
 warnings.filterwarnings("ignore", message=r"urllib3.*doesn't match a supported version")
+
+if sys.platform == "win32":
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 
 from dotenv import load_dotenv
 
@@ -59,9 +64,9 @@ def get_product_keyframes(slug_or_prefix: str, keyframes_dir: Optional[str | Pat
     prefix = slug_or_prefix.lower().replace("-", "_").replace(" ", "_").strip("_")
     
     frames = {
-        "frame_1_front": f"{prefix}_frame1_front.jpg",
-        "frame_2_side": f"{prefix}_frame2_side.jpg",
-        "frame_3_shoulder": f"{prefix}_frame3_shoulder.jpg",
+        "frame_1_front": [f"{prefix}_frame1_front.jpg", f"{prefix}_frame1.jpg"],
+        "frame_2_side": [f"{prefix}_frame2_side.jpg", f"{prefix}_frame2.jpg"],
+        "frame_3_shoulder": [f"{prefix}_frame3_shoulder.jpg", f"{prefix}_frame3.jpg"],
     }
     
     result = {
@@ -71,14 +76,24 @@ def get_product_keyframes(slug_or_prefix: str, keyframes_dir: Optional[str | Pat
         "cdn_urls": []
     }
     
-    for key, fname in frames.items():
-        local_p = target_dir / fname
-        cdn_url = get_keyframe_cdn_url(fname)
+    for key, candidates in frames.items():
+        chosen_fname = candidates[0]
+        local_p = target_dir / chosen_fname
         exists_locally = local_p.is_file()
+        
+        # Check secondary candidate if primary isn't found
+        if not exists_locally and len(candidates) > 1:
+            alt_p = target_dir / candidates[1]
+            if alt_p.is_file():
+                chosen_fname = candidates[1]
+                local_p = alt_p
+                exists_locally = True
+
+        cdn_url = get_keyframe_cdn_url(chosen_fname)
         if not exists_locally:
             result["all_present"] = False
         result["frames"][key] = {
-            "filename": fname,
+            "filename": chosen_fname,
             "local_path": str(local_p) if exists_locally else None,
             "cdn_url": cdn_url,
             "exists_locally": exists_locally

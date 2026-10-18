@@ -3,7 +3,7 @@ Prompt Templates for TikTok Product Promo Generator
 =====================================================
 Templates used to generate:
 - Keyframe image prompts (for Gemini Pro)
-- Flow AI video prompts (for Veo 3.1 / Omni Flash 8s)
+- Flow AI video prompts (for Omni Flash 10s portrait)
 - TikTok caption & hashtags (Bahasa Melayu Malaysia)
 - Suno BGM prompt & lyrics
 
@@ -11,13 +11,15 @@ ANTI-REPETITION & VIRAL HOOK SYSTEM (generation_history.json):
 - Tracks all previously used opening hooks and sign-off CTAs across sessions.
 - Before generating new content, check the last 7 entries in the history file
   and ensure the new generation uses genuinely different phrasing and angles.
-- 6 Proven Viral Hook Archetypes (2-Second Retention Rule):
+- 8 Proven Viral Hook Archetypes (2-Second Retention Rule):
   1. The Unspoken Daily Dilemma (Tropical Climate / Comfort / Sauna Effect)
   2. The Flattering Silhouette / Visual Insecurity Solution (Auto-slimming, hiding tummy, thigh cuts)
   3. The Price-Quality Myth-Buster (Expensive outdoor brands vs high-quality affordable items)
   4. The Hidden Gem / Secret Discovery (Effortless 2-second styling secret, overlooked cut)
   5. The Visual Pattern Interrupt / Direct Question ("Korang perasan tak...", "Tahu tak kenapa...")
   6. The Relatable Lifestyle Dilemma (Waking up late, rushed mornings, ironless prep)
+  7. The Stereotype-Buster / Pain-Point Contrast (Challenging category assumptions)
+  8. The FOMO / FYP Social Proof Trend (FYP trend awareness, viral discovery)
 - After generating, ALWAYS log the new entry with save_generation_history() from generate_prompts.py.
 - NO fixed rotation scripts — just be aware of what was already used and create fresh words on the spot.
 """
@@ -60,7 +62,7 @@ sharp focus, no handbag, no tote bag, no purse, no tumbler, no props, no text ov
 
 
 # =============================================================================
-# FLOW AI VIDEO PROMPTS (Veo 3.1 / Omni Flash 8s)
+# FLOW AI VIDEO PROMPTS (Omni Flash 10s portrait)
 # =============================================================================
 # Each prompt combines visual direction + audio/dialogue in one paragraph.
 # The dialogue follows a natural 3-Act structure (Intro → Detail → Sign-off).
@@ -73,7 +75,7 @@ sharp focus, no handbag, no tote bag, no purse, no tumbler, no props, no text ov
 #   as long as it differs from what was recently used.
 # - Natural, smooth delivery with relaxed micro-expressions and clear lip-syncing.
 
-FLOW_SCENE_1_INTRO = """Generate an 8-second video from the provided frame of an adult \
+FLOW_SCENE_1_INTRO = """Generate a 10-second video from the provided frame of an adult \
 Malaysian woman wearing a hijab and {product_description}. \
 The camera maintains a stable, smooth framing with a gentle subtle zoom towards her. \
 She has a relaxed, confident posture and gives a natural, pleasant smile with comfortable eye contact towards the camera. \
@@ -87,7 +89,7 @@ The voice must sound natural, polished, and friendly, using 'saya'. \
 Explicitly translate the following English text into standard Malaysian Malay \
 for the spoken audio: "{dialogue_scene_1}" """
 
-FLOW_SCENE_2_PRODUCT = """Generate an 8-second video from the provided frame of the woman \
+FLOW_SCENE_2_PRODUCT = """Generate a 10-second video from the provided frame of the woman \
 in {product_description} turned to a 3/4 side profile view. \
 The camera performs a slow, smooth cinematic pan across the outfit to showcase the clean silhouette and fabric texture. \
 She gestures naturally and casually towards the garment with relaxed, subtle hand movements with empty hands. \
@@ -99,7 +101,7 @@ The voice should sound genuine and helpful, like giving casual styling advice, u
 Explicitly translate the following English text into standard Malaysian Malay \
 for the spoken audio: "{dialogue_scene_2}" """
 
-FLOW_SCENE_3_OUTRO = """Generate an 8-second video from the provided frame of the woman \
+FLOW_SCENE_3_OUTRO = """Generate a 10-second video from the provided frame of the woman \
 in {product_description} turning to glance back over her shoulder with a relaxed, soft smile. \
 Add a gentle cinematic soft-focus effect with natural lighting. \
 Her arms and hands rest naturally low at her sides with empty hands without any bag, props, or awkward waving gestures. \

@@ -3,7 +3,7 @@ Dynamic Prompt & Content Generator for TikTok Products
 ======================================================
 Uses Gemini Pro (gemini-1.5-pro / gemini-2.5-pro) to generate:
 - 3 Unique Keyframe Image Prompts (Front, Side Profile, Over Shoulder)
-- 3 Flow AI Video Generation Prompts (Veo 3.1 / Omni Flash 8s with Malaysian Malay Lip-Sync)
+- 3 Flow AI Video Generation Prompts (Omni Flash 10s portrait with Malaysian Malay Lip-Sync)
 - TikTok Caption + Hashtags (Bahasa Melayu Malaysia, policy-safe)
 - Suno BGM Style + Lyrics (Bahasa Melayu)
 
@@ -223,20 +223,22 @@ STRICT RULES
 
 2. SPEAKING PERSONALITY & VIRAL HOOK ENGINE (2-SECOND RETENTION RULE):
    - You MUST craft the most compelling, scroll-stopping hook angle for this specific product.
-   - Stop the scroll in the first 2 seconds! Choose one of the 6 proven Malaysian TikTok Shop viral hook archetypes:
+   - Stop the scroll in the first 2 seconds! Choose one of the 8 proven Malaysian TikTok Shop viral hook archetypes:
      1. The Unspoken Daily Dilemma / Tropical Climate Dilemma (e.g. cuaca panas rasa macam sauna vs material kalis air sejuk selesa).
      2. The Flattering Silhouette / Visual Insecurity Solution (e.g. takut peha nampak besar / cutting kembang vs efek auto-slimming).
      3. The Price-Quality Myth-Buster (e.g. sangka kena berhabis ratusan ringgit dekat outdoor brand vs kualiti padu mampu milik).
      4. The Hidden Gem / Secret Discovery (e.g. rahsia bersiap kemas dalam 2 saat / cutting rahsia yang ramai terlepas pandang).
      5. The Visual Pattern Interrupt / Direct Question (e.g. "Korang perasan tak...", "Tahu tak kenapa...", "Siapa dekat sini yang...").
      6. The Relatable Lifestyle Dilemma (e.g. bangun lambat, malas nak iron baju, nak cepat pergi kerja/kuliah).
+     7. The Stereotype-Buster / Pain-Point Contrast (e.g. "Siapa cakap jaket kalis air mesti nampak boyish?").
+     8. The FOMO / FYP Social Proof Trend (e.g. "Patutlah asyik lalu dekat FYP...").
    - Ensure the hook IMMEDIATELY hooks the viewer, connects directly to the product's #1 USP, and feels completely organic.
    - DO NOT repeat any angle or phrasing from the last 7 recorded entries in the anti-repetition list.
    - Speak in a CALM, FRIENDLY, and EFFORTLESS tone—like a creator sharing an honest daily outfit recommendation.
    - AVOID forced hyper-excitement, exaggerated whispers, dramatic screaming, or fake hype.
    - Natural, smooth conversational flow (steady pace, pleasant rhythm, clear pronunciation).
 
-3. THE 3-ACT NATURAL VIDEO STRUCTURE (8 seconds each):
+3. THE 3-ACT NATURAL VIDEO STRUCTURE (10 seconds each):
 
    ╔══════════════════════════════════════════════════════════╗
    ║ SCENE 1 — "THE CASUAL INTRO" (Frame 1: Front-facing)     ║
@@ -386,7 +388,7 @@ def format_deliverable_markdown(
 
 ---
 
-### 🎬 3 Flow AI Video Prompts (Veo 3.1 / Omni Flash 8s)
+### 🎬 3 Flow AI Video Prompts (Omni Flash 10s portrait)
 
 > 💡 *Salin terus kotak kod di bawah untuk menyalin arahan visual Bahasa Inggeris dan skrip lip-sync Bahasa Melayu secara serentak.*
 

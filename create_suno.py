@@ -1,8 +1,14 @@
 import asyncio
 import os
 import sys
+import json
+import argparse
 from pathlib import Path
 from playwright.async_api import async_playwright
+
+if sys.platform == "win32":
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 
 SUNO_URL = "https://suno.com/create"
 BGM_PROMPT = (
@@ -13,7 +19,41 @@ BGM_PROMPT = (
 )
 BGM_TITLE = "Baju Kuning Guest Blouse - Soft Yellow Chill BGM"
 
-async def setup_suno():
+
+def get_latest_bgm_info() -> tuple[str, str]:
+    """Fetch latest generated BGM prompt and title from Supabase or generation history."""
+    try:
+        from supabase_client import get_supabase_client
+        client = get_supabase_client()
+        if client:
+            res = client.table("gemini_flow_generations").select("product_name, bgm_prompt").order("created_at", desc=True).limit(1).execute()
+            if res.data and res.data[0].get("bgm_prompt"):
+                p_name = res.data[0].get("product_name", "Product Promo")
+                prompt = res.data[0]["bgm_prompt"]
+                title = f"{p_name[:35]} - BGM Instrumental"
+                return prompt, title
+    except Exception as e:
+        print(f"Notice fetching latest BGM from Supabase: {e}")
+
+    try:
+        hist_path = Path(__file__).resolve().parent / "generation_history.json"
+        if hist_path.is_file():
+            with open(hist_path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            gens = data.get("generations", [])
+            if gens and gens[-1].get("bgm_prompt"):
+                p_name = gens[-1].get("product", "Product Promo")
+                return gens[-1]["bgm_prompt"], f"{p_name[:35]} - BGM Instrumental"
+    except Exception as e_hist:
+        print(f"Notice reading history: {e_hist}")
+
+    return BGM_PROMPT, BGM_TITLE
+
+
+async def setup_suno(prompt_text: str = None, title_text: str = None):
+    target_prompt = (prompt_text or BGM_PROMPT).strip()
+    target_title = (title_text or BGM_TITLE).strip()
+
     print("Step 1: Connecting to Brave over CDP...")
     p = await async_playwright().start()
     browser = None
@@ -66,20 +106,17 @@ async def setup_suno():
     print("Saved suno_initial.png")
 
     page_text = await suno_page.inner_text("body")
-    print(f"Page text snippet: {page_text[:300].replace('\n', ' ')}")
+    print(f"Page text snippet: {page_text[:300].replace(chr(10), ' ')}")
 
     # Check if Custom mode switch exists
     custom_toggle = suno_page.locator("button[role='switch']:has-text('Custom'), div:has-text('Custom') button[role='switch'], button:has-text('Custom')").first
-    is_custom = False
     try:
         if await custom_toggle.is_visible(timeout=2000):
-            # Check state
             checked = await custom_toggle.get_attribute("aria-checked")
             if checked != "true":
                 print("Enabling Custom mode...")
                 await custom_toggle.click()
                 await suno_page.wait_for_timeout(1500)
-            is_custom = True
             print("Custom mode active!")
     except Exception as e:
         print(f"Custom toggle check notice: {e}")
@@ -114,7 +151,7 @@ async def setup_suno():
         print("Found prompt textarea. Typing style prompt...")
         await style_input.click()
         await style_input.fill("")
-        await style_input.fill(BGM_PROMPT)
+        await style_input.fill(target_prompt)
         await suno_page.wait_for_timeout(1000)
     else:
         print("Could not find style textarea directly!")
@@ -130,7 +167,7 @@ async def setup_suno():
             print("Found Title input. Entering title...")
             await title_input.click()
             await title_input.fill("")
-            await title_input.fill(BGM_TITLE)
+            await title_input.fill(target_title)
             await suno_page.wait_for_timeout(1000)
     except Exception as e:
         print(f"Title input notice: {e}")
@@ -156,7 +193,35 @@ async def setup_suno():
         print("Create button not visible or needs sign in. Screenshot captured.")
         return False
 
-if __name__ == "__main__":
-    success = asyncio.run(setup_suno())
-    sys.exit(0 if success else 1)
 
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Automate Suno AI instrumental BGM generation via Brave CDP")
+    parser.add_argument("--prompt", type=str, help="BGM style prompt")
+    parser.add_argument("--title", type=str, help="Song title")
+    parser.add_argument("--file", type=str, help="Path to JSON file containing BGM prompt")
+    parser.add_argument("--latest", action="store_true", help="Fetch latest BGM prompt from Supabase / history")
+    args = parser.parse_args()
+
+    chosen_prompt = None
+    chosen_title = None
+
+    if args.prompt:
+        chosen_prompt = args.prompt
+        chosen_title = args.title or "TikTok Promo BGM"
+    elif args.file:
+        file_path = Path(args.file)
+        if file_path.is_file():
+            try:
+                data = json.loads(file_path.read_text(encoding="utf-8"))
+                chosen_prompt = data.get("suno_bgm", {}).get("style") or data.get("bgm_prompt")
+                chosen_title = f"{data.get('title', 'Product')[:35]} - BGM"
+            except Exception:
+                chosen_prompt = file_path.read_text(encoding="utf-8")
+    elif args.latest:
+        chosen_prompt, chosen_title = get_latest_bgm_info()
+
+    if args.title and not chosen_title:
+        chosen_title = args.title
+
+    success = asyncio.run(setup_suno(prompt_text=chosen_prompt, title_text=chosen_title))
+    sys.exit(0 if success else 1)

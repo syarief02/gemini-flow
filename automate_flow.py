@@ -8,8 +8,14 @@ and configures the 3-scene video promo generation.
 import asyncio
 import os
 import sys
+import json
+import argparse
 from pathlib import Path
 from playwright.async_api import async_playwright
+
+if sys.platform == "win32":
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 
 FLOW_URL = "https://flow.google.com/?pli=1&authuser=5"
 
@@ -18,7 +24,7 @@ FRAME_1 = str(KEYFRAMES_DIR / "soft_yellow_striped_blouse_frame1_front.jpg")
 FRAME_2 = str(KEYFRAMES_DIR / "soft_yellow_striped_blouse_frame2_side.jpg")
 FRAME_3 = str(KEYFRAMES_DIR / "soft_yellow_striped_blouse_frame3_shoulder.jpg")
 
-SCENES = [
+DEFAULT_SCENES = [
     {
         "index": 1,
         "name": "Scene 1 (Front to Side)",
@@ -72,7 +78,7 @@ async def connect_to_brave(port: int = 9222):
     """Attempt connection to Brave CDP."""
     p = await async_playwright().start()
     try:
-        browser = await p.chromium.connect_over_cdp(f"http://127.0.0.1:{port}")
+        browser = await p.chromium.connect_over_cdp(f"http://127.0.0.1:{port}", timeout=5000)
         return p, browser
     except Exception as err:
         await p.stop()
@@ -86,30 +92,49 @@ async def find_or_open_flow_tab(browser):
         if "flow.google.com" in page.url or "labs.google" in page.url:
             await page.bring_to_front()
             return page
-    
+
     # Open new page if none exists
     page = await context.new_page()
     await page.goto(FLOW_URL, wait_until="networkidle")
     return page
 
 
-async def inspect_flow_page():
-    """Inspect current Flow AI page structure to identify UI controls."""
+async def inspect_flow_page(scenes=None):
+    """Inspect current Flow AI page structure to identify UI controls and verify session."""
     p, browser = await connect_to_brave()
     page = await find_or_open_flow_tab(browser)
     print("Active page title:", await page.title())
     print("Active page URL:", page.url)
-    
+
     screenshot_path = Path(__file__).resolve().parent / "flow_tab_preview.png"
     await page.screenshot(path=str(screenshot_path))
     print(f"Captured screenshot to: {screenshot_path}")
-    
+
+    active_scenes = scenes or DEFAULT_SCENES
+    print(f"Loaded {len(active_scenes)} scenes for Flow AI generation.")
+    for sc in active_scenes:
+        print(f"  - {sc.get('name')}: Start={Path(sc.get('start_frame','')).name}, End={Path(sc.get('end_frame','')).name}")
+
     return browser, page
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Automate Flow AI via Brave CDP")
+    parser.add_argument("--json", type=str, help="Path to product JSON or scenes file")
+    args = parser.parse_args()
+
+    custom_scenes = None
+    if args.json:
+        jp = Path(args.json)
+        if jp.is_file():
+            try:
+                data = json.loads(jp.read_text(encoding="utf-8"))
+                if "scenes" in data and isinstance(data["scenes"], list):
+                    custom_scenes = data["scenes"]
+            except Exception as ej:
+                print(f"Notice reading scenes JSON: {ej}")
+
     try:
-        asyncio.run(inspect_flow_page())
+        asyncio.run(inspect_flow_page(scenes=custom_scenes))
     except Exception as e:
         print("Inspection error:", e)
-
