@@ -240,7 +240,13 @@ Deliver to the user in this exact order:
    | **Scene 3** | `keyframes/<prefix>_frame3_shoulder.jpg` *(Over-the-Shoulder)* | `keyframes/<prefix>_frame1_front.jpg` *(Front View)* | Model glances warmly over shoulder, then turns smoothly back to face camera front-standing with yellow basket CTA. **Completes the 360° loop.** |
 
    > ❌ **CRITICAL MISTAKE TO AVOID:** Putting Frame 2 (Side) as Start in Scene 1! That causes the video to play backwards (Side ➡️ Front) and breaks viewer immersion.
-   > ✅ **PRE-RENDER FRAME VERIFICATION:** Always verify visually in the Flow UI that the left thumbnail is `Start` and the right thumbnail is `End`. If uploading new frames, ensure `_frame1_front.jpg` is clicked first into `Start`, and `_frame2_side.jpg` into `End`.
+   > ❌ **CRITICAL MISTAKE TO AVOID (MISSING 'ADD TO PROMPT'):** Simply uploading a file or clicking an asset in the popover DOES NOT attach it to the composer slot! Closing the popover without clicking `Add to prompt` leaves the slot empty or pointing to an obsolete card.
+   > ✅ **MANDATORY 'ADD TO PROMPT' ATTACHMENT PROCEDURE:**
+   > 1. Click the slot chip (`Start` or `End`).
+   > 2. In the popover's `Search assets` input, type the exact frame tag (e.g. `frame1_front`, `frame2_side`, `frame3_shoulder`).
+   > 3. Click the filtered thumbnail to preview it in the center.
+   > 4. **MANDATORY:** Click the white **`Add to prompt`** button at the bottom of the preview dialog.
+   > 5. Confirm that the composer slot in the toolbar changes from text (`Start`/`End`) into a visible cropped image thumbnail chip of the correct garment and pose before typing the prompt!
 
    #### 4b. MANDATORY SPOKEN MALAY LIP-SYNC IN FLOW COMPOSER
    Google Flow AI / Veo generates character mouth lip-sync and audio directly from the prompt text entered into the composer. If you only provide visual descriptions, Flow generates a silent or muddled video!

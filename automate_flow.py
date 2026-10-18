@@ -144,66 +144,66 @@ async def configure_and_render_scene(
     print(f"\n--- Initiating Flow AI Video Generation for Scene {scene_index} ---")
     await page.wait_for_timeout(2000)
 
-    # 1. Attach / Select Start Frame
-    if start_frame_path and Path(start_frame_path).is_file():
-        start_btn = page.locator("button:has-text('Start')").first
-        if await start_btn.is_visible(timeout=3000):
-            print(f"Setting Start Frame: {Path(start_frame_path).name}")
-            await start_btn.click()
+    async def attach_frame_by_search_or_upload(slot_index: int, frame_path: str | Path | None, query_tag: str):
+        if not frame_path:
+            return
+        p_obj = Path(frame_path)
+        triggers = page.locator("div.frame-trigger")
+        trigger_btn = triggers.nth(slot_index).locator("button").first
+        if not await trigger_btn.is_visible(timeout=3000):
+            trigger_btn = page.locator("button:has-text('Start'), button:has-text('End')").nth(slot_index)
+
+        print(f"Opening frame slot {slot_index} for: {p_obj.name}...")
+        await trigger_btn.click()
+        await page.wait_for_timeout(1500)
+
+        # 1. First check if searching for the file tag finds an already uploaded asset
+        search_input = page.locator("flow-add-menu-popover-content input, input[placeholder*='Search']").first
+        found_in_search = False
+        if await search_input.is_visible(timeout=2000):
+            await search_input.fill("")
+            await search_input.fill(query_tag)
             await page.wait_for_timeout(1500)
 
-            # Check if upload button is needed or file chooser can be triggered
+            filtered_item = page.locator(
+                "flow-add-menu-popover-content flow-asset-list-item, "
+                "flow-add-menu-popover-content .asset-list-item, "
+                "flow-add-menu-popover-content div.item-row, "
+                "flow-add-menu-popover-content [role='listbox'] > *"
+            ).first
+            if await filtered_item.is_visible(timeout=2000):
+                print(f"Found asset for '{query_tag}' via search. Selecting...")
+                await filtered_item.click()
+                await page.wait_for_timeout(1000)
+                found_in_search = True
+
+        # 2. If not found via search, upload the file
+        if not found_in_search and p_obj.is_file():
             upload_btn = page.locator("button:has-text('Upload media'), div:has-text('Upload media'), [aria-label*='Upload']").last
             if await upload_btn.is_visible(timeout=2000):
-                try:
-                    async with page.expect_file_chooser(timeout=3000) as fc_info:
-                        await upload_btn.click()
-                    fc = await fc_info.value
-                    await fc.set_files(str(start_frame_path))
-                    print(f"Uploaded Start Frame: {Path(start_frame_path).name}")
-                    await page.wait_for_timeout(3500)
-                except Exception as e_up:
-                    print(f"Direct file chooser notice: {e_up}. Checking modal asset list...")
-                    # Select from modal if already present
-                    asset_item = page.locator("div[role='dialog'] img, div[aria-modal='true'] img, div[role='listbox'] img").first
-                    if await asset_item.is_visible(timeout=2000):
-                        await asset_item.click()
-                        await page.wait_for_timeout(1000)
+                print(f"Uploading file: {p_obj.name}...")
+                async with page.expect_file_chooser(timeout=4000) as fc_info:
+                    await upload_btn.click()
+                fc = await fc_info.value
+                await fc.set_files(str(p_obj))
+                await page.wait_for_timeout(3500)
 
-            # Close picker modal if open
-            close_btn = page.locator("button[aria-label='Close'], button:has-text('Close')").first
-            if await close_btn.is_visible(timeout=1500):
-                await close_btn.click()
-                await page.wait_for_timeout(1000)
+        # 3. Click 'Add to prompt' button (MANDATORY TO ATTACH FRAME TO COMPOSER SLOT)
+        add_btn = page.locator("button:has-text('Add to prompt')").first
+        if await add_btn.is_visible(timeout=3000):
+            print(f"Clicking 'Add to prompt' for slot {slot_index}...")
+            await add_btn.click()
+            await page.wait_for_timeout(2000)
+        else:
+            print(f"Warning: 'Add to prompt' button not visible for slot {slot_index}.")
 
-    # 2. Attach / Select End Frame
-    if end_frame_path and Path(end_frame_path).is_file():
-        end_btn = page.locator("button:has-text('End')").first
-        if await end_btn.is_visible(timeout=3000):
-            print(f"Setting End Frame: {Path(end_frame_path).name}")
-            await end_btn.click()
-            await page.wait_for_timeout(1500)
+    # Attach Start Frame (slot 0)
+    query_start = "frame1_front" if scene_index == 1 else ("frame2_side" if scene_index == 2 else "frame3_shoulder")
+    await attach_frame_by_search_or_upload(0, start_frame_path, query_start)
 
-            upload_btn = page.locator("button:has-text('Upload media'), div:has-text('Upload media'), [aria-label*='Upload']").last
-            if await upload_btn.is_visible(timeout=2000):
-                try:
-                    async with page.expect_file_chooser(timeout=3000) as fc_info:
-                        await upload_btn.click()
-                    fc = await fc_info.value
-                    await fc.set_files(str(end_frame_path))
-                    print(f"Uploaded End Frame: {Path(end_frame_path).name}")
-                    await page.wait_for_timeout(3500)
-                except Exception as e_up:
-                    print(f"Direct file chooser notice: {e_up}. Checking modal asset list...")
-                    asset_item = page.locator("div[role='dialog'] img, div[aria-modal='true'] img, div[role='listbox'] img").nth(1)
-                    if await asset_item.is_visible(timeout=2000):
-                        await asset_item.click()
-                        await page.wait_for_timeout(1000)
-
-            close_btn = page.locator("button[aria-label='Close'], button:has-text('Close')").first
-            if await close_btn.is_visible(timeout=1500):
-                await close_btn.click()
-                await page.wait_for_timeout(1000)
+    # Attach End Frame (slot 1)
+    query_end = "frame2_side" if scene_index == 1 else ("frame3_shoulder" if scene_index == 2 else "frame1_front")
+    await attach_frame_by_search_or_upload(1, end_frame_path, query_end)
 
     # 3. Enter Scene Prompt into ProseMirror Editor
     editor = page.locator("div.ProseMirror[role='textbox'], div[contenteditable='true'][role='textbox']").first
