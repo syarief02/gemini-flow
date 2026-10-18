@@ -2,6 +2,7 @@ import asyncio
 import os
 import sys
 import json
+import re
 import argparse
 from pathlib import Path
 from playwright.async_api import async_playwright
@@ -10,7 +11,7 @@ if sys.platform == "win32":
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 
-GMAIL_THREAD_URL = "https://mail.google.com/mail/u/0/#inbox/KtbxLxGPlLGCfJCdlgnfRFLpkxZLPzQgrL"
+DEFAULT_INBOX_URL = "https://mail.google.com/mail/u/0/#inbox"
 
 # Default fallback caption
 CLEAN_KAPSYEN = """Bila dapat jemputan kenduri kahwin tema kuning, mesti ramai pening kepala takut nampak kusam kan? ✨
@@ -68,7 +69,6 @@ def get_latest_caption() -> str:
 
 async def reply_with_clean_format(caption_text: str = None, thread_url: str = None):
     target_caption = (caption_text or CLEAN_KAPSYEN).strip()
-    target_url = (thread_url or GMAIL_THREAD_URL).strip()
 
     print("Step 1: Connecting to Brave over CDP on port 9222...")
     p = await async_playwright().start()
@@ -90,16 +90,33 @@ async def reply_with_clean_format(caption_text: str = None, thread_url: str = No
             break
 
     if not gmail_page:
-        print("Opening new tab to Gmail thread...")
+        print("Opening new tab to Gmail...")
         gmail_page = await context.new_page()
-        await gmail_page.goto(target_url, wait_until="domcontentloaded")
+        if thread_url:
+            await gmail_page.goto(thread_url.strip(), wait_until="domcontentloaded")
+        else:
+            await gmail_page.goto(DEFAULT_INBOX_URL, wait_until="domcontentloaded")
     else:
         await gmail_page.bring_to_front()
-        if target_url not in gmail_page.url:
-            print(f"Navigating to thread: {target_url}")
-            await gmail_page.goto(target_url, wait_until="domcontentloaded")
+        if thread_url and thread_url.strip() not in gmail_page.url:
+            print(f"Navigating to specified thread: {thread_url}")
+            await gmail_page.goto(thread_url.strip(), wait_until="domcontentloaded")
 
-    await gmail_page.wait_for_timeout(3500)
+    await gmail_page.wait_for_timeout(3000)
+
+    # If we are on inbox list (not inside an active thread), open the top/latest email thread
+    is_inside_thread = bool(re.search(r'#(?:inbox|all|sent)/[A-Za-z0-9_-]+', gmail_page.url))
+    if not is_inside_thread:
+        print("Currently on inbox list or overview. Opening the latest email thread...")
+        top_thread = gmail_page.locator("tr.zA, div[role='main'] table tbody tr").first
+        if await top_thread.is_visible(timeout=5000):
+            await top_thread.click()
+            await gmail_page.wait_for_timeout(3000)
+            print(f"Opened thread: {gmail_page.url}")
+        else:
+            print("Notice: No visible thread rows found in inbox table, attempting to stay on current page.")
+
+    await gmail_page.wait_for_timeout(2000)
 
     # Click Reply button or press 'r'
     reply_btn = gmail_page.locator("span[role='button']:has-text('Reply'), div[role='button']:has-text('Reply'), [aria-label*='Reply']").last
