@@ -235,6 +235,13 @@ All generation behavior can be customized in `prompt_templates.py` or via `gener
 
 ---
 
+## 🚀 Upgrade Proposals & Roadmap
+
+For planned architectural enhancements, automation improvements, and video post-processing upgrades, refer to [PROPOSED_UPGRADES.md](PROPOSED_UPGRADES.md).
+
+---
+
 ## 📜 License
 
 Personal & commercial affiliate promotion use.
+
