@@ -5,13 +5,15 @@
 
 ## What This Workspace Does
 
-This is a **TikTok Shop Product Promo Generator** for the Malaysian market.
-Given a single TikTok Shop product URL, the pipeline produces:
+This is an **autonomous end-to-end TikTok Shop Product Promo Generator** for the Malaysian market.
+Given a single TikTok Shop product URL, the complete pipeline automatically executes:
 
-1. **3 Consistent 9:16 Keyframe Images** (Front, Side, Over-Shoulder poses)
-2. **3 Flow AI Video Prompts** (Veo 3.1 / Omni Flash 8s with Malaysian Malay lip-sync)
-3. **TikTok Caption + SEO Hashtags** (Bahasa Melayu Malaysia, policy-safe)
-4. **Suno AI BGM Instrumental Prompt** (One comprehensive style prompt, no lyrics)
+1. **3 Consistent 9:16 Keyframe Images** (Front, Side, Over-Shoulder poses) & Supabase CDN upload
+2. **TikTok Caption + SEO Hashtags** (Bahasa Melayu Malaysia, policy-safe, 1-click copy box)
+3. **3 Flow AI Video Generations in Browser** (Omni Flash 10s portrait, Frame-to-Video via Brave CDP)
+4. **Automated Gmail Promo Reply in Browser** (Instantly replies to the user's email thread in Brave with the full copy package)
+5. **Suno AI Instrumental BGM Generation in Browser** (Configures and triggers pure instrumental BGM creation on `suno.com/create`)
+6. **Supabase Cloud Sync & Git Tracking** (Full record stored in `gemini_flow_generations` and pushed to GitHub)
 
 ---
 
@@ -174,21 +176,72 @@ Deliver to the user in this exact order:
 5. **⚠️ AIGC Reminder** — Always include this note at the end:
    > **Reminder:** This content is AI-generated. When posting to TikTok, enable the "AI-generated content" toggle in posting settings to comply with TikTok's AIGC disclosure policy.
 
-### Step 6: Log to Generation History
-After EVERY generation, you MUST log the new entry:
-```python
-from generate_prompts import save_generation_history
-save_generation_history(
-    product_name="Product Name Here",
-    opening_line="The exact Scene 1 opening line used",
-    closing_line="The exact Scene 3 closing line used"
-)
-```
+### Step 6: Automate Flow AI Video Generation in Browser (Brave)
+- Connect to Brave running with `--remote-debugging-port=9222 --remote-allow-origins=*` using Playwright CDP (`automate_flow.py`).
+- If Brave is not currently running with debugging flags, restart it with debugging enabled:
+  ```powershell
+  Stop-Process -Name brave -Force -ErrorAction SilentlyContinue ; Start-Sleep -Seconds 2 ; Start-Process "C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe" -ArgumentList "--remote-debugging-port=9222", "--remote-allow-origins=*", "https://flow.google.com/?pli=1&authuser=5" ; Start-Sleep -Seconds 4
+  ```
+- Navigate to Google Flow AI project (`https://flow.google.com/`).
+- Set video parameters: **Duration = 10s**, **Orientation = Portrait (9:16)**, **Model = Omni Flash**, **Mode = Frame to Video**.
+- Configure the 3 scene sequences:
+  - **Scene 1**: Start = `Frame 1 (Front)`, End = `Frame 2 (Side)` + Scene 1 Prompt
+  - **Scene 2**: Start = `Frame 2 (Side)`, End = `Frame 3 (Shoulder)` + Scene 2 Prompt
+  - **Scene 3**: Start = `Frame 3 (Shoulder)`, End = `Frame 1 (Front)` [Seamless 360 Loop] + Scene 3 Prompt
+- Trigger video rendering and capture progress screenshot (`flow_renders_progress.png`).
 
-### Step 7: Commit & Push
+### Step 7: Automate Gmail Promo Reply in Browser (Brave)
+- Connect to Brave on port 9222 using `reply_gmail.py`.
+- Find or navigate to the user's active promo email thread (`(no subject)` or promo email with the TikTok link in `syarief.azman@gmail.com`).
+- Click **Reply** button or press keyboard shortcut `r`.
+- Insert the complete promo package in clean formatted text:
+  - Product title & TikTok Shop links
+  - Flow AI Project URL & settings
+  - Complete TikTok Caption + Hashtags (zero em-dashes, zero direct prices)
+  - Spoken Malay Lip-sync breakdown
+  - Supabase CDN keyframe image links
+  - Suno AI Instrumental BGM prompt
+- Click **Send** to immediately dispatch the reply inside the browser.
+- Capture sent confirmation screenshot (`gmail_reply_sent.png`).
+
+### Step 8: Automate Suno AI Instrumental BGM Generation in Browser (Brave)
+- Connect to Brave on port 9222 using `create_suno.py`.
+- Navigate to `https://suno.com/create`.
+- Ensure **Instrumental mode is toggled ON** (strictly no vocals to avoid clashing with Flow AI spoken dialogue).
+- Enter the tailored BGM style prompt into the style textarea.
+- Enter a clear descriptive title for the track.
+- Click **Create** to initiate song generation.
+- Capture generation confirmation screenshot (`suno_generating.png`).
+
+### Step 9: Sync to Supabase & Log Generation History
+- Log the new entry to `generation_history.json` to prevent repetition in the recent 7-entry window:
+  ```python
+  from generate_prompts import save_generation_history
+  save_generation_history(
+      product_name="Product Name Here",
+      opening_line="The exact Scene 1 opening line used",
+      closing_line="The exact Scene 3 closing line used"
+  )
+  ```
+- Sync generation record, scenes, caption, hashtags, and Supabase CDN keyframe URLs to Supabase `gemini_flow_generations`:
+  ```python
+  import supabase_client
+  supabase_client.save_generation_record(
+      product_name="Product Name Here",
+      opening_line="...",
+      closing_line="...",
+      caption="...",
+      hashtags="...",
+      bgm_prompt="...",
+      keyframe_urls=[...],
+      metadata={...}
+  )
+  ```
+
+### Step 10: Commit & Push
 ```bash
-git add generation_history.json
-git commit -m "Log generation history for <product name>"
+git add generation_history.json automate_flow.py reply_gmail.py create_suno.py
+git commit -m "feat: complete end-to-end promo generation for <product name>"
 git push
 ```
 
@@ -235,6 +288,10 @@ git push
 | `generate_prompts.py` | Core engine: SYSTEM_PROMPT, anti-repetition functions, Gemini API caller |
 | `generate_keyframes.py` | Generates 3 consistent 9:16 keyframe images dynamically for any product session |
 | `prompt_templates.py` | Reusable templates for keyframes, Flow AI prompts, caption, and Suno BGM |
+| `automate_flow.py` | Flow AI video generation operator in Brave browser via Playwright CDP |
+| `reply_gmail.py` | Automated Gmail reply script in Brave browser to dispatch copy packages via CDP |
+| `create_suno.py` | Automated Suno AI BGM instrumental generator in Brave browser via CDP |
+| `open_brave.bat` | Launcher batch script to start Brave with remote debugging on port 9222 |
 | `generation_history.json` | Tracks last used opening/closing lines to prevent repetition (window: last 7) |
 | `supabase_client.py` | Supabase cloud database client, health monitoring, and remote generation sync |
 | `publish_to_wordpress.py` | WordPress.com publishing integration for promo articles and affiliate links |
@@ -332,3 +389,48 @@ Kelebihan [product] ni yang buat saya suka:
   - **Mood & Atmosphere**: e.g. breezy, optimistic, fashionable, relaxing, modern Malaysian lifestyle vibe.
   - **Tempo/Pacing**: BPM guidance (e.g. 108–115 BPM, smooth rhythm matched for short-form video pacing).
   - **Production Quality**: "pure instrumental, no vocals, high-quality production, warm acoustic mixing, seamless loopable feel".
+
+---
+
+## Browser Automation Architecture via Playwright CDP (Brave)
+
+To ensure seamless, hands-free generation directly inside the user's desktop browser without requiring credentials or session tokens, the workspace uses **Chrome DevTools Protocol (CDP)** attached to **Brave Browser**:
+
+### 1. Launching Brave with Debugging
+- Brave executable path: `C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe`
+- When starting or restarting Brave for automation, ALWAYS pass:
+  ```powershell
+  Stop-Process -Name brave -Force -ErrorAction SilentlyContinue ; Start-Sleep -Seconds 2 ; Start-Process "C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe" -ArgumentList "--remote-debugging-port=9222", "--remote-allow-origins=*", "<target_url>" ; Start-Sleep -Seconds 4
+  ```
+- **Port 9222**: Dedicated remote debugging listener.
+- **`--remote-allow-origins=*`**: Mandatory flag for Chromium 130+ to permit Playwright websocket connections.
+
+### 2. Playwright Attachment Pattern
+In any browser automation script:
+```python
+from playwright.async_api import async_playwright
+
+p = await async_playwright().start()
+browser = await p.chromium.connect_over_cdp("http://127.0.0.1:9222")
+context = browser.contexts[0]
+# Use existing tab or create new tab
+# NEVER call browser.close() so the user's browser window remains open and visible!
+await p.stop()
+```
+
+### 3. Automated Browser Tasks Sequence
+Whenever the user supplies a TikTok Shop product link:
+1. **Google Flow AI (`automate_flow.py`)**:
+   - Tab: `https://flow.google.com/`
+   - Configures 10s portrait, Omni Flash, Frame-to-Video.
+   - Uploads Frame 1 ➡️ 2 (Scene 1), Frame 2 ➡️ 3 (Scene 2), Frame 3 ➡️ 1 (Scene 3).
+   - Pastes bilingual spoken dialogue prompts and starts renders.
+2. **Gmail Promo Package Reply (`reply_gmail.py`)**:
+   - Tab: `https://mail.google.com/mail/u/0/#inbox`
+   - Finds the active promo thread (`(no subject)` or product link thread).
+   - Clicks **Reply**, fills the formatted caption + hashtag package + video links, and clicks **Send**.
+3. **Suno AI Instrumental BGM (`create_suno.py`)**:
+   - Tab: `https://suno.com/create`
+   - Sets mode to **Instrumental** (strictly no vocals).
+   - Pastes the generated acoustic/lo-fi style prompt and title, then clicks **Create**.
+
