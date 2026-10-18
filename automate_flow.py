@@ -1,88 +1,169 @@
 """
 Flow AI Automation Script for Brave Browser via Playwright CDP
 =============================================================
-Connects to Brave running on port 9222 with remote debugging,
-navigates to Google Flow AI, sets up Frame-to-Video parameters,
-uploads/selects keyframes, inputs prompts, and triggers 10s portrait renders.
+Connects to Brave running on port 9222 with remote debugging, then for each
+scene: clears the composer, enforces Video / Frames / 9:16 / Omni 1.1 Flash /
+720p / 10s / x1, attaches the Start and End keyframes by exact filename,
+verifies pixel-for-pixel that each slot holds the expected keyframe, types the
+visual prompt + Spoken Malay lip-sync line, and only then clicks
+'Start generation'. Any failed check aborts that scene WITHOUT submitting.
 
 Usage:
-    python automate_flow.py --latest
-    python automate_flow.py --scene 1
-    python automate_flow.py --prompt "..." --start-frame path/to/frame1.jpg --end-frame path/to/frame2.jpg
+    python automate_flow.py --all                        # newest keyframe trio, all 3 scenes
+    python automate_flow.py --all --prefix striped_split_cuff_blouse
+    python automate_flow.py --all --dry-run              # run every check, submit nothing
+    python automate_flow.py --scene 2 --prefix <prefix>
+    python automate_flow.py --scene 1 --prompt "..." --start-frame a.jpg --end-frame b.jpg
 """
 
 from __future__ import annotations
 
 import asyncio
-import os
-import sys
-import json
+import io
 import re
+import sys
 import argparse
 from pathlib import Path
+
+from PIL import Image, ImageChops, ImageStat
 from playwright.async_api import async_playwright
 
 if sys.platform == "win32":
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 
+WORKSPACE = Path(__file__).resolve().parent
 FLOW_URL = "https://flow.google.com/?pli=1&authuser=5"
-KEYFRAMES_DIR = Path(__file__).resolve().parent / "keyframes"
+KEYFRAMES_DIR = WORKSPACE / "keyframes"
+
+# Composer settings that every render must use (labels as shown in Flow's settings menu).
+REQUIRED_TOGGLES = ("Video", "Frames", "9:16", "720p", "10s", "x1")
+REQUIRED_MODEL = "Omni 1.1 Flash"
+
+# Mean grayscale difference (0-255) between a slot thumbnail and a local keyframe at 32x56.
+# The same file measures ~0.05; a different pose of the same product measures ~8-10.
+CHIP_MATCH_MAX_DIFF = 3.0
+
+# ~2 spoken Malay words per second, leaving room for the turn inside a 10s clip.
+MAX_DIALOGUE_WORDS = 22
+CAMERA_MOTION_WORDS = ("camera glide", "glides", "pan ", "panning", "zoom", "orbit", "dolly", "tracking shot", "circular camera")
+
+AUDIO_LINE = (
+    "For the audio, generate a highly realistic female voice with a standard Malaysian Malay "
+    "(Bahasa Melayu Malaysia) accent, strictly NOT an Indonesian accent. No background music, "
+    "only her voice and soft ambient sound. Ensure there are no text overlays or watermarks."
+)
+
+PAIRINGS = {1: (0, 1), 2: (1, 2), 3: (2, 0)}  # Scene: (start frame idx, end frame idx)
+
+COMPOSER = ".base-prompt-box"
+OVERLAY = ".cdk-overlay-container"
 
 
-def get_latest_generation_data() -> dict:
-    """Fetch the latest generation record from Supabase or generation_history.json."""
-    try:
-        from supabase_client import get_supabase_client
-        client = get_supabase_client()
-        if client:
-            res = client.table("gemini_flow_generations").select("*").order("created_at", desc=True).limit(1).execute()
-            if res.data:
-                row = res.data[0]
-                return {
-                    "product": row.get("product_name"),
-                    "scenes": row.get("scenes") or {},
-                    "opening_line": row.get("opening_line"),
-                    "closing_line": row.get("closing_line"),
-                    "keyframe_urls": row.get("keyframe_urls") or [],
-                }
-    except Exception as e:
-        print(f"Notice querying Supabase for latest generation: {e}")
-
-    try:
-        hist_path = Path(__file__).resolve().parent / "generation_history.json"
-        if hist_path.is_file():
-            with open(hist_path, "r", encoding="utf-8") as f:
-                data = json.load(f)
-            gens = data.get("generations", [])
-            if gens:
-                last_g = gens[-1]
-                return {
-                    "product": last_g.get("product"),
-                    "scenes": last_g.get("scenes") or {},
-                    "opening_line": last_g.get("opening_line"),
-                    "closing_line": last_g.get("closing_line")
-                }
-    except Exception as e_hist:
-        print(f"Notice reading history: {e_hist}")
-
-    return {}
+class FlowError(RuntimeError):
+    """A pre-submit check failed; the scene must not be rendered."""
 
 
-def find_latest_keyframes() -> tuple[Path | None, Path | None, Path | None]:
-    """Find the most recently generated trio of keyframe images in keyframes/."""
-    if not KEYFRAMES_DIR.is_dir():
-        return None, None, None
+# ---------------------------------------------------------------------------
+# Keyframes and prompt data
+# ---------------------------------------------------------------------------
 
-    f1_candidates = sorted(list(KEYFRAMES_DIR.glob("*frame1*.jpg")), key=os.path.getmtime, reverse=True)
-    f2_candidates = sorted(list(KEYFRAMES_DIR.glob("*frame2*.jpg")), key=os.path.getmtime, reverse=True)
-    f3_candidates = sorted(list(KEYFRAMES_DIR.glob("*frame3*.jpg")), key=os.path.getmtime, reverse=True)
+def resolve_keyframes(prefix: str | None) -> tuple[str, list[Path]]:
+    """Return (prefix, [frame1, frame2, frame3]) for one product, never mixing products."""
+    from supabase_client import get_product_keyframes
 
-    f1 = f1_candidates[0] if f1_candidates else None
-    f2 = f2_candidates[0] if f2_candidates else None
-    f3 = f3_candidates[0] if f3_candidates else None
-    return f1, f2, f3
+    if not prefix:
+        newest = sorted(KEYFRAMES_DIR.glob("*_frame1*.jpg"), key=lambda p: p.stat().st_mtime, reverse=True)
+        if not newest:
+            raise FlowError(f"No *_frame1*.jpg keyframes found in {KEYFRAMES_DIR}")
+        prefix = re.sub(r"_frame1(_front)?$", "", newest[0].stem)
 
+    info = get_product_keyframes(prefix, KEYFRAMES_DIR)
+    frames = [info["frames"][k]["local_path"] for k in ("frame_1_front", "frame_2_side", "frame_3_shoulder")]
+    if not all(frames):
+        raise FlowError(f"Keyframe trio for prefix '{prefix}' is incomplete: {frames}")
+    return prefix, [Path(f) for f in frames]
+
+
+def load_scene_prompts(prefix: str) -> dict:
+    """Load the visual prompts + spoken lines from the Supabase record whose keyframes match `prefix`."""
+    from supabase_client import get_supabase_client
+
+    client = get_supabase_client()
+    if not client:
+        raise FlowError("Supabase is not configured; pass --prompt for a single scene instead.")
+    rows = (
+        client.table("gemini_flow_generations")
+        .select("product_name, scenes, keyframe_urls, created_at")
+        .order("created_at", desc=True)
+        .limit(25)
+        .execute()
+    ).data or []
+    row = next((r for r in rows if any(f"/{prefix}_frame" in (u or "") for u in (r.get("keyframe_urls") or []))), None)
+    if not row:
+        raise FlowError(f"No Supabase generation record has keyframe_urls for prefix '{prefix}'.")
+
+    scenes = row.get("scenes") or {}
+    visual = scenes.get("visual_prompts") or {}
+    spoken = scenes.get("spoken_dialogue") or {}
+    combined = {1: scenes.get("scene_1_intro"), 2: scenes.get("scene_2_detail"), 3: scenes.get("scene_3_outro")}
+    out = {"product": row.get("product_name"), "visual": {}, "dialogue": {}}
+    for i in (1, 2, 3):
+        vis = visual.get(f"scene_{i}") or (combined[i] or "").split("Spoken Malay (Lip-sync):")[0]
+        dia = spoken.get(f"scene_{i}")
+        if not dia and combined[i] and "Spoken Malay (Lip-sync):" in combined[i]:
+            dia = combined[i].split("Spoken Malay (Lip-sync):", 1)[1]
+        out["visual"][i] = (vis or "").strip()
+        out["dialogue"][i] = (dia or "").strip().strip('"').strip()
+    return out
+
+
+def build_scene_prompt(visual: str, dialogue: str) -> str:
+    """Combine the English visual direction and the verbatim Malay lip-sync line, validating both."""
+    visual = visual.strip()
+    if "Spoken Malay (Lip-sync):" in visual:
+        visual, embedded = visual.split("Spoken Malay (Lip-sync):", 1)
+        visual = visual.strip()
+        dialogue = dialogue or embedded.strip().strip('"')
+    if not visual:
+        raise FlowError("Visual prompt is empty.")
+    if not dialogue:
+        raise FlowError("Spoken Malay dialogue is empty; Flow would render a silent or muddled clip.")
+
+    words = len(re.findall(r"[\w'-]+", dialogue))
+    if words > MAX_DIALOGUE_WORDS:
+        raise FlowError(
+            f"Dialogue has {words} words; max {MAX_DIALOGUE_WORDS} fit in a 10s clip. Shorten it:\n  {dialogue}"
+        )
+    lowered = visual.lower()
+    moving = [w.strip() for w in CAMERA_MOTION_WORDS if w in lowered]
+    if moving:
+        print(f"WARNING: visual prompt asks for camera motion {moving}; keyframes share one background, "
+              "so prefer 'Static locked-off vertical shot' with the subject turning.")
+
+    if "for the audio" not in lowered:
+        visual = f"{visual} {AUDIO_LINE}"
+    return f'{visual}\n\nSpoken Malay (Lip-sync): "{dialogue}"'
+
+
+# ---------------------------------------------------------------------------
+# Image matching
+# ---------------------------------------------------------------------------
+
+def _thumb(img: Image.Image) -> Image.Image:
+    return img.convert("L").resize((32, 56), Image.BILINEAR)
+
+
+def closest_keyframe(image_bytes: bytes, candidates: list[Path]) -> tuple[Path, dict[str, float]]:
+    got = _thumb(Image.open(io.BytesIO(image_bytes)))
+    scores = {p.name: ImageStat.Stat(ImageChops.difference(got, _thumb(Image.open(p)))).mean[0] for p in candidates}
+    best = min(candidates, key=lambda p: scores[p.name])
+    return best, scores
+
+
+# ---------------------------------------------------------------------------
+# Browser helpers
+# ---------------------------------------------------------------------------
 
 async def connect_to_brave(port: int = 9222):
     """Connect to Brave via Chrome DevTools Protocol."""
@@ -98,273 +179,260 @@ async def connect_to_brave(port: int = 9222):
         )
 
 
-async def get_or_create_flow_tab(browser):
-    """Find existing Flow AI tab or navigate to Flow."""
+async def get_flow_page(browser, project_url: str | None):
+    """Use the Flow tab already inside a project (or the given project URL); open Flow otherwise."""
     context = browser.contexts[0] if browser.contexts else await browser.new_context()
-    for page in context.pages:
-        if "flow.google.com" in page.url or "labs.google" in page.url:
-            await page.bring_to_front()
-            return page
+    flow_pages = [pg for pg in context.pages if "flow.google.com" in pg.url or "labs.google" in pg.url]
+    if project_url:
+        match = [pg for pg in flow_pages if pg.url.split("?")[0].rstrip("/") == project_url.split("?")[0].rstrip("/")]
+        page = match[0] if match else (flow_pages[0] if flow_pages else await context.new_page())
+        if not match:
+            await page.goto(project_url, wait_until="domcontentloaded")
+    else:
+        in_project = [pg for pg in flow_pages if "/project/" in pg.url]
+        page = (in_project or flow_pages or [None])[0]
+        if page is None:
+            page = await context.new_page()
+            await page.goto(FLOW_URL, wait_until="domcontentloaded")
+            await page.wait_for_timeout(3000)
 
-    page = await context.new_page()
-    await page.goto(FLOW_URL, wait_until="domcontentloaded")
-    await page.wait_for_timeout(3000)
+    await page.bring_to_front()
+    if "/project/" in page.url and "/edit/" in page.url:
+        await page.goto(page.url.split("/edit/")[0], wait_until="domcontentloaded")
+    if "/project/" not in page.url:
+        print("Not inside a Flow project; opening the most recent project...")
+        link = page.locator("a[href*='/project/']").first
+        if await link.is_visible(timeout=4000):
+            await link.click()
+            await page.wait_for_url("**/project/**", timeout=15000)
+        else:
+            raise FlowError("No Flow project open. Open the target project in Brave or pass --project-url.")
+    await page.locator(f"{COMPOSER} [contenteditable='true']").wait_for(timeout=20000)
+    print(f"Active Flow project: {page.url}")
     return page
 
 
-async def ensure_active_flow_project(page):
-    """Ensure the user is inside a Flow project canvas (not stuck on home list)."""
-    # If on home / project list, click into the first project or new project
-    if "/project/" not in page.url:
-        print("Not inside a specific project. Checking for existing project cards or New button...")
-        proj_link = page.locator("a[href*='/project/'], div[role='button']:has-text('New project'), button:has-text('New project')").first
-        if await proj_link.is_visible(timeout=4000):
-            await proj_link.click()
-            await page.wait_for_timeout(3000)
-        elif "/project/" not in page.url:
-            # Try clicking top project item
-            card = page.locator("div[role='gridcell'], div.project-card, flow-project-card").first
-            if await card.is_visible(timeout=3000):
-                await card.click()
-                await page.wait_for_timeout(3000)
-
-    print(f"Active Flow canvas URL: {page.url}")
+def _slot(page, index: int):
+    return page.locator(f"{COMPOSER} .frame-trigger").nth(index)
 
 
-async def configure_and_render_scene(
-    page,
-    scene_index: int,
-    prompt: str,
-    start_frame_path: str | Path | None = None,
-    end_frame_path: str | Path | None = None,
-    wait_after_submit: int = 6000
-) -> bool:
-    """
-    Set Start and End frames in Flow composer, type prompt into ProseMirror,
-    and trigger generation.
-    """
-    print(f"\n--- Initiating Flow AI Video Generation for Scene {scene_index} ---")
-    await page.wait_for_timeout(2000)
+async def clear_composer(page):
+    clear_btn = page.locator(f"{COMPOSER} button[aria-label='Clear prompt']")
+    if await clear_btn.count() and await clear_btn.first.is_visible():
+        await clear_btn.first.click()
+        await page.wait_for_timeout(800)
+    filled = await page.locator(f"{COMPOSER} img.chip-image").count()
+    if filled:
+        raise FlowError(f"Composer still has {filled} attached frame(s) after 'Clear prompt'.")
 
-    async def attach_frame_by_search_or_upload(slot_index: int, frame_path: str | Path | None):
-        if not frame_path:
-            return
-        p_obj = Path(frame_path)
-        slot_name = "Start" if slot_index == 0 else "End"
-        print(f"Opening frame slot {slot_index} ({slot_name}) for: {p_obj.name}...")
 
-        dialog = page.locator("flow-add-menu-popover-content, div[role='dialog']")
-        if not await dialog.is_visible(timeout=1500):
-            triggers = page.locator("div.frame-trigger button, button.empty-chip, button:has-text('Start'), button:has-text('End')")
-            trigger_btn = triggers.first if slot_index == 0 else triggers.last
-            await trigger_btn.click(force=True)
-            await page.wait_for_timeout(1500)
+async def ensure_settings(page):
+    """Open the settings menu and force every required toggle and the model, then verify."""
+    await page.locator(f"{COMPOSER} button[aria-label='Settings trigger']").click()
+    overlay = page.locator(OVERLAY)
+    model_btn = overlay.locator("button[aria-label='Select model family']")
+    await model_btn.wait_for(timeout=5000)
 
-        # 1. Search for the file stem
-        search_input = page.locator("flow-add-menu-popover-content input, input[placeholder*='Search']").first
-        found_in_search = False
-        if await search_input.is_visible(timeout=2000):
-            await search_input.fill("")
-            await search_input.fill(p_obj.stem)
-            await page.wait_for_timeout(1500)
+    radios = overlay.locator("button[role='radio']")
+    for label in REQUIRED_TOGGLES:
+        # Rendered text is "<icon ligature> <label>", e.g. "crop_9_16 9:16"; match the label word only.
+        texts = await radios.evaluate_all("els => els.map(e => e.innerText.trim().split(/\\s+/).pop())")
+        matches = [i for i, t in enumerate(texts) if t == label]
+        if len(matches) != 1:
+            raise FlowError(f"Settings option '{label}' not found (options: {texts}).")
+        btn = radios.nth(matches[0])
+        if await btn.get_attribute("aria-checked") != "true":
+            await btn.click()
+            await page.wait_for_timeout(400)
+        if await btn.get_attribute("aria-checked") != "true":
+            raise FlowError(f"Could not select settings option '{label}'.")
 
-            filtered_item = page.locator(
-                f"div:has-text('{p_obj.stem}'), span:has-text('{p_obj.stem}'), "
-                "flow-add-menu-popover-content flow-asset-list-item, "
-                "flow-add-menu-popover-content .asset-list-item, "
-                "flow-add-menu-popover-content div.item-row, "
-                "flow-add-menu-popover-content [role='listbox'] > *"
-            ).first
-            if await filtered_item.is_visible(timeout=2000):
-                print(f"Found asset for '{p_obj.stem}' via search. Selecting...")
-                await filtered_item.click(force=True)
-                await page.wait_for_timeout(1000)
-                found_in_search = True
-
-        # 2. If not found via search, upload the file
-        if not found_in_search and p_obj.is_file():
-            upload_btn = page.locator("button:has-text('Upload media'), div:has-text('Upload media'), [aria-label*='Upload']").last
-            if await upload_btn.is_visible(timeout=2000):
-                print(f"Uploading file: {p_obj.name}...")
-                async with page.expect_file_chooser(timeout=4000) as fc_info:
-                    await upload_btn.click(force=True)
-                fc = await fc_info.value
-                await fc.set_files(str(p_obj))
-                await page.wait_for_timeout(4000)
-
-        # 3. If 'Add to prompt' button is present (full dialog), click it.
-        # In compact popover, clicking the item already attached it directly!
-        add_btn = page.locator("button:has-text('Add to prompt')").first
-        try:
-            if await add_btn.is_visible(timeout=1500):
-                print(f"Clicking 'Add to prompt' for slot {slot_index}...")
-                await add_btn.click(force=True)
-                await page.wait_for_timeout(1500)
-            else:
-                print(f"Frame attached to slot {slot_index} via compact list.")
-        except Exception as e_add:
-            print(f"Notice on Add to prompt: {e_add}")
-
-    # Attach Start Frame (slot 0)
-    await attach_frame_by_search_or_upload(0, start_frame_path)
-
-    # Attach End Frame (slot 1)
-    await attach_frame_by_search_or_upload(1, end_frame_path)
-
-    # Ensure all popovers are closed so they do not intercept pointer events
-    await page.keyboard.press("Escape")
-    await page.wait_for_timeout(500)
-    await page.keyboard.press("Escape")
-    await page.wait_for_timeout(500)
-
-    # 3. Enter Scene Prompt into ProseMirror Editor
-    editor = page.locator("div.ProseMirror[role='textbox'], div[contenteditable='true'][role='textbox']").first
-    if not await editor.is_visible(timeout=3000):
-        editor = page.locator("div[contenteditable='true'], textarea").last
-
-    if await editor.is_visible(timeout=3000):
-        print(f"Typing Scene {scene_index} prompt into Flow composer...")
-        await editor.click(force=True)
+    if REQUIRED_MODEL not in (await model_btn.inner_text()):
+        await model_btn.click()
+        await overlay.locator("button[role='menuitem']").filter(has_text=REQUIRED_MODEL).first.click()
         await page.wait_for_timeout(500)
-        # Clear existing text
-        await page.keyboard.press("Control+A")
-        await page.keyboard.press("Backspace")
-        await page.wait_for_timeout(300)
-        # Insert prompt
-        await page.keyboard.insert_text(prompt.strip())
-        await page.wait_for_timeout(1500)
-    else:
-        print("ERROR: Could not locate Flow prompt editor.")
+        if REQUIRED_MODEL not in (await model_btn.inner_text()):
+            raise FlowError(f"Could not select model '{REQUIRED_MODEL}'.")
+
+    cost = overlay.get_by_text(re.compile(r"Generating will use"))
+    if await cost.count():
+        print(f"  {(await cost.first.inner_text()).strip()}")
+    await page.keyboard.press("Escape")
+    await model_btn.wait_for(state="detached", timeout=5000)
+
+    summary = await page.locator(f"{COMPOSER} button[aria-label='Settings trigger']").inner_text()
+    if not all(s in summary for s in ("Video", "720p", "10s", "9_16", "x1")):
+        raise FlowError(f"Settings summary looks wrong after configuring: '{summary}'")
+    print(f"  Settings verified: {REQUIRED_MODEL} | {' · '.join(REQUIRED_TOGGLES)}")
+
+
+async def attach_frame(page, slot_index: int, frame: Path):
+    """Open the slot picker, search the exact filename, upload it if missing, and click the exact row."""
+    slot_name = ("Start", "End")[slot_index]
+    slot = _slot(page, slot_index)
+    await slot.locator("button.empty-chip").click()
+    overlay = page.locator(OVERLAY)
+    search = overlay.locator("input.search-input").first
+    await search.wait_for(timeout=5000)
+
+    async def click_exact_row(timeout_ms: int) -> bool:
+        await search.fill(frame.name)
+        rows = overlay.locator("button.asset-item")
+        for _ in range(timeout_ms // 250):
+            for i in range(await rows.count()):
+                if (await rows.nth(i).inner_text()).strip() == frame.name:
+                    await rows.nth(i).click()
+                    return True
+            await page.wait_for_timeout(250)
         return False
 
-    # 4. Trigger Render
-    generate_btn = page.locator("button[aria-label='Start generation'], button[aria-label*='generate'], button.send-btn").first
-    is_disabled = await generate_btn.get_attribute("disabled") if await generate_btn.is_visible(timeout=2000) else True
+    if not await click_exact_row(4000):
+        print(f"  '{frame.name}' is not in this project yet; uploading...")
+        async with page.expect_file_chooser(timeout=5000) as chooser:
+            await overlay.locator("button[aria-label='Upload media']").click()
+        await (await chooser.value).set_files(str(frame))
+        for _ in range(120):  # up to 60s for the upload to land
+            if await slot.locator("img.chip-image").count():
+                break
+            if await search.is_visible() and await click_exact_row(500):
+                break
+            await page.wait_for_timeout(500)
 
-    if not is_disabled or is_disabled == "false":
-        print(f"Clicking 'Start generation' for Scene {scene_index}...")
-        await generate_btn.click()
+    try:
+        await slot.locator("img.chip-image").wait_for(timeout=15000)
+    except Exception:
+        raise FlowError(f"{slot_name} slot is still empty after selecting '{frame.name}'.")
+    if await search.is_visible():
+        await page.keyboard.press("Escape")
+    print(f"  {slot_name} slot filled with '{frame.name}'")
+
+
+async def verify_slot(page, slot_index: int, expected: Path, candidates: list[Path]):
+    """Download the slot's image and confirm it is the expected keyframe, not another pose or product."""
+    slot_name = ("Start", "End")[slot_index]
+    img = _slot(page, slot_index).locator("img.chip-image")
+    src = ""
+    for _ in range(40):
+        src = await img.get_attribute("src") or ""
+        if src.startswith("http"):
+            break
+        await page.wait_for_timeout(250)
+    if not src.startswith("http"):
+        raise FlowError(f"{slot_name} slot image never finished loading.")
+
+    resp = await page.context.request.get(src)
+    if not resp.ok:
+        raise FlowError(f"Could not download {slot_name} slot image (HTTP {resp.status}).")
+    best, scores = closest_keyframe(await resp.body(), candidates)
+    detail = ", ".join(f"{k}={v:.2f}" for k, v in scores.items())
+    if best != expected or scores[expected.name] > CHIP_MATCH_MAX_DIFF:
+        raise FlowError(f"{slot_name} slot does NOT hold {expected.name} (diffs: {detail}).")
+    print(f"  {slot_name} slot verified as {expected.name} (diff {scores[expected.name]:.2f})")
+
+
+async def type_prompt(page, prompt: str):
+    editor = page.locator(f"{COMPOSER} div.ProseMirror[role='textbox']")
+    await editor.click()
+    await page.keyboard.press("Control+A")
+    await page.keyboard.press("Backspace")
+    await page.keyboard.insert_text(prompt)
+    await page.wait_for_timeout(800)
+    norm = lambda s: re.sub(r"\s+", " ", s).strip()
+    typed = norm(await editor.inner_text())
+    visual, spoken = prompt.split("Spoken Malay (Lip-sync):", 1)
+    if norm(visual)[:80] not in typed or norm("Spoken Malay (Lip-sync):" + spoken) not in typed:
+        raise FlowError("Prompt text in the composer does not match what was typed.")
+
+
+async def render_scene(page, scene: int, prompt: str, start: Path, end: Path, trio: list[Path], dry_run: bool) -> bool:
+    print(f"\n--- Scene {scene}: {start.name} -> {end.name} ---")
+    if start == end:
+        raise FlowError("Start and End frames are the same file.")
+    candidates = list(dict.fromkeys([*trio, start, end]))
+    await clear_composer(page)
+    await ensure_settings(page)
+    await attach_frame(page, 0, start)
+    await attach_frame(page, 1, end)
+    await type_prompt(page, prompt)
+
+    # Final gate: re-check both slots after everything else has been touched.
+    await verify_slot(page, 0, start, candidates)
+    await verify_slot(page, 1, end, candidates)
+    ready_png = WORKSPACE / f"flow_scene{scene}_ready.png"
+    await page.screenshot(path=str(ready_png))
+    print(f"  Pre-submit screenshot: {ready_png.name}")
+
+    if dry_run:
+        print(f"  DRY RUN: all checks passed; not submitting Scene {scene}.")
+        await clear_composer(page)
+        return True
+
+    generate_btn = page.locator(f"{COMPOSER} button[aria-label='Start generation']")
+    if await generate_btn.is_disabled():
+        raise FlowError("'Start generation' is disabled.")
+    await generate_btn.click()
+    # Flow empties the composer once it accepts the job.
+    for _ in range(30):
+        if await page.locator(f"{COMPOSER} img.chip-image").count() == 0:
+            break
+        await page.wait_for_timeout(500)
     else:
-        print(f"Submitting via Enter key for Scene {scene_index}...")
-        await page.keyboard.press("Enter")
+        raise FlowError("Composer did not reset after clicking 'Start generation'; the job may not have been queued.")
 
-    await page.wait_for_timeout(wait_after_submit)
-    screenshot_p = Path(__file__).resolve().parent / "flow_renders_progress.png"
-    await page.screenshot(path=str(screenshot_p))
-    print(f"Captured render progress screenshot: {screenshot_p}")
-    print(f"Scene {scene_index} generation successfully queued!")
+    await page.wait_for_timeout(3000)
+    await page.screenshot(path=str(WORKSPACE / "flow_renders_progress.png"))
+    print(f"  Scene {scene} queued.")
     return True
 
 
-def format_flow_prompt_with_lipsync(visual_prompt: str, spoken_dialogue: str = None) -> str:
-    """Ensure the prompt contains both visual directions and explicit Spoken Malay lip-sync block."""
-    prompt = visual_prompt.strip()
-    if "Spoken Malay (Lip-sync):" in prompt:
-        return prompt
-
-    if spoken_dialogue:
-        clean_spoken = spoken_dialogue.strip().strip('"')
-        return f'{prompt}\n\nSpoken Malay (Lip-sync): "{clean_spoken}"'
-
-    # If dialogue not provided separately, attempt to extract quoted speech from prompt
-    quotes = re.findall(r'"([^"]{15,})"', prompt)
-    if quotes:
-        extracted_dialogue = quotes[-1]
-        return f'{prompt}\n\nSpoken Malay (Lip-sync): "{extracted_dialogue}"'
-
-    return prompt
-
+# ---------------------------------------------------------------------------
+# Entry point
+# ---------------------------------------------------------------------------
 
 async def run_flow_pipeline(
     scene_num: int = 1,
     render_all: bool = False,
+    prefix: str | None = None,
     prompt_override: str | None = None,
     start_frame_override: str | None = None,
-    end_frame_override: str | None = None
-):
-    """Main pipeline execution entry point."""
+    end_frame_override: str | None = None,
+    project_url: str | None = None,
+    dry_run: bool = False,
+) -> bool:
+    prefix, trio = resolve_keyframes(prefix)
+    print(f"Keyframes ({prefix}): {', '.join(p.name for p in trio)}")
+    scenes_to_run = [1, 2, 3] if render_all else [scene_num]
+
+    # Build and validate every prompt before touching the browser.
+    prompts: dict[int, str] = {}
+    if prompt_override and not render_all:
+        prompts[scene_num] = build_scene_prompt(prompt_override, "")
+    else:
+        data = load_scene_prompts(prefix)
+        print(f"Prompts from record: {data['product']}")
+        for s in scenes_to_run:
+            prompts[s] = build_scene_prompt(data["visual"][s], data["dialogue"][s])
+
     print("Connecting to Brave on port 9222...")
     p, browser = await connect_to_brave()
     try:
-        page = await get_or_create_flow_tab(browser)
-        await ensure_active_flow_project(page)
-
-        # Determine frames and prompts
-        f1, f2, f3 = find_latest_keyframes()
-        gen_data = get_latest_generation_data()
-        scenes = gen_data.get("scenes") or {}
-
-        def get_clean_scene_prompt(scene_idx: int, default_str: str) -> str:
-            keys = {
-                1: ["scene_1_intro", "scene_1", "1"],
-                2: ["scene_2_detail", "scene_2", "2"],
-                3: ["scene_3_outro", "scene_3", "3"]
-            }.get(scene_idx, [])
-            for k in keys:
-                val = scenes.get(k)
-                if isinstance(val, str) and len(val.strip()) > 30 and not re.match(r"^scene\s*\d+$", val.strip(), re.I):
-                    return val.strip()
-            return default_str
-
-        # Default prompts
-        raw_prompts = {
-            1: get_clean_scene_prompt(
-                1,
-                'A smooth front-facing medium camera shot transitioning gracefully into a three-quarter side profile '
-                'of the Malaysian Muslim woman wearing the chic modest outfit in the sunlit courtyard. '
-                'Natural motion, empty hands resting at sides. For the audio, generate a highly realistic female voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent—strictly NOT an Indonesian accent. Ensure there are no text overlays or watermarks.'
-            ),
-            2: get_clean_scene_prompt(
-                2,
-                'A smooth camera glide continuing from three-quarter side profile into an over-the-shoulder view '
-                'in the courtyard, showcasing the fabric drape and styling details with empty hands resting low at sides. '
-                'For the audio, generate a highly realistic female voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent—strictly NOT an Indonesian accent. Ensure there are no text overlays or watermarks.'
-            ),
-            3: get_clean_scene_prompt(
-                3,
-                'A seamless circular camera motion from the over-the-shoulder angle turning back gracefully to face front '
-                'towards the camera with a warm smile. Empty hands resting low. For the audio, generate a highly realistic female voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent—strictly NOT an Indonesian accent. Ensure there are no text overlays or watermarks.'
-            )
-        }
-
-        # Frame pairings: Scene 1: F1->F2 | Scene 2: F2->F3 | Scene 3: F3->F1
-        pairings = {
-            1: (f1, f2),
-            2: (f2, f3),
-            3: (f3, f1)
-        }
-
-        scenes_to_run = [1, 2, 3] if render_all else [scene_num]
-
-        for s_idx in scenes_to_run:
-            start_f = Path(start_frame_override) if (start_frame_override and not render_all) else pairings[s_idx][0]
-            end_f = Path(end_frame_override) if (end_frame_override and not render_all) else pairings[s_idx][1]
-            base_prompt = prompt_override if (prompt_override and not render_all) else raw_prompts.get(s_idx)
-
-            fallback_spoken = {
-                1: scenes.get("spoken_dialogue", {}).get("scene_1") or gen_data.get("opening_line"),
-                2: scenes.get("spoken_dialogue", {}).get("scene_2"),
-                3: scenes.get("spoken_dialogue", {}).get("scene_3") or gen_data.get("closing_line")
-            }.get(s_idx)
-
-            active_prompt = format_flow_prompt_with_lipsync(base_prompt, spoken_dialogue=fallback_spoken)
-
-            success = await configure_and_render_scene(
-                page=page,
-                scene_index=s_idx,
-                prompt=active_prompt,
-                start_frame_path=start_f,
-                end_frame_path=end_f,
-                wait_after_submit=6000
-            )
-            if not success:
-                print(f"Failed to queue Scene {s_idx}.")
+        page = await get_flow_page(browser, project_url)
+        for s in scenes_to_run:
+            start, end = trio[PAIRINGS[s][0]], trio[PAIRINGS[s][1]]
+            if not render_all:
+                start = Path(start_frame_override) if start_frame_override else start
+                end = Path(end_frame_override) if end_frame_override else end
+            try:
+                await render_scene(page, s, prompts[s], start, end, trio, dry_run)
+            except FlowError as err:
+                print(f"\nABORTED Scene {s} (nothing was submitted): {err}")
+                try:
+                    await page.screenshot(path=str(WORKSPACE / f"flow_scene{s}_aborted.png"))
+                except Exception:
+                    pass
                 return False
-
-            if render_all and s_idx < 3:
-                print("Waiting 8 seconds before queuing next scene...")
-                await asyncio.sleep(8)
-
+            if s != scenes_to_run[-1]:
+                await page.wait_for_timeout(4000)
         return True
     finally:
         # Never close the user's browser
@@ -375,22 +443,27 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Automate Flow AI 10s portrait video rendering in Brave")
     parser.add_argument("--scene", type=int, default=1, choices=[1, 2, 3], help="Scene number to render (1, 2, or 3)")
     parser.add_argument("--all", action="store_true", help="Queue all 3 scenes sequentially (Frame 1->2, 2->3, 3->1)")
-    parser.add_argument("--prompt", type=str, help="Custom scene prompt")
-    parser.add_argument("--start-frame", type=str, help="Path to start frame image")
-    parser.add_argument("--end-frame", type=str, help="Path to end frame image")
-    parser.add_argument("--latest", action="store_true", help="Automatically pull latest keyframes and prompts")
+    parser.add_argument("--prefix", type=str, help="Keyframe prefix, e.g. striped_split_cuff_blouse (default: newest trio)")
+    parser.add_argument("--prompt", type=str, help="Custom scene prompt incl. 'Spoken Malay (Lip-sync): \"...\"' (single scene only)")
+    parser.add_argument("--start-frame", type=str, help="Path to start frame image (single scene only)")
+    parser.add_argument("--end-frame", type=str, help="Path to end frame image (single scene only)")
+    parser.add_argument("--project-url", type=str, help="Flow project URL to render in")
+    parser.add_argument("--dry-run", action="store_true", help="Run every check and screenshot, but do not submit")
+    parser.add_argument("--latest", action="store_true", help="Kept for compatibility; the newest keyframe trio is the default")
     args = parser.parse_args()
 
     try:
         ok = asyncio.run(run_flow_pipeline(
             scene_num=args.scene,
             render_all=args.all,
+            prefix=args.prefix,
             prompt_override=args.prompt,
             start_frame_override=args.start_frame,
-            end_frame_override=args.end_frame
+            end_frame_override=args.end_frame,
+            project_url=args.project_url,
+            dry_run=args.dry_run,
         ))
         sys.exit(0 if ok else 1)
     except Exception as exc:
         print("Flow automation error:", exc)
         sys.exit(1)
-

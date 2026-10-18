@@ -64,8 +64,18 @@ sharp focus, no handbag, no tote bag, no purse, no tumbler, no props, no text ov
 # =============================================================================
 # FLOW AI VIDEO PROMPTS (Omni Flash 10s portrait)
 # =============================================================================
-# Each prompt combines visual direction + audio/dialogue in one paragraph.
+# Each prompt = one English visual/audio paragraph + a verbatim Spoken Malay line.
 # The dialogue follows a natural 3-Act structure (Intro → Detail → Sign-off).
+#
+# FRAME-TO-VIDEO RULES (proven 2026-10-19; automate_flow.py enforces the hard ones):
+# - "Static locked-off vertical shot, the camera does not move." All 3 keyframes share one
+#   background, so camera pans/zooms/orbits fight the frames and cause warping.
+#   The SUBJECT turns in place between the Start pose and the End pose instead.
+# - Spoken line: max 22 words (aim 16-20), 1-2 short sentences. Longer lines get rushed,
+#   cut off, or lose lip-sync in a 10s clip.
+# - Scene 2 ends with her back to camera: the line must be finished before she turns away.
+#   Scene 3 starts from the back: she speaks once she faces the camera.
+# - "No background music": the Suno instrumental is added later.
 #
 # PERSONALITY RULES FOR ALL SCENES:
 # - Speak in a calm, relaxed, and effortless tone—like a creator chatting casually with followers.
@@ -75,43 +85,49 @@ sharp focus, no handbag, no tote bag, no purse, no tumbler, no props, no text ov
 #   as long as it differs from what was recently used.
 # - Natural, smooth delivery with relaxed micro-expressions and clear lip-syncing.
 
-FLOW_SCENE_1_INTRO = """Generate a 10-second video from the provided frame of an adult \
-Malaysian woman wearing a hijab and {product_description}. \
-The camera maintains a stable, smooth framing with a gentle subtle zoom towards her. \
-She has a relaxed, confident posture and gives a natural, pleasant smile with comfortable eye contact towards the camera. \
-Both arms rest naturally at her sides with empty hands. Strictly no handbag or props. \
-Ensure there are no text overlays or watermarks in the video. \
-The subject speaks with subtle, natural facial expressions and accurate lip-syncing. \
-Her tone is calm, warm, and conversational—effortless and relatable. \
-For the audio, generate a highly realistic female voice with a standard \
-Malaysian Malay (Bahasa Melayu Malaysia) accent—strictly NOT an Indonesian accent. \
-The voice must sound natural, polished, and friendly, using 'saya'. \
-Explicitly translate the following English text into standard Malaysian Malay \
-for the spoken audio: "{dialogue_scene_1}" """
+# {subject} = model + hijab, e.g. "A young Malaysian Muslim woman in a taupe chiffon hijab"
+# {outfit}  = garment details + bottoms + shoes, exactly as in the keyframes
+# {setting} = the shared keyframe background, e.g. "a sunlit cafe courtyard with rattan chairs and potted palms"
 
-FLOW_SCENE_2_PRODUCT = """Generate a 10-second video from the provided frame of the woman \
-in {product_description} turned to a 3/4 side profile view. \
-The camera performs a slow, smooth cinematic pan across the outfit to showcase the clean silhouette and fabric texture. \
-She gestures naturally and casually towards the garment with relaxed, subtle hand movements with empty hands. \
-Strictly no handbag or props. Ensure there are no text overlays or watermarks in the video. \
-The subject speaks towards the camera with a calm, friendly, and informative tone with accurate lip-syncing. \
-For the audio, generate a highly realistic female voice with a standard \
-Malaysian Malay (Bahasa Melayu Malaysia) accent—strictly NOT an Indonesian accent. \
-The voice should sound genuine and helpful, like giving casual styling advice, using 'saya'. \
-Explicitly translate the following English text into standard Malaysian Malay \
-for the spoken audio: "{dialogue_scene_2}" """
+FLOW_AUDIO = """For the audio, generate a highly realistic female voice with a standard \
+Malaysian Malay (Bahasa Melayu Malaysia) accent, strictly NOT an Indonesian accent. \
+No background music, only her voice and soft ambient sound. \
+Ensure there are no text overlays or watermarks."""
 
-FLOW_SCENE_3_OUTRO = """Generate a 10-second video from the provided frame of the woman \
-in {product_description} turning to glance back over her shoulder with a relaxed, soft smile. \
-Add a gentle cinematic soft-focus effect with natural lighting. \
-Her arms and hands rest naturally low at her sides with empty hands without any bag, props, or awkward waving gestures. \
-Ensure there are no text overlays or watermarks in the video. \
-The subject speaks with warm, friendly sincerity and accurate lip-syncing. \
-For the audio, generate a highly realistic female voice with a standard \
-Malaysian Malay (Bahasa Melayu Malaysia) accent—strictly NOT an Indonesian accent. \
-The voice should sound warm, inviting, and natural, using 'saya'. \
-Explicitly translate the following English text into standard Malaysian Malay \
-for the spoken audio: "{dialogue_scene_3}" """
+# Scene 1: Start = Frame 1 (front) -> End = Frame 2 (3/4 side)
+FLOW_SCENE_1_INTRO = """Static locked-off vertical shot, the camera does not move. \
+{subject} stands in {setting}, wearing {outfit}. \
+She starts facing the camera with a warm natural smile and speaks directly to the camera, \
+then slowly pivots in place into a three-quarter angle while keeping eye contact. \
+Her hands stay empty and relaxed at her sides the whole time, no gestures, no props. \
+The background, lighting, outfit and hijab stay identical throughout. \
+Soft natural daylight, realistic fabric movement. """ + FLOW_AUDIO + """
+
+Spoken Malay (Lip-sync): "{dialogue_scene_1}\""""
+
+# Scene 2: Start = Frame 2 (3/4 side) -> End = Frame 3 (back, glancing over shoulder)
+FLOW_SCENE_2_PRODUCT = """Static locked-off vertical shot, the camera does not move. \
+The same {subject_short}, wearing {outfit}, in the same {setting}. \
+She starts at a three-quarter angle speaking warmly to the camera, then slowly keeps turning in place \
+until her back faces the camera, glancing back over her shoulder with a smile so her face stays visible \
+in profile, showing off {back_detail}. \
+Her hands stay empty and relaxed at her sides the whole time, no gestures, no props. \
+The background, lighting, outfit and hijab stay identical throughout. \
+Soft natural daylight, realistic fabric movement. """ + FLOW_AUDIO + """
+
+Spoken Malay (Lip-sync): "{dialogue_scene_2}\""""
+
+# Scene 3: Start = Frame 3 (back) -> End = Frame 1 (front), closing the 360° loop
+FLOW_SCENE_3_OUTRO = """Static locked-off vertical shot, the camera does not move. \
+The same {subject_short}, wearing {outfit}, in the same {setting}. \
+She starts with her back to the camera glancing over her shoulder with a smile, then slowly turns in place \
+all the way back to face the camera and speaks warmly and directly to the camera, \
+ending in a relaxed front-facing standing pose. \
+Her hands stay empty and relaxed at her sides the whole time, no waving, no raised hands, no props. \
+The background, lighting, outfit and hijab stay identical throughout. \
+Soft natural daylight, realistic fabric movement. """ + FLOW_AUDIO + """
+
+Spoken Malay (Lip-sync): "{dialogue_scene_3}\""""
 
 
 

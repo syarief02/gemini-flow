@@ -26,9 +26,11 @@ Every AI agent operating in this repository MUST memorize and adhere strictly to
 | **Gmail Promo Reply** | Adding greetings ("Salam Syarief"), section headers ("MAKLUMAT PRODUK"), Flow video prompts, Suno prompts, dividers (`===`), CDN links, or leaving Gmail quoted text / previous thread content. | **STRICTLY AND ONLY THE CLEAN TIKTOK CAPTION + HASHTAGS.** Always expand and delete quoted text (`div.gmail_quote` / `div.ajR`) before typing. No greetings, headers, prompts, dividers, or quoted text. |
 | **Brave CDP Connection** | Attempting to connect to an existing Brave instance without flags or launching without `--remote-allow-origins=*`, or calling `browser.close()` which kills the user's window. | Always launch with `--remote-debugging-port=9222 --remote-allow-origins=*`. **NEVER call `browser.close()`** so the user's visible interactive window stays open on desktop. |
 | **Keyframe Consistency** | Adding handbags, totes, phones, coffee cups, tumblers, waving hands, or changing hijab/bottoms between frames. | **Strict Zero-Prop & Empty-Hands Rule.** Both hands empty at sides. Same model, same modest hijab, same outfit head-to-toe, same background across all 3 frames. |
-| **Flow AI Parameters** | Using 5s/8s duration, landscape 16:9, or text-to-video mode. | **Duration = 10s**, **Orientation = Portrait (9:16)**, **Model = Omni Flash**, **Mode = Frame-to-Video** (Frame 1➡️2, Frame 2➡️3, Frame 3➡️1). |
-| **Flow AI Frame Pairing** | Reversing Start/End frames (e.g. putting Side as Start in Scene 1), uploading mismatched files, or guessing frame order. | **STRICT DIRECTIONAL CONTINUITY:** **Scene 1:** Start = Frame 1 (Front) ➡️ End = Frame 2 (Side); **Scene 2:** Start = Frame 2 (Side) ➡️ End = Frame 3 (Shoulder); **Scene 3:** Start = Frame 3 (Shoulder) ➡️ End = Frame 1 (Front 360° Loop). Verify thumbnails visually before rendering. |
-| **Flow AI Spoken Lip-Sync** | Submitting English-only visual prompt to Flow AI without the spoken dialogue, or separating dialogue outside the composer. | **MANDATORY VERBATIM LIP-SYNC IN COMPOSER:** The prompt entered into Flow AI's composer MUST explicitly include BOTH the English camera/visual instructions AND the verbatim Malaysian Malay dialogue block: `Spoken Malay (Lip-sync): "<dialogue>"`. Flow AI generates character lip-sync directly from this text. |
+| **Flow AI Parameters** | Using 5s/8s duration, landscape 16:9, or text-to-video mode. | **Duration = 10s**, **Orientation = Portrait (9:16)**, **Model = Omni 1.1 Flash**, **Mode = Video + Frames** (Frame 1➡️2, Frame 2➡️3, Frame 3➡️1), **720p**, **x1**. |
+| **Flow AI Frame Attachment** | Submitting while a `Start`/`End` slot is still empty (Flow silently renders **text-to-video**: a different woman, no hijab, wrong garment). Searching a partial tag like `frame1_front` (matches EVERY product) or clicking picker rows by position (the list re-sorts by recent use). | Search the **full filename** (`<prefix>_frame1_front.jpg`), click the row whose text **exactly** equals it, and confirm the slot turned into an image chip showing the right pose. **Never click `Start generation` until BOTH slots are verified.** `automate_flow.py` enforces this with a pixel match against the local keyframes. |
+| **Flow AI Frame Pairing** | Reversing Start/End frames (e.g. putting Side as Start in Scene 1), uploading mismatched files, or guessing frame order. | **STRICT DIRECTIONAL CONTINUITY:** **Scene 1:** Start = Frame 1 (Front) ➡️ End = Frame 2 (Side); **Scene 2:** Start = Frame 2 (Side) ➡️ End = Frame 3 (Shoulder); **Scene 3:** Start = Frame 3 (Shoulder) ➡️ End = Frame 1 (Front 360° Loop). |
+| **Flow AI Spoken Lip-Sync** | Submitting English-only visual prompt to Flow AI without the spoken dialogue, or separating dialogue outside the composer. | **MANDATORY VERBATIM LIP-SYNC IN COMPOSER:** The prompt entered into Flow AI's composer MUST explicitly include BOTH the English visual instructions AND the verbatim Malaysian Malay dialogue block: `Spoken Malay (Lip-sync): "<dialogue>"`. Flow AI generates character lip-sync directly from this text. |
+| **Flow AI Camera & Dialogue Fit** | "Camera glides / pans / zooms / orbits" (all 3 keyframes share one background, so camera moves cause warping). Spoken lines of 40+ words (rushed, cut off, broken lip-sync in 10s). | Open every scene with **"Static locked-off vertical shot, the camera does not move."** and make the **model turn in place** from the Start pose to the End pose. **Max 22 words per spoken line** (aim 16-20). Add **"No background music"** (Suno BGM is layered later). |
 | **Suno AI BGM** | Generating songs with vocal lyrics or background singing. | **Instrumental mode MUST be toggled ON.** TikTok promos use spoken Malay lip-sync voiceovers; vocals clash with speech. |
 | **Spoken Dialogue & Caption** | Using Indonesian words ("banget", "emang", "bgt"), em-dashes (`—`), or mentioning direct prices. | **Standard Malaysian Malay (KL accent)**, pronoun "saya" (never "aku"), zero em-dashes (use `:` or `,`), zero prices (direct to "beg kuning"). |
 | **Hook Selection** | Banning valid hook formulas or reusing openers from the last 7 recorded entries. | **Never ban valid hooks.** Live search MY TikTok data, rank candidate hooks, audit with `verify_hook_quality()`, and avoid the last 7 entries. |
@@ -153,6 +155,7 @@ Before writing Scene 1 dialogue, the agent MUST follow this exact 3-step process
 
 > **Step 4c. Select Winner (MANDATORY EVERY RUN)**:
 > Pick the **#1 ranked hook** as the Scene 1 opening line. Display the ranking table to the user.
+> **Length:** each scene's full spoken line (hook included) is **max 22 words**. A 40-word hook cannot be spoken in a 10s clip; `automate_flow.py` will refuse it.
 
 **8 Proven Viral Hook Archetypes (2-Second Retention Rule)**:
 1. **The Unspoken Daily Dilemma (Tropical Climate / Comfort)**: e.g. Hot weather sauna effect, humid sweat, stuffy fabrics vs breathable water-resistant protection.
@@ -215,11 +218,10 @@ Deliver to the user in this exact order:
    context = browser.contexts[0]
    ```
 
-3. **Verify Video Configuration Parameters:**
-   - **Duration:** Exactly **10 seconds** (10s) — NOT 5s, NOT 8s.
-   - **Orientation:** Exactly **Portrait (9:16)** — NOT landscape 16:9.
-   - **Model:** **Omni Flash** (Omni 1.1 Flash) or latest available fast video model.
-   - **Generation Mode:** **Frame to Video** (Start Frame + End Frame). Ensure the composer displays both `Start` and `End` frame attachment slots.
+3. **Verify Video Configuration Parameters (open the settings menu, never assume):**
+   - The composer's settings button (`button[aria-label='Settings trigger']`) reads e.g. `Video · 720p · 10s ▯ x1`. Click it; the menu has toggle buttons (`button[role='radio']`, selected = `aria-checked="true"`) and a model dropdown (`button[aria-label='Select model family']`).
+   - Required: **Video** (not Image) · **Frames** (not Ingredients) · **9:16** · **Omni 1.1 Flash** · **720p** · **10s** · **x1**. The menu shows the cost ("Generating will use 15 credits").
+   - In **Frames** mode the composer shows two slots, `Start` and `End`, with a swap button between them.
 
 4. **⛔ CRITICAL ZERO-MISTAKE RULES FOR FLOW AI (FRAMES & LIP-SYNC):**
 
@@ -240,46 +242,69 @@ Deliver to the user in this exact order:
    | **Scene 3** | `keyframes/<prefix>_frame3_shoulder.jpg` *(Over-the-Shoulder)* | `keyframes/<prefix>_frame1_front.jpg` *(Front View)* | Model glances warmly over shoulder, then turns smoothly back to face camera front-standing with yellow basket CTA. **Completes the 360° loop.** |
 
    > ❌ **CRITICAL MISTAKE TO AVOID:** Putting Frame 2 (Side) as Start in Scene 1! That causes the video to play backwards (Side ➡️ Front) and breaks viewer immersion.
-   > ❌ **CRITICAL MISTAKE TO AVOID (MISSING 'ADD TO PROMPT'):** Simply uploading a file or clicking an asset in the popover DOES NOT attach it to the composer slot! Closing the popover without clicking `Add to prompt` leaves the slot empty or pointing to an obsolete card.
-   > ✅ **MANDATORY 'ADD TO PROMPT' ATTACHMENT PROCEDURE:**
-   > 1. Click the slot chip (`Start` or `End`).
-   > 2. In the popover's `Search assets` input, type the exact frame tag (e.g. `frame1_front`, `frame2_side`, `frame3_shoulder`).
-   > 3. Click the filtered thumbnail to preview it in the center.
-   > 4. **MANDATORY:** Click the white **`Add to prompt`** button at the bottom of the preview dialog.
-   > 5. Confirm that the composer slot in the toolbar changes from text (`Start`/`End`) into a visible cropped image thumbnail chip of the correct garment and pose before typing the prompt!
+   > ❌ **CRITICAL MISTAKE TO AVOID (EMPTY SLOT = TEXT-TO-VIDEO):** If either slot is still empty when you click `Start generation`, Flow does NOT warn you. It renders text-to-video and invents a different woman (no hijab, different top). This is exactly what ruined the striped split-cuff blouse run on 2026-10-19.
+   > ❌ **CRITICAL MISTAKE TO AVOID (PARTIAL SEARCH / CLICK BY POSITION):** Searching `frame1_front` returns the frame 1 of EVERY product in the project, and the picker list re-sorts by recent use after every pick. Never click "the first row" or "the third row".
+   > ✅ **MANDATORY ATTACHMENT PROCEDURE (Flow UI as of 2026-10-19):**
+   > 1. Click **Clear prompt** (✕ on the composer) so both slots start empty.
+   > 2. Click the empty `Start` slot (`.frame-trigger button.empty-chip`). An asset picker opens with a `Search` box, an `Images` filter, an **Upload media** button and a list of filenames.
+   > 3. Type the **full filename**, e.g. `striped_split_cuff_blouse_frame1_front.jpg`.
+   > 4. Click the row whose text **exactly** equals that filename. In the current UI this attaches immediately and closes the picker (no `Add to prompt` step; if an older preview dialog with `Add to prompt` ever appears, click it).
+   > 5. If the file is not in the project, use **Upload media**, then search and click it as above.
+   > 6. Confirm the slot changed from the word `Start`/`End` into an image chip (`button[aria-label='Image ingredient']` with `img.chip-image`) showing the **correct pose**: front = straight-on with collar and buttons; side = body angled, placket off-center; shoulder = back of the garment. Repeat for `End`.
 
    #### 4b. MANDATORY SPOKEN MALAY LIP-SYNC IN FLOW COMPOSER
    Google Flow AI / Veo generates character mouth lip-sync and audio directly from the prompt text entered into the composer. If you only provide visual descriptions, Flow generates a silent or muddled video!
 
    **The prompt entered into Flow AI's composer (`div.ProseMirror[role='textbox']`) MUST ALWAYS contain BOTH:**
-   1. The English camera and visual motion instructions.
+   1. The English visual instructions: static camera, the model turning in place from the Start pose to the End pose, exact outfit and setting, audio direction.
    2. The explicit Malaysian Malay spoken lip-sync dialogue block formatted with the header `Spoken Malay (Lip-sync): "<dialogue>"`.
 
-   **Exact Template for Each Scene in Flow AI:**
-   ```text
-   {english_visual_camera_and_lighting_prompt} For the audio, generate a highly realistic female voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent—strictly NOT an Indonesian accent. Ensure there are no text overlays or watermarks.
+   **Fit rules (these decide whether the clip looks clean or messy):**
+   - **Static camera.** Start with `Static locked-off vertical shot, the camera does not move.` All 3 keyframes share one background; "camera glides / pans / zooms / orbits" fights the frames and warps the scene.
+   - **Max 22 words per spoken line** (aim 16-20, 1-2 short sentences). About 2 Malay words per second fit a 10s clip that also contains a turn. `automate_flow.py` refuses longer lines.
+   - **Scene 2** ends with her back to the camera: the line must finish before her face turns away. **Scene 3** starts from the back: she speaks once she faces the camera.
+   - Include **"No background music, only her voice and soft ambient sound."** The Suno instrumental is added in editing.
+   - Hands stay empty and relaxed at her sides; no gestures, no waving, no props.
 
-   Spoken Malay (Lip-sync): "{exact_malaysian_malay_spoken_dialogue}"
+   **Exact Template for Each Scene in Flow AI** (full per-scene versions in `prompt_templates.py`):
+   ```text
+   Static locked-off vertical shot, the camera does not move. {subject + hijab} stands in {keyframe setting}, wearing {exact outfit, bottoms, shoes}. {how she turns from the Start pose to the End pose and when she speaks}. Her hands stay empty and relaxed at her sides the whole time, no gestures, no props. The background, lighting, outfit and hijab stay identical throughout. Soft natural daylight, realistic fabric movement. For the audio, generate a highly realistic female voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent, strictly NOT an Indonesian accent. No background music, only her voice and soft ambient sound. Ensure there are no text overlays or watermarks.
+
+   Spoken Malay (Lip-sync): "{exact Malaysian Malay line, max 22 words}"
    ```
 
-   **Concrete Example for Scene 1 (W629 Striped Cropped Shirt):**
+   **Verified Example, Scene 1 (Striped Split-Cuff Blouse, rendered clean on 2026-10-19):**
    ```text
-   A smooth subtle slow zoom-in on a young Malaysian Muslim woman facing the camera warmly in a sunlit modern aesthetic interior, wearing a chic Korean striped cropped long-sleeved shirt in dark navy with crisp white pinstripes, tailored spread collar, and chest flap pockets, seamlessly paired with high-waisted black trousers. Gentle head nod with natural eye contact and empty hands resting low at sides. Camera glides smoothly into a three-quarter side profile angle. For the audio, generate a highly realistic female voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent—strictly NOT an Indonesian accent. Ensure there are no text overlays or watermarks.
+   Static locked-off vertical shot, the camera does not move. A young Malaysian Muslim woman in a taupe chiffon hijab stands in a sunlit cafe courtyard with rattan chairs and potted palms, wearing a fitted beige blouse with thin latte-tan vertical pinstripes, a pointed collar, small white buttons, a curved hem and split cuffs, with straight navy trousers and cream pointed flats. She starts facing the camera with a warm natural smile and speaks directly to the camera, then slowly pivots in place into a three-quarter angle while keeping eye contact. Her hands stay empty and relaxed at her sides the whole time, no gestures, no props. The background, lighting, outfit and hijab stay identical throughout. Soft natural daylight, realistic fabric movement. For the audio, generate a highly realistic female voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent, strictly NOT an Indonesian accent. No background music, only her voice and soft courtyard ambience. Ensure there are no text overlays or watermarks.
 
-   Spoken Malay (Lip-sync): "Stop beli kemeja baggy yang buat badan korang nampak tenggelam atau petak! Korang tengok kemeja jalur krop ala Korea rona navy ni: potongan pinggang berstruktur dengan poket dada berpenutup ni auto bagi efek kaki nampak tinggi lampai dan pinggang terus nampak ramping!"
+   Spoken Malay (Lip-sync): "Pernah tak kemeja berjalur buat badan korang nampak lurus macam pembaris? Blaus beige latte ni lain: pinggang berlekuk, terus nampak ramping!"
    ```
 
 5. **Automated Playwright Flow Execution (`automate_flow.py`):**
-   - Run the unified automation script to queue all 3 scenes or an individual scene:
+   - Prompts come from the Supabase record whose `keyframe_urls` match the keyframe prefix (never "whichever record is newest"). Sync the record (Step 9) BEFORE rendering.
+   - **Always dry-run first**, then render:
      ```bash
-     # Render all 3 scenes consecutively with exact frame pairings & lip-sync:
-     python automate_flow.py --all
+     # Every check + pre-submit screenshots, submits nothing:
+     python automate_flow.py --all --prefix <prefix> --dry-run
 
-     # Or render a specific scene:
-     python automate_flow.py --scene 1
+     # Render all 3 scenes (Frame 1->2, 2->3, 3->1):
+     python automate_flow.py --all --prefix <prefix>
+
+     # Re-render one scene:
+     python automate_flow.py --scene 2 --prefix <prefix>
      ```
-   - The script connects over port 9222, ensures 10s portrait orientation, uploads the exact keyframe pair, types the combined visual + Spoken Malay lip-sync text via `page.keyboard.insert_text()`, and clicks `button[aria-label='Start generation']`.
-   - Wait 4-6 seconds and capture verification screenshot `flow_renders_progress.png`.
+     `--prefix` defaults to the newest complete keyframe trio; `--project-url <flow project url>` picks the project.
+   - Per scene the script: clears the composer → forces Video / Frames / 9:16 / Omni 1.1 Flash / 720p / 10s / x1 → attaches Start and End by exact filename (uploads if missing) → types visual prompt + `Spoken Malay (Lip-sync)` → **downloads each slot's image and pixel-matches it against the local keyframes** (same file ≈ 0.05, wrong pose ≈ 8-10; limit 3.0) → saves `flow_scene<N>_ready.png` → clicks `Start generation` → confirms the composer reset (job accepted).
+   - It refuses to run when a spoken line is over 22 words or missing, and warns on camera-motion words.
+   - **If any check fails, the scene is ABORTED and nothing is submitted** (`ABORTED Scene N ...` plus `flow_scene<N>_aborted.png`). Fix the cause (shorten the line, upload the right file, select the right project). **Never bypass the gate by clicking `Start generation` yourself.**
+
+6. **Post-Render QA (MANDATORY before Gmail/Suno steps):**
+   - Renders take about 1 minute. For each new tile, open it and click ⓘ: it must say **Omni 1.1 Flash · 9:16 · 10s · 720p**.
+   - Scrub the video at about 0s, 3s, 6s and 9.9s: same model, hijab, garment, bottoms and background as the keyframes; first frame = Start keyframe, last frame = End keyframe; no props, no waving, no warping.
+   - A render with a **different woman / no hijab / different top** means the frames were not attached (text-to-video). Regenerate that scene; don't hand it to the user.
+   - Agents cannot hear audio: tell the user to listen for Malaysian accent and lip-sync before posting.
+
+7. **Interactive Browser Agents (e.g. Claude in Chrome):** The Claude in Chrome extension runs inside this same Brave profile (same Google sign-ins as `authuser=5`). An agent driving Flow by hand MUST apply the same gate: clear the composer, open the settings menu and check every value, search the full filename, zoom the screenshot on both slot chips to confirm the poses, then submit. Open your own tab for the project; don't take over the user's tab.
 
 ---
 
@@ -407,15 +432,17 @@ Deliver to the user in this exact order:
          caption="...",
          hashtags="...",
          bgm_prompt="...",
-         scenes={
-             "scene1": {"frame_visual": "...", "opening_line": "..."},
-             "scene2": {"frame_visual": "...", "dialogue": "..."},
-             "scene3": {"frame_visual": "...", "closing_line": "..."}
+         scenes={  # this exact shape is what automate_flow.py reads
+             "visual_prompts": {"scene_1": "...", "scene_2": "...", "scene_3": "..."},     # English visual + audio paragraph
+             "spoken_dialogue": {"scene_1": "...", "scene_2": "...", "scene_3": "..."},    # verbatim Malay, max 22 words each
+             "scene_1_intro": "<visual 1>\n\nSpoken Malay (Lip-sync): \"<dialogue 1>\"",
+             "scene_2_detail": "<visual 2>\n\nSpoken Malay (Lip-sync): \"<dialogue 2>\"",
+             "scene_3_outro": "<visual 3>\n\nSpoken Malay (Lip-sync): \"<dialogue 3>\""
          },
-         keyframe_urls=[
-             supabase_client.get_keyframe_cdn_url("<prefix>_frame1.jpg"),
-             supabase_client.get_keyframe_cdn_url("<prefix>_frame2.jpg"),
-             supabase_client.get_keyframe_cdn_url("<prefix>_frame3.jpg")
+         keyframe_urls=[  # automate_flow.py finds the record by these filenames
+             supabase_client.get_keyframe_cdn_url("<prefix>_frame1_front.jpg"),
+             supabase_client.get_keyframe_cdn_url("<prefix>_frame2_side.jpg"),
+             supabase_client.get_keyframe_cdn_url("<prefix>_frame3_shoulder.jpg")
          ],
          metadata={
              "pdp_url": "https://shop.tiktok.com/my/pdp/...",
@@ -425,6 +452,7 @@ Deliver to the user in this exact order:
      )
      ```
    - Verify that table `gemini_flow_generations` records the upserted row without errors.
+   - **Changing dialogue after a record exists (e.g. a re-render):** `save_generation_record()` matches rows on `product_name` + `opening_line`, so a new opening line INSERTS a duplicate row. Update the existing row by `id` instead (`client.table("gemini_flow_generations").update({...}).eq("id", row_id)`), and edit the matching `generation_history.json` entry in place, so both hold the lines that were actually rendered.
 
 ---
 
@@ -481,7 +509,7 @@ git push
 | `generate_prompts.py` | Core engine: SYSTEM_PROMPT, anti-repetition functions, Gemini API caller |
 | `generate_keyframes.py` | Generates 3 consistent 9:16 keyframe images dynamically for any product session |
 | `prompt_templates.py` | Reusable templates for keyframes, Flow AI prompts, caption, and Suno BGM |
-| `automate_flow.py` | Flow AI video generation operator in Brave browser via Playwright CDP |
+| `automate_flow.py` | Flow AI renderer in Brave via Playwright CDP. Enforces settings, attaches frames by exact filename, pixel-verifies both slots, and refuses to submit on any failed check (`--dry-run` to test) |
 | `reply_gmail.py` | Automated Gmail reply script in Brave browser to dispatch copy packages via CDP |
 | `create_suno.py` | Automated Suno AI BGM instrumental generator in Brave browser via CDP |
 | `open_brave.bat` | Launcher batch script to start Brave with remote debugging on port 9222 |
@@ -525,12 +553,10 @@ git push
 
 ## Flow AI Video Prompt Structure
 
-Each scene prompt is a **single English paragraph** combining:
-- **Visual:** Camera movement, subject action, body language, clothing details.
-- **Audio:** "For the audio, generate a highly realistic female voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent—strictly NOT an Indonesian accent."
-- **Dialogue:** "Explicitly translate the following English text into standard Malaysian Malay for the spoken audio: ..."
-
-The English dialogue text provided will be auto-translated by Flow's audio engine into natural spoken Malaysian Malay with lip-sync.
+Each scene prompt is **one English paragraph + one verbatim Malay line** (full rules and a verified example in Step 6 §4b; templates in `prompt_templates.py`):
+- **Visual:** `Static locked-off vertical shot, the camera does not move.` + model, hijab, exact outfit and setting from the keyframes + how she turns in place from the Start pose to the End pose + empty relaxed hands.
+- **Audio:** "For the audio, generate a highly realistic female voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent, strictly NOT an Indonesian accent. No background music, only her voice and soft ambient sound. Ensure there are no text overlays or watermarks."
+- **Dialogue:** `Spoken Malay (Lip-sync): "<verbatim Malaysian Malay, max 22 words>"`. Write the Malay yourself; never ask Flow to translate English.
 
 **CRITICAL PACKAGING RULE — WRAP IN SAME CODE BOX FOR 1-CLICK COPY:**
 ALWAYS wrap the Flow AI prompt AND the spoken Malay lip-sync dialogue in the **SAME text / code box**.
@@ -538,10 +564,9 @@ Do NOT separate the spoken Malay into an external quote below the box. This allo
 
 Example layout:
 ```text
-A smooth front-facing medium camera shot with subtle slow zoom-in on an aesthetic Malaysian Muslim woman... For the audio, generate a highly realistic female voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent—strictly NOT an Indonesian accent. Explicitly translate the following English text into standard Malaysian Malay for the spoken audio: "..." Ensure there are no text overlays or watermarks.
+Static locked-off vertical shot, the camera does not move. A young Malaysian Muslim woman in a ... hijab stands in ..., wearing .... She starts ..., then slowly turns in place .... Her hands stay empty and relaxed at her sides the whole time, no gestures, no props. ... For the audio, generate a highly realistic female voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent, strictly NOT an Indonesian accent. No background music, only her voice and soft ambient sound. Ensure there are no text overlays or watermarks.
 
-Spoken Malay (Lip-sync):
-"Ayat dialog bahasa Melayu di sini..."
+Spoken Malay (Lip-sync): "Ayat dialog bahasa Melayu di sini, maksimum 22 patah perkataan."
 ```
 
 ---
@@ -615,9 +640,9 @@ await p.stop()
 Whenever the user supplies a TikTok Shop product link:
 1. **Google Flow AI (`automate_flow.py`)**:
    - Tab: `https://flow.google.com/`
-   - Configures 10s portrait, Omni Flash, Frame-to-Video.
-   - Uploads Frame 1 ➡️ 2 (Scene 1), Frame 2 ➡️ 3 (Scene 2), Frame 3 ➡️ 1 (Scene 3).
-   - Pastes bilingual spoken dialogue prompts and starts renders.
+   - Forces Video / Frames / 9:16 / Omni 1.1 Flash / 720p / 10s / x1.
+   - Attaches and pixel-verifies Frame 1 ➡️ 2 (Scene 1), Frame 2 ➡️ 3 (Scene 2), Frame 3 ➡️ 1 (Scene 3).
+   - Types visual prompt + `Spoken Malay (Lip-sync)` line and starts renders only after every check passes. Then do Post-Render QA (Step 6 §6).
 2. **Gmail Promo Package Reply (`reply_gmail.py`)**:
    - Tab: `https://mail.google.com/mail/u/0/#inbox`
    - Finds the active promo thread (`(no subject)` or product link thread).
@@ -667,5 +692,20 @@ Whenever the user supplies a TikTok Shop product link:
 * **Symptoms:** `supabase.table().upsert()` throws `ConnectionTerminated` or timeout.
 * **Root Cause:** HTTP/2 multiplexing drop on long-lived connections.
 * **Guaranteed Solution:** The built-in REST fallback in `supabase_client.save_generation_record()` automatically retries via HTTP/1.1 `urllib.request`. If testing manually, use `supabase_client.test_supabase_connection()`.
+
+### 6. Flow Render Shows a Different Woman / No Hijab / Wrong Garment
+* **Symptoms:** The video looks nothing like the keyframes. Its ⓘ panel still says Omni 1.1 Flash · 9:16 · 10s.
+* **Root Cause:** The `Start`/`End` slots were empty at submit, so Flow rendered text-to-video. (Old `automate_flow.py` clicked the first element containing the filename, often a grid tile instead of a picker row, and submitted without checking the slots.)
+* **Guaranteed Solution:** Re-render with the current `automate_flow.py` (dry-run first). It refuses to submit unless both slots pixel-match the expected keyframes. If doing it by hand, follow Step 6 §4a and zoom on both chips before submitting.
+
+### 7. Flow Clip Is Rushed, Cut Off, Warped or Has Music
+* **Symptoms:** Speech is too fast or stops mid-sentence, lips don't match, the background bends, or music plays under the voice.
+* **Root Cause:** Spoken line too long for 10s, camera-motion instructions fighting a shared static background, or no "No background music" instruction.
+* **Guaranteed Solution:** Max 22 words per line, `Static locked-off vertical shot, the camera does not move.`, the model turns in place, and `No background music, only her voice and soft ambient sound.` See Step 6 §4b.
+
+### 8. `automate_flow.py` Prints `ABORTED Scene N`
+* **Meaning:** A pre-submit check failed and nothing was rendered (no credits spent). Read the reason line and `flow_scene<N>_aborted.png`.
+* **Common causes:** spoken line over 22 words (shorten it and update the Supabase record), no Supabase record whose `keyframe_urls` match the prefix (run Step 9 first), wrong Flow project open (pass `--project-url`), or a slot holding the wrong image (check the project for duplicate or mislabeled uploads).
+* **Never** bypass the gate by clicking `Start generation` manually without performing the same checks.
 
 

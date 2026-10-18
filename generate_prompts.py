@@ -247,7 +247,8 @@ STRICT RULES
    ║   allowed as long as it differs from recent history.       ║
    ║ • Natural pleasant smile, steady comfortable eye contact.║
    ║ • NO exaggerated wide-eyes, NO aggressive leaning in.    ║
-   ║ • Camera: Smooth, subtle slow zoom or steady shot.       ║
+   ║ • Camera: Static locked-off shot. She speaks, then pivots║
+   ║   in place from front to a three-quarter angle.          ║
    ║ • Tone: Warm, relaxed, sincere, friendly.                ║
    ║ • Body Language: Relaxed shoulders, gentle natural nod.  ║
    ╚══════════════════════════════════════════════════════════╝
@@ -256,10 +257,11 @@ STRICT RULES
    ║ SCENE 2 — "THE DETAIL & FEEL" (Frame 2: Side profile)    ║
    ╠══════════════════════════════════════════════════════════╣
    ║ • Calmly highlight the real texture, cut, or comfort.    ║
-   ║ • Natural, unforced gestures (gentle touch on sleeve).   ║
-   ║ • Camera: Slow graceful pan along the garment.           ║
+   ║ • Hands stay empty and relaxed at her sides.             ║
+   ║ • Camera: Static locked-off shot. She turns in place     ║
+   ║   from three-quarter to her back, glancing over shoulder.║
+   ║ • Finish the spoken line BEFORE her face turns away.     ║
    ║ • Tone: Informative, honest, helpful styling advice.     ║
-   ║ • Body Language: Casual side turn, soft subtle gestures. ║
    ╚══════════════════════════════════════════════════════════╝
 
    ╔══════════════════════════════════════════════════════════╗
@@ -271,18 +273,26 @@ STRICT RULES
    ║ • CREATE a completely fresh, original sign-off CTA every  ║
    ║   time. Do NOT copy-paste from previous products. Write   ║
    ║   it on the spot like a real human would naturally say it. ║
-   ║ • Camera: Soft, natural lighting with gentle slow-mo.    ║
+   ║ • Camera: Static locked-off shot. She turns from her back║
+   ║   to face the camera, THEN speaks the CTA.               ║
    ║ • Tone: Friendly, effortless, polite recommendation.     ║
    ║ • Body Language: Natural relaxed over-the-shoulder       ║
    ║   glance, soft pleasant smile, arms resting naturally low ║
    ║   at her sides with empty hands. STRICTLY NO BAGS/PROPS. ║
    ╚══════════════════════════════════════════════════════════╝
 
-4. FLOW AI PROMPT FORMAT:
+4. FLOW AI PROMPT FORMAT (Frame-to-Video, 10s):
    - Each scene prompt is a SINGLE English paragraph combining visual + audio instructions.
-   - Visual: Describe camera movement, subject action, and body language.
-   - Audio: Instruct Flow to generate realistic Malaysian Malay female voice.
+   - Start with: "Static locked-off vertical shot, the camera does not move." All three keyframes share one
+     background, so NEVER ask for camera pans, zooms, glides or orbits; the SUBJECT turns in place between the
+     Start pose and the End pose.
+   - Restate the exact model, hijab, garment, bottoms, shoes and setting from the keyframes.
+   - Audio: Instruct Flow to generate realistic Malaysian Malay female voice, plus
+     "No background music, only her voice and soft ambient sound."
    - Always include: "Ensure there are no text overlays or watermarks."
+   - SPOKEN LINE LENGTH: each scene's spoken_malay_dialogue is MAX 22 words (aim 16-20), 1-2 short sentences.
+     About 2 Malay words per second fit a 10s clip with the turn; longer lines get rushed, cut off or lose lip-sync.
+     automate_flow.py refuses to render a line over 22 words.
 
 5. TIKTOK CAPTION:
    - High-converting Bahasa Melayu copywriting with relatable problem-solution angle.
