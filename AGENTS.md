@@ -361,24 +361,21 @@ Deliver to the user in this exact order:
    - Dismiss any cookie banners, promotional dialogs, or popups if visible.
 
 2. **⛔ CRITICAL ZERO-MISTAKE SUNO RULE — PURE INSTRUMENTAL ONLY:**
-   - The **Instrumental toggle switch MUST be active/checked ON**.
-     ```python
-     instrumental_toggle = suno_page.locator("button[role='switch']:has-text('Instrumental'), label:has-text('Instrumental') input[type='checkbox'], div:has-text('Instrumental') button[role='switch']").first
-     checked = await instrumental_toggle.get_attribute("aria-checked")
-     if checked != "true":
-         await instrumental_toggle.click()
-     ```
+   - In responsive or mobile-width browser layouts, the composer is housed in a collapsible drawer. If collapsed, click the center orange Create button `a[href='/create'][aria-label='Create']` on the bottom navigation bar to expand it.
+   - Toggle or select **Advanced** mode (`button:has-text('Advanced')`).
+   - In Suno v6 Advanced mode, the Lyrics box explicitly states: *"Start writing lyrics, or leave this empty for instrumental"*. The **Lyrics editor (`div[contenteditable='true'][role='textbox']`) MUST BE KEPT COMPLETELY EMPTY** to guarantee pure instrumental BGM generation!
+   - If a classic `Instrumental` toggle switch is present, verify that it is switched ON (`aria-checked="true"`).
    - **WHY:** TikTok Shop fashion promos rely on clear, spoken Malaysian Malay lip-sync voiceovers from Flow AI. Background music with vocal lyrics or singing clashes with the spoken audio and confuses the viewer.
 
 3. **Input Tailored Style Prompt & Title:**
-   - Locate style/prompt textarea:
-     `textarea[placeholder*='Style of Music'], textarea[placeholder*='style'], textarea[placeholder*='Song Description'], textarea`
-   - Paste the comprehensive style prompt (108–115 BPM, lo-fi indie acoustic cafe pop, bright fingerpicked guitar, Rhodes piano, soft shaker, Malaysian aesthetic lifestyle vibe).
-   - Enter descriptive title in Title input: `<Product Title> - Soft Chill BGM`.
+   - Locate the Styles textarea:
+     `textarea[placeholder*='smooth female vocals'], textarea[placeholder*='techno dubstep'], textarea[placeholder*='Style of Music'], textarea[placeholder*='style'], div:has-text('Styles') textarea`
+   - Paste the comprehensive style prompt (108–115 BPM, lo-fi indie acoustic cafe pop, bright fingerpicked guitar, Rhodes piano, soft shaker, Malaysian aesthetic lifestyle vibe, pure instrumental).
+   - Enter descriptive title in Title input: `<Product Title> - BGM Instrumental` (scroll drawer to bring into view if needed).
 
 4. **Trigger Generation & Verification:**
    - Click the **Create** button: `button:has-text('Create'), button[aria-label='Create']`.
-   - Wait 5-6 seconds for the 2 new tracks with loading spinners to appear under the **Today** workspace section.
+   - Wait 5-6 seconds for the 2 new tracks with spinning loading rings to appear under the **Today** workspace section.
    - Capture verification screenshot `suno_generating.png`.
 
 ---

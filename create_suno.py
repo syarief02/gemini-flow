@@ -12,12 +12,12 @@ if sys.platform == "win32":
 
 SUNO_URL = "https://suno.com/create"
 BGM_PROMPT = (
-    "Upbeat lo-fi indie acoustic cafe pop, featuring bright fingerpicked acoustic guitar, "
-    "subtle warm Rhodes electric piano chords, crisp lo-fi drum groove, soft shaker, and round "
-    "warm melodic bass. Sunny, breezy, modern Malaysian aesthetic lifestyle vibe, relaxing and "
-    "optimistic tempo at 110 BPM. Pure instrumental, strictly no vocals, loopable high quality production."
+    "Warm acoustic lo-fi indie cafe pop, breezy fingerpicked acoustic guitar, "
+    "subtle Rhodes electric piano chords, smooth mellow bassline, light brushed drums, "
+    "108 BPM, modern minimalist aesthetic lifestyle vibe, relaxing, sunny, chic, "
+    "pure instrumental, strictly no vocals"
 )
-BGM_TITLE = "Baju Kuning Guest Blouse - Soft Yellow Chill BGM"
+BGM_TITLE = "TikTok Product Promo - BGM Instrumental"
 
 
 def get_latest_bgm_info() -> tuple[str, str]:
@@ -41,9 +41,10 @@ def get_latest_bgm_info() -> tuple[str, str]:
             with open(hist_path, "r", encoding="utf-8") as f:
                 data = json.load(f)
             gens = data.get("generations", [])
-            if gens and gens[-1].get("bgm_prompt"):
-                p_name = gens[-1].get("product", "Product Promo")
-                return gens[-1]["bgm_prompt"], f"{p_name[:35]} - BGM Instrumental"
+            for g in reversed(gens):
+                if g.get("bgm_prompt"):
+                    p_name = g.get("product", "Product Promo")
+                    return g["bgm_prompt"], f"{p_name[:35]} - BGM Instrumental"
     except Exception as e_hist:
         print(f"Notice reading history: {e_hist}")
 
@@ -88,114 +89,144 @@ async def setup_suno(prompt_text: str = None, title_text: str = None):
             await suno_page.goto(SUNO_URL, wait_until="domcontentloaded")
 
     print("Waiting for Suno page to settle...")
-    await suno_page.wait_for_timeout(5000)
+    await suno_page.wait_for_timeout(3000)
 
-    # Dismiss any cookie or popup if present
+    # 1. Dismiss any non-critical cookie popups (do NOT click generic close button as that closes drawer)
     for close_sel in [
         "button:has-text('Accept All')",
         "button:has-text('I Agree')",
+        "div:has-text('Create your own lyricist') button:has-text('Got it')",
         "button:has-text('Got it')",
-        "button[aria-label='Close']",
-        "button:has-text('Dismiss')"
     ]:
         try:
             btn = suno_page.locator(close_sel).first
             if await btn.is_visible(timeout=1000):
-                await btn.click()
+                await btn.click(force=True)
                 print(f"Dismissed popup via {close_sel}")
         except:
             pass
 
-    # Save initial screenshot
-    await suno_page.screenshot(path="suno_initial.png")
-    print("Saved suno_initial.png")
+    # 2. Check if drawer is closed (in responsive/mobile layout) and open it if needed
+    adv_mode_btn = suno_page.locator("button:has-text('Advanced'), span:has-text('Advanced')").first
+    custom_toggle = suno_page.locator("button[role='switch']:has-text('Custom'), div:has-text('Custom') button[role='switch']").first
+    drawer_open = await adv_mode_btn.is_visible(timeout=1000) or await custom_toggle.is_visible(timeout=1000)
 
-    page_text = await suno_page.inner_text("body")
-    print(f"Page text snippet: {page_text[:300].replace(chr(10), ' ')}")
+    if not drawer_open:
+        print("Create drawer collapsed. Opening via bottom navigation...")
+        create_nav = suno_page.locator("a[href='/create'][aria-label='Create'], a[aria-label='Create']").first
+        if await create_nav.is_visible(timeout=2000):
+            await create_nav.click(force=True)
+            await suno_page.wait_for_timeout(2000)
 
-    # Check if Custom mode switch exists
-    custom_toggle = suno_page.locator("button[role='switch']:has-text('Custom'), div:has-text('Custom') button[role='switch'], button:has-text('Custom')").first
-    try:
-        if await custom_toggle.is_visible(timeout=2000):
-            checked = await custom_toggle.get_attribute("aria-checked")
-            if checked != "true":
-                print("Enabling Custom mode...")
-                await custom_toggle.click()
-                await suno_page.wait_for_timeout(1500)
-            print("Custom mode active!")
-    except Exception as e:
-        print(f"Custom toggle check notice: {e}")
+    # 3. Ensure Advanced mode / Custom mode is active
+    if await adv_mode_btn.is_visible(timeout=2000):
+        print("Enabling Advanced mode...")
+        await adv_mode_btn.click(force=True)
+        await suno_page.wait_for_timeout(1000)
+    elif await custom_toggle.is_visible(timeout=2000):
+        checked = await custom_toggle.get_attribute("aria-checked")
+        if checked != "true":
+            print("Enabling Custom mode...")
+            await custom_toggle.click(force=True)
+            await suno_page.wait_for_timeout(1000)
 
-    # Ensure Instrumental mode is ON
+    # 4. Instrumental Mode: Ensure Lyrics are EMPTY, or toggle Instrumental switch
     instrumental_toggle = suno_page.locator(
         "button[role='switch']:has-text('Instrumental'), "
         "label:has-text('Instrumental') input[type='checkbox'], "
         "div:has-text('Instrumental') button[role='switch']"
     ).first
     try:
-        if await instrumental_toggle.is_visible(timeout=2000):
+        if await instrumental_toggle.is_visible(timeout=1500):
             checked = await instrumental_toggle.get_attribute("aria-checked")
             if checked != "true":
                 print("Toggling Instrumental mode ON...")
-                await instrumental_toggle.click()
-                await suno_page.wait_for_timeout(1000)
-            print("Instrumental mode confirmed ON!")
-    except Exception as e:
-        print(f"Instrumental toggle notice: {e}")
+                await instrumental_toggle.click(force=True)
+                await suno_page.wait_for_timeout(500)
+    except Exception as e_inst:
+        print(f"Instrumental toggle notice: {e_inst}")
 
-    # Locate Style of Music or Song Description input
-    style_input = suno_page.locator(
+    # Also ensure lyrics editor is empty (Suno v6: empty lyrics = pure instrumental)
+    lyrics_editor = suno_page.locator("div[contenteditable='true'][role='textbox']").first
+    try:
+        if await lyrics_editor.is_visible(timeout=1500):
+            print("Clearing lyrics editor to guarantee instrumental BGM...")
+            await lyrics_editor.click(force=True)
+            await suno_page.keyboard.press("Control+A")
+            await suno_page.keyboard.press("Backspace")
+            await suno_page.wait_for_timeout(500)
+    except Exception as e_lyr:
+        print(f"Lyrics editor clear notice: {e_lyr}")
+
+    # 5. Fill Styles of Music textarea
+    styles_ta = suno_page.locator(
+        "textarea[placeholder*='smooth female vocals'], "
+        "textarea[placeholder*='techno dubstep'], "
+        "textarea[placeholder*='dance floor'], "
         "textarea[placeholder*='Style of Music'], "
         "textarea[placeholder*='style'], "
-        "textarea[placeholder*='Song Description'], "
-        "textarea[placeholder*='prompt'], "
-        "textarea"
+        "div:has-text('Styles') textarea"
     ).first
 
-    if await style_input.is_visible(timeout=3000):
-        print("Found prompt textarea. Typing style prompt...")
-        await style_input.click()
-        await style_input.fill("")
-        await style_input.fill(target_prompt)
+    if await styles_ta.is_visible(timeout=3000):
+        print("Typing BGM style prompt into Suno...")
+        await styles_ta.click(force=True)
+        await styles_ta.fill("")
+        await styles_ta.fill(target_prompt)
         await suno_page.wait_for_timeout(1000)
     else:
-        print("Could not find style textarea directly!")
+        print("Warning: Direct Styles textarea not matched by selector.")
 
-    # Locate Title input if in custom mode
-    title_input = suno_page.locator(
+    # 6. Fill Song Title
+    title_inp = suno_page.locator(
         "input[placeholder*='Title'], "
         "input[placeholder*='title'], "
         "input[aria-label*='Title']"
     ).first
     try:
-        if await title_input.is_visible(timeout=1500):
-            print("Found Title input. Entering title...")
-            await title_input.click()
-            await title_input.fill("")
-            await title_input.fill(target_title)
-            await suno_page.wait_for_timeout(1000)
-    except Exception as e:
-        print(f"Title input notice: {e}")
+        if not await title_inp.is_visible(timeout=1000):
+            await suno_page.evaluate("""() => {
+                const el = document.querySelector('input[placeholder*="Title"], input[placeholder*="title"]');
+                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }""")
+            await suno_page.wait_for_timeout(800)
+
+        if await title_inp.is_visible(timeout=2000):
+            print(f"Entering Title: {target_title}...")
+            await title_inp.click(force=True)
+            await title_inp.fill("")
+            await title_inp.fill(target_title)
+            await suno_page.wait_for_timeout(500)
+    except Exception as e_title:
+        print(f"Title input notice: {e_title}")
 
     # Capture configured state
     await suno_page.screenshot(path="suno_configured.png")
     print("Saved suno_configured.png")
 
-    # Locate Create button
+    # 7. Locate and Click Create Button
     create_btn = suno_page.locator(
         "button:has-text('Create'), "
         "button[aria-label='Create']"
-    ).first
+    ).last
 
     if await create_btn.is_visible(timeout=3000):
-        print("Clicking Create button to generate song...")
-        await create_btn.click()
+        is_disabled = await create_btn.get_attribute("disabled")
+        aria_disabled = await create_btn.get_attribute("aria-disabled")
+        if is_disabled or aria_disabled == "true":
+            print("Create button currently disabled. Checking fields...")
+            return False
+
+        print("Clicking Create button to generate instrumental BGM...")
+        await create_btn.click(force=True)
         await suno_page.wait_for_timeout(6000)
         await suno_page.screenshot(path="suno_generating.png")
-        print("Saved suno_generating.png - Generation initiated!")
+        print("Saved suno_generating.png - BGM generation successfully initiated!")
+        await p.stop()
         return True
     else:
-        print("Create button not visible or needs sign in. Screenshot captured.")
+        print("Create button not visible. Screenshot captured.")
+        await p.stop()
         return False
 
 

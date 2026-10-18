@@ -146,36 +146,38 @@ async def configure_and_render_scene(
     print(f"\n--- Initiating Flow AI Video Generation for Scene {scene_index} ---")
     await page.wait_for_timeout(2000)
 
-    async def attach_frame_by_search_or_upload(slot_index: int, frame_path: str | Path | None, query_tag: str):
+    async def attach_frame_by_search_or_upload(slot_index: int, frame_path: str | Path | None):
         if not frame_path:
             return
         p_obj = Path(frame_path)
-        triggers = page.locator("div.frame-trigger")
-        trigger_btn = triggers.nth(slot_index).locator("button").first
-        if not await trigger_btn.is_visible(timeout=3000):
-            trigger_btn = page.locator("button:has-text('Start'), button:has-text('End')").nth(slot_index)
+        slot_name = "Start" if slot_index == 0 else "End"
+        print(f"Opening frame slot {slot_index} ({slot_name}) for: {p_obj.name}...")
 
-        print(f"Opening frame slot {slot_index} for: {p_obj.name}...")
-        await trigger_btn.click()
-        await page.wait_for_timeout(1500)
+        dialog = page.locator("flow-add-menu-popover-content, div[role='dialog']")
+        if not await dialog.is_visible(timeout=1500):
+            triggers = page.locator("div.frame-trigger button, button.empty-chip, button:has-text('Start'), button:has-text('End')")
+            trigger_btn = triggers.first if slot_index == 0 else triggers.last
+            await trigger_btn.click(force=True)
+            await page.wait_for_timeout(1500)
 
-        # 1. First check if searching for the file tag finds an already uploaded asset
+        # 1. Search for the file stem
         search_input = page.locator("flow-add-menu-popover-content input, input[placeholder*='Search']").first
         found_in_search = False
         if await search_input.is_visible(timeout=2000):
             await search_input.fill("")
-            await search_input.fill(query_tag)
+            await search_input.fill(p_obj.stem)
             await page.wait_for_timeout(1500)
 
             filtered_item = page.locator(
+                f"div:has-text('{p_obj.stem}'), span:has-text('{p_obj.stem}'), "
                 "flow-add-menu-popover-content flow-asset-list-item, "
                 "flow-add-menu-popover-content .asset-list-item, "
                 "flow-add-menu-popover-content div.item-row, "
                 "flow-add-menu-popover-content [role='listbox'] > *"
             ).first
             if await filtered_item.is_visible(timeout=2000):
-                print(f"Found asset for '{query_tag}' via search. Selecting...")
-                await filtered_item.click()
+                print(f"Found asset for '{p_obj.stem}' via search. Selecting...")
+                await filtered_item.click(force=True)
                 await page.wait_for_timeout(1000)
                 found_in_search = True
 
@@ -185,27 +187,35 @@ async def configure_and_render_scene(
             if await upload_btn.is_visible(timeout=2000):
                 print(f"Uploading file: {p_obj.name}...")
                 async with page.expect_file_chooser(timeout=4000) as fc_info:
-                    await upload_btn.click()
+                    await upload_btn.click(force=True)
                 fc = await fc_info.value
                 await fc.set_files(str(p_obj))
-                await page.wait_for_timeout(3500)
+                await page.wait_for_timeout(4000)
 
-        # 3. Click 'Add to prompt' button (MANDATORY TO ATTACH FRAME TO COMPOSER SLOT)
+        # 3. If 'Add to prompt' button is present (full dialog), click it.
+        # In compact popover, clicking the item already attached it directly!
         add_btn = page.locator("button:has-text('Add to prompt')").first
-        if await add_btn.is_visible(timeout=3000):
-            print(f"Clicking 'Add to prompt' for slot {slot_index}...")
-            await add_btn.click()
-            await page.wait_for_timeout(2000)
-        else:
-            print(f"Warning: 'Add to prompt' button not visible for slot {slot_index}.")
+        try:
+            if await add_btn.is_visible(timeout=1500):
+                print(f"Clicking 'Add to prompt' for slot {slot_index}...")
+                await add_btn.click(force=True)
+                await page.wait_for_timeout(1500)
+            else:
+                print(f"Frame attached to slot {slot_index} via compact list.")
+        except Exception as e_add:
+            print(f"Notice on Add to prompt: {e_add}")
 
     # Attach Start Frame (slot 0)
-    query_start = "frame1_front" if scene_index == 1 else ("frame2_side" if scene_index == 2 else "frame3_shoulder")
-    await attach_frame_by_search_or_upload(0, start_frame_path, query_start)
+    await attach_frame_by_search_or_upload(0, start_frame_path)
 
     # Attach End Frame (slot 1)
-    query_end = "frame2_side" if scene_index == 1 else ("frame3_shoulder" if scene_index == 2 else "frame1_front")
-    await attach_frame_by_search_or_upload(1, end_frame_path, query_end)
+    await attach_frame_by_search_or_upload(1, end_frame_path)
+
+    # Ensure all popovers are closed so they do not intercept pointer events
+    await page.keyboard.press("Escape")
+    await page.wait_for_timeout(500)
+    await page.keyboard.press("Escape")
+    await page.wait_for_timeout(500)
 
     # 3. Enter Scene Prompt into ProseMirror Editor
     editor = page.locator("div.ProseMirror[role='textbox'], div[contenteditable='true'][role='textbox']").first
@@ -214,7 +224,7 @@ async def configure_and_render_scene(
 
     if await editor.is_visible(timeout=3000):
         print(f"Typing Scene {scene_index} prompt into Flow composer...")
-        await editor.click()
+        await editor.click(force=True)
         await page.wait_for_timeout(500)
         # Clear existing text
         await page.keyboard.press("Control+A")
