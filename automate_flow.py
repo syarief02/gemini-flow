@@ -280,22 +280,39 @@ async def attach_frame(page, slot_index: int, frame: Path):
         rows = overlay.locator("button.asset-item")
         for _ in range(timeout_ms // 250):
             for i in range(await rows.count()):
-                if (await rows.nth(i).inner_text()).strip() == frame.name:
+                # Row text is "<name>" (narrow layout) or "<name>\nImage" (wide layout).
+                if (await rows.nth(i).inner_text()).strip().split("\n")[0].strip() == frame.name:
                     await rows.nth(i).click()
+                    # Wide layout previews the asset first and needs an explicit 'Add to prompt'.
+                    for _ in range(8):
+                        if await slot.locator("img.chip-image").count() or await click_add_to_prompt():
+                            break
+                        await page.wait_for_timeout(250)
                     return True
             await page.wait_for_timeout(250)
+        return False
+
+    async def click_add_to_prompt() -> bool:
+        # The button re-renders while an upload finishes, so never wait long on a stale handle.
+        add_btn = overlay.locator("button:has-text('Add to prompt')").first
+        try:
+            if await add_btn.is_visible():
+                await add_btn.click(timeout=3000)
+                return True
+        except Exception:
+            pass
         return False
 
     if not await click_exact_row(4000):
         print(f"  '{frame.name}' is not in this project yet; uploading...")
         async with page.expect_file_chooser(timeout=5000) as chooser:
-            await overlay.locator("button[aria-label='Upload media']").click()
+            await overlay.locator("button[aria-label='Upload media'], button:has-text('Upload media')").first.click()
         await (await chooser.value).set_files(str(frame))
         for _ in range(120):  # up to 60s for the upload to land
             if await slot.locator("img.chip-image").count():
                 break
-            if await search.is_visible() and await click_exact_row(500):
-                break
+            if not await click_add_to_prompt() and await search.is_visible():
+                await click_exact_row(500)
             await page.wait_for_timeout(500)
 
     try:
@@ -349,15 +366,21 @@ async def render_scene(page, scene: int, prompt: str, start: Path, end: Path, tr
     if start == end:
         raise FlowError("Start and End frames are the same file.")
     candidates = list(dict.fromkeys([*trio, start, end]))
-    await clear_composer(page)
-    await ensure_settings(page)
-    await attach_frame(page, 0, start)
-    await attach_frame(page, 1, end)
-    await type_prompt(page, prompt)
+    try:
+        await page.keyboard.press("Escape")  # close any picker or menu left open
+        await clear_composer(page)
+        await ensure_settings(page)
+        await attach_frame(page, 0, start)
+        await attach_frame(page, 1, end)
+        await type_prompt(page, prompt)
 
-    # Final gate: re-check both slots after everything else has been touched.
-    await verify_slot(page, 0, start, candidates)
-    await verify_slot(page, 1, end, candidates)
+        # Final gate: re-check both slots after everything else has been touched.
+        await verify_slot(page, 0, start, candidates)
+        await verify_slot(page, 1, end, candidates)
+    except FlowError:
+        raise
+    except Exception as err:
+        raise FlowError(f"Browser step failed before submit: {str(err).splitlines()[0]}") from err
     ready_png = WORKSPACE / f"flow_scene{scene}_ready.png"
     await page.screenshot(path=str(ready_png))
     print(f"  Pre-submit screenshot: {ready_png.name}")

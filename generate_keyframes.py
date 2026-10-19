@@ -54,10 +54,55 @@ def clean_slug(text: str) -> str:
     return cleaned[:30] if cleaned else "product"
 
 
+MODEL_TIMEOUT_S = 60
+
+
+def _run_with_timeout(fn, timeout_s: float):
+    """Run fn in a daemon thread so a hung API call can't block the script (or its exit)."""
+    import threading
+
+    result: dict = {}
+
+    def target():
+        try:
+            result["value"] = fn()
+        except BaseException as err:  # re-raised in the caller's thread
+            result["error"] = err
+
+    worker = threading.Thread(target=target, daemon=True)
+    worker.start()
+    worker.join(timeout_s)
+    if worker.is_alive():
+        raise TimeoutError(f"no response after {timeout_s:.0f}s")
+    if "error" in result:
+        raise result["error"]
+    return result["value"]
+
+
+def quota_note(client: genai.Client, model: str) -> Optional[str]:
+    """The interactions API hangs instead of returning 429 when quota is gone; generate_content reports it at once."""
+    from datetime import datetime, timedelta
+    from google.genai import types
+
+    try:
+        _run_with_timeout(lambda: client.models.generate_content(
+            model=model, contents="ping", config=types.GenerateContentConfig(response_modalities=["IMAGE"])), 30)
+    except Exception as err:
+        if getattr(err, "code", None) != 429:
+            return None
+        details = (getattr(err, "details", None) or {}).get("error", {}).get("details", [])
+        delay = next((d.get("retryDelay") for d in details if str(d.get("@type", "")).endswith("RetryInfo")), None)
+        if delay and delay.rstrip("s").isdigit():
+            seconds = int(delay.rstrip("s"))
+            reset_at = (datetime.now() + timedelta(seconds=seconds)).strftime("%Y-%m-%d %H:%M")
+            return f"429 RESOURCE_EXHAUSTED: quota resets in {seconds // 3600}h {seconds % 3600 // 60}m (about {reset_at} local time)"
+        return "429 RESOURCE_EXHAUSTED: quota exhausted (no reset time given)"
+    return None
+
+
 def generate_one(client: genai.Client, prompt: str, references: list[Path], output_path: Path) -> str:
     last_error: Exception | None = None
     inputs = [{"type": "text", "text": prompt}, *(image_input(path) for path in references)]
-    import concurrent.futures
 
     def _call_model(m):
         return client.interactions.create(
@@ -74,17 +119,17 @@ def generate_one(client: genai.Client, prompt: str, references: list[Path], outp
     for model in MODEL_CANDIDATES:
         try:
             print(f"Generating {output_path.name} with {model}...", flush=True)
-            with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
-                future = executor.submit(_call_model, model)
-                interaction = future.result(timeout=35)
+            interaction = _run_with_timeout(lambda: _call_model(model), MODEL_TIMEOUT_S)
             generated = interaction.output_image
             if not generated or not generated.data:
                 raise RuntimeError("The model returned no image data.")
             output_path.write_bytes(base64.b64decode(generated.data))
             print(f"SUCCESS {model}: {output_path}", flush=True)
             return model
-        except concurrent.futures.TimeoutError:
-            print(f"FAILED {model}: Request timed out after 35s", flush=True)
+        except TimeoutError as error:
+            note = quota_note(client, model)
+            last_error = RuntimeError(note) if note else error
+            print(f"FAILED {model}: {note or f'request timed out ({error})'}", flush=True)
         except Exception as error:
             last_error = error
             print(f"FAILED {model}: {error}", flush=True)
@@ -108,7 +153,8 @@ def generate_one(client: genai.Client, prompt: str, references: list[Path], outp
             return "imagen-3.0-generate-002"
     except Exception as err_imagen:
         print(f"FAILED imagen-3.0-generate-002: {err_imagen}", flush=True)
-        last_error = err_imagen
+        if "429" not in str(last_error):  # keep the quota/reset message as the headline error
+            last_error = err_imagen
 
     raise RuntimeError(f"All configured Gemini and Imagen image models failed for {output_path.name}: {last_error}")
 
