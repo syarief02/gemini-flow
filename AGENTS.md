@@ -340,8 +340,9 @@ Deliver to the user in this exact order:
      ```python
      reply_btn = gmail_page.locator("span[role='button']:has-text('Reply'), div[role='button']:has-text('Reply'), [aria-label*='Reply']").last
      await reply_btn.click()
-     # Or press 'r' keyboard shortcut
+     # Don't rely on the 'r' shortcut: Gmail keyboard shortcuts are OFF on this account (2026-10-20).
      ```
+   - **Send automatically, every run.** The user gave a standing instruction on 2026-10-20 ("send it always"): don't ask before sending this caption reply. Still run every clean-format check below before clicking Send, and read the sent message back afterwards.
    - **Do NOT build the reply with the Gmail API (`create_draft` with `replyToMessageId`)**: it appends the quoted original (`gmail_extra` / `gmail_quote`) to the HTML body, and `update_draft` cannot remove it. Write the reply in the Gmail web composer instead.
    - The web reply often opens in **plain-text mode**, where the quote is `>` lines instead of a `blockquote`, so removing DOM quote elements does nothing. Click the body, press `Control+A`, then `Delete`, confirm the body is empty, then type the caption.
    - After sending, read the sent message back (Gmail API `get_thread`) and confirm it has no `gmail_quote`, `>` lines or `wrote:` line.
