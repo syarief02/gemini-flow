@@ -103,7 +103,14 @@ python scrape_product.py "https://vt.tiktok.com/..."
   2. If it is unavailable, disabled, or quota-limited, inspect the tools and models available in the current session for another image-capable provider.
   3. Use an already configured workspace provider next, such as Gemini or Imagen through `GEMINI_API_KEY` or `GOOGLE_API_KEY` in `.env`, when it can generate images. Never expose secret values.
   4. Use an OpenAI Images API fallback only when an `OPENAI_API_KEY` is already configured or the user explicitly authorizes setting one up. Follow any active image-generation skill restrictions.
-  5. Do not use an unconfigured external website, ask the user to paste a credential, or claim generation succeeded when it did not.
+  5. **Google Flow Image mode (user-approved fallback, 2026-10-19)** when the Gemini API returns 429 or is otherwise unavailable. It runs in the user's existing Flow project in Brave, uses **Nano Banana Pro**, and cost **0 credits** as of 2026-10-19 (check the "Generating will use N credits" line). Agents with browser control may use it without asking again:
+     - Composer settings: **Image** · **Nano Banana Pro** · **9:16** · **x1**.
+     - Upload the main listing photo via **+** (`Add ingredients to the prompt box`) → **Upload media**, named `<prefix>_product.jpg`, and attach it (wide window: click the row, then **Add to prompt**; narrow window: clicking the row attaches it).
+     - Frame 1: full keyframe prompt (exact garment details, hijab, inner top, bottoms, shoes, setting, empty hands, zero props). Frames 2 and 3: attach the **generated Frame 1** as the reference (search its generated title and click the exact row; the grid tile with the same name is NOT the picker row) and repeat every outfit and setting detail.
+     - Click `Start generation` with a real click; Flow ignores a synthetic JS `.click()`. Each image takes about 20-30s.
+     - Open each result and zoom on the garment before moving on. Save copies to `keyframes/<prefix>_frame1_front.jpg` etc. by downloading the open image's `src` (the largest `<img>` in the edit view) through Playwright `context.request`.
+     - Report it in the quota badge, e.g. `🟢 Status Kuota Imej: Aktif (3/3 imej berjaya dijana)` + "Gemini API 429 (reset ...); generated in Flow Image mode, Nano Banana Pro, 0 credits".
+  6. Do not use any other unconfigured external website, ask the user to paste a credential, or claim generation succeeded when it did not.
 - A provider is "available" only when its tool or API is callable, its required credential is already configured or explicitly authorized, and its use is permitted by the active environment and instructions.
 - Pass the scraped product images as visual reference (e.g. `product_1.jpg`, `product_2.jpg`).
 - Pass Frame 1 as reference to Frame 2, and both to Frame 3, for character consistency.
@@ -324,6 +331,9 @@ Deliver to the user in this exact order:
      await reply_btn.click()
      # Or press 'r' keyboard shortcut
      ```
+   - **Do NOT build the reply with the Gmail API (`create_draft` with `replyToMessageId`)**: it appends the quoted original (`gmail_extra` / `gmail_quote`) to the HTML body, and `update_draft` cannot remove it. Write the reply in the Gmail web composer instead.
+   - The web reply often opens in **plain-text mode**, where the quote is `>` lines instead of a `blockquote`, so removing DOM quote elements does nothing. Click the body, press `Control+A`, then `Delete`, confirm the body is empty, then type the caption.
+   - After sending, read the sent message back (Gmail API `get_thread`) and confirm it has no `gmail_quote`, `>` lines or `wrote:` line.
 
 3. **⛔ CRITICAL ZERO-MISTAKE FORMAT RULE (NEVER VIOLATE):**
    - The email reply body MUST contain **EXCLUSIVELY AND ONLY THE CLEAN TIKTOK CAPTION + 4–6 SEO HASHTAGS**.
