@@ -71,10 +71,12 @@ sharp focus, no handbag, no tote bag, no purse, no tumbler, no props, no text ov
 # - "Static locked-off vertical shot, the camera does not move." All 3 keyframes share one
 #   background, so camera pans/zooms/orbits fight the frames and cause warping.
 #   The SUBJECT turns in place between the Start pose and the End pose instead.
-# - Spoken line: max 22 words (aim 16-20), 1-2 short sentences. Longer lines get rushed,
-#   cut off, or lose lip-sync in a 10s clip.
-# - Scene 2 ends with her back to camera: the line must be finished before she turns away.
-#   Scene 3 starts from the back: she speaks once she faces the camera.
+# - Spoken line (rule of 2026-10-20, user feedback): 2-3 NATURAL spoken sentences, 28-32 words
+#   (hard limits 24-34). The old ~40-word conversational lines sounded natural but were sometimes
+#   cut off; the 14-21-word "spec list" lines of 2026-10-19 sounded stretched and unnatural.
+#   Write it the way a Malaysian creator talks to a friend ("dia", "je", "tau", "memang", "la"),
+#   pick 1-2 details per scene and say why they matter, no colons/semicolons, no spec lists.
+# - She talks continuously for the whole clip, including while she turns (no waiting to speak).
 # - "No background music": the Suno instrumental is added later.
 #
 # PERSONALITY RULES FOR ALL SCENES:
@@ -92,7 +94,10 @@ sharp focus, no handbag, no tote bag, no purse, no tumbler, no props, no text ov
 FLOW_AUDIO = """For the audio, generate a highly realistic female voice with a standard \
 Malaysian Malay (Bahasa Melayu Malaysia) accent, strictly NOT an Indonesian accent. \
 No background music, only her voice and soft ambient sound. \
-Ensure there are no text overlays or watermarks."""
+Ensure there are no text overlays or watermarks. \
+She speaks continuously in a warm, natural, conversational tone at a relaxed but steady pace, \
+like chatting with a close friend, from the first second until the clip ends, without long pauses, \
+and keeps talking naturally while she turns."""
 
 # Scene 1: Start = Frame 1 (front) -> End = Frame 2 (3/4 side)
 FLOW_SCENE_1_INTRO = """Static locked-off vertical shot, the camera does not move. \
@@ -108,9 +113,9 @@ Spoken Malay (Lip-sync): "{dialogue_scene_1}\""""
 # Scene 2: Start = Frame 2 (3/4 side) -> End = Frame 3 (back, glancing over shoulder)
 FLOW_SCENE_2_PRODUCT = """Static locked-off vertical shot, the camera does not move. \
 The same {subject_short}, wearing {outfit}, in the same {setting}. \
-She starts at a three-quarter angle speaking warmly to the camera, then slowly keeps turning in place \
-until her back faces the camera, glancing back over her shoulder with a smile so her face stays visible \
-in profile, showing off {back_detail}. \
+She starts at a three-quarter angle talking warmly to the camera and keeps talking as she slowly turns \
+in place until her back faces the camera, glancing back over her shoulder with a smile so her face stays \
+visible in profile, showing off {back_detail}. \
 Her hands stay empty and relaxed at her sides the whole time, no gestures, no props. \
 The background, lighting, outfit and hijab stay identical throughout. \
 Soft natural daylight, realistic fabric movement. """ + FLOW_AUDIO + """
@@ -120,8 +125,8 @@ Spoken Malay (Lip-sync): "{dialogue_scene_2}\""""
 # Scene 3: Start = Frame 3 (back) -> End = Frame 1 (front), closing the 360° loop
 FLOW_SCENE_3_OUTRO = """Static locked-off vertical shot, the camera does not move. \
 The same {subject_short}, wearing {outfit}, in the same {setting}. \
-She starts with her back to the camera glancing over her shoulder with a smile, then slowly turns in place \
-all the way back to face the camera and speaks warmly and directly to the camera, \
+She starts with her back to the camera glancing over her shoulder with a smile and starts talking right away, \
+slowly turning in place all the way back to face the camera while she talks warmly and directly to the camera, \
 ending in a relaxed front-facing standing pose. \
 Her hands stay empty and relaxed at her sides the whole time, no waving, no raised hands, no props. \
 The background, lighting, outfit and hijab stay identical throughout. \

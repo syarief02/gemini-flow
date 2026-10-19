@@ -277,7 +277,7 @@ STRICT RULES
    ║ • Hands stay empty and relaxed at her sides.             ║
    ║ • Camera: Static locked-off shot. She turns in place     ║
    ║   from three-quarter to her back, glancing over shoulder.║
-   ║ • Finish the spoken line BEFORE her face turns away.     ║
+   ║ • She keeps talking naturally while she turns.           ║
    ║ • Tone: Informative, honest, helpful styling advice.     ║
    ╚══════════════════════════════════════════════════════════╝
 
@@ -291,7 +291,7 @@ STRICT RULES
    ║   time. Do NOT copy-paste from previous products. Write   ║
    ║   it on the spot like a real human would naturally say it. ║
    ║ • Camera: Static locked-off shot. She turns from her back║
-   ║   to face the camera, THEN speaks the CTA.               ║
+   ║   to face the camera, talking the whole time.            ║
    ║ • Tone: Friendly, effortless, polite recommendation.     ║
    ║ • Body Language: Natural relaxed over-the-shoulder       ║
    ║   glance, soft pleasant smile, arms resting naturally low ║
@@ -305,11 +305,20 @@ STRICT RULES
      Start pose and the End pose.
    - Restate the exact model, hijab, garment, bottoms, shoes and setting from the keyframes.
    - Audio: Instruct Flow to generate realistic Malaysian Malay female voice, plus
-     "No background music, only her voice and soft ambient sound."
+     "No background music, only her voice and soft ambient sound." and
+     "She speaks continuously in a warm, natural, conversational tone at a relaxed but steady pace, like chatting
+     with a close friend, from the first second until the clip ends, without long pauses, and keeps talking
+     naturally while she turns."
    - Always include: "Ensure there are no text overlays or watermarks."
-   - SPOKEN LINE LENGTH: each scene's spoken_malay_dialogue is MAX 22 words (aim 16-20), 1-2 short sentences.
-     About 2 Malay words per second fit a 10s clip with the turn; longer lines get rushed, cut off or lose lip-sync.
-     automate_flow.py refuses to render a line over 22 words.
+   - SPOKEN LINE (each scene's spoken_malay_dialogue): 2-3 NATURAL spoken sentences, 28-32 words
+     (automate_flow.py refuses under 24 or over 34). Shorter lines get stretched and sound unnatural; ~40+ words
+     get cut off before the 10s clip ends.
+     Write it exactly like a Malaysian creator talking to a friend, with natural fillers ("dia", "je", "tau",
+     "memang", "la", "korang"). Pick 1-2 details per scene and say WHY they matter; never rattle off a spec list.
+     No colons or semicolons in spoken lines (commas and full stops only). Keep English words to common ones.
+     GOOD: "Saya suka tekstur korduroi dia yang halus ni, rasa vintage sangat. Renda beralun tu ikut sepanjang
+     butang depan, poket dia pun besar, senang nak simpan barang kecil."
+     BAD (spec list, too short): "Tekstur korduroi halus, renda beralun sepanjang butang, dua poket besar: detail vintage."
 
 5. TIKTOK CAPTION:
    - High-converting Bahasa Melayu copywriting with relatable problem-solution angle.

@@ -50,14 +50,23 @@ REQUIRED_MODEL = "Omni 1.1 Flash"
 # The same file measures ~0.05; a different pose of the same product measures ~8-10.
 CHIP_MATCH_MAX_DIFF = 3.0
 
-# ~2 spoken Malay words per second, leaving room for the turn inside a 10s clip.
-MAX_DIALOGUE_WORDS = 22
+# Spoken line length for a 10s clip, in words. Lines of ~40 words (old style) sounded natural but were
+# sometimes cut off; lines of 14-21 words (2026-10-19) got stretched and sounded unnatural. Aim 28-32.
+MIN_DIALOGUE_WORDS = 24
+MAX_DIALOGUE_WORDS = 34
 CAMERA_MOTION_WORDS = ("camera glide", "glides", "pan ", "panning", "zoom", "orbit", "dolly", "tracking shot", "circular camera")
+# Staging that makes her wait before talking squeezes the speech into part of the clip.
+SPEECH_DELAY_PHRASES = ("finishes speaking", "once she faces", "then speaks", "before she speaks", "after turning")
 
 AUDIO_LINE = (
     "For the audio, generate a highly realistic female voice with a standard Malaysian Malay "
     "(Bahasa Melayu Malaysia) accent, strictly NOT an Indonesian accent. No background music, "
     "only her voice and soft ambient sound. Ensure there are no text overlays or watermarks."
+)
+PACE_LINE = (
+    "She speaks continuously in a warm, natural, conversational tone at a relaxed but steady pace, "
+    "like chatting with a close friend, from the first second until the clip ends, without long pauses, "
+    "and keeps talking naturally while she turns."
 )
 
 PAIRINGS = {1: (0, 1), 2: (1, 2), 3: (2, 0)}  # Scene: (start frame idx, end frame idx)
@@ -139,16 +148,33 @@ def build_scene_prompt(visual: str, dialogue: str) -> str:
     words = len(re.findall(r"[\w'-]+", dialogue))
     if words > MAX_DIALOGUE_WORDS:
         raise FlowError(
-            f"Dialogue has {words} words; max {MAX_DIALOGUE_WORDS} fit in a 10s clip. Shorten it:\n  {dialogue}"
+            f"Dialogue has {words} words; over {MAX_DIALOGUE_WORDS} gets cut off before the 10s clip ends. "
+            f"Trim it to {MIN_DIALOGUE_WORDS}-{MAX_DIALOGUE_WORDS} words:\n  {dialogue}"
+        )
+    if words < MIN_DIALOGUE_WORDS:
+        raise FlowError(
+            f"Dialogue has only {words} words; under {MIN_DIALOGUE_WORDS} the voice gets stretched and sounds "
+            f"unnatural. Rewrite it as 2-3 natural spoken sentences ({MIN_DIALOGUE_WORDS}-{MAX_DIALOGUE_WORDS} words):\n  {dialogue}"
+        )
+    if re.search(r"[:;]", dialogue):
+        raise FlowError(
+            "Spoken line contains ':' or ';', which reads like a list and causes odd pauses. "
+            f"Use commas and full stops, as people actually speak:\n  {dialogue}"
         )
     lowered = visual.lower()
     moving = [w.strip() for w in CAMERA_MOTION_WORDS if w in lowered]
     if moving:
         print(f"WARNING: visual prompt asks for camera motion {moving}; keyframes share one background, "
               "so prefer 'Static locked-off vertical shot' with the subject turning.")
+    delayed = [w for w in SPEECH_DELAY_PHRASES if w in lowered]
+    if delayed:
+        print(f"WARNING: visual prompt delays her speech {delayed}; let her talk through the whole clip, "
+              "including while she turns.")
 
     if "for the audio" not in lowered:
         visual = f"{visual} {AUDIO_LINE}"
+    if "conversational tone" not in visual.lower():
+        visual = f"{visual} {PACE_LINE}"
     return f'{visual}\n\nSpoken Malay (Lip-sync): "{dialogue}"'
 
 

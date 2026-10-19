@@ -31,7 +31,7 @@ Every AI agent operating in this repository MUST memorize and adhere strictly to
 | **Flow AI Frame Attachment** | Submitting while a `Start`/`End` slot is still empty (Flow silently renders **text-to-video**: a different woman, no hijab, wrong garment). Searching a partial tag like `frame1_front` (matches EVERY product) or clicking picker rows by position (the list re-sorts by recent use). | Search the **full filename** (`<prefix>_frame1_front.jpg`), click the row whose text **exactly** equals it, and confirm the slot turned into an image chip showing the right pose. **Never click `Start generation` until BOTH slots are verified.** `automate_flow.py` enforces this with a pixel match against the local keyframes. |
 | **Flow AI Frame Pairing** | Reversing Start/End frames (e.g. putting Side as Start in Scene 1), uploading mismatched files, or guessing frame order. | **STRICT DIRECTIONAL CONTINUITY:** **Scene 1:** Start = Frame 1 (Front) ➡️ End = Frame 2 (Side); **Scene 2:** Start = Frame 2 (Side) ➡️ End = Frame 3 (Shoulder); **Scene 3:** Start = Frame 3 (Shoulder) ➡️ End = Frame 1 (Front 360° Loop). |
 | **Flow AI Spoken Lip-Sync** | Submitting English-only visual prompt to Flow AI without the spoken dialogue, or separating dialogue outside the composer. | **MANDATORY VERBATIM LIP-SYNC IN COMPOSER:** The prompt entered into Flow AI's composer MUST explicitly include BOTH the English visual instructions AND the verbatim Malaysian Malay dialogue block: `Spoken Malay (Lip-sync): "<dialogue>"`. Flow AI generates character lip-sync directly from this text. |
-| **Flow AI Camera & Dialogue Fit** | "Camera glides / pans / zooms / orbits" (all 3 keyframes share one background, so camera moves cause warping). Spoken lines of 40+ words (rushed, cut off, broken lip-sync in 10s). | Open every scene with **"Static locked-off vertical shot, the camera does not move."** and make the **model turn in place** from the Start pose to the End pose. **Max 22 words per spoken line** (aim 16-20). Add **"No background music"** (Suno BGM is layered later). |
+| **Flow AI Camera & Dialogue Fit** | "Camera glides / pans / zooms / orbits" (all 3 keyframes share one background, so camera moves cause warping). Spoken lines of ~40+ words (cut off before the clip ends) **or** short "spec list" lines of 14-21 words with colons (stretched, robotic, unnatural: the user rejected these on 2026-10-20). | Open every scene with **"Static locked-off vertical shot, the camera does not move."** and make the **model turn in place** from the Start pose to the End pose. Spoken line = **2-3 natural conversational sentences, 28-32 words** (hard limits 24-34), no colons, she **talks through the whole clip, including while turning**. Add **"No background music"** (Suno BGM is layered later). |
 | **Suno AI BGM** | Generating songs with vocal lyrics or background singing. | **Instrumental mode MUST be toggled ON.** TikTok promos use spoken Malay lip-sync voiceovers; vocals clash with speech. |
 | **Spoken Dialogue & Caption** | Using Indonesian words ("banget", "emang", "bgt"), em-dashes (`—`), or mentioning direct prices. | **Standard Malaysian Malay (KL accent)**, pronoun "saya" (never "aku"), zero em-dashes (use `:` or `,`), zero prices (direct to "beg kuning"). |
 | **Hook Selection** | Banning valid hook formulas or reusing openers from the last 7 recorded entries. | **Never ban valid hooks.** Live search MY TikTok data, rank candidate hooks, audit with `verify_hook_quality()`, and avoid the last 7 entries. |
@@ -164,7 +164,7 @@ Before writing Scene 1 dialogue, the agent MUST follow this exact 3-step process
 
 > **Step 4c. Select Winner (MANDATORY EVERY RUN)**:
 > Pick the **#1 ranked hook** as the Scene 1 opening line. Display the ranking table to the user.
-> **Length:** each scene's full spoken line (hook included) is **max 22 words**. A 40-word hook cannot be spoken in a 10s clip; `automate_flow.py` will refuse it.
+> **Length & style:** each scene's full spoken line (hook included) is **2-3 natural spoken sentences, 28-32 words** (`automate_flow.py` refuses under 24 or over 34). The hook is the first sentence; the next sentence explains it like a creator talking to a friend, not a spec list.
 
 **8 Proven Viral Hook Archetypes (2-Second Retention Rule)**:
 1. **The Unspoken Daily Dilemma (Tropical Climate / Comfort)**: e.g. Hot weather sauna effect, humid sweat, stuffy fabrics vs breathable water-resistant protection.
@@ -270,8 +270,11 @@ Deliver to the user in this exact order:
 
    **Fit rules (these decide whether the clip looks clean or messy):**
    - **Static camera.** Start with `Static locked-off vertical shot, the camera does not move.` All 3 keyframes share one background; "camera glides / pans / zooms / orbits" fights the frames and warps the scene.
-   - **Max 22 words per spoken line** (aim 16-20, 1-2 short sentences). About 2 Malay words per second fit a 10s clip that also contains a turn. `automate_flow.py` refuses longer lines.
-   - **Scene 2** ends with her back to the camera: the line must finish before her face turns away. **Scene 3** starts from the back: she speaks once she faces the camera.
+   - **Spoken line = 2-3 natural conversational sentences, 28-32 words** (hard limits 24-34; `automate_flow.py` refuses outside them). History: the old ~40-word lines sounded natural but were sometimes cut off; the 14-21-word lines used on 2026-10-19 sounded stretched and unnatural (user feedback 2026-10-20).
+   - **Write it the way a Malaysian creator talks to a friend**: natural fillers (`dia`, `je`, `tau`, `memang`, `la`, `korang`), pick 1-2 details per scene and say *why* they matter. Never rattle off a spec list. **No colons or semicolons** in spoken lines (they read as list pauses; the script refuses them). Keep English words to common ones.
+     - ✅ `"Saya suka tekstur korduroi dia yang halus ni, rasa vintage sangat. Renda beralun tu ikut sepanjang butang depan, poket dia pun besar, senang nak simpan barang kecil."` (27 words)
+     - ❌ `"Tekstur korduroi halus, renda beralun sepanjang butang, dua poket besar: detail vintage yang selesa dipakai harian."` (spec list, colon, 16 words)
+   - **She talks through the whole clip, including while she turns.** Don't make her wait ("finishes speaking, then turns", "speaks once she faces the camera"); that squeezes the speech. The script adds a pace line automatically: *"She speaks continuously in a warm, natural, conversational tone at a relaxed but steady pace, like chatting with a close friend, from the first second until the clip ends, without long pauses, and keeps talking naturally while she turns."*
    - Include **"No background music, only her voice and soft ambient sound."** The Suno instrumental is added in editing.
    - Hands stay empty and relaxed at her sides; no gestures, no waving, no props.
 
@@ -279,14 +282,14 @@ Deliver to the user in this exact order:
    ```text
    Static locked-off vertical shot, the camera does not move. {subject + hijab} stands in {keyframe setting}, wearing {exact outfit, bottoms, shoes}. {how she turns from the Start pose to the End pose and when she speaks}. Her hands stay empty and relaxed at her sides the whole time, no gestures, no props. The background, lighting, outfit and hijab stay identical throughout. Soft natural daylight, realistic fabric movement. For the audio, generate a highly realistic female voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent, strictly NOT an Indonesian accent. No background music, only her voice and soft ambient sound. Ensure there are no text overlays or watermarks.
 
-   Spoken Malay (Lip-sync): "{exact Malaysian Malay line, max 22 words}"
+   Spoken Malay (Lip-sync): "{2-3 natural spoken Malaysian Malay sentences, 28-32 words, no colons}"
    ```
 
-   **Verified Example, Scene 1 (Striped Split-Cuff Blouse, rendered clean on 2026-10-19):**
+   **Example, Scene 1 (Striped Split-Cuff Blouse).** The visual part rendered clean on 2026-10-19. The spoken line is rewritten to the 2026-10-20 natural-speech rule; the original 21-word line with a colon sounded stretched.
    ```text
    Static locked-off vertical shot, the camera does not move. A young Malaysian Muslim woman in a taupe chiffon hijab stands in a sunlit cafe courtyard with rattan chairs and potted palms, wearing a fitted beige blouse with thin latte-tan vertical pinstripes, a pointed collar, small white buttons, a curved hem and split cuffs, with straight navy trousers and cream pointed flats. She starts facing the camera with a warm natural smile and speaks directly to the camera, then slowly pivots in place into a three-quarter angle while keeping eye contact. Her hands stay empty and relaxed at her sides the whole time, no gestures, no props. The background, lighting, outfit and hijab stay identical throughout. Soft natural daylight, realistic fabric movement. For the audio, generate a highly realistic female voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent, strictly NOT an Indonesian accent. No background music, only her voice and soft courtyard ambience. Ensure there are no text overlays or watermarks.
 
-   Spoken Malay (Lip-sync): "Pernah tak kemeja berjalur buat badan korang nampak lurus macam pembaris? Blaus beige latte ni lain: pinggang berlekuk, terus nampak ramping!"
+   Spoken Malay (Lip-sync): "Korang pernah perasan tak, kemeja berjalur biasa selalu buat badan nampak lurus je macam pembaris? Blaus jalur latte ni lain sikit, pinggang dia berlekuk, jadi badan terus nampak lebih ramping."
    ```
 
 5. **Automated Playwright Flow Execution (`automate_flow.py`):**
@@ -310,7 +313,7 @@ Deliver to the user in this exact order:
      ```
      `--prefix` defaults to the newest complete keyframe trio, but always pass it explicitly so the right product (and its project) is used.
    - Per scene the script: clears the composer → forces Video / Frames / 9:16 / Omni 1.1 Flash / 720p / 10s / x1 → attaches Start and End by exact filename (uploads if missing) → types visual prompt + `Spoken Malay (Lip-sync)` → **downloads each slot's image and pixel-matches it against the local keyframes** (same file ≈ 0.05, wrong pose ≈ 8-10; limit 3.0) → saves `flow_scene<N>_ready.png` → clicks `Start generation` → confirms the composer reset (job accepted).
-   - It refuses to run when a spoken line is over 22 words or missing, and warns on camera-motion words.
+   - It refuses to run when a spoken line is missing, under 24 or over 34 words, or contains `:`/`;`. It warns on camera-motion words and on staging that delays her speech, and appends the conversational pace line if the prompt lacks one.
    - **If any check fails, the scene is ABORTED and nothing is submitted** (`ABORTED Scene N ...` plus `flow_scene<N>_aborted.png`). Fix the cause (shorten the line, upload the right file, select the right project). **Never bypass the gate by clicking `Start generation` yourself.**
 
 6. **Post-Render QA (MANDATORY before Gmail/Suno steps):**
@@ -452,7 +455,7 @@ Deliver to the user in this exact order:
          bgm_prompt="...",
          scenes={  # this exact shape is what automate_flow.py reads
              "visual_prompts": {"scene_1": "...", "scene_2": "...", "scene_3": "..."},     # English visual + audio paragraph
-             "spoken_dialogue": {"scene_1": "...", "scene_2": "...", "scene_3": "..."},    # verbatim Malay, max 22 words each
+             "spoken_dialogue": {"scene_1": "...", "scene_2": "...", "scene_3": "..."},    # verbatim Malay, 28-32 natural words each
              "scene_1_intro": "<visual 1>\n\nSpoken Malay (Lip-sync): \"<dialogue 1>\"",
              "scene_2_detail": "<visual 2>\n\nSpoken Malay (Lip-sync): \"<dialogue 2>\"",
              "scene_3_outro": "<visual 3>\n\nSpoken Malay (Lip-sync): \"<dialogue 3>\""
@@ -575,8 +578,8 @@ git push
 
 Each scene prompt is **one English paragraph + one verbatim Malay line** (full rules and a verified example in Step 6 §4b; templates in `prompt_templates.py`):
 - **Visual:** `Static locked-off vertical shot, the camera does not move.` + model, hijab, exact outfit and setting from the keyframes + how she turns in place from the Start pose to the End pose + empty relaxed hands.
-- **Audio:** "For the audio, generate a highly realistic female voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent, strictly NOT an Indonesian accent. No background music, only her voice and soft ambient sound. Ensure there are no text overlays or watermarks."
-- **Dialogue:** `Spoken Malay (Lip-sync): "<verbatim Malaysian Malay, max 22 words>"`. Write the Malay yourself; never ask Flow to translate English.
+- **Audio:** "For the audio, generate a highly realistic female voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent, strictly NOT an Indonesian accent. No background music, only her voice and soft ambient sound. Ensure there are no text overlays or watermarks. She speaks continuously in a warm, natural, conversational tone at a relaxed but steady pace, like chatting with a close friend, from the first second until the clip ends, without long pauses, and keeps talking naturally while she turns."
+- **Dialogue:** `Spoken Malay (Lip-sync): "<verbatim Malaysian Malay, 2-3 natural spoken sentences, 28-32 words, no colons>"`. Write the Malay yourself; never ask Flow to translate English.
 
 **CRITICAL PACKAGING RULE — WRAP IN SAME CODE BOX FOR 1-CLICK COPY:**
 ALWAYS wrap the Flow AI prompt AND the spoken Malay lip-sync dialogue in the **SAME text / code box**.
@@ -586,7 +589,7 @@ Example layout:
 ```text
 Static locked-off vertical shot, the camera does not move. A young Malaysian Muslim woman in a ... hijab stands in ..., wearing .... She starts ..., then slowly turns in place .... Her hands stay empty and relaxed at her sides the whole time, no gestures, no props. ... For the audio, generate a highly realistic female voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent, strictly NOT an Indonesian accent. No background music, only her voice and soft ambient sound. Ensure there are no text overlays or watermarks.
 
-Spoken Malay (Lip-sync): "Ayat dialog bahasa Melayu di sini, maksimum 22 patah perkataan."
+Spoken Malay (Lip-sync): "Dua atau tiga ayat santai macam bercakap dengan kawan, lebih kurang 28 hingga 32 patah perkataan, tanpa tanda titik bertindih."
 ```
 
 ---
@@ -721,11 +724,12 @@ Whenever the user supplies a TikTok Shop product link:
 ### 7. Flow Clip Is Rushed, Cut Off, Warped or Has Music
 * **Symptoms:** Speech is too fast or stops mid-sentence, lips don't match, the background bends, or music plays under the voice.
 * **Root Cause:** Spoken line too long for 10s, camera-motion instructions fighting a shared static background, or no "No background music" instruction.
-* **Guaranteed Solution:** Max 22 words per line, `Static locked-off vertical shot, the camera does not move.`, the model turns in place, and `No background music, only her voice and soft ambient sound.` See Step 6 §4b.
+* **Guaranteed Solution:** 2-3 natural conversational sentences of 28-32 words (not a spec list, no colons), she talks through the whole clip including the turn, `Static locked-off vertical shot, the camera does not move.`, the model turns in place, and `No background music, only her voice and soft ambient sound.` See Step 6 §4b.
+* **Voice sounds stretched, slow, robotic or "weird":** the line is too short or written like a spec list (this happened with the 14-21-word lines of 2026-10-19). Rewrite it as natural speech of 28-32 words.
 
 ### 8. `automate_flow.py` Prints `ABORTED Scene N`
 * **Meaning:** A pre-submit check failed and nothing was rendered (no credits spent). Read the reason line and `flow_scene<N>_aborted.png`.
-* **Common causes:** spoken line over 22 words (shorten it and update the Supabase record), no Supabase record whose `keyframe_urls` match the prefix (run Step 9 first), or a slot holding the wrong image (check the project for duplicate or mislabeled uploads).
+* **Common causes:** spoken line outside 24-34 words or containing `:`/`;` (rewrite it and update the Supabase record by `id`), no Supabase record whose `keyframe_urls` match the prefix (run Step 9 first), or a slot holding the wrong image (check the project for duplicate or mislabeled uploads).
 * **`No Flow project recorded for '<prefix>'`:** the product has no project yet. Run the printed `--create-project` command, then render again.
 * **`Flow project creation error`:** the home page had no **New project** button (signed out or UI changed), or the rename didn't save. Create or rename the project by hand in Flow, then add `"<prefix>": {"name": ..., "url": "https://flow.google.com/u/5/project/<id>", "created": ...}` to `flow_projects.json`.
 * **Never** bypass the gate by clicking `Start generation` manually without performing the same checks.
