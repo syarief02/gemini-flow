@@ -8,21 +8,26 @@ verifies pixel-for-pixel that each slot holds the expected keyframe, types the
 visual prompt + Spoken Malay lip-sync line, and only then clicks
 'Start generation'. Any failed check aborts that scene WITHOUT submitting.
 
+Every product gets its OWN Flow project. The project for each keyframe prefix is
+recorded in flow_projects.json, and renders always go to that product's project.
+
 Usage:
-    python automate_flow.py --all                        # newest keyframe trio, all 3 scenes
-    python automate_flow.py --all --prefix striped_split_cuff_blouse
-    python automate_flow.py --all --dry-run              # run every check, submit nothing
+    python automate_flow.py --create-project "OLOME Cropped Denim Jacket" --prefix olome_cropped_denim_jacket
+    python automate_flow.py --all --prefix <prefix> --dry-run   # run every check, submit nothing
+    python automate_flow.py --all --prefix <prefix>             # render all 3 scenes
     python automate_flow.py --scene 2 --prefix <prefix>
-    python automate_flow.py --scene 1 --prompt "..." --start-frame a.jpg --end-frame b.jpg
+    python automate_flow.py --scene 1 --prompt "..." --start-frame a.jpg --end-frame b.jpg --prefix <prefix>
 """
 
 from __future__ import annotations
 
 import asyncio
 import io
+import json
 import re
 import sys
 import argparse
+from datetime import datetime
 from pathlib import Path
 
 from PIL import Image, ImageChops, ImageStat
@@ -35,6 +40,7 @@ if sys.platform == "win32":
 WORKSPACE = Path(__file__).resolve().parent
 FLOW_URL = "https://flow.google.com/?pli=1&authuser=5"
 KEYFRAMES_DIR = WORKSPACE / "keyframes"
+PROJECTS_FILE = WORKSPACE / "flow_projects.json"  # keyframe prefix -> its own Flow project
 
 # Composer settings that every render must use (labels as shown in Flow's settings menu).
 REQUIRED_TOGGLES = ("Video", "Frames", "9:16", "720p", "10s", "x1")
@@ -179,34 +185,83 @@ async def connect_to_brave(port: int = 9222):
         )
 
 
-async def get_flow_page(browser, project_url: str | None):
-    """Use the Flow tab already inside a project (or the given project URL); open Flow otherwise."""
-    context = browser.contexts[0] if browser.contexts else await browser.new_context()
-    flow_pages = [pg for pg in context.pages if "flow.google.com" in pg.url or "labs.google" in pg.url]
-    if project_url:
-        match = [pg for pg in flow_pages if pg.url.split("?")[0].rstrip("/") == project_url.split("?")[0].rstrip("/")]
-        page = match[0] if match else (flow_pages[0] if flow_pages else await context.new_page())
-        if not match:
-            await page.goto(project_url, wait_until="domcontentloaded")
-    else:
-        in_project = [pg for pg in flow_pages if "/project/" in pg.url]
-        page = (in_project or flow_pages or [None])[0]
-        if page is None:
-            page = await context.new_page()
-            await page.goto(FLOW_URL, wait_until="domcontentloaded")
-            await page.wait_for_timeout(3000)
+def _project_root(url: str) -> str:
+    """https://flow.google.com/u/5/project/<id>[/edit/...][?...] -> https://flow.google.com/u/5/project/<id>"""
+    m = re.match(r"(https://[^/]+/(?:u/\d+/)?project/[0-9a-f-]{36})", url)
+    if not m:
+        raise FlowError(f"Not a Flow project URL: {url}")
+    return m.group(1)
 
+
+def load_projects() -> dict:
+    if PROJECTS_FILE.is_file():
+        return json.loads(PROJECTS_FILE.read_text(encoding="utf-8"))
+    return {}
+
+
+def record_project(prefix: str, name: str, url: str):
+    projects = load_projects()
+    projects[prefix] = {"name": name, "url": url, "created": datetime.now().strftime("%Y-%m-%d %H:%M")}
+    PROJECTS_FILE.write_text(json.dumps(projects, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+
+def project_url_for(prefix: str, override: str | None) -> str:
+    """The product's own project: --project-url if given, else the one recorded for this prefix."""
+    if override:
+        return _project_root(override)
+    entry = load_projects().get(prefix)
+    if not entry:
+        raise FlowError(
+            f"No Flow project recorded for '{prefix}'. Every product needs its own project:\n"
+            f'  python automate_flow.py --create-project "<Product name>" --prefix {prefix}'
+        )
+    return entry["url"]
+
+
+async def create_flow_project(browser, name: str) -> str:
+    """Create a new Flow project in its own tab, rename it to `name`, and return its URL."""
+    context = browser.contexts[0] if browser.contexts else await browser.new_context()
+    page = await context.new_page()  # never take over the user's own Flow tab
+    await page.goto(FLOW_URL, wait_until="domcontentloaded")
+    new_btn = page.locator("button").filter(has_text=re.compile(r"New project", re.I)).first
+    try:
+        await new_btn.wait_for(timeout=20000)
+    except Exception:
+        raise FlowError("Flow home page has no 'New project' button (signed out, or the UI changed).")
+    await new_btn.click()
+    try:
+        await page.wait_for_url(re.compile(r"/project/[0-9a-f-]{36}"), timeout=30000)
+    except Exception:
+        raise FlowError("Clicking 'New project' did not open a project.")
+    url = _project_root(page.url)
+
+    title = page.locator("input.editable-text-input").first
+    await title.wait_for(timeout=15000)
+    await title.click()
+    await page.keyboard.press("Control+A")
+    await page.keyboard.insert_text(name)
+    await page.keyboard.press("Enter")
+    await page.wait_for_timeout(1500)
+
+    # Prove the rename was saved by reloading the project.
+    await page.reload(wait_until="domcontentloaded")
+    await page.locator("input.editable-text-input").first.wait_for(timeout=15000)
+    saved = (await page.locator("input.editable-text-input").first.input_value()).strip()
+    if saved != name:
+        raise FlowError(f"Project created at {url}, but its title is '{saved}', not '{name}'. Rename it by hand.")
+    print(f"Created Flow project '{name}': {url}")
+    return url
+
+
+async def get_flow_page(browser, project_url: str):
+    """Use a tab already showing this product's project, or open the project in a new tab."""
+    context = browser.contexts[0] if browser.contexts else await browser.new_context()
+    root = _project_root(project_url)
+    match = [pg for pg in context.pages if pg.url.startswith(root)]
+    page = match[0] if match else await context.new_page()  # never repurpose another project's tab
+    if not match or "/edit/" in page.url:
+        await page.goto(root, wait_until="domcontentloaded")
     await page.bring_to_front()
-    if "/project/" in page.url and "/edit/" in page.url:
-        await page.goto(page.url.split("/edit/")[0], wait_until="domcontentloaded")
-    if "/project/" not in page.url:
-        print("Not inside a Flow project; opening the most recent project...")
-        link = page.locator("a[href*='/project/']").first
-        if await link.is_visible(timeout=4000):
-            await link.click()
-            await page.wait_for_url("**/project/**", timeout=15000)
-        else:
-            raise FlowError("No Flow project open. Open the target project in Brave or pass --project-url.")
     await page.locator(f"{COMPOSER} [contenteditable='true']").wait_for(timeout=20000)
     print(f"Active Flow project: {page.url}")
     return page
@@ -424,6 +479,8 @@ async def run_flow_pipeline(
 ) -> bool:
     prefix, trio = resolve_keyframes(prefix)
     print(f"Keyframes ({prefix}): {', '.join(p.name for p in trio)}")
+    project_url = project_url_for(prefix, project_url)
+    print(f"Flow project for this product: {project_url}")
     scenes_to_run = [1, 2, 3] if render_all else [scene_num]
 
     # Build and validate every prompt before touching the browser.
@@ -470,10 +527,36 @@ if __name__ == "__main__":
     parser.add_argument("--prompt", type=str, help="Custom scene prompt incl. 'Spoken Malay (Lip-sync): \"...\"' (single scene only)")
     parser.add_argument("--start-frame", type=str, help="Path to start frame image (single scene only)")
     parser.add_argument("--end-frame", type=str, help="Path to end frame image (single scene only)")
-    parser.add_argument("--project-url", type=str, help="Flow project URL to render in")
+    parser.add_argument("--project-url", type=str, help="Override the product's recorded Flow project")
+    parser.add_argument("--create-project", type=str, metavar="NAME",
+                        help="Create this product's own Flow project named NAME, record it for --prefix, and exit")
     parser.add_argument("--dry-run", action="store_true", help="Run every check and screenshot, but do not submit")
     parser.add_argument("--latest", action="store_true", help="Kept for compatibility; the newest keyframe trio is the default")
     args = parser.parse_args()
+
+    if args.create_project:
+        if not args.prefix:
+            parser.error("--create-project needs --prefix (the product's keyframe prefix)")
+        existing = load_projects().get(args.prefix)
+        if existing:
+            print(f"'{args.prefix}' already has its Flow project '{existing['name']}': {existing['url']}")
+            sys.exit(0)
+
+        async def _create():
+            p, browser = await connect_to_brave()
+            try:
+                url = await create_flow_project(browser, args.create_project.strip())
+                record_project(args.prefix, args.create_project.strip(), url)
+                print(f"Recorded in {PROJECTS_FILE.name}: {args.prefix} -> {url}")
+            finally:
+                await p.stop()  # never close the user's browser
+
+        try:
+            asyncio.run(_create())
+            sys.exit(0)
+        except Exception as exc:
+            print("Flow project creation error:", exc)
+            sys.exit(1)
 
     try:
         ok = asyncio.run(run_flow_pipeline(

@@ -27,6 +27,7 @@ Every AI agent operating in this repository MUST memorize and adhere strictly to
 | **Brave CDP Connection** | Attempting to connect to an existing Brave instance without flags or launching without `--remote-allow-origins=*`, or calling `browser.close()` which kills the user's window. | Always launch with `--remote-debugging-port=9222 --remote-allow-origins=*`. **NEVER call `browser.close()`** so the user's visible interactive window stays open on desktop. |
 | **Keyframe Consistency** | Adding handbags, totes, phones, coffee cups, tumblers, waving hands, or changing hijab/bottoms between frames. | **Strict Zero-Prop & Empty-Hands Rule.** Both hands empty at sides. Same model, same modest hijab, same outfit head-to-toe, same background across all 3 frames. |
 | **Flow AI Parameters** | Using 5s/8s duration, landscape 16:9, or text-to-video mode. | **Duration = 10s**, **Orientation = Portrait (9:16)**, **Model = Omni 1.1 Flash**, **Mode = Video + Frames** (Frame 1➡️2, Frame 2➡️3, Frame 3➡️1), **720p**, **x1**. |
+| **Flow Project per Product** | Rendering a new product's keyframes or videos into an existing project (e.g. the old shared "Oct 19 - 02:05" project), which mixes products, makes picker searches ambiguous, and hides which clip belongs to which product. | **Every new product gets its OWN new Flow project**, created once at the start of its first Flow step: `python automate_flow.py --create-project "<Short Product Name>" --prefix <prefix>`. The project URL is recorded in `flow_projects.json`; all keyframe generation (Flow Image mode), uploads and renders for that product happen only in that project. Re-renders reuse it; never create a second project for the same prefix. |
 | **Flow AI Frame Attachment** | Submitting while a `Start`/`End` slot is still empty (Flow silently renders **text-to-video**: a different woman, no hijab, wrong garment). Searching a partial tag like `frame1_front` (matches EVERY product) or clicking picker rows by position (the list re-sorts by recent use). | Search the **full filename** (`<prefix>_frame1_front.jpg`), click the row whose text **exactly** equals it, and confirm the slot turned into an image chip showing the right pose. **Never click `Start generation` until BOTH slots are verified.** `automate_flow.py` enforces this with a pixel match against the local keyframes. |
 | **Flow AI Frame Pairing** | Reversing Start/End frames (e.g. putting Side as Start in Scene 1), uploading mismatched files, or guessing frame order. | **STRICT DIRECTIONAL CONTINUITY:** **Scene 1:** Start = Frame 1 (Front) ➡️ End = Frame 2 (Side); **Scene 2:** Start = Frame 2 (Side) ➡️ End = Frame 3 (Shoulder); **Scene 3:** Start = Frame 3 (Shoulder) ➡️ End = Frame 1 (Front 360° Loop). |
 | **Flow AI Spoken Lip-Sync** | Submitting English-only visual prompt to Flow AI without the spoken dialogue, or separating dialogue outside the composer. | **MANDATORY VERBATIM LIP-SYNC IN COMPOSER:** The prompt entered into Flow AI's composer MUST explicitly include BOTH the English visual instructions AND the verbatim Malaysian Malay dialogue block: `Spoken Malay (Lip-sync): "<dialogue>"`. Flow AI generates character lip-sync directly from this text. |
@@ -103,7 +104,8 @@ python scrape_product.py "https://vt.tiktok.com/..."
   2. If it is unavailable, disabled, or quota-limited, inspect the tools and models available in the current session for another image-capable provider.
   3. Use an already configured workspace provider next, such as Gemini or Imagen through `GEMINI_API_KEY` or `GOOGLE_API_KEY` in `.env`, when it can generate images. Never expose secret values.
   4. Use an OpenAI Images API fallback only when an `OPENAI_API_KEY` is already configured or the user explicitly authorizes setting one up. Follow any active image-generation skill restrictions.
-  5. **Google Flow Image mode (user-approved fallback, 2026-10-19)** when the Gemini API returns 429 or is otherwise unavailable. It runs in the user's existing Flow project in Brave, uses **Nano Banana Pro**, and cost **0 credits** as of 2026-10-19 (check the "Generating will use N credits" line). Agents with browser control may use it without asking again:
+  5. **Google Flow Image mode (user-approved fallback, 2026-10-19)** when the Gemini API returns 429 or is otherwise unavailable. It uses **Nano Banana Pro** and cost **0 credits** as of 2026-10-19 (check the "Generating will use N credits" line). Agents with browser control may use it without asking again:
+     - **First create this product's own Flow project** (`python automate_flow.py --create-project "<Short Product Name>" --prefix <prefix>`) and open the URL it records in `flow_projects.json` in your own tab. Generate the keyframes there, never in another product's project.
      - Composer settings: **Image** · **Nano Banana Pro** · **9:16** · **x1**.
      - Upload the main listing photo via **+** (`Add ingredients to the prompt box`) → **Upload media**, named `<prefix>_product.jpg`, and attach it (wide window: click the row, then **Add to prompt**; narrow window: clicking the row attaches it).
      - Frame 1: full keyframe prompt (exact garment details, hijab, inner top, bottoms, shoes, setting, empty hands, zero props). Frames 2 and 3: attach the **generated Frame 1** as the reference (search its generated title and click the exact row; the grid tile with the same name is NOT the picker row) and repeat every outfit and setting detail.
@@ -288,6 +290,12 @@ Deliver to the user in this exact order:
    ```
 
 5. **Automated Playwright Flow Execution (`automate_flow.py`):**
+   - **One Flow project per product.** If the product has no project yet (it is not in `flow_projects.json`), create it first. This is usually already done in Step 3 when keyframes came from Flow Image mode:
+     ```bash
+     python automate_flow.py --create-project "OLOME Cropped Denim Jacket" --prefix olome_cropped_denim_jacket
+     ```
+     It opens Flow home in a new tab, clicks **New project**, renames the project (title field `input.editable-text-input`) to the given name, reloads to prove the name was saved, and records `prefix -> {name, url}` in `flow_projects.json`. Name it with a short readable product name (about 40 characters max). Running it again for the same prefix creates nothing; it just prints the existing project.
+   - Every render goes to the project recorded for that prefix, opened in its own tab. A prefix with no recorded project is refused with the exact create command. `--project-url` overrides this only for deliberate exceptions.
    - Prompts come from the Supabase record whose `keyframe_urls` match the keyframe prefix (never "whichever record is newest"). Sync the record (Step 9) BEFORE rendering.
    - **Always dry-run first**, then render:
      ```bash
@@ -300,7 +308,7 @@ Deliver to the user in this exact order:
      # Re-render one scene:
      python automate_flow.py --scene 2 --prefix <prefix>
      ```
-     `--prefix` defaults to the newest complete keyframe trio; `--project-url <flow project url>` picks the project.
+     `--prefix` defaults to the newest complete keyframe trio, but always pass it explicitly so the right product (and its project) is used.
    - Per scene the script: clears the composer → forces Video / Frames / 9:16 / Omni 1.1 Flash / 720p / 10s / x1 → attaches Start and End by exact filename (uploads if missing) → types visual prompt + `Spoken Malay (Lip-sync)` → **downloads each slot's image and pixel-matches it against the local keyframes** (same file ≈ 0.05, wrong pose ≈ 8-10; limit 3.0) → saves `flow_scene<N>_ready.png` → clicks `Start generation` → confirms the composer reset (job accepted).
    - It refuses to run when a spoken line is over 22 words or missing, and warns on camera-motion words.
    - **If any check fails, the scene is ABORTED and nothing is submitted** (`ABORTED Scene N ...` plus `flow_scene<N>_aborted.png`). Fix the cause (shorten the line, upload the right file, select the right project). **Never bypass the gate by clicking `Start generation` yourself.**
@@ -311,7 +319,7 @@ Deliver to the user in this exact order:
    - A render with a **different woman / no hijab / different top** means the frames were not attached (text-to-video). Regenerate that scene; don't hand it to the user.
    - Agents cannot hear audio: tell the user to listen for Malaysian accent and lip-sync before posting.
 
-7. **Interactive Browser Agents (e.g. Claude in Chrome):** The Claude in Chrome extension runs inside this same Brave profile (same Google sign-ins as `authuser=5`). An agent driving Flow by hand MUST apply the same gate: clear the composer, open the settings menu and check every value, search the full filename, zoom the screenshot on both slot chips to confirm the poses, then submit. Open your own tab for the project; don't take over the user's tab.
+7. **Interactive Browser Agents (e.g. Claude in Chrome):** The Claude in Chrome extension runs inside this same Brave profile (same Google sign-ins as `authuser=5`). An agent driving Flow by hand MUST apply the same gate: clear the composer, open the settings menu and check every value, search the full filename, zoom the screenshot on both slot chips to confirm the poses, then submit. Open **the product's own project** (URL from `flow_projects.json`; create it with `--create-project` if missing) in your own tab; don't take over the user's tab or work in another product's project.
 
 ---
 
@@ -457,7 +465,8 @@ Deliver to the user in this exact order:
          metadata={
              "pdp_url": "https://shop.tiktok.com/my/pdp/...",
              "tiktok_url": "https://vt.tiktok.com/...",
-             "local_keyframes": [...]
+             "local_keyframes": [...],
+             "flow_project_url": "<this product's URL from flow_projects.json>"
          }
      )
      ```
@@ -471,7 +480,7 @@ Deliver to the user in this exact order:
 **Goal:** Ensure every generated script, history log, and automation artifact is version-controlled and pushed to GitHub.
 
 ```bash
-git add generation_history.json automate_flow.py reply_gmail.py create_suno.py AGENTS.md
+git add generation_history.json flow_projects.json automate_flow.py reply_gmail.py create_suno.py AGENTS.md
 git commit -m "feat: complete end-to-end automated promo generation for <product name>"
 git push
 ```
@@ -524,6 +533,7 @@ git push
 | `create_suno.py` | Automated Suno AI BGM instrumental generator in Brave browser via CDP |
 | `open_brave.bat` | Launcher batch script to start Brave with remote debugging on port 9222 |
 | `generation_history.json` | Tracks last used opening/closing lines to prevent repetition (window: last 7) |
+| `flow_projects.json` | Keyframe prefix → that product's own Google Flow project (`name`, `url`, `created`). Written by `automate_flow.py --create-project`; read by every render. Commit it. |
 | `supabase_client.py` | Supabase cloud database client, health monitoring, and remote generation sync |
 | `publish_to_wordpress.py` | WordPress.com publishing integration for promo articles and affiliate links |
 | `tiktok_policy_notes.md` | **TikTok policy tracker**: compiled rules, violations, AIGC requirements, and change log |
@@ -649,7 +659,7 @@ await p.stop()
 ### 3. Automated Browser Tasks Sequence
 Whenever the user supplies a TikTok Shop product link:
 1. **Google Flow AI (`automate_flow.py`)**:
-   - Tab: `https://flow.google.com/`
+   - Tab: the product's own project from `flow_projects.json` (created with `--create-project` for each new product).
    - Forces Video / Frames / 9:16 / Omni 1.1 Flash / 720p / 10s / x1.
    - Attaches and pixel-verifies Frame 1 ➡️ 2 (Scene 1), Frame 2 ➡️ 3 (Scene 2), Frame 3 ➡️ 1 (Scene 3).
    - Types visual prompt + `Spoken Malay (Lip-sync)` line and starts renders only after every check passes. Then do Post-Render QA (Step 6 §6).
@@ -715,7 +725,9 @@ Whenever the user supplies a TikTok Shop product link:
 
 ### 8. `automate_flow.py` Prints `ABORTED Scene N`
 * **Meaning:** A pre-submit check failed and nothing was rendered (no credits spent). Read the reason line and `flow_scene<N>_aborted.png`.
-* **Common causes:** spoken line over 22 words (shorten it and update the Supabase record), no Supabase record whose `keyframe_urls` match the prefix (run Step 9 first), wrong Flow project open (pass `--project-url`), or a slot holding the wrong image (check the project for duplicate or mislabeled uploads).
+* **Common causes:** spoken line over 22 words (shorten it and update the Supabase record), no Supabase record whose `keyframe_urls` match the prefix (run Step 9 first), or a slot holding the wrong image (check the project for duplicate or mislabeled uploads).
+* **`No Flow project recorded for '<prefix>'`:** the product has no project yet. Run the printed `--create-project` command, then render again.
+* **`Flow project creation error`:** the home page had no **New project** button (signed out or UI changed), or the rename didn't save. Create or rename the project by hand in Flow, then add `"<prefix>": {"name": ..., "url": "https://flow.google.com/u/5/project/<id>", "created": ...}` to `flow_projects.json`.
 * **Never** bypass the gate by clicking `Start generation` manually without performing the same checks.
 
 
