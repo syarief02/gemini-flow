@@ -690,6 +690,11 @@ Whenever the user supplies a TikTok Shop product link:
   Start-Sleep -Seconds 4
   ```
 
+### 1b. Brave Keeps Asking to "Allow Remote Debugging" / 403 Forbidden
+* **Symptoms:** `/json/version` returns 404, connections time out, or `ws://.../devtools/browser/<id>` returns `403 Forbidden`; the user has to click an approval prompt in Brave for each script run.
+* **Root Cause:** Brave was started normally and remote debugging was switched on from inside the browser. That mode asks the user to approve each new script connection. (The Claude in Chrome extension is a separate channel and never needs this.)
+* **Guaranteed Solution:** Start Brave with `--remote-debugging-port=9222 --remote-allow-origins=*` (restart command above). The user's taskbar Brave shortcut has carried these flags since 2026-10-20; the shared desktop and Start-menu shortcuts need admin rights to change. If Brave was already running without the flag (e.g. opened by a link), the flag is ignored until every Brave window is closed. `automate_flow.connect_to_brave()` falls back to the `DevToolsActivePort` websocket when the flag is missing, but then every connection needs the user's approval.
+
 ### 2. Accidental Browser Window Closure
 * **Symptoms:** The user complains that Brave disappeared or closed after automation ran.
 * **Root Cause:** Calling `await browser.close()` in Playwright CDP scripts.

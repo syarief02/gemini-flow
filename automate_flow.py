@@ -197,17 +197,36 @@ def closest_keyframe(image_bytes: bytes, candidates: list[Path]) -> tuple[Path, 
 # Browser helpers
 # ---------------------------------------------------------------------------
 
+BRAVE_DEVTOOLS_FILE = Path.home() / "AppData/Local/BraveSoftware/Brave-Browser/User Data/DevToolsActivePort"
+
+
 async def connect_to_brave(port: int = 9222):
-    """Connect to Brave via Chrome DevTools Protocol."""
+    """Connect to Brave via Chrome DevTools Protocol.
+
+    1) Brave launched with --remote-debugging-port=9222 serves http://127.0.0.1:9222/json/version.
+    2) Brave with remote debugging switched on from inside the browser answers 404 there and only
+       accepts the websocket path written to its DevToolsActivePort file; the first connection waits
+       for the user to approve a prompt in Brave, later ones connect straight away.
+    """
     p = await async_playwright().start()
     try:
         browser = await p.chromium.connect_over_cdp(f"http://127.0.0.1:{port}", timeout=6000)
         return p, browser
-    except Exception as err:
+    except Exception as http_err:
+        if BRAVE_DEVTOOLS_FILE.is_file():
+            lines = BRAVE_DEVTOOLS_FILE.read_text(encoding="utf-8").split()
+            if len(lines) >= 2:
+                ws_url = f"ws://127.0.0.1:{lines[0]}{lines[1]}"
+                print(f"Connecting to Brave via {ws_url} (approve the remote-debugging prompt in Brave if it appears)...")
+                try:
+                    return p, await p.chromium.connect_over_cdp(ws_url, timeout=120000)
+                except Exception as ws_err:
+                    http_err = ws_err
         await p.stop()
         raise RuntimeError(
-            f"Could not connect to Brave CDP on port {port}: {err}\n"
-            "Please ensure Brave is launched with: --remote-debugging-port=9222 --remote-allow-origins=*"
+            f"Could not connect to Brave CDP on port {port}: {str(http_err).splitlines()[0]}\n"
+            "Launch Brave with --remote-debugging-port=9222 --remote-allow-origins=*, or switch on remote "
+            "debugging in Brave and approve its prompt."
         )
 
 
