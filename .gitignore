@@ -16,8 +16,13 @@ gemini_conversation_text.txt
 *.png
 *.webp
 *.gif
-keyframes/
 archived_assets/
+
+# ...except keyframes/: keyframes and garment reference photos are committed (AGENTS.md Step 10)
+!keyframes/*.jpg
+!keyframes/*.jpeg
+!keyframes/*.png
+!keyframes/*.webp
 
 
 

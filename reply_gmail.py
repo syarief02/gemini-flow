@@ -13,58 +13,24 @@ if sys.platform == "win32":
 
 DEFAULT_INBOX_URL = "https://mail.google.com/mail/u/0/#inbox"
 
-# Default fallback caption
-CLEAN_KAPSYEN = """Bila dapat jemputan kenduri kahwin tema kuning, mesti ramai pening kepala takut nampak kusam kan? ✨
 
-Korang tengok kemeja blaus jalur rona soft butter yellow ni: tona kuning pastel lembut ni memang auto naikkan seri wajah dan langsung tak buat kulit nampak malap! Ditambah pula dengan perincian jalur halus menegak dan potongan lengan gelembung tiga suku yang kembang beralun, terus bagi siluet ramping dan sopan terletak. Sesuai sangat untuk gayakan ke majlis kenduri, hari kerja di pejabat, mahupun santai hujung minggu.
+def get_latest_caption(prefix: str = None) -> str:
+    """Caption + hashtags from generations/<prefix>.json, or from the newest record without a prefix.
 
-Kelebihan blaus kemeja jalur kuning lembut ni yang buat saya suka:
-✨ Tona Kuning Pastel Lembut: Warna butter yellow yang manis, menaikkan seri kulit tanpa nampak terlalu terang atau mencolok mata.
-✨ Jalur Menegak Slimming Effect: Corak pinstripes halus yang memberi ilusi badan kelihatan lebih tinggi dan ramping.
-✨ Lengan Gelembung Tiga Suku: Potongan 3/4 lantern puff sleeves yang selesa, menutup lengan dengan kemas dan bergaya ala Korean chic.
-✨ Fabrik Sejuk Beralun: Material ringan dan breathable yang sangat selesa dan tidak melekit walau dipakai bawah cuaca panas terik Malaysia.
-✨ Saiz Mesra S Hingga Plus Size: Potongan loose flowy yang terletak kemas pada pelbagai bentuk tubuh wanita.
+    Never falls back to a stored sample caption: sending another product's caption is worse than not sending.
+    """
+    from generation_store import latest_record, load_record
 
-Padankan dengan seluar tailored rona krim atau skirt pleated untuk penampilan yang eksklusif dan manis dipandang! 💛
-
-Jom tekan beg kuning dekat bawah sekarang untuk dapatkan saiz pilihan korang sebelum stok habis licin! 👇💛
-
-#BajuKuningGuest #BlouseWanitaPlusSize #KemejaStripe #OutfitKenduri #KoreanStyleBlouse #MuslimahStyleMY"""
-
-
-def get_latest_caption() -> str:
-    """Fetch latest generated caption + hashtags from Supabase or generation history."""
-    try:
-        from supabase_client import get_supabase_client
-        client = get_supabase_client()
-        if client:
-            res = client.table("gemini_flow_generations").select("caption, hashtags").order("created_at", desc=True).limit(1).execute()
-            if res.data and res.data[0].get("caption"):
-                cap = res.data[0]["caption"].strip()
-                tags = (res.data[0].get("hashtags") or "").strip()
-                if tags and tags not in cap:
-                    return f"{cap}\n\n{tags}"
-                return cap
-    except Exception as e:
-        print(f"Notice fetching latest caption from Supabase: {e}")
-    
-    # Fallback to generation_history.json
-    try:
-        hist_path = Path(__file__).resolve().parent / "generation_history.json"
-        if hist_path.is_file():
-            with open(hist_path, "r", encoding="utf-8") as f:
-                data = json.load(f)
-            gens = data.get("generations", [])
-            if gens and gens[-1].get("caption"):
-                cap = gens[-1]["caption"].strip()
-                tags = (gens[-1].get("hashtags") or "").strip()
-                if tags and tags not in cap:
-                    return f"{cap}\n\n{tags}"
-                return cap
-    except Exception as e_hist:
-        print(f"Notice reading history: {e_hist}")
-
-    return CLEAN_KAPSYEN
+    record = load_record(prefix) if prefix else latest_record()
+    if not record or not (record.get("caption") or "").strip():
+        where = f"generations/{prefix}.json" if prefix else "generations/"
+        raise RuntimeError(f"No caption found in {where}. Pass --caption or --file instead.")
+    print(f"Caption from record: {record.get('product_name')} ({record.get('prefix')})")
+    cap = record["caption"].strip()
+    tags = (record.get("hashtags") or "").strip()
+    if tags and tags not in cap:
+        return f"{cap}\n\n{tags}"
+    return cap
 
 
 async def reply_with_clean_format(caption_text: str = None, thread_url: str = None):
@@ -190,7 +156,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Automate Gmail promo reply via Brave CDP")
     parser.add_argument("--caption", type=str, help="Specific clean caption string to send")
     parser.add_argument("--file", type=str, help="Path to text or JSON file containing caption")
-    parser.add_argument("--latest", action="store_true", help="Fetch latest caption from Supabase / history")
+    parser.add_argument("--prefix", type=str, help="Send the caption from generations/<prefix>.json")
+    parser.add_argument("--latest", action="store_true", help="Send the caption from the newest record in generations/")
     parser.add_argument("--thread-url", type=str, help="Target Gmail thread URL")
     args = parser.parse_args()
 
@@ -209,7 +176,7 @@ if __name__ == "__main__":
             except Exception:
                 chosen_caption = content
     else:
-        chosen_caption = get_latest_caption()
+        chosen_caption = get_latest_caption(args.prefix)
 
     success = asyncio.run(reply_with_clean_format(caption_text=chosen_caption, thread_url=args.thread_url))
     sys.exit(0 if success else 1)

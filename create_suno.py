@@ -11,44 +11,17 @@ if sys.platform == "win32":
     sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 
 SUNO_URL = "https://suno.com/create"
-BGM_PROMPT = (
-    "Warm acoustic lo-fi indie cafe pop, breezy fingerpicked acoustic guitar, "
-    "subtle Rhodes electric piano chords, smooth mellow bassline, light brushed drums, "
-    "108 BPM, modern minimalist aesthetic lifestyle vibe, relaxing, sunny, chic, "
-    "pure instrumental, strictly no vocals"
-)
-BGM_TITLE = "TikTok Product Promo - BGM Instrumental"
+def get_latest_bgm_info(prefix: str = None) -> tuple[str, str]:
+    """BGM prompt + title from generations/<prefix>.json, or from the newest record without a prefix."""
+    from generation_store import latest_record, load_record
 
-
-def get_latest_bgm_info() -> tuple[str, str]:
-    """Fetch latest generated BGM prompt and title from Supabase or generation history."""
-    try:
-        from supabase_client import get_supabase_client
-        client = get_supabase_client()
-        if client:
-            res = client.table("gemini_flow_generations").select("product_name, bgm_prompt").order("created_at", desc=True).limit(1).execute()
-            if res.data and res.data[0].get("bgm_prompt"):
-                p_name = res.data[0].get("product_name", "Product Promo")
-                prompt = res.data[0]["bgm_prompt"]
-                title = f"{p_name[:35]} - BGM Instrumental"
-                return prompt, title
-    except Exception as e:
-        print(f"Notice fetching latest BGM from Supabase: {e}")
-
-    try:
-        hist_path = Path(__file__).resolve().parent / "generation_history.json"
-        if hist_path.is_file():
-            with open(hist_path, "r", encoding="utf-8") as f:
-                data = json.load(f)
-            gens = data.get("generations", [])
-            for g in reversed(gens):
-                if g.get("bgm_prompt"):
-                    p_name = g.get("product", "Product Promo")
-                    return g["bgm_prompt"], f"{p_name[:35]} - BGM Instrumental"
-    except Exception as e_hist:
-        print(f"Notice reading history: {e_hist}")
-
-    return BGM_PROMPT, BGM_TITLE
+    record = load_record(prefix) if prefix else latest_record()
+    if not record or not (record.get("bgm_prompt") or "").strip():
+        where = f"generations/{prefix}.json" if prefix else "generations/"
+        raise RuntimeError(f"No BGM prompt found in {where}. Pass --prompt and --title instead.")
+    print(f"BGM prompt from record: {record.get('product_name')} ({record.get('prefix')})")
+    title = record.get("bgm_title") or f"{(record.get('product_name') or 'Product Promo')[:35]} - BGM Instrumental"
+    return record["bgm_prompt"].strip(), title
 
 
 async def setup_suno(prompt_text: str = None, title_text: str = None):
@@ -235,7 +208,8 @@ if __name__ == "__main__":
     parser.add_argument("--prompt", type=str, help="BGM style prompt")
     parser.add_argument("--title", type=str, help="Song title")
     parser.add_argument("--file", type=str, help="Path to JSON file containing BGM prompt")
-    parser.add_argument("--latest", action="store_true", help="Fetch latest BGM prompt from Supabase / history")
+    parser.add_argument("--prefix", type=str, help="Use the BGM prompt from generations/<prefix>.json")
+    parser.add_argument("--latest", action="store_true", help="Use the BGM prompt from the newest record in generations/")
     args = parser.parse_args()
 
     chosen_prompt = None
@@ -254,7 +228,7 @@ if __name__ == "__main__":
             except Exception:
                 chosen_prompt = file_path.read_text(encoding="utf-8")
     else:
-        chosen_prompt, chosen_title = get_latest_bgm_info()
+        chosen_prompt, chosen_title = get_latest_bgm_info(args.prefix)
 
     if args.title and not chosen_title:
         chosen_title = args.title

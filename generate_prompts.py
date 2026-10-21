@@ -143,12 +143,18 @@ def save_generation_history(
     hashtags: str = None,
     bgm_prompt: str = None,
     keyframe_urls: list = None,
-    metadata: dict = None
+    metadata: dict = None,
+    prefix: str = None,
+    bgm_title: str = None
 ):
     """Append a new entry to the generation history file.
-    
+
     Just stores the raw opening and closing text — no rigid categories.
     The point is simply to know what was already said so the next generation avoids it.
+
+    With `prefix` (the keyframe prefix), the full record is also saved to
+    generations/<prefix>.json, which automate_flow.py renders from and Step 10 commits.
+    `keyframe_urls` is accepted for older callers; the record lists the keyframes found for `prefix`.
     """
     # Compute hook quality audit
     hook_audit = verify_hook_quality(opening_line)
@@ -199,28 +205,32 @@ def save_generation_history(
         except Exception as e_hist:
             print(f"Notice: local history file write: {e_hist}")
 
-    # Optionally sync to Supabase database
-    try:
-        from supabase_client import save_generation_record
-        meta = metadata or {}
+    # Save the full record in the repo (generations/<prefix>.json)
+    if prefix:
+        from generation_store import find_keyframes, save_record
+        meta = dict(metadata or {})
         meta.setdefault("hook_archetype", hook_audit.get("archetype"))
         meta.setdefault("hook_score", hook_audit.get("hook_score"))
         meta.setdefault("hook_status", hook_audit.get("status"))
         meta.setdefault("hook_issues", hook_audit.get("issues"))
+        kf = find_keyframes(prefix)
+        if not kf["all_present"]:
+            print(f"WARNING: keyframe trio for '{prefix}' is incomplete in keyframes/: {kf['paths']}")
 
-        save_generation_record(
-            product_name=product_name,
-            opening_line=opening_line,
-            closing_line=closing_line,
-            metadata=meta,
-            scenes=scenes,
-            caption=caption,
-            hashtags=hashtags,
-            bgm_prompt=bgm_prompt,
-            keyframe_urls=keyframe_urls
-        )
-    except Exception as e_sup:
-        print(f"Notice: Supabase sync: {e_sup}")
+        record_file = save_record(prefix, {
+            "product_name": product_name,
+            "opening_line": opening_line,
+            "closing_line": closing_line,
+            "scenes": scenes or {},
+            "caption": caption,
+            "hashtags": hashtags,
+            "bgm_prompt": bgm_prompt,
+            "bgm_title": bgm_title,
+            "keyframes": kf["paths"],
+            "keyframe_urls": kf["urls"],
+            "metadata": meta,
+        })
+        print(f"🗂️ Saved generation record: {record_file.relative_to(record_file.parent.parent)}")
 
 
 SYSTEM_PROMPT = """You are a top Malaysian TikTok e-commerce content strategist who creates VIRAL short-form video scripts.
@@ -383,7 +393,7 @@ def format_deliverable_markdown(
     frames = kf_info.get("frames", {})
     all_present = kf_info.get("all_present", False)
     
-    quota_badge = "🟢 Status Kuota Imej: Aktif (3/3 imej sedia ada & diselaraskan ke Supabase Storage)" if all_present else "🟢 Status Kuota Imej: Aktif (Generasi berjaya)"
+    quota_badge = "🟢 Status Kuota Imej: Aktif (3/3 imej sedia ada dalam keyframes/)" if all_present else "🟢 Status Kuota Imej: Aktif (Generasi berjaya)"
 
     f1 = frames.get("frame_1_front", {})
     f2 = frames.get("frame_2_side", {})
@@ -411,16 +421,16 @@ def format_deliverable_markdown(
 
 ---
 
-### 📁 Lokasi Fail Keyframe (Dedicated Folder & Cloud CDN)
+### 📁 Lokasi Fail Keyframe (Dedicated Folder & GitHub)
 
 * **Lokasi Tempatan:** `keyframes/`
   * **Frame 1 (Front):** `{f1.get('local_path') or f1.get('filename') or 'frame1_front.jpg'}`
   * **Frame 2 (Side):** `{f2.get('local_path') or f2.get('filename') or 'frame2_side.jpg'}`
   * **Frame 3 (Shoulder):** `{f3.get('local_path') or f3.get('filename') or 'frame3_shoulder.jpg'}`
-* **Pautan Supabase CDN:**
-  * Frame 1: [{f1.get('filename', 'Frame 1')}]({f1.get('cdn_url', '#')})
-  * Frame 2: [{f2.get('filename', 'Frame 2')}]({f2.get('cdn_url', '#')})
-  * Frame 3: [{f3.get('filename', 'Frame 3')}]({f3.get('cdn_url', '#')})
+* **Pautan GitHub (selepas git push):**
+  * Frame 1: [{f1.get('filename', 'Frame 1')}]({f1.get('url', '#')})
+  * Frame 2: [{f2.get('filename', 'Frame 2')}]({f2.get('url', '#')})
+  * Frame 3: [{f3.get('filename', 'Frame 3')}]({f3.get('url', '#')})
 
 ---
 
@@ -550,11 +560,8 @@ if __name__ == "__main__":
             slug = data.get("title", "product").lower()
             slug = re.sub(r"[^a-zA-Z0-9]+", "_", slug).strip("_")[:20]
             
-            try:
-                from supabase_client import get_product_keyframes
-                kf_info = get_product_keyframes(slug)
-            except Exception:
-                kf_info = {}
+            from generation_store import find_keyframes
+            kf_info = find_keyframes(slug)
 
             # Format markdown deliverable
             markdown_out = format_deliverable_markdown(data, res, kf_info)
@@ -562,7 +569,7 @@ if __name__ == "__main__":
             print(markdown_out)
             print("="*70)
 
-            # Auto-save to history and Supabase
+            # Auto-save to history and generations/<slug>.json
             try:
                 open_line = res.get("spoken_malay_dialogue", {}).get("scene_1_intro") or res.get("flow_ai_prompts", {}).get("scene_1_intro", "")[:100]
                 close_line = res.get("spoken_malay_dialogue", {}).get("scene_3_outro") or res.get("flow_ai_prompts", {}).get("scene_3_outro", "")[:100]
@@ -592,7 +599,7 @@ if __name__ == "__main__":
                     caption=res.get("tiktok_caption"),
                     hashtags=res.get("hashtags"),
                     bgm_prompt=res.get("suno_bgm", {}).get("style"),
-                    keyframe_urls=kf_info.get("cdn_urls")
+                    prefix=slug
                 )
             except Exception as e_hist:
                 print(f"History sync notice: {e_hist}")

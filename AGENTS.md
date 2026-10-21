@@ -8,12 +8,12 @@
 This is an **autonomous end-to-end TikTok Shop Product Promo Generator** for the Malaysian market.
 Given a single TikTok Shop product URL, the complete pipeline automatically executes:
 
-1. **3 Consistent 9:16 Keyframe Images** (Front, Side, Over-Shoulder poses) & Supabase CDN upload
+1. **3 Consistent 9:16 Keyframe Images** (Front, Side, Over-Shoulder poses), saved in `keyframes/` and committed to GitHub
 2. **TikTok Caption + SEO Hashtags** (Bahasa Melayu Malaysia, policy-safe, 1-click copy box)
 3. **3 Flow AI Video Generations in Browser** (Omni Flash 10s portrait, Frame-to-Video via Brave CDP)
 4. **Automated Gmail Promo Reply in Browser** (Instantly replies to the user's email thread in Brave with the full copy package)
 5. **Suno AI Instrumental BGM Generation in Browser** (Configures and triggers pure instrumental BGM creation on `suno.com/create`)
-6. **Supabase Cloud Sync & Git Tracking** (Full record stored in `gemini_flow_generations` and pushed to GitHub)
+6. **GitHub Record & Asset Tracking** (Full record in `generations/<prefix>.json`, keyframes in `keyframes/`, both committed and pushed)
 
 ---
 
@@ -23,7 +23,7 @@ Every AI agent operating in this repository MUST memorize and adhere strictly to
 
 | Area | ❌ FATAL MISTAKE (NEVER DO THIS) | ✅ CORRECT BEHAVIOR (MANDATORY) |
 |------|-----------------------------------|----------------------------------|
-| **Gmail Promo Reply** | Adding greetings ("Salam Syarief"), section headers ("MAKLUMAT PRODUK"), Flow video prompts, Suno prompts, dividers (`===`), CDN links, or leaving Gmail quoted text / previous thread content. | **STRICTLY AND ONLY THE CLEAN TIKTOK CAPTION + HASHTAGS.** Always expand and delete quoted text (`div.gmail_quote` / `div.ajR`) before typing. No greetings, headers, prompts, dividers, or quoted text. |
+| **Gmail Promo Reply** | Adding greetings ("Salam Syarief"), section headers ("MAKLUMAT PRODUK"), Flow video prompts, Suno prompts, dividers (`===`), image or GitHub links, or leaving Gmail quoted text / previous thread content. | **STRICTLY AND ONLY THE CLEAN TIKTOK CAPTION + HASHTAGS.** Always expand and delete quoted text (`div.gmail_quote` / `div.ajR`) before typing. No greetings, headers, prompts, dividers, or quoted text. |
 | **Brave CDP Connection** | Attempting to connect to an existing Brave instance without flags or launching without `--remote-allow-origins=*`, or calling `browser.close()` which kills the user's window. | Always launch with `--remote-debugging-port=9222 --remote-allow-origins=*`. **NEVER call `browser.close()`** so the user's visible interactive window stays open on desktop. |
 | **Keyframe Consistency** | Adding handbags, totes, phones, coffee cups, tumblers, waving hands, or changing hijab/bottoms between frames. | **Strict Zero-Prop & Empty-Hands Rule.** Both hands empty at sides. Same model, same modest hijab, same outfit head-to-toe, same background across all 3 frames. |
 | **Flow AI Parameters** | Using 5s/8s duration, landscape 16:9, or text-to-video mode. | **Duration = 10s**, **Orientation = Portrait (9:16)**, **Model = Omni 1.1 Flash**, **Mode = Video + Frames** (Frame 1➡️2, Frame 2➡️3, Frame 3➡️1), **720p**, **x1**. |
@@ -35,7 +35,7 @@ Every AI agent operating in this repository MUST memorize and adhere strictly to
 | **Suno AI BGM** | Generating songs with vocal lyrics or background singing. | **Instrumental mode MUST be toggled ON.** TikTok promos use spoken Malay lip-sync voiceovers; vocals clash with speech. |
 | **Spoken Dialogue & Caption** | Using Indonesian words ("banget", "emang", "bgt"), em-dashes (`—`), or mentioning direct prices. | **Standard Malaysian Malay (KL accent)**, pronoun "saya" (never "aku"), zero em-dashes (use `:` or `,`), zero prices (direct to "beg kuning"). |
 | **Hook Selection** | Banning valid hook formulas or reusing openers from the last 7 recorded entries. | **Never ban valid hooks.** Live search MY TikTok data, rank candidate hooks, audit with `verify_hook_quality()`, and avoid the last 7 entries. |
-| **Supabase Cloud Sync** | Leaving generations only in local JSON or forgetting to upload keyframes to CDN. | Upload all 3 keyframes to bucket `gemini-flow-keyframes`, obtain public CDN URLs, and sync full generation record to `gemini_flow_generations`. |
+| **Saving to GitHub** | Leaving a product only on this PC (no `generations/<prefix>.json`, keyframes not committed), or relying on Supabase (no longer used; its keys are disabled). | Save the full record with `save_generation_history(prefix=...)` (Step 9), then commit and push `generations/<prefix>.json`, `keyframes/<prefix>_*` and the history (Step 10). The repo is public: no credentials or tracking URLs in records. |
 
 ---
 
@@ -116,7 +116,7 @@ python scrape_product.py "https://vt.tiktok.com/..."
 - A provider is "available" only when its tool or API is callable, its required credential is already configured or explicitly authorized, and its use is permitted by the active environment and instructions.
 - Pass the scraped product images as visual reference (e.g. `product_1.jpg`, `product_2.jpg`).
 - Pass Frame 1 as reference to Frame 2, and both to Frame 3, for character consistency.
-- Save generated images to the dedicated `keyframes/` directory in the workspace root as `keyframes/<product_prefix>_frame1_front.jpg`, `keyframes/<product_prefix>_frame2_side.jpg`, `keyframes/<product_prefix>_frame3_shoulder.jpg` (create `keyframes/` directory automatically if it does not exist).
+- Save generated images to the dedicated `keyframes/` directory in the workspace root as `keyframes/<product_prefix>_frame1_front.jpg`, `keyframes/<product_prefix>_frame2_side.jpg`, `keyframes/<product_prefix>_frame3_shoulder.jpg` (create `keyframes/` directory automatically if it does not exist). Also keep the garment reference photo you used as `keyframes/<product_prefix>_product.jpg`. Everything in `keyframes/` is committed to the public GitHub repo (Step 10).
 
 **Quota Tracking & Reporting Rules (MANDATORY EVERY RUN):**
 - You MUST report the image generation quota status in EVERY generation response to the user:
@@ -299,7 +299,7 @@ Deliver to the user in this exact order:
      ```
      It opens Flow home in a new tab, clicks **New project**, renames the project (title field `input.editable-text-input`) to the given name, reloads to prove the name was saved, and records `prefix -> {name, url}` in `flow_projects.json`. Name it with a short readable product name (about 40 characters max). Running it again for the same prefix creates nothing; it just prints the existing project.
    - Every render goes to the project recorded for that prefix, opened in its own tab. A prefix with no recorded project is refused with the exact create command. `--project-url` overrides this only for deliberate exceptions.
-   - Prompts come from the Supabase record whose `keyframe_urls` match the keyframe prefix (never "whichever record is newest"). Sync the record (Step 9) BEFORE rendering.
+   - Prompts come from this product's record, `generations/<prefix>.json` (never "whichever record is newest"). Save the record (Step 9) BEFORE rendering.
    - **Always dry-run first**, then render:
      ```bash
      # Every check + pre-submit screenshots, submits nothing:
@@ -353,7 +353,7 @@ Deliver to the user in this exact order:
    - ❌ **ABSOLUTELY NO SECTION HEADERS:** Do NOT write "MAKLUMAT PRODUK", "PAUTAN PROJEK", "KAPSYEN TIKTOK", etc.
    - ❌ **ABSOLUTELY NO VIDEO PROMPTS:** Do NOT include Flow AI prompts or English scene descriptions.
    - ❌ **ABSOLUTELY NO SUNO BGM PROMPTS:** Do NOT include music style prompts in the email.
-   - ❌ **ABSOLUTELY NO MEDIA LINKS OR METADATA:** Do NOT include CDN image URLs, PDP URLs, or timestamps.
+   - ❌ **ABSOLUTELY NO MEDIA LINKS OR METADATA:** Do NOT include image URLs, PDP URLs, or timestamps.
    - ❌ **ABSOLUTELY NO DIVIDERS:** Do NOT use dashed lines or equals signs (`===`, `---`, `___`).
    - ✅ **ONLY THE PURE READY-TO-POST CAPTION:**
      ```text
@@ -427,67 +427,60 @@ Deliver to the user in this exact order:
 
 ---
 
-### Step 9: Sync to Supabase & Log Generation History
+### Step 9: Save the Generation Record & History (in the repo)
 
-**Goal:** Ensure absolute data persistence, prevent hook fatigue across generation runs, and keep cloud records synchronized with Supabase CDN keyframe assets.
+**Goal:** Keep everything needed to re-render, resend or audit a product in the repo (pushed to GitHub in Step 10), and prevent hook fatigue across runs. **Supabase is not used by the pipeline any more:** its legacy keys were disabled on 2026-10-20 and the user chose GitHub as the store on 2026-10-21. (`supabase_client.py` remains only for the unused web app, `webapp.py`.)
 
-1. **Update Local Anti-Repetition History:**
-   - Append to `generation_history.json`:
-     ```python
-     from generate_prompts import save_generation_history
-     save_generation_history(
-         product_name="Product Name Here",
-         opening_line="The exact Scene 1 opening line used",
-         closing_line="The exact Scene 3 closing line used"
-     )
-     ```
-   - This prevents repeating the same opening question or closing CTA within the last 7 recorded entries.
+**Save the record BEFORE rendering (Step 6):** `automate_flow.py` reads the prompts from it.
 
-2. **Sync Full Generation Record to Supabase Cloud:**
-   - Synchronize via `supabase_client.save_generation_record()`:
-     ```python
-     import supabase_client
-     supabase_client.save_generation_record(
-         product_name="Product Name Here",
-         opening_line="...",
-         closing_line="...",
-         caption="...",
-         hashtags="...",
-         bgm_prompt="...",
-         scenes={  # this exact shape is what automate_flow.py reads
-             "visual_prompts": {"scene_1": "...", "scene_2": "...", "scene_3": "..."},     # English visual + audio paragraph
-             "spoken_dialogue": {"scene_1": "...", "scene_2": "...", "scene_3": "..."},    # verbatim Malay, 28-32 natural words each
-             "scene_1_intro": "<visual 1>\n\nSpoken Malay (Lip-sync): \"<dialogue 1>\"",
-             "scene_2_detail": "<visual 2>\n\nSpoken Malay (Lip-sync): \"<dialogue 2>\"",
-             "scene_3_outro": "<visual 3>\n\nSpoken Malay (Lip-sync): \"<dialogue 3>\""
-         },
-         keyframe_urls=[  # automate_flow.py finds the record by these filenames
-             supabase_client.get_keyframe_cdn_url("<prefix>_frame1_front.jpg"),
-             supabase_client.get_keyframe_cdn_url("<prefix>_frame2_side.jpg"),
-             supabase_client.get_keyframe_cdn_url("<prefix>_frame3_shoulder.jpg")
-         ],
-         metadata={
-             "pdp_url": "https://shop.tiktok.com/my/pdp/...",
-             "tiktok_url": "https://vt.tiktok.com/...",
-             "local_keyframes": [...],
-             "flow_project_url": "<this product's URL from flow_projects.json>"
-         }
-     )
-     ```
-   - Verify that table `gemini_flow_generations` records the upserted row without errors.
-   - **Changing dialogue after a record exists (e.g. a re-render):** `save_generation_record()` matches rows on `product_name` + `opening_line`, so a new opening line INSERTS a duplicate row. Update the existing row by `id` instead (`client.table("gemini_flow_generations").update({...}).eq("id", row_id)`), and edit the matching `generation_history.json` entry in place, so both hold the lines that were actually rendered.
+One call writes both the anti-repetition entry in `generation_history.json` and the full record in `generations/<prefix>.json`:
+```python
+from generate_prompts import save_generation_history
+save_generation_history(
+    prefix="<prefix>",                     # the keyframe prefix: writes generations/<prefix>.json
+    product_name="Product Name Here",
+    opening_line="<exact Scene 1 spoken line>",
+    closing_line="<exact Scene 3 spoken line>",
+    caption="...",
+    hashtags="...",
+    bgm_prompt="...",
+    bgm_title="<Short Product Name> - BGM Instrumental",
+    scenes={  # this exact shape is what automate_flow.py reads
+        "visual_prompts": {"scene_1": "...", "scene_2": "...", "scene_3": "..."},     # English visual + audio paragraph
+        "spoken_dialogue": {"scene_1": "...", "scene_2": "...", "scene_3": "..."},    # verbatim Malay, 28-32 natural words each
+        "scene_1_intro": "<visual 1>\n\nSpoken Malay (Lip-sync): \"<dialogue 1>\"",
+        "scene_2_detail": "<visual 2>\n\nSpoken Malay (Lip-sync): \"<dialogue 2>\"",
+        "scene_3_outro": "<visual 3>\n\nSpoken Malay (Lip-sync): \"<dialogue 3>\""
+    },
+    metadata={
+        "pdp_url": "https://shop.tiktok.com/my/pdp/<id>",   # no query string: the shared URL carries personal tracking IDs
+        "tiktok_url": "https://vt.tiktok.com/...",
+        "flow_project_url": "<this product's URL from flow_projects.json>",
+        "reference_image": "keyframes/<prefix>_product.jpg",
+        "keyframe_provider": "e.g. Google Flow Image mode, Nano Banana Pro, 0 credits",
+        "colour": "<listing colour used>"
+    }
+)
+```
+- The record lists the keyframe trio it finds in `keyframes/` (`keyframes`) and their public GitHub links (`keyframe_urls`, live after `git push`). It prints a WARNING if the trio is incomplete.
+- Save the garment reference photo used for the keyframes as `keyframes/<prefix>_product.jpg`, so the product can be regenerated later.
+- `reply_gmail.py --prefix <prefix>` and `create_suno.py --prefix <prefix>` read the caption and BGM prompt from the same record. Without a record they stop with an error; they never fall back to a sample caption.
+- **Changing dialogue after a record exists (e.g. a re-render):** call `save_generation_history()` again with the same `prefix`; the record file is updated in place (`created_at` is kept). The history file matches entries on `product_name` + `opening_line`, so a new opening line APPENDS a second entry: edit the old `generation_history.json` entry in place instead, so both files hold the lines that were actually rendered.
+- **The GitHub repo is public.** Everything in `generations/` and `keyframes/` is visible to anyone. Never put credentials, email addresses or full shared TikTok URLs (they carry user and tracking IDs) into a record.
 
 ---
 
 ### Step 10: Git Commit & Push
 
-**Goal:** Ensure every generated script, history log, and automation artifact is version-controlled and pushed to GitHub.
+**Goal:** Back up this product's record, keyframes, reference photo and history on GitHub.
 
 ```bash
-git add generation_history.json flow_projects.json automate_flow.py reply_gmail.py create_suno.py AGENTS.md
-git commit -m "feat: complete end-to-end automated promo generation for <product name>"
+git add generations/<prefix>.json keyframes/<prefix>_* generation_history.json flow_projects.json
+git commit -m "feat: <product name> promo in its own Flow project"
 git push
 ```
+- Add only this run's files (plus any script or doc you deliberately changed); never sweep unrelated working-tree changes into the commit.
+- `keyframes/` is committed on purpose (`.gitignore` re-includes `keyframes/*.jpg` after ignoring images elsewhere). `output/` (raw scrapes) stays ignored.
 
 ---
 
@@ -538,11 +531,14 @@ git push
 | `open_brave.bat` | Launcher batch script to start Brave with remote debugging on port 9222 |
 | `generation_history.json` | Tracks last used opening/closing lines to prevent repetition (window: last 7) |
 | `flow_projects.json` | Keyframe prefix → that product's own Google Flow project (`name`, `url`, `created`). Written by `automate_flow.py --create-project`; read by every render. Commit it. |
-| `supabase_client.py` | Supabase cloud database client, health monitoring, and remote generation sync |
+| `generation_store.py` | Reads and writes `generations/<prefix>.json` and finds each product's keyframe trio in `keyframes/` |
+| `generations/` | One full record per product (prompts, spoken lines, caption, hashtags, BGM prompt, keyframes, Flow project, metadata). Written in Step 9, read by `automate_flow.py`, `reply_gmail.py` and `create_suno.py`. Commit it. |
+| `keyframes/` | Every product's 3 keyframes and garment reference photo (`<prefix>_product.jpg`). Committed to the public GitHub repo. |
+| `supabase_client.py` | Supabase client used only by the unused web app (`webapp.py`). The pipeline no longer uses Supabase. |
 | `publish_to_wordpress.py` | WordPress.com publishing integration for promo articles and affiliate links |
 | `tiktok_policy_notes.md` | **TikTok policy tracker**: compiled rules, violations, AIGC requirements, and change log |
 | `scrape_product.py` | Scrapes TikTok Shop product page → images + metadata |
-| `.env` | Contains `GEMINI_API_KEY`, Supabase, and WordPress credentials (gitignored, never commit) |
+| `.env` | Contains `GEMINI_API_KEY`, old Supabase keys and WordPress credentials (gitignored, never commit) |
 | `.gitignore` | Excludes `.env`, images, output dir, and temp files from git |
 
 ---
@@ -564,13 +560,13 @@ git push
 
 ## Anti-Repetition & Viral Hook System
 
-- **File:** `generation_history.json` & Supabase Database
+- **File:** `generation_history.json` (committed to GitHub)
 - **Window:** Last **7** entries only. Older entries can be freely reused.
 - **How it works:**
   1. **Zero Banned Hooks**: NEVER ban any hook styles or formulas. All hook techniques (pain-point questions, relatable confessions, visual pattern interrupts, curiosity gap) are valid.
   2. **Search Internet Data for Best Hooks**: Before writing, search current TikTok e-commerce data and viral retail trends for high-converting hook formulas in Malaysia.
   3. **Record to Avoid Repetition**: `get_recently_used_phrases(last_n=7)` retrieves the last 7 recorded openers and closers. The new dialogue simply avoids repeating those 7.
-  4. **Auto-Logging**: After generation, `save_generation_history()` logs the newly created hook and CTA to both local history and Supabase.
+  4. **Auto-Logging**: After generation, `save_generation_history()` logs the newly created hook and CTA to `generation_history.json` and, with `prefix=`, the full record to `generations/<prefix>.json`.
 - **No fixed rotation scripts.** No banned hooks. Data-driven viral hooks with recent history awareness.
 
 ---
@@ -717,10 +713,10 @@ Whenever the user supplies a TikTok Shop product link:
 * **Root Cause:** Instrumental mode was not toggled ON before clicking Create.
 * **Guaranteed Solution:** Always inspect and verify the `aria-checked` attribute on the Instrumental switch (`button[role='switch']:has-text('Instrumental')`). If `aria-checked != "true"`, click it before entering the prompt or clicking Create.
 
-### 5. Supabase HTTP/2 Stream Terminated
-* **Symptoms:** `supabase.table().upsert()` throws `ConnectionTerminated` or timeout.
-* **Root Cause:** HTTP/2 multiplexing drop on long-lived connections.
-* **Guaranteed Solution:** The built-in REST fallback in `supabase_client.save_generation_record()` automatically retries via HTTP/1.1 `urllib.request`. If testing manually, use `supabase_client.test_supabase_connection()`.
+### 5. Record Missing or Wrong Product in `generations/`
+* **Symptoms:** `automate_flow.py` says `No generation record at generations/<prefix>.json`, or `reply_gmail.py` / `create_suno.py` stop with `No caption found` / `No BGM prompt found`.
+* **Root Cause:** Step 9 was skipped, or it was run with a different `prefix` than the keyframe files use.
+* **Guaranteed Solution:** Run Step 9 with the exact keyframe prefix (the part before `_frame1_front.jpg`), then retry. Pass `--prefix <prefix>` to `reply_gmail.py` and `create_suno.py` rather than `--latest`, so a re-saved older record can't be picked by mistake. (Supabase is no longer used, so its old `ConnectionTerminated` / 401 errors don't apply.)
 
 ### 6. Flow Render Shows a Different Woman / No Hijab / Wrong Garment
 * **Symptoms:** The video looks nothing like the keyframes. Its ⓘ panel still says Omni 1.1 Flash · 9:16 · 10s.
@@ -735,7 +731,7 @@ Whenever the user supplies a TikTok Shop product link:
 
 ### 8. `automate_flow.py` Prints `ABORTED Scene N`
 * **Meaning:** A pre-submit check failed and nothing was rendered (no credits spent). Read the reason line and `flow_scene<N>_aborted.png`.
-* **Common causes:** spoken line outside 24-34 words or containing `:`/`;` (rewrite it and update the Supabase record by `id`), no Supabase record whose `keyframe_urls` match the prefix (run Step 9 first), or a slot holding the wrong image (check the project for duplicate or mislabeled uploads).
+* **Common causes:** spoken line outside 24-34 words or containing `:`/`;` (rewrite it and re-save the record with the same `prefix`, Step 9), no `generations/<prefix>.json` record (run Step 9 first), or a slot holding the wrong image (check the project for duplicate or mislabeled uploads).
 * **`No Flow project recorded for '<prefix>'`:** the product has no project yet. Run the printed `--create-project` command, then render again.
 * **`Flow project creation error`:** the home page had no **New project** button (signed out or UI changed), or the rename didn't save. Create or rename the project by hand in Flow, then add `"<prefix>": {"name": ..., "url": "https://flow.google.com/u/5/project/<id>", "created": ...}` to `flow_projects.json`.
 * **Never** bypass the gate by clicking `Start generation` manually without performing the same checks.

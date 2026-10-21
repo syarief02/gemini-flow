@@ -235,14 +235,7 @@ def run_generation(source_dir: Path, prefix: Optional[str] = None, force: bool =
 
     print(f"\n🎉 Generation complete: {success_count}/3 keyframes created in {KEYFRAME_DIR}/")
     if success_count > 0:
-        try:
-            from supabase_client import upload_keyframe_to_supabase
-            for c_path in completed:
-                cdn_url = upload_keyframe_to_supabase(c_path)
-                if cdn_url:
-                    print(f"☁️ Synced to Supabase Storage: {cdn_url}")
-        except Exception as e_sync:
-            print(f"Notice: Supabase storage auto-sync: {e_sync}")
+        print("Keyframes are backed up by committing keyframes/ to GitHub (AGENTS.md Step 10).")
 
 
 

@@ -85,7 +85,7 @@ class FlowError(RuntimeError):
 
 def resolve_keyframes(prefix: str | None) -> tuple[str, list[Path]]:
     """Return (prefix, [frame1, frame2, frame3]) for one product, never mixing products."""
-    from supabase_client import get_product_keyframes
+    from generation_store import find_keyframes
 
     if not prefix:
         newest = sorted(KEYFRAMES_DIR.glob("*_frame1*.jpg"), key=lambda p: p.stat().st_mtime, reverse=True)
@@ -93,7 +93,7 @@ def resolve_keyframes(prefix: str | None) -> tuple[str, list[Path]]:
             raise FlowError(f"No *_frame1*.jpg keyframes found in {KEYFRAMES_DIR}")
         prefix = re.sub(r"_frame1(_front)?$", "", newest[0].stem)
 
-    info = get_product_keyframes(prefix, KEYFRAMES_DIR)
+    info = find_keyframes(prefix, KEYFRAMES_DIR)
     frames = [info["frames"][k]["local_path"] for k in ("frame_1_front", "frame_2_side", "frame_3_shoulder")]
     if not all(frames):
         raise FlowError(f"Keyframe trio for prefix '{prefix}' is incomplete: {frames}")
@@ -101,22 +101,15 @@ def resolve_keyframes(prefix: str | None) -> tuple[str, list[Path]]:
 
 
 def load_scene_prompts(prefix: str) -> dict:
-    """Load the visual prompts + spoken lines from the Supabase record whose keyframes match `prefix`."""
-    from supabase_client import get_supabase_client
+    """Load the visual prompts + spoken lines from this product's record, generations/<prefix>.json."""
+    from generation_store import load_record, record_path
 
-    client = get_supabase_client()
-    if not client:
-        raise FlowError("Supabase is not configured; pass --prompt for a single scene instead.")
-    rows = (
-        client.table("gemini_flow_generations")
-        .select("product_name, scenes, keyframe_urls, created_at")
-        .order("created_at", desc=True)
-        .limit(25)
-        .execute()
-    ).data or []
-    row = next((r for r in rows if any(f"/{prefix}_frame" in (u or "") for u in (r.get("keyframe_urls") or []))), None)
+    row = load_record(prefix)
     if not row:
-        raise FlowError(f"No Supabase generation record has keyframe_urls for prefix '{prefix}'.")
+        raise FlowError(
+            f"No generation record at {record_path(prefix).relative_to(WORKSPACE)}. Save it first "
+            "(AGENTS.md Step 9), or pass --prompt for a single scene."
+        )
 
     scenes = row.get("scenes") or {}
     visual = scenes.get("visual_prompts") or {}
