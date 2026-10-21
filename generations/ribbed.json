@@ -1,0 +1,28 @@
+{
+  "prefix": "ribbed",
+  "created_at": "2026-09-02T11:49:53.315985+00:00",
+  "product_name": "Shawl Express Bidang 50 Cotton Ribbed Ironless",
+  "opening_line": "Paling tenang bila pagi-pagi nak cepat, kita capai tudung yang langsung tak berkedut dan tak payah pening nak cari seterika.",
+  "closing_line": "Ada banyak kod warna earth tone yang cantik, korang boleh terus pilih warna kegemaran dekat beg kuning sekarang.",
+  "scenes": {},
+  "caption": null,
+  "hashtags": null,
+  "bgm_prompt": null,
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/ribbed_frame1_front.jpg",
+    "keyframes/ribbed_frame2_side.jpg",
+    "keyframes/ribbed_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/ribbed_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/ribbed_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/ribbed_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "source": "backfill_history",
+    "supabase_id": "d9e385f8-c6c8-482a-bb0e-799df47e518c",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-09-02T11:49:53.315985+00:00"
+}

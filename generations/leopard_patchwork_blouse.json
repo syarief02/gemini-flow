@@ -1,0 +1,28 @@
+{
+  "prefix": "leopard_patchwork_blouse",
+  "created_at": "2026-09-09T13:44:02.625878+00:00",
+  "product_name": "Baju Kemeja Patchwork Leopard Wanita 2-Tone",
+  "opening_line": "Kadang-kadang kita bosan juga bila asyik pakai baju polos satu warna je kan? Tapi kemeja potongan separuh hitam separuh corak harimau bintang ni terus buat penampilan biasa rasa macam baru keluar dari pentas fesyen.",
+  "closing_line": "Padankan je dengan seluar hitam atau jeans, confirm ramai yang pusing tengok dua kali. Kalau korang berkenan dengan rekaan unik ni, tengok saiz yang masih available dekat beg kuning.",
+  "scenes": {},
+  "caption": null,
+  "hashtags": null,
+  "bgm_prompt": null,
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/leopard_patchwork_blouse_frame1_front.jpg",
+    "keyframes/leopard_patchwork_blouse_frame2_side.jpg",
+    "keyframes/leopard_patchwork_blouse_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/leopard_patchwork_blouse_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/leopard_patchwork_blouse_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/leopard_patchwork_blouse_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "source": "backfill_history",
+    "supabase_id": "67ef0477-7d2d-4481-baf8-2caf03e6f9e6",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-09-09T13:44:02.625878+00:00"
+}

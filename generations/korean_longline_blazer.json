@@ -1,0 +1,38 @@
+{
+  "prefix": "korean_longline_blazer",
+  "created_at": "2026-10-10T17:28:33.59296+00:00",
+  "product_name": "Jaket Sut Panjang Gaya Korea Blazer Wanita Longgar dan Pelangsingan Elegan",
+  "opening_line": "Korang yang kerja pejabat selalu tak buntu nak cari blazer yang bila sarung langsung tak nampak macam seragam sekolah atau kaku macam orang tua? Korang tengok jaket sut labuh potongan Korea rona mocha taupe ni, potongan bahu kemas dengan labuh atas lutut ni auto ubah gaya korang jadi persis eksekutif moden yang penuh karisma!",
+  "closing_line": "Sangat versatil untuk perjumpaan penting dengan klien mahupun suai padan santai ke kafe lepas waktu kerja. Jom tekan beg kuning dekat bawah sekarang untuk dapatkan saiz idaman korang sebelum warna trending ni kehabisan stok!",
+  "scenes": {
+    "scene_1_intro": "A smooth front-facing medium camera shot with subtle slow zoom-in on an aesthetic Malaysian Muslim woman wearing a modern soft cream chiffon bawal hijab and the Korean-style mocha taupe longline suit jacket blazer over a fitted cream ribbed top and sand-grey pleated wide-leg trousers. She stands in a sunlit architectural courtyard with warm morning light, looking directly into the camera with a relaxed, confident smile and empty hands naturally at her sides. For the audio, generate a highly realistic female voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent—strictly NOT an Indonesian accent. Explicitly translate the following English text into standard Malaysian Malay for the spoken audio: \"Are you office ladies always frustrated trying to find a blazer that never looks like a rigid school uniform or outdated corporate wear? Look at this Korean longline suit jacket in rich mocha taupe; the crisp structured shoulders and above-knee length instantly transform you into a poised, charismatic modern executive!\" Ensure there are no text overlays or watermarks.",
+    "scene_3_outro": "A smooth over-the-shoulder medium shot showing the clean rear view of the same Malaysian Muslim woman, showcasing the crisp back shoulder lines and the clean mid-thigh center vent hem modestly covering the hips and thighs. She turns her head back over her shoulder towards the camera with a warm, elegant smile. Both arms rest naturally low at her sides with completely empty open hands (strictly no handbag, no purse, no props). The camera gently pulls back in the warm sunlit courtyard. For the audio, generate a highly realistic female voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent—strictly NOT an Indonesian accent. Explicitly translate the following English text into standard Malaysian Malay for the spoken audio: \"It is so versatile for high-stakes client meetings or effortless weekend cafe styling after office hours. Click the yellow basket below right now to secure your ideal size before this trending color runs out!\" Ensure there are no text overlays or watermarks.",
+    "scene_2_details": "A graceful slow lateral tracking shot at a three-quarter side angle around the same Malaysian Muslim woman in the mocha taupe longline suit jacket. The camera gently glides to highlight the sharp notched lapel collar, the 4 delicate horn buttons kissing each wrist cuff, the deep horizontal flap pockets, and the flattering tailored drape over sand-grey pleated wide-leg pants. Her arms remain low with completely empty hands as she gently turns her head towards the camera with a poised, friendly expression against the sunlit travertine courtyard background. For the audio, generate a highly realistic female voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent—strictly NOT an Indonesian accent. Explicitly translate the following English text into standard Malaysian Malay for the spoken audio: \"What makes it a pure favorite is the premium suiting fabric that drapes flawlessly without easily wrinkling all day. The subtle shoulder framing and rear vent slit give an elongated, slimming silhouette that flatters any body frame.\" Ensure there are no text overlays or watermarks."
+  },
+  "caption": "Korang yang kerja pejabat selalu tak buntu nak cari blazer yang bila sarung langsung tak nampak macam seragam sekolah atau kaku macam orang tua? ✨\n\nKorang tengok jaket sut labuh potongan Korea rona mocha taupe ni, potongan bahu kemas dengan labuh atas lutut ni auto ubah gaya korang jadi persis eksekutif moden yang penuh karisma!\n\nKelebihan jaket sut labuh Korea ni yang buat saya suka:\n✨ Potongan bahu berstruktur kemas: Memberi ilusi postur tegak dan badan lebih berkarisma\n✨ Kolar lapel bertakuk tajam: Rekaan moden yang menaikkan aura profesional dan 'old money'\n✨ Fabrik suiting poliester premium: Tidak mudah renyuk, jatuh terletak elok, dan sejuk selesa untuk cuaca pejabat\n✨ Perincian 4 butang pada hujung lengan: Sentuhan jahitan teliti persis pakaian tempahan butik\n✨ Panjang atas lutut yang sopan: Melindungi bahagian pinggul dan paha dengan potongan santai menutup aurat\n\nTips penggayaan: Padankan bersama baju knit dalaman rona krim, seluar palazzo berlipat warna pasir, dan tudung bawal chiffon krim untuk penampilan 'power dressing' yang memikat! 🍂\n\nJom tekan beg kuning dekat bawah sekarang untuk dapatkan saiz idaman korang sebelum stok habis! 👇💛",
+  "hashtags": "#BlazerWanita #KoreanBlazerMY #OuterwearMuslimah #OOTDPejabat #BajuKerjaWanita #GayaOldMoney",
+  "bgm_prompt": "Upbeat modern acoustic chill groove instrumental, elegant fingerpicked acoustic guitar, smooth Rhodes piano chords, warm sub bassline, crisp subtle lo-fi snare beats, sunny executive cafe vibe, modern Malaysian urban chic lifestyle aesthetic, 114 BPM, pure instrumental, no vocals, high quality mix, seamless loop.",
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/korean_longline_blazer_frame1_front.jpg",
+    "keyframes/korean_longline_blazer_frame2_side.jpg",
+    "keyframes/korean_longline_blazer_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/korean_longline_blazer_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/korean_longline_blazer_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/korean_longline_blazer_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "color": "Mocha Taupe / Hazelnut Brown",
+    "folder": "20261011_012603",
+    "hook_score": 100,
+    "hook_issues": [],
+    "hook_status": "pass",
+    "product_url": "https://vt.tiktok.com/ZS9D3k2wqSDfa-GwLOF/",
+    "hook_archetype": "Conversational Organic Recommendation",
+    "supabase_id": "78b2eb69-c8e5-40fa-b1e4-e3ce947fea02",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-10-10T17:28:33.59296+00:00"
+}

@@ -1,0 +1,35 @@
+{
+  "prefix": "valen_knitcardigan",
+  "created_at": "2026-09-30T05:44:09.836637+00:00",
+  "product_name": "VALEN Women Cardigan Perempuan Knit Wanita Lengan Panjang Korean Style",
+  "opening_line": "Dengan cuaca Malaysia yang panas terik dekat luar tapi aircond ofis sejuk beku, kardigan kait halus Valen ni memang penyelamat wajib ada dalam beg! Benang dia lembut gila tak miang langsung pada kulit, ringan, dan potongan kemas dia senang padan dengan apa-apa seluar!",
+  "closing_line": "Sangat sesuai untuk korang gayakan pergi kerja, kuliah, mahupun santai lepak hujung minggu sebab ada enam belas pilihan warna pastel dan earth tone yang cantik. Kalau nak kardigan knit Korean style yang lembut dan versatil ni sebelum warna kegemaran korang habis, jom tekan beg kuning sekarang!",
+  "scenes": {},
+  "caption": null,
+  "hashtags": null,
+  "bgm_prompt": null,
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/valen_knitcardigan_frame1_front.jpg",
+    "keyframes/valen_knitcardigan_frame2_side.jpg",
+    "keyframes/valen_knitcardigan_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/valen_knitcardigan_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/valen_knitcardigan_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/valen_knitcardigan_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "brand": "VALEN",
+    "category": "Pakaian & Fesyen Wanita / Outerwear & Kardigan",
+    "hook_score": 100,
+    "hook_issues": [],
+    "hook_status": "pass",
+    "hook_archetype": "The Unspoken Daily Dilemma (Tropical Climate / Comfort)",
+    "product_prefix": "valen_knitcardigan",
+    "keyframe_provider": "Antigravity Native generate_image",
+    "supabase_id": "36a3b957-615b-445b-9576-496d57802da0",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-09-30T05:44:09.836637+00:00"
+}

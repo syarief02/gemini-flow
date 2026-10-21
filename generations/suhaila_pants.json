@@ -1,0 +1,28 @@
+{
+  "prefix": "suhaila_pants",
+  "created_at": "2026-09-05T16:36:13.034884+00:00",
+  "product_name": "PANDAEYES SUHAILA Seluar Kasual Soft Toyobo 0933",
+  "opening_line": "Jujur cakap, seluar palazzo jenis kain Soft Toyobo macam ni memang jadi penyelamat setiap kali saya nak cepat keluar rumah.",
+  "closing_line": "Pinggang dia getah memeri muat sampai empat puluh empat inci, korang ketik je beg kuning untuk tengok warna yang masih in stock.",
+  "scenes": {},
+  "caption": null,
+  "hashtags": null,
+  "bgm_prompt": null,
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/suhaila_pants_frame1_front.jpg",
+    "keyframes/suhaila_pants_frame2_side.jpg",
+    "keyframes/suhaila_pants_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/suhaila_pants_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/suhaila_pants_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/suhaila_pants_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "source": "backfill_history",
+    "supabase_id": "0e4318f0-08a6-4150-abac-bb23fda594e1",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-09-05T16:36:13.034884+00:00"
+}

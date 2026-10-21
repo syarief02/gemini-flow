@@ -1,0 +1,31 @@
+{
+  "prefix": "korean_baggy_blouse",
+  "created_at": "2026-09-11T17:00:03.741916+00:00",
+  "product_name": "An elegant, Korean-style baggy cotton white blouse designed for Muslimah and plu",
+  "opening_line": "A stylish Malaysian woman in her late 20s stands front-facing in a clean, minimalist Korean-style aesthetic room. The ca",
+  "closing_line": "An over-the-shoulder angle shot showing the clean drape of the back of the blouse under soft, natural lighting. The woma",
+  "scenes": {
+    "scene_1_intro": "A stylish Malaysian woman in her late 20s stands front-facing in a clean, minimalist Korean-style aesthetic room. The camera gently zooms in slowly. She smiles warmly and speaks naturally with relaxed shoulders. Audio: A calm, friendly Malaysian Malay female voice with an urban KL accent says, 'Puas saya cari kemeja putih yang tak nampak macam baju sekolah, tapi pada masa yang sama tak ketat dekat bahagian pinggul. Nasib baik blouse kapas berpotongan baggy ala Korea ni betul-betul faham kehendak kita.' Ensure there are no text overlays or watermarks.",
+    "scene_3_outro": "An over-the-shoulder angle shot showing the clean drape of the back of the blouse under soft, natural lighting. The woman glances back with a gentle, sincere smile, radiating confidence. Audio: The Malaysian Malay female voice speaks in a warm, polite recommendation tone, 'Baju rona putih bersih macam ni wajib ada sekurang-kurangnya sehelai sebab nak gayakan dengan skirt boleh, slack pun kemas. Korang yang nak kemaskan wardrobe capsule masing-masing, boleh tekan ikon troli kuning tu untuk dapatkan sehelai hari ni.' Ensure there are no text overlays or watermarks.",
+    "scene_2_detail": "Side-profile camera shot with a slow, graceful pan showcasing the premium cotton texture and the elegant long-sleeve cuff detail. The woman gently adjusts her sleeve, demonstrating the comfort and non-restrictive cut of the blouse. Audio: The same calm, friendly Malaysian Malay female voice continues in an informative tone, 'Kain cotton dia memang jenis lembut dan tak rasa keras langsung bila kita bergerak. Tengok potongan lengan dia, jenis jatuh selesa dan ada kelonggaran yang cukup sopan, jadi tak melekat dekat badan.' Ensure there are no text overlays or watermarks."
+  },
+  "caption": "Paling pening kepala bila nak cari kemeja putih yang tak nampak macam nak pergi perhimpunan sekolah, kan? Kadang-kadang cutting pula terlalu fit sampai rasa rimas nak bergerak. Blouse cotton ala Korea ni memang penyelamat: potongan baggy yang sangat mesra muslimah, tak ketat di bahagian pinggul, dan material kapasnya sejuk dipakai sepanjang hari. Sesuai sangat dipadankan dengan slack untuk gaya pejabat, atau sarung bersama jeans untuk keluar santai hujung minggu. Jom dapatkan satu untuk mudahkan rutin bersiap harian korang, klik saja beg kuning sekarang!",
+  "hashtags": "",
+  "bgm_prompt": "Minimalist, clean Korean acoustic pop, soft fingerstyle acoustic guitar, gentle Rhodes electric piano, warm light percussion, smooth bassline, 110 BPM, elegant, relaxing, positive and bright lifestyle vibe, pure instrumental, no vocals",
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/korean_baggy_blouse_frame1_front.jpg",
+    "keyframes/korean_baggy_blouse_frame2_side.jpg",
+    "keyframes/korean_baggy_blouse_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/korean_baggy_blouse_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/korean_baggy_blouse_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/korean_baggy_blouse_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "supabase_id": "28cacbab-e191-4036-a9b0-0931433b7740",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-09-11T17:00:03.741916+00:00"
+}

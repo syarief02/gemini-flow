@@ -1,0 +1,28 @@
+{
+  "prefix": "xtep",
+  "created_at": "2026-09-02T17:29:45.202941+00:00",
+  "product_name": "Kasut Larian XTEP Kusyen Stabil 40mm",
+  "opening_line": "Bila tapak kaki selalu sakit lepas jogging atau berdiri lama dekat tempat kerja, kasut kusyen tebal macam ni memang ubah terus rasa selesa harian saya.",
+  "closing_line": "Bahagian depan enam milimeter lebih luas khas untuk kaki lebar, korang boleh terus semak carta saiz dekat beg kuning.",
+  "scenes": {},
+  "caption": null,
+  "hashtags": null,
+  "bgm_prompt": null,
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/xtep_frame1_front.jpg",
+    "keyframes/xtep_frame2_side.jpg",
+    "keyframes/xtep_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/xtep_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/xtep_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/xtep_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "source": "backfill_history",
+    "supabase_id": "7beb4763-855d-4582-b4b9-692408e19765",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-09-02T17:29:45.202941+00:00"
+}

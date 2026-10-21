@@ -1,0 +1,30 @@
+{
+  "prefix": "elgini_sports",
+  "created_at": "2026-09-12T07:58:21.438383+00:00",
+  "product_name": "ELGINI E16277 Baju Latihan Wanita Cepat Kering S-XXL",
+  "opening_line": "Bila kita nak mulakan rutin bersenam dekat luar, perkara pertama yang selalu buat kita rasa serba salah mestilah nak cari baju sukan yang tak melekap dekat bahagian dada kan? Sebab tu rekaan dua lapis daripada ELGINI ni memang penyelamat bila nak berjoging atau buat regangan santai.",
+  "closing_line": "Baju sukan yang kemas dan patuh syariah macam ni buat kita bersemangat nak kekal cergas setiap hari. Kalau korang tengah cari baju latihan yang betul-betul selesa dan tak panas, boleh terus singgah beg kuning untuk tengok pilihan saiz dan warna yang ada.",
+  "scenes": {},
+  "caption": null,
+  "hashtags": null,
+  "bgm_prompt": null,
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/elgini_sports_frame1_front.jpg",
+    "keyframes/elgini_sports_frame2_side.jpg",
+    "keyframes/elgini_sports_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/elgini_sports_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/elgini_sports_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/elgini_sports_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "brand": "ELGINI",
+    "category": "Women Activewear",
+    "model_code": "E16277",
+    "supabase_id": "6c92e80f-c08d-4f64-ab79-2135b43b8c40",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-09-12T07:58:21.438383+00:00"
+}

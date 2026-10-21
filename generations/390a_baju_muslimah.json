@@ -1,0 +1,31 @@
+{
+  "prefix": "390a_baju_muslimah",
+  "created_at": "2026-09-11T17:11:58.728398+00:00",
+  "product_name": "Kemeja cotton baggy ala Korea #390A direka khas untuk wanita muslimah yang menca",
+  "opening_line": "Ramai yang ingat kalau pakai baju potongan baggy ni badan akan nampak tenggelam, kan? Saya dulu pun fikir macam tu, tapi kemeja cotton drop-shoulder longgar macam ni rupa-rupanya buat siluet kita nampak kemas dan sangat sopan.",
+  "closing_line": "Senang sangat nak suai padan dengan tudung kegemaran korang, nak bawa pergi kerja atau lepak hujung minggu pun nampak kemas. Cuba intai pilihan warna yang soft dekat beg kuning.",
+  "scenes": {
+    "scene_1_intro": "Please generate a realistic, warm, and conversational Malaysian Malay female voice speaking calmly: \"Ramai yang ingat kalau pakai baju potongan baggy ni badan akan nampak tenggelam, kan? Saya dulu pun fikir macam tu, tapi kemeja cotton drop-shoulder longgar macam ni rupa-rupanya buat siluet kita nampak kemas dan sangat sopan.\" Ensure there are no text overlays or watermarks.",
+    "scene_3_outro": "Please generate a realistic, warm, and conversational Malaysian Malay female voice speaking calmly: \"Senang sangat nak suai padan dengan tudung kegemaran korang, nak bawa pergi kerja atau lepak hujung minggu pun nampak kemas. Cuba intai pilihan warna yang soft dekat beg kuning.\" Ensure there are no text overlays or watermarks.",
+    "scene_2_detail": "Please generate a realistic, warm, and conversational Malaysian Malay female voice speaking calmly: \"Kain dia jenis cotton premium yang betul-betul lembut, jenis tak nipis melekat dekat badan, dan labuh dia memang ngam-ngam tutup bahagian belakang dengan selesa.\" Ensure there are no text overlays or watermarks."
+  },
+  "caption": "Paling penat bila cari kemeja baggy tapi material nipis and cutting nampak geleber macam pinjam baju orang, kan? Blouse cotton labuh ala Korea ni penyelamat keadaan. Kain dia jenis cotton lembut yang kemas, potongannya longgar tapi masih terletak cantik dekat bahu. Sesuai sangat untuk outfit ke pejabat, kelas, atau sekadar lepak santai hujung minggu. Plus size pun tak perlu risau sebab cutting drop shoulder dia memang direka untuk bagi keselesaan maksimum tanpa nampak sarat. Jom dapatkan warna minimalis idaman korang, terus klik beg kuning sekarang.",
+  "hashtags": "",
+  "bgm_prompt": "Warm, cheerful acoustic indie pop, fingerpicked acoustic guitar, soft piano chords, gentle shaker percussion, medium tempo 110 BPM, light and airy, pure instrumental, no vocals, high-quality cozy cafe vibe.",
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/390a_baju_muslimah_frame1_front.jpg",
+    "keyframes/390a_baju_muslimah_frame2_side.jpg",
+    "keyframes/390a_baju_muslimah_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/390a_baju_muslimah_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/390a_baju_muslimah_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/390a_baju_muslimah_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "supabase_id": "75610ef5-554a-4233-8ebc-fbdddd0cea5f",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-09-11T17:11:58.728398+00:00"
+}

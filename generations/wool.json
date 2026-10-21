@@ -1,0 +1,28 @@
+{
+  "prefix": "wool",
+  "created_at": "2026-09-04T13:25:09.568763+00:00",
+  "product_name": "Kot Bulu Wool Wanita Gaya Korea Panjang Setengah",
+  "opening_line": "Ramai yang tak perasan, rahsia gaya nampak mahal dan terletak kemas waktu musim sejuk sebenarnya terletak pada kualiti potongan kot bulu macam ni.",
+  "closing_line": "Ada rona camel klasik dengan hitam elegan, korang yang nak nampak bergaya waktu bercuti boleh terus dapatkan dekat beg kuning sekarang.",
+  "scenes": {},
+  "caption": null,
+  "hashtags": null,
+  "bgm_prompt": null,
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/wool_frame1_front.jpg",
+    "keyframes/wool_frame2_side.jpg",
+    "keyframes/wool_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/wool_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/wool_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/wool_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "source": "backfill_history",
+    "supabase_id": "c2ae68ad-ef70-4d83-8f24-01019b66bf50",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-09-04T13:25:09.568763+00:00"
+}

@@ -1,0 +1,52 @@
+{
+  "prefix": "elgini_e16200",
+  "created_at": "2026-09-28T17:20:44.848748+00:00",
+  "product_name": "ELGINI E16200 Jersi Mikrofiber Muslimah S-XXL | Muslimah Microfibre Jersey",
+  "opening_line": "Pagi-pagi bila nak keluar bersenam atau beriadah, paling malas bila kena hadap papan seterika semata-mata nak gosok baju sukan kan? Tengok jersi mikrofiber Muslimah Elgini kod E satu enam dua kosong kosong ni, tarik je terus sarung sebab fabrik dia memang seratus peratus ironless, sejuk beralun, dan potongan tunik labuh dia elok tutup aurat!",
+  "closing_line": "Potongan baju ni memang terletak cantik dari saiz S sampai dua XL, sesuai untuk jogging, aktiviti sukan, mahupun bersantai di rumah. Kalau korang nak jersi sejuk tanpa gosok dalam warna ice blue yang menawan ni, jom amankan pesanan korang dekat beg kuning hari ni!",
+  "scenes": {
+    "scene_1": {
+      "camera": "Front-facing medium shot with subtle slow zoom-in",
+      "visual": "Malaysian Muslim woman wearing a neat black bawal chiffon hijab, the stylish ELGINI E16200 Jersi Mikrofiber Muslimah in ice blue / pastel baby blue with long sleeves and modest tunic length, paired with straight-cut black sports trousers. Empty hands resting naturally low at her sides.",
+      "dialogue_en": "In the morning when heading out for a workout or recreation, the biggest hassle is facing the ironing board just to press a sports shirt, right? Look at this Elgini Muslimah microfibre jersey code E16200: just grab and wear because the fabric is 100% ironless, cool and airy, and its modest tunic cut gracefully covers your silhouette!",
+      "dialogue_ms": "Pagi-pagi bila nak keluar bersenam atau beriadah, paling malas bila kena hadap papan seterika semata-mata nak gosok baju sukan kan? Tengok jersi mikrofiber Muslimah Elgini kod E satu enam dua kosong kosong ni, tarik je terus sarung sebab fabrik dia memang seratus peratus ironless, sejuk beralun, dan potongan tunik labuh dia elok tutup aurat!"
+    },
+    "scene_2": {
+      "camera": "Smooth 3/4 side profile camera tracking",
+      "visual": "Fluid drape of the ice blue microfibre jersey, highlighting the 180gsm premium quick-dry breathable texture, neat sleeve cuffs, round crewneck under the black hijab, and the modest A-line tunic length that gracefully covers hips and thighs without clinging. Empty hands, one hand resting naturally near her side.",
+      "dialogue_en": "Feel the premium 180gsm microfibre material: it is lightweight, highly breathable, dries rapidly when sweating, and maintains a clean modest drape without clinging to your body.",
+      "dialogue_ms": "Rasa material mikrofiber seratus lapan puluh gsm ni: sangat ringan, ada pengudaraan lancar, cepat kering bila berpeluh, dan potongan labuh dia langsung tak melekat pada badan bila kita bergerak aktif."
+    },
+    "scene_3": {
+      "camera": "Over-the-shoulder glance",
+      "visual": "Woman turns back towards the camera with a confident, warm smile. Both arms rest naturally low at her sides with completely empty hands (no bags, no water bottles, no props, no waving). Soft natural morning daylight against the park jogging track.",
+      "dialogue_en": "This tunic jersey fits gracefully from size S all the way to 2XL, perfect for jogging, community sports, or relaxing daily wear. If you want a cool, ironless jersey in this refreshing ice blue shade, secure your order from the yellow basket today!",
+      "dialogue_ms": "Potongan baju ni memang terletak cantik dari saiz S sampai dua XL, sesuai untuk jogging, aktiviti sukan, mahupun bersantai di rumah. Kalau korang nak jersi sejuk tanpa gosok dalam warna ice blue yang menawan ni, jom amankan pesanan korang dekat beg kuning hari ni!"
+    }
+  },
+  "caption": "Malas nak gosok baju sukan pagi-pagi? 🏃‍♀️✨\n\nJersi Mikrofiber Muslimah Elgini kod E16200 ni memang penyelamat hari-hari kita! Tarik je dari almari terus sarung sebab material dia memang seratus peratus ironless dan anti-kedut. Potongan tunik labuh A-line yang sopan menutup bahagian pinggul dan punggung dengan sempurna, jadi kita rasa bebas dan yakin nak bergerak.\n\nKelebihan Jersi Mikrofiber Muslimah Elgini E16200 yang buat saya suka:\n✨ Fabrik mikrofiber 180gsm premium yang sejuk, licin, dan tidak melekat pada badan\n✨ Ciri ironless dan anti-kedut yang jimat masa bersiap bila-bila masa\n✨ Teknologi cepat kering (quick-dry) yang sangat selesa walaupun berpeluh banyak\n✨ Potongan labuh Muslimah sopan dari saiz S hingga 2XL untuk pelbagai bentuk badan\n✨ Warna ice blue pastel yang lembut, segar, dan memberi aura bertenaga\n\nSesuai digayakan untuk jogging petang, senaman aerobik, aktiviti sukan kampus, mahupun santai harian di rumah. Selesa dan kemas sepanjang hari! 👟🩵\n\nJom dapatkan jersi Muslimah sejuk tanpa gosok ni, grab saiz korang dekat beg kuning sekarang! 👇💛\n\n#JersiMuslimah #ElginiMalaysia #BajuSukanMuslimah #MicrofibreJersey #OOTDSukan #MuslimahActivewear",
+  "hashtags": "#JersiMuslimah #ElginiMalaysia #BajuSukanMuslimah #MicrofibreJersey #OOTDSukan #MuslimahActivewear",
+  "bgm_prompt": "Genre: Fresh upbeat acoustic chill pop with light active rhythm. Instrumentation: Clean fingerpicked acoustic guitar, subtle breezy synth pads, crisp lo-fi drum beats, bright acoustic ukulele touches, and warm melodic electric bass. Mood: Refreshing, optimistic, cheerful, active outdoor lifestyle vibe. Tempo: 110 BPM, smooth uplifting bounce matched for short-form sports and activewear video pacing. Production: Pure instrumental, strictly no vocals, warm acoustic mastering, dynamic stereo separation, seamless loopable progression.",
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/elgini_e16200_frame1_front.jpg",
+    "keyframes/elgini_e16200_frame2_side.jpg",
+    "keyframes/elgini_e16200_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/elgini_e16200_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/elgini_e16200_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/elgini_e16200_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "hook_score": 100,
+    "hook_issues": [],
+    "hook_source": "Live TikTok search ranked #1 of 3 candidates",
+    "hook_status": "pass",
+    "hook_archetype": "The Relatable Lifestyle Dilemma (Morning Rush / Easy Prep)",
+    "hook_ranking_method": "live_search_then_rank",
+    "supabase_id": "3982eabb-cfd0-4bff-9423-f0e31c8a8391",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-09-28T17:20:44.848748+00:00"
+}

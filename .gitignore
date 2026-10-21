@@ -32,6 +32,9 @@ extracted_flow_video/
 *.mp4
 *.wav
 *.mp3
+# ...except media/: finished promo media moved here from the old Supabase bucket
+!media/*.mp4
+!media/*.wav
 
 # Environment variables / Secrets
 .env

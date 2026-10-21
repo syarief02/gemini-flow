@@ -1,0 +1,38 @@
+{
+  "prefix": "korean_double_button_long_coat",
+  "created_at": "2026-10-13T04:27:00.525438+00:00",
+  "product_name": "Kot Panjang Wanita Berkancing Dua dengan Kerah Berlekuk Elegan Labuh Sederhana Potongan Ramping",
+  "opening_line": "Siapa dekat sini yang nak pergi bercuti musim sejuk tapi takut gila nampak kembang macam marshmallow atau karipap pusing? Korang tengok kot labuh dua butang rona mocha ni, potongan ramping dengan kolar lapel berlekuk tajam ni auto bagi ilusi badan nampak tinggi lampai dan pinggang terus nampak ramping terletak!",
+  "closing_line": "Ada pilihan saiz dari S sampai empat XL, memang sangat mesra untuk wanita berhijab yang nak kekal sopan dan bergaya mewah. Jom tekan beg kuning dekat bawah sekarang untuk grab warna idaman korang sebelum saiz pilihan licin!",
+  "scenes": {
+    "scene_1_intro": "A smooth front-facing medium camera shot with subtle slow zoom-in on an aesthetic Malaysian Muslim woman wearing a modern soft off-white chiffon bawal hijab and the tailored Korean-style rich mocha brown long woolen overcoat over a fitted black high-neck top and black tailored trousers. She stands in a sunlit architectural courtyard with warm morning light, looking directly into the camera with a relaxed, pleasant smile and empty hands naturally at her sides. For the audio, generate a highly realistic female voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent—strictly NOT an Indonesian accent. Explicitly translate the following English text into standard Malaysian Malay for the spoken audio: \"Who among you is planning a winter vacation but is terrified of looking bulky like a marshmallow or an oversized puff? Look at this double-button long coat in rich mocha; the tailored slim cut and sharp notched lapel collar instantly create an elongated, tall silhouette while keeping your waistline neatly cinched!\" Ensure there are no text overlays or watermarks.",
+    "scene_3_outro": "A smooth over-the-shoulder medium shot showing the clean rear view of the same Malaysian Muslim woman, showcasing the tailored back seam and the graceful below-the-knee mid-calf length modestly covering the hips and legs. She turns her head back over her shoulder towards the camera with a gentle, warm smile. Both arms rest naturally low at her sides with completely empty open hands (strictly no handbag, no tote, no phone, no props). The camera gently pulls back in the warm sunlit courtyard. For the audio, generate a highly realistic female voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent—strictly NOT an Indonesian accent. Explicitly translate the following English text into standard Malaysian Malay for the spoken audio: \"Available in sizes from S right up to 4XL, it is so hijab-friendly for modest, effortless luxury whether heading to the office or traveling overseas. Click the yellow basket below right now to secure your favorite shade before popular sizes run out!\" Ensure there are no text overlays or watermarks.",
+    "scene_2_details": "A graceful slow lateral tracking shot at a three-quarter side angle around the same Malaysian Muslim woman in the rich mocha brown long woolen overcoat. The camera gently glides to highlight the premium brushed woolen fabric drape, the sharp notched lapel lines, the two horizontal dark horn buttons at the waist, and the elegant mid-calf length falling gracefully past the knees. Her arms remain low with completely empty hands as she gently turns her head towards the camera with a poised, confident expression against the sunlit travertine courtyard background. For the audio, generate a highly realistic female voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent—strictly NOT an Indonesian accent. Explicitly translate the following English text into standard Malaysian Malay for the spoken audio: \"What makes me love it so much is how structured the brushed woolen blend feels without being suffocatingly heavy. It blocks chilly winds effortlessly while the cinched waistline flatters every body contour with pure elegance.\" Ensure there are no text overlays or watermarks."
+  },
+  "caption": "Siapa dekat sini yang nak pergi bercuti musim sejuk tapi takut gila nampak kembang macam marshmallow atau karipap pusing? ✨\n\nKorang tengok kot labuh dua butang rona mocha ni, potongan ramping dengan kolar lapel berlekuk tajam ni auto bagi ilusi badan nampak tinggi lampai dan pinggang terus nampak ramping terletak!\n\nKelebihan kot panjang bulu woolen Korea ni yang buat saya suka:\n✨ Rekaan dua butang pada pinggang: Auto memberi ilusi pinggang lebih ramping dan kemas beralun\n✨ Kolar lapel bertakuk tajam: Rekaan moden yang menaikkan aura sofistikated ala 'old money'\n✨ Fabrik woolen campuran berstruktur: Tebal dan hangat untuk cuaca sejuk tanpa rasa kaku atau melemaskan\n✨ Potongan labuh melepasi lutut (mid-calf): Sangat sopan menutup aurat, pinggul, dan paha dengan sempurna\n✨ Pilihan saiz inklusif S hingga 4XL: Sesuai untuk pelbagai bentuk badan wanita Malaysia\n\nTips penggayaan: Padankan bersama baju knit dalaman rona gelap, seluar lurus hitam, dan tudung bawal chiffon rona krim untuk gaya 'winter traveler' yang paling memukau! ❄️\n\nJom tekan beg kuning dekat bawah sekarang untuk dapatkan saiz dan warna idaman korang sebelum stok habis! 👇💛",
+  "hashtags": "#KotPanjangWanita #WinterCoatMY #TravelWinterOOTD #OuterwearMuslimah #BajuSejukKorea #GayaOldMoney",
+  "bgm_prompt": "Upbeat atmospheric cinematic lo-fi pop instrumental, warm acoustic guitar arpeggios, gentle Rhodes electric piano chords, soft warm analog bassline, crisp subtle drum grooves with brush percussion, travel-inspired optimistic morning lifestyle mood, 112 BPM, pure instrumental, no vocals, high fidelity mix, seamless loop.",
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/korean_double_button_long_coat_frame1_front.jpg",
+    "keyframes/korean_double_button_long_coat_frame2_side.jpg",
+    "keyframes/korean_double_button_long_coat_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/korean_double_button_long_coat_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/korean_double_button_long_coat_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/korean_double_button_long_coat_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "color": "Rich Mocha Brown / Heather Coffee",
+    "folder": "20261013_122401",
+    "hook_score": 100,
+    "hook_issues": [],
+    "hook_status": "pass",
+    "product_url": "https://vt.tiktok.com/ZS9U82Hgefksp-cmLLe/",
+    "hook_archetype": "The Flattering Silhouette / Visual Insecurity Solution",
+    "supabase_id": "0eec2203-9a97-4e43-a715-8e6dc10b0bd0",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-10-13T04:27:00.525438+00:00"
+}

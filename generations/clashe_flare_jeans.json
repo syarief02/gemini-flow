@@ -1,0 +1,31 @@
+{
+  "prefix": "clashe_flare_jeans",
+  "created_at": "2026-09-10T13:13:33.321707+00:00",
+  "product_name": "CLASHE Flare Jeans Plus Size Denim Fashion Wide Leg Jeans Women",
+  "opening_line": "Mencari potongan denim yang betul-betul boleh bagi ilusi kaki nampak panjang sebenarnya tak susah kalau tahu siluet yang betul. Macam jeans kembang bawah daripada CLASHE yang saya gayakan ni.",
+  "closing_line": "Sangat berbaloi untuk dijadikan koleksi harian korang yang nak tampil yakin setiap hari. Kalau nak tahu saiz yang ngam dengan ukuran pinggang korang, boleh belek-belek dekat beg kuning sekarang.",
+  "scenes": {
+    "scene_1_intro": "A video of a stylish Malaysian woman wearing dark blue CLASHE flare jeans standing in a bright minimalist room with a subtle slow zoom. The voiceover should be a realistic Malaysian Malay female voice with a calm, friendly, and natural KL urban accent, saying: Mencari potongan denim yang betul-betul boleh bagi ilusi kaki nampak panjang sebenarnya tak susah kalau tahu siluet yang betul. Macam jeans kembang bawah daripada CLASHE yang saya gayakan ni. Ensure there are no text overlays or watermarks.",
+    "scene_3_outro": "A relaxed over-the-shoulder shot of the woman smiling warmly in soft natural lighting with a gentle slow-mo. The voiceover should be a realistic Malaysian Malay female voice with a soft, polite, and reassuring tone, saying: Sangat berbaloi untuk dijadikan koleksi harian korang yang nak tampil yakin setiap hari. Kalau nak tahu saiz yang ngam dengan ukuran pinggang korang, boleh belek-belek dekat beg kuning sekarang. Ensure there are no text overlays or watermarks.",
+    "scene_2_detail": "A side-angle close-up slow-motion pan showcasing the premium stretch denim fabric and the elegant transition into a flare starting at the knee. The voiceover should be a realistic Malaysian Malay female voice with a helpful, informative, and pleasant tone, saying: Bahagian pinggang dia kemas, manakala potongan kembang dari paras lutut ke bawah ni yang bagi saya paling ajaib sebab dia bagi balance pada bentuk pinggul. Denim dia lembut, stretchable tapi tak mengecut lepas basuh. Ensure there are no text overlays or watermarks."
+  },
+  "caption": "Bila peha dan pinggul nampak lebih berisi, siluet jeans jenis flare atau kembang bawah ni sebenarnya penolong terbaik korang. CLASHE Flare Jeans direka khas untuk memberi potongan yang seimbang, selesa, dan buat kaki nampak automatik lebih tinggi. Fabrik denim berkualiti yang stretchable memeluk lekuk tubuh dengan sangat selesa tanpa rasa menjerut. Sesuai dipadankan dengan kemeja kasual mahupun t-shirt harian. Dapatkan saiz plus size korang yang paling ngam, terus check out di beg kuning hari ini!",
+  "hashtags": "#JeansKembang #FlareJeansMY #PlusSizeJeans #OOTDMuslimah #FashionMY #DenimLook",
+  "bgm_prompt": "Sophisticated and breezy acoustic pop instrumental, soft acoustic guitar strumming, light crisp shaker percussion, warm gentle piano chord highlights, 110 BPM, elegant lifestyle mood, pure instrumental, no vocals",
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/clashe_flare_jeans_frame1_front.jpg",
+    "keyframes/clashe_flare_jeans_frame2_side.jpg",
+    "keyframes/clashe_flare_jeans_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/clashe_flare_jeans_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/clashe_flare_jeans_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/clashe_flare_jeans_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "supabase_id": "5fdc52a7-fe15-484d-aed1-c7b9226a59d3",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-09-10T13:13:33.321707+00:00"
+}

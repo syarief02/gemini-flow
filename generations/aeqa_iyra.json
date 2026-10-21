@@ -1,0 +1,52 @@
+{
+  "prefix": "aeqa_iyra",
+  "created_at": "2026-09-27T14:39:58.251841+00:00",
+  "product_name": "AEQA Baju Sukan Muslimah Iyra 2.0 (M-6XL) Dusty Pink",
+  "opening_line": "Tak payah pening nak cari skirt extender lagi setiap kali nak pergi jogging atau gym! Tengok baju sukan Muslimah AEQA Iyra dua perpuluhan kosong ni, potongan peplum kembang labuh dekat bawah ni auto tutup bahagian punggung dengan sopan dan tak melekat langsung walaupun berpeluh!",
+  "closing_line": "Ada saiz dari M sampai enam XL dengan pilihan warna dusty pink yang manis ni untuk semua bentuk badan. Kalau korang nak bersukan dengan lebih yakin dan aurat terjaga rapi, dapatkan baju sukan AEQA Iyra dekat beg kuning sekarang!",
+  "scenes": {
+    "scene_1": {
+      "camera": "Front-facing medium shot with subtle slow zoom-in",
+      "visual": "Malaysian Muslim woman wearing a neat modern black sports hijab and an elegant dusty pink AEQA Iyra 2.0 long-sleeve sports shirt featuring a flared ruffled peplum hem covering her hips, paired with relaxed black sports jogger pants. Empty hands resting naturally low at her sides.",
+      "dialogue_en": "No need to stress about finding a skirt extender every time you go jogging or hit the gym! Look at this AEQA Iyra 2.0 Muslimah sports shirt: the flared peplum hem at the bottom gracefully covers the hips and backside, and it never clings to your body even when sweating heavily!",
+      "dialogue_ms": "Tak payah pening nak cari skirt extender lagi setiap kali nak pergi jogging atau gym! Tengok baju sukan Muslimah AEQA Iyra dua perpuluhan kosong ni, potongan peplum kembang labuh dekat bawah ni auto tutup bahagian punggung dengan sopan dan tak melekat langsung walaupun berpeluh!"
+    },
+    "scene_2": {
+      "camera": "Smooth 3/4 side profile camera tracking",
+      "visual": "Loose, modest drape of the dusty pink sports shirt, highlighting the stretchy 4-way elastic fabric, neat crew neckline, and how the flared peplum ruffle gently covers the hips and backside during movement. Empty hands, one hand resting naturally near her side.",
+      "dialogue_en": "Notice the thoughtful design: the four-way stretch fabric feels cool against the skin, dries rapidly, and gives you total freedom of movement without feeling restricted or exposed.",
+      "dialogue_ms": "Tengok potongan dia: fabrik memeri empat arah ni rasa sejuk pada kulit, cepat kering bila berpeluh, dan bagi korang kebebasan bergerak sepenuhnya tanpa rasa rimas atau segan."
+    },
+    "scene_3": {
+      "camera": "Over-the-shoulder glance",
+      "visual": "Woman turns back towards the camera with a confident, warm smile. Both arms rest naturally low at sides with completely empty hands (no bags, no water bottles, no props, no waving).",
+      "dialogue_en": "Available in sizes M all the way to 6XL with this lovely dusty pink shade to flatter every silhouette. If you want to stay active with total modesty and confidence, grab your AEQA Iyra sports shirt from the yellow basket now!",
+      "dialogue_ms": "Ada saiz dari M sampai enam XL dengan pilihan warna dusty pink yang manis ni untuk semua bentuk badan. Kalau korang nak bersukan dengan lebih yakin dan aurat terjaga rapi, dapatkan baju sukan AEQA Iyra dekat beg kuning sekarang!"
+    }
+  },
+  "caption": "Penat cari skirt extender setiap kali nak jogging atau gym? 🏃‍♀️✨\n\nBaju sukan Muslimah AEQA Iyra 2.0 ni memang penyelamat untuk wanita aktif! Rekaan potongan longgar dengan peplum kembang labuh di bahagian bawah terus menutup aurat bahagian pinggul dan punggung dengan sopan, jadi korang boleh bersenam dengan penuh yakin tanpa rasa segan.\n\nKelebihan AEQA Baju Sukan Iyra 2.0 ni yang buat saya suka:\n✨ Rekaan peplum kembang labuh yang selamat tutup punggung tanpa perlukan skirt extender\n✨ Fabrik elastik 4-arah yang memeri dan memberi kebebasan bergerak sepenuhnya\n✨ Teknologi sejuk dan cepat kering yang tidak melekat pada badan walaupun berpeluh\n✨ Potongan longgar sopan dan mesra Muslimah dari saiz M hingga plus size 6XL\n✨ Tona dusty pink yang manis dan versatile untuk yoga, zumba, jogging, mahupun riadah santai\n\nSesuai dipadankan dengan seluar sukan atau jogger pants untuk gaya aktif yang selesa dan sopan sepanjang hari. Jom kekal sihat dan bertenaga! 👟🌸\n\nNak bersenam dengan yakin tanpa risau baju melekat, dapatkan saiz korang dekat beg kuning sekarang! 👇💛\n\n#BajuSukanMuslimah #SportswearMuslimah #AeqaMalaysia #OOTDSukan #MuslimahActive #BajuSukanPlusSize",
+  "hashtags": "#BajuSukanMuslimah #SportswearMuslimah #AeqaMalaysia #OOTDSukan #MuslimahActive #BajuSukanPlusSize",
+  "bgm_prompt": "Genre: Upbeat active acoustic pop with inspiring energetic groove. Instrumentation: Bright acoustic guitar strumming, punchy upbeat drum groove, warm rhythmic bassline, vibrant subtle marimba notes, and breezy ambient synth chords. Mood: Uplifting, motivating, fresh, cheerful, healthy active lifestyle vibe. Tempo: 114 BPM, smooth rhythmic momentum matched for short-form fitness and active lifestyle video pacing. Production: Pure instrumental, strictly no vocals, warm acoustic mastering, energetic stereo separation, seamless loopable progression.",
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/aeqa_iyra_frame1_front.jpg",
+    "keyframes/aeqa_iyra_frame2_side.jpg",
+    "keyframes/aeqa_iyra_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/aeqa_iyra_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/aeqa_iyra_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/aeqa_iyra_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "hook_score": 100,
+    "hook_issues": [],
+    "hook_source": "Live TikTok search ranked #1 of 3 candidates",
+    "hook_status": "pass",
+    "hook_archetype": "The Flattering Silhouette / Visual Insecurity Solution",
+    "hook_ranking_method": "live_search_then_rank",
+    "supabase_id": "c317408d-7a56-4cc8-ba19-88faba8bbc94",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-09-27T14:39:58.251841+00:00"
+}

@@ -1,0 +1,35 @@
+{
+  "prefix": "clashe_denimskirt",
+  "created_at": "2026-09-30T23:35:05.946625+00:00",
+  "product_name": "CLASHE 2251 Skirts For Women Korean Style Loose A-line Denim Skirts",
+  "opening_line": "Susah betul nak cari skirt jeans labuh yang potongan dia langsung tak keras kejung dan tak melekat dekat bahagian punggung kan? Tengok maxi skirt denim jenama Clashe kod dua dua lima satu ni, material denim basuh lembut beralun gila, pinggang bergetah ada tali laras, dan garisan panel menegak dia auto buat ilusi kita nampak lebih tinggi dan ramping!",
+  "closing_line": "Memang senang gila nak gayakan untuk pergi kerja santai, kelas, jalan-jalan hujung minggu, atau lepak kafe sebab tona warna denim lembut ni masuk dengan apa-apa baju. Kalau korang nak skirt denim A-line Korea yang selesa dan kualiti padu ni, jom amankan pesanan korang dekat beg kuning sekarang!",
+  "scenes": {},
+  "caption": null,
+  "hashtags": null,
+  "bgm_prompt": null,
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/clashe_denimskirt_frame1_front.jpg",
+    "keyframes/clashe_denimskirt_frame2_side.jpg",
+    "keyframes/clashe_denimskirt_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/clashe_denimskirt_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/clashe_denimskirt_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/clashe_denimskirt_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "brand": "CLASHE",
+    "category": "Pakaian & Fesyen Wanita / Skirt Denim & Jeans",
+    "hook_score": 100,
+    "hook_issues": [],
+    "hook_status": "pass",
+    "hook_archetype": "The Flattering Silhouette / Visual Insecurity Solution",
+    "product_prefix": "clashe_denimskirt",
+    "keyframe_provider": "Antigravity Native generate_image",
+    "supabase_id": "0dd43189-c0fe-4a74-943e-209d1b651062",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-09-30T23:35:05.946625+00:00"
+}

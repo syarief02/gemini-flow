@@ -1,0 +1,31 @@
+{
+  "prefix": "zeke_kurta",
+  "created_at": "2026-09-11T17:41:21.158735+00:00",
+  "product_name": "ZEKE D0049 Lelaki Kurta V Neck Hitam Lengan Pendek Kasual Baju",
+  "opening_line": "Lelaki selalu mengadu susah nak cari baju yang nampak kemas macam kurta tapi pada masa yang sama tak rasa panas atau terlalu formal. Nah, bila sarung kurta moden potongan santai daripada ZEKE ni, terus faham kenapa ramai suka.",
+  "closing_line": "Dari solat Jumaat sampai ke sesi lepak minum petang, baju ni memang senang nak bawa ke mana-mana. Siapa yang nak hadiahkan untuk diri sendiri atau orang tersayang, cepat-cepat tekan beg kuning untuk pilih saiz korang.",
+  "scenes": {
+    "scene_1_intro": "A smooth front-facing medium shot with a subtle slow zoom-in on a handsome Malaysian Malay man in his late 20s. He is wearing the ZEKE D0049 jet black casual kurta top with short half sleeves and a clean notched V-neckline slit collar, paired with light blue denim jeans and white sneakers. He stands in a brightly lit modern Kuala Lumpur cafe patio with lush green plants in the background. He smiles warmly and speaks naturally with relaxed shoulders and confident, friendly eye contact. For the audio, generate a highly realistic male voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent—strictly NOT an Indonesian accent. Explicitly translate the following English text into standard Malaysian Malay for the spoken audio: \"Lelaki selalu mengadu susah nak cari baju yang nampak kemas macam kurta tapi pada masa yang sama tak rasa panas atau terlalu formal. Nah, bila sarung kurta moden potongan santai daripada ZEKE ni, terus faham kenapa ramai suka.\" Ensure there are no text overlays or watermarks.",
+    "scene_3_outro": "An over-the-shoulder angle medium shot capturing the clean back silhouette, comfortable shoulder cut, and smooth drape of the black kurta top under soft natural daylight. The Malaysian Malay man turns his head back towards the camera with a poised, friendly smile. His arms rest naturally at his sides or loosely in pockets—strictly no waving and no raised hands. For the audio, generate a highly realistic male voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent—strictly NOT an Indonesian accent. Explicitly translate the following English text into standard Malaysian Malay for the spoken audio: \"Dari solat Jumaat sampai ke sesi lepak minum petang, baju ni memang senang nak bawa ke mana-mana. Siapa yang nak hadiahkan untuk diri sendiri atau orang tersayang, cepat-cepat tekan beg kuning untuk pilih saiz korang.\" Ensure there are no text overlays or watermarks.",
+    "scene_2_detail": "A graceful 3/4 side profile medium shot with a slow cinematic camera pan showcasing the clean side drape, smooth structured fabric, and relaxed elbow-length half sleeves of the ZEKE D0049 jet black casual kurta top. The Malaysian Malay man places one hand casually in his denim pocket and adjusts his stance with natural confidence, demonstrating the effortless breathability and non-restrictive cut. For the audio, generate a highly realistic male voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent—strictly NOT an Indonesian accent. Explicitly translate the following English text into standard Malaysian Malay for the spoken audio: \"Kolar belah V-neck tanpa butang ni memang bagi efek leher nampak jenjang dan tak menjerut langsung. Fabrik dia jenis berstruktur tapi beralun lembut, tambah pula lengan paras siku ni buat kita rasa bebas nak bergerak sepanjang hari.\" Ensure there are no text overlays or watermarks."
+  },
+  "caption": "Susah kan nak cari baju harian lelaki yang cukup kemas untuk urusan rasmi tapi tetap rasa santai bila lepak kedai kopi? ☕\n\nBaju Kurta Moden V-Neck ZEKE D0049 ni memang gabungan sempurna antara gaya tradisional dan kasual kontemporari. Rekaan kolar belah V-neck tanpa butang memberikan ilusi leher lebih kemas, manakala lengan paras siku memastikan pengudaraan yang selesa dalam cuaca panas Malaysia.\n\nKelebihan kurta moden ZEKE yang wajib korang tahu:\n✨ Rekaan V-neck kemas: Potongan belah moden tanpa butang yang selesa dan tidak menjerut\n✨ Lengan separuh paras siku: Gaya kasual santai yang kemas untuk aktiviti harian\n✨ Fabrik sejuk & berstruktur: Lembut pada kulit, tidak melekat, dan tahan kedut\n✨ Potongan loose fit: Selesa dipakai untuk pelbagai bentuk badan dari saiz M hingga 2XL\n✨ Sangat versatil: Sesuai dipadankan dengan seluar jeans, chinos, atau seluar slack\n\nSesuai digayakan untuk solat Jumaat, ke tempat kerja kasual, mahupun keluar bersiar-siar hujung minggu. 👕\n\nJom upgrade penampilan harian korang atau hadiahkan untuk pasangan, semak saiz dan pilihan warna dekat beg kuning sekarang! 👇💛\n\n#KurtaLelaki #KurtaModen #OOTDLelakiMY #MenswearMalaysia #BajuKasualLelaki",
+  "hashtags": "#KurtaLelaki #KurtaModen #OOTDLelakiMY #MenswearMalaysia #BajuKasualLelaki",
+  "bgm_prompt": "Modern urban chillout acoustic lo-fi groove, fingerpicked acoustic guitar, subtle warm electric piano chords, crisp tight rim-shot beat, smooth deep bassline, 112 BPM, relaxed stylish menswear lifestyle vibe, balanced studio mix, pure instrumental, strictly no vocals",
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/zeke_kurta_frame1_front.jpg",
+    "keyframes/zeke_kurta_frame2_side.jpg",
+    "keyframes/zeke_kurta_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/zeke_kurta_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/zeke_kurta_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/zeke_kurta_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "supabase_id": "9c1b79ff-f1af-4c57-aef1-14bc60f43d91",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-09-11T17:41:21.158735+00:00"
+}

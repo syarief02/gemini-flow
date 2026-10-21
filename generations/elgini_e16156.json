@@ -1,0 +1,50 @@
+{
+  "prefix": "elgini_e16156",
+  "created_at": "2026-09-27T04:37:43.092622+00:00",
+  "product_name": "ELGINI E16156 Jaket Windbreaker Kalis Air Hud Ribbed Cuff 100% Polyester",
+  "opening_line": "Korang perasan tak, kebanyakan jaket windbreaker bila kita pakai cuaca panas sikit terus rasa berkuap macam dalam sauna? Tapi dengan jaket bertudung Elgini kod E satu enam satu lima enam ni, material poliester kalis air dia ringan, tahan tiupan angin sejuk, dan rasa sangat beralun selesa!",
+  "closing_line": "Potongan unisex ni memang kemas dipakai untuk aktiviti luar mahupun gaya santai harian dari saiz S sampai dua XL. Kalau korang nak lindungi diri dari hujan renyai dan angin sejuk dengan gaya sporty yang padu, klik beg kuning sekarang sebelum stok kehabisan!",
+  "scenes": {
+    "scene_1": {
+      "camera": "Front-facing medium shot with subtle slow zoom-in",
+      "visual": "Malaysian Muslim woman wearing a neat matching beige chiffon hijab and a deep plum hooded windbreaker jacket with vertical chest zip pocket, paired with black trousers. Empty hands resting naturally at her sides.",
+      "dialogue_en": "Have you ever noticed how most windbreakers feel stuffy like a sauna in our warm weather? But with this Elgini hooded windbreaker jacket code E16156, the water-resistant polyester fabric stays lightweight, shields against chilly breeze, and feels so surprisingly breathable!",
+      "dialogue_ms": "Korang perasan tak, kebanyakan jaket windbreaker bila kita pakai cuaca panas sikit terus rasa berkuap macam dalam sauna? Tapi dengan jaket bertudung Elgini kod E satu enam satu lima enam ni, material poliester kalis air dia ringan, tahan tiupan angin sejuk, dan rasa sangat beralun selesa!"
+    },
+    "scene_2": {
+      "camera": "Smooth 3/4 side profile camera tracking",
+      "visual": "Clean silhouette, water-resistant polyester texture, functional hood resting neatly on shoulders, ribbed elastic cuff at wrists, and sleek vertical chest pocket of the deep plum windbreaker.",
+      "dialogue_en": "Look at the functional details: the ribbed elastic cuffs keep cold wind out, and the vertical zippered chest pocket keeps your essentials completely secure during workouts or unpredictable drizzle.",
+      "dialogue_ms": "Tengok perincian praktikal dia: pergelangan tangan ada getah ribbed cuff kemas supaya angin tak masuk, ditambah pula poket dada berzip menegak yang selamat untuk simpan kunci atau telefon waktu hujan renyai."
+    },
+    "scene_3": {
+      "camera": "Over-the-shoulder glance",
+      "visual": "Woman turns back towards the camera with a confident, warm smile. Both arms rest naturally low at sides with completely empty hands (no bags, no props, no waving).",
+      "dialogue_en": "This sporty unisex cut fits effortlessly for workouts, daily rides, or casual cafe outings from size S to XXL. If you want versatile weather protection in effortless style, tap the yellow basket now before stocks run out!",
+      "dialogue_ms": "Potongan unisex ni memang kemas dipakai untuk aktiviti luar mahupun gaya santai harian dari saiz S sampai dua XL. Kalau korang nak lindungi diri dari hujan renyai dan angin sejuk dengan gaya sporty yang padu, klik beg kuning sekarang sebelum stok kehabisan!"
+    }
+  },
+  "caption": "Korang cari jaket yang kalis percikan air tapi tak panas berkuap? 🌧️✨\n\nJaket windbreaker bertudung ELGINI E16156 ni memang pilihan serbaguna untuk cuaca Malaysia yang tak menentu. Diperbuat daripada fabrik 100% poliester kalis air yang ringan, rekaan berhud dengan ribbed cuff bergetah kemas di pergelangan tangan bantu halang angin sejuk dan titisan hujan renyai.\n\nKelebihan ELGINI E16156 ni yang buat saya suka:\n✨ Fabrik 100% poliester kalis percikan air dan tahan tiupan angin\n✨ Dilengkapi hud praktikal untuk perlindungan kepala ekstra\n✨ Pergelangan tangan ribbed cuff bergetah kemas dan selesa\n✨ Poket dada berzip menegak selamat untuk simpan barangan penting\n✨ Potongan unisex kasual sporty sesuai dari saiz S hingga 2XL\n\nSesuai digayakan untuk joging, berbasikal, ulang-alik kerja, atau sekadar santai lepak kafe. Padankan dengan seluar kasual dan kasut sukan untuk gaya aktif yang sentiasa kemas! 👟🧢\n\nNak dapatkan jaket windbreaker kalis air serbaguna ni, terus semak saiz korang dekat beg kuning sekarang! 👇💛\n\n#JaketWindbreaker #JaketKalisAir #ElginiMalaysia #SportyOutfitMY #OOTDMalaysia #GayaKasual",
+  "hashtags": "#JaketWindbreaker #JaketKalisAir #ElginiMalaysia #SportyOutfitMY #OOTDMalaysia #GayaKasual",
+  "bgm_prompt": "Genre: Upbeat lo-fi indie groove pop with modern acoustic pulse. Instrumentation: Crisp acoustic guitar strumming, punchy lo-fi snare and subtle kick, mellow Rhodes electric piano chords, warm analog bassline, airy ambient synth textures. Mood: Fresh, confident, energetic yet relaxed, fashionable urban lifestyle aesthetic. Tempo: 112 BPM, smooth rhythmic momentum suitable for short-form fashion video pacing. Production: Pure instrumental, strictly no vocals, clean stereo separation, balanced warm acoustic mastering, seamless loopable progression.",
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/elgini_e16156_frame1_front.jpg",
+    "keyframes/elgini_e16156_frame2_side.jpg",
+    "keyframes/elgini_e16156_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/elgini_e16156_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/elgini_e16156_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/elgini_e16156_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "hook_score": 100,
+    "hook_issues": [],
+    "hook_status": "pass",
+    "hook_archetype": "The Unspoken Daily Dilemma (Tropical Climate / Comfort)",
+    "supabase_id": "f5c2e749-036b-4d5f-93ee-c93791c49975",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-09-27T04:37:43.092622+00:00"
+}

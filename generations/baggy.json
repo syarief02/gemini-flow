@@ -1,0 +1,28 @@
+{
+  "prefix": "baggy",
+  "created_at": "2026-08-31T16:33:26.461231+00:00",
+  "product_name": "360 Outfit Baggy Sweatpants (Refreshed Hybrid)",
+  "opening_line": "Seluar macam ni yang saya paling suka sarung waktu hujung minggu atau nak pergi kelas santai.",
+  "closing_line": "Siapa yang nak cari seluar santai tapi terletak elok, korang tengok je beg kuning untuk tengok pilihan warna.",
+  "scenes": {},
+  "caption": null,
+  "hashtags": null,
+  "bgm_prompt": null,
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/baggy_frame1_front.jpg",
+    "keyframes/baggy_frame2_side.jpg",
+    "keyframes/baggy_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/baggy_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/baggy_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/baggy_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "source": "backfill_history",
+    "supabase_id": "bbfcb9bf-c277-425e-902b-be352c939e83",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-08-31T16:33:26.461231+00:00"
+}

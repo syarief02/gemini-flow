@@ -1,0 +1,27 @@
+{
+  "prefix": "pleated_vneck_blouse",
+  "created_at": "2026-09-17T15:09:52.576401+00:00",
+  "product_name": "Pleated V Neck Long Sleeve Shirt Blouse Cantik Anti Kedut Kain Ironless",
+  "opening_line": "Korang yang hari-hari kerja pejabat mesti faham rasa rimas bila pakai kemeja keras yang baru duduk sekejap je dah berkedut seribu kan? Sejak saya jumpa blouse pleated kolar V ni, memang rasa macam dapat nafas baru sebab kemas macam baju formal tapi rasa lembut macam t-shirt harian.",
+  "closing_line": "Nak selit kemas dalam seluar slack untuk masuk meeting boleh, nak lepas luar santai dengan seluar putih macam ni pun nampak mahal. Siapa yang nak jimatkan masa bersiap setiap pagi dengan blouse anti-kedut ni, jom dapatkan terus dekat beg kuning sebelum pilihan warna sold out.",
+  "scenes": {},
+  "caption": null,
+  "hashtags": null,
+  "bgm_prompt": null,
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/pleated_vneck_blouse_frame1_front.jpg",
+    "keyframes/pleated_vneck_blouse_frame2_side.jpg",
+    "keyframes/pleated_vneck_blouse_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/pleated_vneck_blouse_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/pleated_vneck_blouse_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/pleated_vneck_blouse_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "supabase_id": "c15c40b1-137e-4f0d-a9a9-10e9bac2f747",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-09-17T15:09:52.576401+00:00"
+}

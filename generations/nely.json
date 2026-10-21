@@ -1,0 +1,28 @@
+{
+  "prefix": "nely",
+  "created_at": "2026-08-28T12:00:00+00:00",
+  "product_name": "Nely Set Pants",
+  "opening_line": "Hari ni saya nak share satu set yang sangat senang nak pakai...",
+  "closing_line": "Korang boleh tekan beg kuning kalau nak survey saiz yang tinggal.",
+  "scenes": {},
+  "caption": null,
+  "hashtags": null,
+  "bgm_prompt": null,
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/nely_frame1_front.jpg",
+    "keyframes/nely_frame2_side.jpg",
+    "keyframes/nely_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/nely_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/nely_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/nely_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "source": "backfill_history",
+    "supabase_id": "b5a0184a-68aa-4abe-bc27-473473001e9b",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-08-28T12:00:00+00:00"
+}

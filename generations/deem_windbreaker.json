@@ -1,0 +1,27 @@
+{
+  "prefix": "deem_windbreaker",
+  "created_at": "2026-09-18T12:54:11.62014+00:00",
+  "product_name": "DEEM Perempuan Lengan Panjang Jackets Hooded Waterproof Reflective Windbreaker",
+  "opening_line": "Musim cuaca tak menentu dekat Malaysia sekarang ni, tengah hari panas terik tiba-tiba petang terus hujan lebat kan? Sejak saya ada jaket windbreaker kalis air daripada DEEM ni, memang sentiasa jadi penyelamat harian saya sebab material dia kalis air, ringan gila dan warna pastel dia nampak aesthetic bila sarung.",
+  "closing_line": "Paling bijak, tengok bahagian belakang baju ni ada garisan reflektif berkembar dengan logo DEEM yang akan pantulkan cahaya bila disuluh lampu kereta waktu malam untuk keselamatan korang. Siapa yang nak jaket kalis air bergaya dan praktikal macam ni, boleh terus tekan beg kuning di bawah untuk lock saiz korang sekarang.",
+  "scenes": {},
+  "caption": null,
+  "hashtags": null,
+  "bgm_prompt": null,
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/deem_windbreaker_frame1_front.jpg",
+    "keyframes/deem_windbreaker_frame2_side.jpg",
+    "keyframes/deem_windbreaker_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/deem_windbreaker_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/deem_windbreaker_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/deem_windbreaker_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "supabase_id": "2dc43719-bee8-4763-a607-f38aef250bb7",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-09-18T12:54:11.62014+00:00"
+}

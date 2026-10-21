@@ -1,0 +1,52 @@
+{
+  "prefix": "elgini_e16158",
+  "created_at": "2026-09-27T05:03:39.861521+00:00",
+  "product_name": "ELGINI E16158 Jaket Windbreaker Kalis Air Hud Unisex S-XXL",
+  "opening_line": "Siapa cakap jaket kalis air mesti nampak boyish dan warna gelap je? Tengok jaket windbreaker Elgini kod E satu enam satu lima lapan ni, kalis percikan air tapi tona pastel lilac dia terus buat OOTD nampak comel dan sporty chic!",
+  "closing_line": "Ada saiz dari S sampai dua XL yang sesuai digayakan santai waktu siang mahupun beriadah waktu petang. Kalau korang nak tampil bergaya aktif dengan warna pastel yang comel ni, pastikan korang kunci beg kuning hari ni juga!",
+  "scenes": {
+    "scene_1": {
+      "camera": "Front-facing medium shot with subtle slow zoom-in",
+      "visual": "Malaysian Muslim woman wearing a neat matching light cream chiffon hijab and a stylish pastel lilac hooded windbreaker jacket with vertical chest zip pocket, paired with straight black trousers. Empty hands resting naturally low at her sides.",
+      "dialogue_en": "We often see windbreakers in dark, bulky cuts that feel overly masculine, right? When I found this Elgini hooded windbreaker jacket code E16158 in pastel lilac, I immediately fell in love because the soft tone instantly gives an adorable, sporty chic vibe!",
+      "dialogue_ms": "Selalu sangat kita tengok jaket windbreaker warna gelap dan rekaan petak yang nampak maskulin kan? Bila saya terjumpa jaket bertudung Elgini kod E satu enam satu lima lapan warna pastel lilac ni, terus jatuh hati sebab tona lembut dia auto bagi vibe sporty chic yang manis gila!"
+    },
+    "scene_2": {
+      "camera": "Smooth 3/4 side profile camera tracking",
+      "visual": "Clean silhouette, lightweight water-resistant polyester texture, functional hood resting neatly behind the neck with white contrast drawstrings, and sleek vertical chest zip pocket of the pastel lilac windbreaker.",
+      "dialogue_en": "Beyond the sweet aesthetic, it features lightweight water-resistant polyester, an attached hood with adjustable drawstrings, and reflective accents that give you both style and security for outdoor workouts.",
+      "dialogue_ms": "Bukan sekadar rupa estetik manis, material poliester dia kalis percikan air dan sangat ringan, ada hud bertali jerut yang kemas, serta perincian reflektif keselamatan bila korang joging waktu petang."
+    },
+    "scene_3": {
+      "camera": "Over-the-shoulder glance",
+      "visual": "Woman turns back towards the camera with a confident, warm smile. Both arms rest naturally low at sides with completely empty hands (no bags, no props, no waving).",
+      "dialogue_en": "Available in sizes S to XXL, it is effortless to style whether for casual cafe dates or active outdoor sessions. If you want an active look with a charming pastel twist, secure yours from the yellow basket today!",
+      "dialogue_ms": "Ada saiz dari S sampai dua XL yang sesuai digayakan santai waktu siang mahupun beriadah waktu petang. Kalau korang nak tampil bergaya aktif dengan warna pastel yang comel ni, pastikan korang kunci beg kuning hari ni juga!"
+    }
+  },
+  "caption": "Ingat jaket windbreaker warna gelap dan gaya maskulin saja ke? 🌸✨\n\nJaket windbreaker bertudung ELGINI E16158 dalam tona pastel lilac ni memang ubah terus pandangan korang! Bukan setakat nampak manis dan sporty chic untuk OOTD kafe, material 100% poliester dia ringan, kalis percikan air, dan tahan tiupan angin untuk cuaca harian Malaysia.\n\nKelebihan ELGINI E16158 ni yang buat saya suka:\n✨ Tona pastel lilac yang manis dan moden untuk gaya streetwear sopan\n✨ Fabrik 100% poliester kalis percikan air yang ringan dan bernafas\n✨ Rekaan berhud dengan tali jerut kontras yang kemas dan boleh dilaras\n✨ Poket dada berzip menegak dan poket sisi yang praktikal\n✨ Perincian reflektif keselamatan untuk aktiviti joging atau riadah petang\n\nMudah dipadankan dengan seluar kasual hitam dan kasut sukan untuk gaya aktif yang santai. Sesuai untuk wanita mahupun lelaki dari saiz S hingga 2XL! 👟🥤\n\nNak dapatkan jaket windbreaker pastel lilac yang comel dan tahan lasak ni, tekan beg kuning dekat bawah sekarang! 👇💛\n\n#JaketWindbreaker #JaketPastel #ElginiMalaysia #MuslimahSporty #OOTDMalaysia #GayaKasual",
+  "hashtags": "#JaketWindbreaker #JaketPastel #ElginiMalaysia #MuslimahSporty #OOTDMalaysia #GayaKasual",
+  "bgm_prompt": "Genre: Breezy acoustic indie pop with cheerful lo-fi groove. Instrumentation: Clean acoustic guitar picking, mellow Fender Rhodes keys, crisp boom-bap lo-fi drums, warm electric bass, subtle dreamy synth pads. Mood: Uplifting, playful, refreshing, fashionable Malaysian lifestyle vibe. Tempo: 110 BPM, smooth rhythmic momentum matched for short-form fashion video pacing. Production: Pure instrumental, strictly no vocals, warm studio acoustic mix, loopable structure.",
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/elgini_e16158_frame1_front.jpg",
+    "keyframes/elgini_e16158_frame2_side.jpg",
+    "keyframes/elgini_e16158_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/elgini_e16158_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/elgini_e16158_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/elgini_e16158_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "hook_score": 100,
+    "hook_issues": [],
+    "hook_source": "Live web search ranked #1 of 4 candidates",
+    "hook_status": "pass",
+    "hook_archetype": "The Stereotype-Buster / Pain-Point Contrast",
+    "hook_ranking_method": "live_search_then_rank",
+    "supabase_id": "4a7f5f2a-8242-4371-89e9-8696b3c27e95",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-09-27T05:03:39.861521+00:00"
+}

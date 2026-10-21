@@ -1,0 +1,34 @@
+{
+  "prefix": "motion_cargopants",
+  "created_at": "2026-09-29T16:54:12.580712+00:00",
+  "product_name": "Motion Wide-Leg Cargo Pants Loose Fit Contrast Stitch & Reflective Lines",
+  "opening_line": "Jangan beli seluar cargo atau tracksuit biasa selagi korang belum tengok cutting wide-leg Motion ni! Tengok garisan piping reflective melengkung dekat bahagian peha ni, bukan je bagi vibe streetwear aesthetic yang mahal gila, tapi automatik buat ilusi kaki kita nampak lebih jenjang dan pinggul auto nampak kemas!",
+  "closing_line": "Sesuai sangat untuk korang pakai pergi kelas, lepak santai hujung minggu, hiking, atau jogging petang sebab potongan unisex dia memang terletak kemas untuk semua saiz badan. Kalau korang nak seluar tracksuit streetwear yang selesa dan bergaya padu macam ni, jom amankan warna idaman korang dekat beg kuning sekarang!",
+  "scenes": {},
+  "caption": null,
+  "hashtags": null,
+  "bgm_prompt": null,
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/motion_cargopants_frame1_front.jpg",
+    "keyframes/motion_cargopants_frame2_side.jpg",
+    "keyframes/motion_cargopants_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/motion_cargopants_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/motion_cargopants_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/motion_cargopants_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "category": "Pakaian & Fesyen / Seluar Kasual & Sukan",
+    "hook_score": 100,
+    "hook_issues": [],
+    "hook_status": "pass",
+    "hook_archetype": "The Flattering Silhouette / Visual Insecurity Solution",
+    "product_prefix": "motion_cargopants",
+    "keyframe_provider": "Antigravity Native generate_image",
+    "supabase_id": "2e15c294-ba67-4b4c-9187-ab5ce15c526e",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-09-29T16:54:12.580712+00:00"
+}

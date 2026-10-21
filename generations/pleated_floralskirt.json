@@ -1,0 +1,35 @@
+{
+  "prefix": "pleated_floralskirt",
+  "created_at": "2026-09-29T17:54:40.323033+00:00",
+  "product_name": "Super Flowy Pleated Floral / Batik Printing Long Skirt (Fit Up To 100KG)",
+  "opening_line": "Ramai orang ingat kain pleated corak batik macam ni buat badan nampak mengembang dan punggung nampak lebar kan? Sebenarnya bila saya sarung skirt floral batik pleated ni, lipatan halus dia auto jatuh beralun lurus ke bawah, pinggang bergetah muat sampai seratus kilo, dan terus nampak ramping macam model!",
+  "closing_line": "Sesuai sangat untuk korang gayakan pergi pejabat, kenduri kahwin, majlis rasmi, atau lepak santai dekat kafe sebab senang gila nak padan dengan apa-apa warna baju. Kalau korang nak skirt pleated batik yang super flowy dan selesa ni sebelum corak kegemaran korang sold out, tekan beg kuning sekarang untuk pilih kod corak korang!",
+  "scenes": {},
+  "caption": null,
+  "hashtags": null,
+  "bgm_prompt": null,
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/pleated_floralskirt_frame1_front.jpg",
+    "keyframes/pleated_floralskirt_frame2_side.jpg",
+    "keyframes/pleated_floralskirt_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/pleated_floralskirt_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/pleated_floralskirt_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/pleated_floralskirt_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "brand": "LOVE & LIKE",
+    "category": "Pakaian & Fesyen Wanita / Skirt Moden",
+    "hook_score": 100,
+    "hook_issues": [],
+    "hook_status": "pass",
+    "hook_archetype": "The Flattering Silhouette / Visual Insecurity Solution",
+    "product_prefix": "pleated_floralskirt",
+    "keyframe_provider": "Antigravity Native generate_image",
+    "supabase_id": "5c1090c2-6fc2-43d1-a515-86dea2585f1e",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-09-29T17:54:40.323033+00:00"
+}

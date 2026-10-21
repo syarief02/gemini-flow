@@ -1,0 +1,35 @@
+{
+  "prefix": "bgm_lyra_blouse",
+  "created_at": "2026-10-07T15:16:33.985153+00:00",
+  "product_name": "BGM LYRA DOUBLE STRIPED BLOUSE WITH LOGO FULL BUTTON",
+  "opening_line": "Dengan cuaca Malaysia yang panas terik ni, penat betul bila terpaksa sarung blazer tebal semata-mata nak nampak kemas pergi kerja. Tengok kemeja jalur berkembar BGM Lyra rona charcoal ni, material dia sejuk beralun, corak pinstripe berganda ni terus bagi gaya korang auto nampak macam executive santai tanpa rasa berpeluh!",
+  "closing_line": "Sesuai sangat untuk korang yang nak tampil bergaya smart executive tanpa perlu berbelanja mahal untuk pakaian formal. Jom klik beg kuning bawah untuk pilih warna kegemaran korang sebelum kehabisan stok!",
+  "scenes": {
+    "scene_1": "Scene 1 Front View Prompt",
+    "scene_2": "Scene 2 3/4 Side Profile Prompt",
+    "scene_3": "Scene 3 Over-the-Shoulder Prompt"
+  },
+  "caption": "Full caption text",
+  "hashtags": "#BGMBlouse #KemejaWanita #BajuKerjaMuslimah #OOTDOfficeMY #SmartCasualWanita",
+  "bgm_prompt": "Upbeat modern acoustic groove...",
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/bgm_lyra_blouse_frame1_front.jpg",
+    "keyframes/bgm_lyra_blouse_frame2_side.jpg",
+    "keyframes/bgm_lyra_blouse_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/bgm_lyra_blouse_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/bgm_lyra_blouse_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/bgm_lyra_blouse_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "hook_score": 100,
+    "hook_issues": [],
+    "hook_status": "pass",
+    "hook_archetype": "The Unspoken Daily Dilemma (Tropical Climate / Comfort)",
+    "supabase_id": "ff1d0cad-3783-49d4-a141-2515e1f1bcc8",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-10-07T15:16:33.985153+00:00"
+}

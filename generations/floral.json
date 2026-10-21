@@ -1,0 +1,28 @@
+{
+  "prefix": "floral",
+  "created_at": "2026-08-31T15:48:00+00:00",
+  "product_name": "Vintage Floral Chiffon Blouse",
+  "opening_line": "Hari ni saya nak share satu blaus corak bunga vintaj yang sangat manis...",
+  "closing_line": "Korang boleh tekan beg kuning kalau nak survey saiz dan corak yang masih ada.",
+  "scenes": {},
+  "caption": null,
+  "hashtags": null,
+  "bgm_prompt": null,
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/floral_frame1_front.jpg",
+    "keyframes/floral_frame2_side.jpg",
+    "keyframes/floral_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/floral_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/floral_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/floral_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "source": "backfill_history",
+    "supabase_id": "a385279e-dc4a-4d98-ab26-a8d494a09d82",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-08-31T15:48:00+00:00"
+}

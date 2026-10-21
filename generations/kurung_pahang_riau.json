@@ -1,0 +1,37 @@
+{
+  "prefix": "kurung_pahang_riau",
+  "created_at": "2026-10-09T14:11:04.121034+00:00",
+  "product_name": "KURUNG PAHANG RIAU IBU & ANAK PREMIUM COTTON LINEN",
+  "opening_line": "Korang pernah tak pergi kenduri tengah panas terik sampai baju kurung melekap basah dekat badan sebab kain panas berkuap? Tengok Kurung Pahang Riau material premium cotton linen rona dusty anggun ni, fabrik dia sejuk bernafas gila dan potongan pesak kembang beralun ni auto sorok pinggul tanpa nampak menggelebeh!",
+  "closing_line": "Ada empat belas pilihan warna memukau dari saiz S sampai tujuh XL untuk ibu, memang senang sangat nak cari padanan sedondon. Jom tekan beg kuning dekat bawah sekarang untuk dapatkan warna idaman korang sebelum promosi tamat!",
+  "scenes": {
+    "scene_1": "Scene 1 Front View Prompt",
+    "scene_2": "Scene 2 3/4 Side Profile Prompt",
+    "scene_3": "Scene 3 Over-the-Shoulder Prompt"
+  },
+  "caption": "Full caption text",
+  "hashtags": "#KurungPahangRiau #KurungIbuAnak #BajuSedondonRaya #BajuKurungCotton #MuslimahFashionMY",
+  "bgm_prompt": "Traditional Nusantara acoustic strings...",
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/kurung_pahang_riau_frame1_front.jpg",
+    "keyframes/kurung_pahang_riau_frame2_side.jpg",
+    "keyframes/kurung_pahang_riau_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/kurung_pahang_riau_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/kurung_pahang_riau_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/kurung_pahang_riau_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "hook_score": 100,
+    "hook_issues": [],
+    "hook_status": "pass",
+    "video_mp4_cdn": "https://blqsgijvdvzwnqeltoje.supabase.co/storage/v1/object/public/gemini-flow-keyframes/videos/kurung_pahang_riau_motion_30s.mp4",
+    "hook_archetype": "The Unspoken Daily Dilemma (Tropical Climate / Comfort)",
+    "video_local_path": "c:\\Users\\User\\OneDrive\\Desktop\\gemini flow\\kurung_pahang_riau_motion_30s.mp4",
+    "supabase_id": "49adccf6-a0f4-4aad-a512-d536b2d62169",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-10-09T14:11:04.121034+00:00"
+}

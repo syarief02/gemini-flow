@@ -1,0 +1,30 @@
+{
+  "prefix": "nara_batwing",
+  "created_at": "2026-09-16T20:25:32.512032+00:00",
+  "product_name": "MS111 MODA STORE NARA BATWING NAOMI Baggy STRIPED TOP",
+  "opening_line": "Pagi-pagi bila nak cepat bersiap, benda paling malas nak hadap mestilah bab kena berdiri lama menggosok baju kan? Sebab tu saya rasa blouse batwing berjalur NARA daripada Moda Store ni memang penyelamat sejati, jenis material cotton rib yang terus sarung tanpa perlu seterika langsung.",
+  "closing_line": "Padankan je dengan seluar straight-cut atau palazzo, terus nampak kemas gaya minimalis ala wanita Korea. Korang yang nak jimat masa bersiap setiap hari, cepat-cepat check out dekat beg kuning sementara kod warna kegemaran korang masih ada stok.",
+  "scenes": {},
+  "caption": null,
+  "hashtags": null,
+  "bgm_prompt": null,
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/nara_batwing_frame1_front.jpg",
+    "keyframes/nara_batwing_frame2_side.jpg",
+    "keyframes/nara_batwing_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/nara_batwing_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/nara_batwing_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/nara_batwing_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "brand": "MODA STORE",
+    "model": "NARA BATWING MS111",
+    "fabric": "Cotton Rib Ironless",
+    "supabase_id": "bfc52bc9-3e01-4114-b419-e44fd9ec78cc",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-09-16T20:25:32.512032+00:00"
+}

@@ -1,0 +1,28 @@
+{
+  "prefix": "quilted",
+  "created_at": "2026-09-02T12:15:01.832516+00:00",
+  "product_name": "Kot Trench Wanita Berlapis Quilted Fleece Tebal",
+  "opening_line": "Susah nak cari baju sejuk yang betul-betul hangat tapi badan langsung tak nampak mengembang atau kaku.",
+  "closing_line": "Ada saiz sampai lima XL, siapa yang tengah rancang nak pergi travel boleh terus semak saiz dekat beg kuning.",
+  "scenes": {},
+  "caption": null,
+  "hashtags": null,
+  "bgm_prompt": null,
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/quilted_frame1_front.jpg",
+    "keyframes/quilted_frame2_side.jpg",
+    "keyframes/quilted_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/quilted_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/quilted_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/quilted_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "source": "backfill_history",
+    "supabase_id": "173344e6-35ab-4c70-a347-6517c53cb942",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-09-02T12:15:01.832516+00:00"
+}

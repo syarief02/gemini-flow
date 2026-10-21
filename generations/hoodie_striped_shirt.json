@@ -1,0 +1,31 @@
+{
+  "prefix": "hoodie_striped_shirt",
+  "created_at": "2026-09-12T07:42:32.925623+00:00",
+  "product_name": "ELGINI E16277 Women's Quick-Dry Training Shirt features a lightweight, high-performance breathable fabric designed for comfort during active routines or casual daily wear, offered in sizes S-XXL.",
+  "opening_line": "A medium close-up of a Malaysian female creator in a modern ELGINI quick-dry training shirt, standing in a brightly lit",
+  "closing_line": "An over-the-shoulder shot of the creator turning her head back with a pleasant, polite smile, showing the clean back sil",
+  "scenes": {
+    "scene_1_intro": "A medium close-up of a Malaysian female creator in a modern ELGINI quick-dry training shirt, standing in a brightly lit modern living space. She maintains calm, friendly eye contact and smiles warmly. The camera slowly zooms in. Audio generation: A warm, natural Malaysian female voice saying, 'Korang perasan tak, bila kita bersukan atau buat aktiviti luar dekat Malaysia yang cuaca tak menentu ni, baju biasa cepat sangat lencun dengan peluh sampai rasa melekit? Sebab tu saya suka pakai baju latihan ELGINI ni, kain dia memang direka khas untuk serap peluh dengan cepat.' Ensure there are no text overlays or watermarks.",
+    "scene_3_outro": "An over-the-shoulder shot of the creator turning her head back with a pleasant, polite smile, showing the clean back silhouette of the activewear shirt. The background is softly blurred. Audio generation: A friendly, conversational Malaysian female voice saying, 'Sangat sesuai untuk korang yang aktif tapi nak maintain nampak kemas sepanjang hari. Kalau nak rasa sendiri kelembutan kain sporty ni, singgah kejap kat beg kuning untuk cari saiz S sampai XXL yang sesuai dengan korang.' Ensure there are no text overlays or watermarks.",
+    "scene_2_detail": "A close-up shot of the training shirt from a side angle, with a slow, smooth pan showing the neat stitching and lightweight texture of the fabric. The creator gently pulls the fabric slightly to show its elastic quality. Clean, professional lighting. Audio generation: A relaxed, friendly Malaysian female voice saying, 'Cuba tengok potongan dia dekat bahagian sisi ni, tak melekat dekat badan tapi tetap nampak kemas dan terletak. Fabrik dia jenis quick-dry yang sangat ringan, berangin, dan tak perlu risau pasal kedutan langsung.' Ensure there are no text overlays or watermarks."
+  },
+  "caption": "Rasa lemas bila bersukan sebab baju lambat kering dan melekit dekat kulit?\n\nMasalah tu selesai dengan ELGINI E16277 ni. Kain quick-dry dia memang sangat sejuk, ringan, dan cepat sangat serap peluh. Sesuai untuk gaya hidup aktif, malah cukup kemas untuk dipakai harian atau keluar bersiar-siar.\n\nPotongan dia selesa sangat untuk wanita muslimah, tak ketat dan tersedia sehingga saiz XXL. Jom pilih warna kegemaran korang di beg kuning sekarang!",
+  "hashtags": "",
+  "bgm_prompt": "Chill upbeat lo-fi house, warm synth pads, rhythmic acoustic percussion, clean organic bassline, 110 BPM, bright inspiring mood, perfect background for vlog, pure instrumental, no vocals, high-quality production.",
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/hoodie_striped_shirt_frame1_front.jpg",
+    "keyframes/hoodie_striped_shirt_frame2_side.jpg",
+    "keyframes/hoodie_striped_shirt_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/hoodie_striped_shirt_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/hoodie_striped_shirt_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/hoodie_striped_shirt_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "supabase_id": "82b97633-4c6c-4e2f-9144-f1a903770a40",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-09-12T07:42:32.925623+00:00"
+}

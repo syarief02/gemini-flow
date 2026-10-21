@@ -1,0 +1,46 @@
+{
+  "prefix": "geworth_motion_pants",
+  "created_at": "2026-10-05T14:12:01.04409+00:00",
+  "product_name": "Geworth Motion Cargo Pants Wide-Leg Street Fit Contrast Stitch Lines Reflective Strip Casual Pants",
+  "opening_line": "Selalu sangat terbeli seluar baggy yang buat kaki nampak pendek atau menggelebeh macam kain guni kan? Korang tengok seluar Geworth Motion Cargo ni, perincian garisan lengkung berona kontras dia auto bagi ilusi kaki nampak jenjang tinggi, dan potongan kaki lebar dia buat peha langsung tak nampak besar!",
+  "closing_line": "Sesuai sangat untuk korang yang suka gaya sporty minimalis tapi nak keselesaan maksimum sepanjang hari. Korang boleh tengok ukuran carta saiz dan grab seluar Geworth idaman korang dekat beg kuning bawah!",
+  "scenes": {
+    "scene_1": {
+      "visual": "A smooth front-facing medium camera shot with subtle slow zoom-in on an athletic, confident 24-year-old Malaysian Muslim woman standing in a sunlit modern minimalist concrete terrace courtyard in Kuala Lumpur. She is wearing a sleek matte black sports hijab tucked neatly into a fitted black long-sleeve performance activewear crewneck top, paired with black GEWORTH wide-leg motion pants featuring prominent white/silver curved contrast piping stitch lines arching over the upper thighs and running along the side seams, styled with clean white sneakers. Her arms rest naturally low at her sides with completely empty open hands, absolutely zero bags, zero tumblers, zero accessories. She makes warm eye contact with the camera and speaks with energetic, engaging facial animation.",
+      "spoken_malay": "Selalu sangat terbeli seluar baggy yang buat kaki nampak pendek atau menggelebeh macam kain guni kan? Korang tengok seluar Geworth Motion Cargo ni, perincian garisan lengkung berona kontras dia auto bagi ilusi kaki nampak jenjang tinggi, dan potongan kaki lebar dia buat peha langsung tak nampak besar!"
+    },
+    "scene_2": {
+      "visual": "A smooth three-quarter (3/4) side tracking camera shot gently panning around the same Malaysian Muslim woman in the sunlit urban courtyard. She wears the identical black sports hijab, fitted black activewear top, and black GEWORTH wide-leg motion pants. She turns slightly, showcasing the outer-leg curved contrast piping detail and clean wide-leg straight drape falling over her white sneakers. Her arms rest naturally low at her sides with completely empty open hands, zero bags, zero props. She smiles charismatically toward the camera while speaking with fluid confidence.",
+      "spoken_malay": "Paling syok, fabrik dia jenis ringan beralun dan sejuk, langsung tak rimas bila kita berjalan atau aktif bersukan. Tali pinggang dia boleh laras ikut keselesaan, ada poket sisi yang dalam, dan cutting street fit dia memang nampak kemas bergaya!"
+    },
+    "scene_3": {
+      "visual": "A smooth full-length camera shot starting from behind at an over-the-shoulder angle, showing the rear elastic waistband, clean back drape, and side curved contrast piping lines of the black GEWORTH wide-leg motion pants. The Malaysian Muslim woman gently turns her head back over her shoulder towards the camera with a warm inviting smile, her arms resting naturally low at her sides with completely empty open hands. Strictly no bags, no purse, no phone, no waving, and no raised hands. The crisp morning sunlight highlights the sleek athleisure silhouette.",
+      "spoken_malay": "Sesuai sangat untuk korang yang suka gaya sporty minimalis tapi nak keselesaan maksimum sepanjang hari. Korang boleh tengok ukuran carta saiz dan grab seluar Geworth idaman korang dekat beg kuning bawah!"
+    }
+  },
+  "caption": "Korang cari seluar baggy yang selesa tapi tak buat kaki nampak menggelebeh? 🖤✨\n\nSeluar Geworth Motion Cargo Pants potongan wide-leg ni memang padu! Perincian garisan kontras lengkung dia bukan sekadar hiasan, tapi bijak memberi ilusi optik kaki nampak lebih jenjang dan ramping. Potongan kaki lebar yang jatuh kemas ni buat pergerakan rasa bebas tanpa melekat pada peha mahupun pinggul.\n\nKelebihan seluar Geworth Motion Cargo ni yang buat saya suka:\n✨ Rekaan Garisan Kontras: Jalur putih lengkung dinamik yang memberi ilusi visual kaki lebih panjang\n✨ Potongan Wide-Leg Street Fit: Potongan longgar santai yang terletak kemas dan menutup aurat\n✨ Fabrik Ringan & Bernafas: Selesa dipakai waktu cuaca panas, cepat kering dan tidak melekit\n✨ Pinggang Bergetah Bertali: Dilengkapi tali laras corak dwi-warna untuk keselesaan saiz tersuai\n✨ Poket Sisi Praktikal: Poket sisi yang dalam untuk kemudahan menyimpan barangan peribadi\n\nSenang sangat nak suai padan dengan tshirt oversize, hoodie, atau baju sukan untuk gaya athleisure santai mahupun sesi senaman. 👟🔥\n\nKorang boleh tengok carta saiz dan grab seluar idaman korang dekat beg kuning bawah sekarang! 👇💛\n\n#SeluarCargoWanita #WideLegPantsMY #SeluarSukanMuslimah #StreetwearMuslimah #AthleisureMY",
+  "hashtags": "#SeluarCargoWanita #WideLegPantsMY #SeluarSukanMuslimah #StreetwearMuslimah #AthleisureMY",
+  "bgm_prompt": "Energetic urban chillhop, modern lo-fi trap groove, 115 BPM. Crisp punchy kick, snappy syncopated snare, muted sub-bass line, warm Rhodes chords, and subtle futuristic synth plucks. Confident, stylish, rhythmic, modern Malaysian street-athleisure lifestyle atmosphere. Pure instrumental, strictly no vocals, clean punchy mix, warm stereo mastering, seamless loop for short-form fashion video.",
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/geworth_motion_pants_frame1_front.jpg",
+    "keyframes/geworth_motion_pants_frame2_side.jpg",
+    "keyframes/geworth_motion_pants_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/geworth_motion_pants_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/geworth_motion_pants_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/geworth_motion_pants_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "url": "https://vt.tiktok.com/ZS9DaHTkkBkVQ-frUFU/",
+    "brand": "GEWORTH",
+    "hook_score": 100,
+    "hook_issues": [],
+    "hook_status": "pass",
+    "hook_archetype": "The Flattering Silhouette / Visual Insecurity Solution",
+    "supabase_id": "15a0bb05-3725-4d29-a15d-f1aabf27c64a",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-10-05T14:12:01.04409+00:00"
+}

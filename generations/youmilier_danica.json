@@ -1,0 +1,46 @@
+{
+  "prefix": "youmilier_danica",
+  "created_at": "2026-10-03T05:21:31.740452+00:00",
+  "product_name": "YOUMILIER DANICA SPORT CASUAL MODEST TOP PANT SET",
+  "opening_line": "Siapa cakap set sukan Muslimah mesti ketat melekat sampai nampak bentuk badan? Set Youmilier Danica ni potongan longgar, kain ribbed lembut bernafas, dan seluar kaki lebar dia jatuh beralun langsung tak melekat!",
+  "closing_line": "Satu set dah lengkap, tak payah pening fikir nak padan apa, sesuai untuk jogging santai pagi, jalan-jalan hujung minggu sampai travel jauh. Ada empat warna cantik, jadi klik beg kuning tu dan pilih warna kegemaran korang hari ni!",
+  "scenes": {
+    "scene_1": {
+      "prompt": "A smooth front-facing medium camera shot with subtle slow zoom-in on an aesthetic Malaysian Muslim woman in a modern sand-beige chiffon hijab, wearing the warm khaki fine vertical ribbed-knit 2-piece set with a sporty stand collar half-zip and flowy wide-leg pants. She has a relaxed natural smile and comfortable direct eye contact with the camera. Both arms rest naturally low at her sides with empty hands, standing in an aesthetic modern Kuala Lumpur outdoor cafe patio. For the audio, generate a highly realistic female voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent—strictly NOT an Indonesian accent. Explicitly translate the following English text into standard Malaysian Malay for the spoken audio: \"Who says a Muslimah sports casual set has to be tight and clingy to the body? This Youmilier Danica set has a modest loose silhouette, soft breathable ribbed knit fabric, and wide-leg flowy pants that drape elegantly without clinging at all!\" Ensure there are no text overlays or watermarks.",
+      "spoken_malay": "Siapa cakap set sukan Muslimah mesti ketat melekat sampai nampak bentuk badan? Set Youmilier Danica ni potongan longgar, kain ribbed lembut bernafas, dan seluar kaki lebar dia jatuh beralun langsung tak melekat!"
+    },
+    "scene_2": {
+      "prompt": "A graceful 3/4 side profile medium shot of the same Malaysian Muslim woman wearing the warm khaki ribbed 2-piece set. The camera pans smoothly to highlight the sleek silver half-zip stand collar with rectangular pull ring, neat angled yoke stitching, and the fluid modest drape of the relaxed top and wide-leg pants down to her minimalist white sneakers. Both arms rest naturally low at her sides with empty hands. For the audio, generate a highly realistic female voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent—strictly NOT an Indonesian accent. Explicitly translate the following English text into standard Malaysian Malay for the spoken audio: \"Look at this sporty half-zip collar with a modest tunic length, neat zipper, and comfortable neck fit. The ribbed fabric is cool and breezy, super comfortable for casual strolls or cafe hangouts without feeling stuffy!\" Ensure there are no text overlays or watermarks.",
+      "spoken_malay": "Tengok kolar half-zip sporty dengan potongan baju labuh ni, zip kemas dan leher terletak elok. Fabrik ribbed dia sejuk beralun, selesa sangat untuk jalan santai atau lepak kafe tanpa rasa berkuap!"
+    },
+    "scene_3": {
+      "prompt": "An elegant rear three-quarter full shot of the same Malaysian Muslim woman turning gracefully to glance over her shoulder back toward the camera with a radiant, confident smile. Both arms rest naturally low at her sides with completely empty hands, showing the clean back cut of the relaxed ribbed top and the unrestricted flow of the wide-leg pants against the lush green modern cafe patio. For the audio, generate a highly realistic female voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent—strictly NOT an Indonesian accent. Explicitly translate the following English text into standard Malaysian Malay for the spoken audio: \"One complete set is ready to go, no need to stress about matching tops and bottoms, perfect from morning jogs to weekend cafe outings and long-distance travel. There are four lovely colors available, so tap that yellow basket and pick your favorite shade today!\" Ensure there are no text overlays or watermarks.",
+      "spoken_malay": "Satu set dah lengkap, tak payah pening fikir nak padan apa, sesuai untuk jogging santai pagi, jalan-jalan hujung minggu sampai travel jauh. Ada empat warna cantik, jadi klik beg kuning tu dan pilih warna kegemaran korang hari ni!"
+    }
+  },
+  "caption": "Siapa cakap set sukan santai mesti ketat melekat sampai nampak bentuk badan? 🏃‍♀️✨\n\nBila nak keluar beriadah atau lepak santai, mesti kita nak pakaian yang selesa, berangin, tapi tetap menutup aurat dengan kemas. Set Youmilier Danica Sport Casual ni memang pilihan tepat sebab sarung satu set terus nampak kemas, berseri, dan bergaya tanpa perlu pening fikir padanan baju dengan seluar!\n\nKelebihan Youmilier Danica Sport Casual Set ni yang buat saya suka:\n✨ Kolar Half-Zip Sporty: Rekaan leher separa zip kemas, moden dan senang disarung bila-bila masa\n✨ Potongan Longgar Modest: Labuh baju bersahaja dan tak melekat langsung pada bentuk tubuh\n✨ Fabrik Ribbed Bernafas: Kain bertekstur halus, lembut pada kulit, dan tak panas walau cuaca terik\n✨ Seluar Kaki Lebar Beralun: Pinggang bergetah anjal selesa, langkah bebas tanpa rasa terbeban\n✨ Pilihan Warna Menawan: Sangat mudah disuai padan sama ada satu set mahupun diasingkan\n\nGaya santai moden: Padankan dengan kasut sneakers putih dan tudung bawal atau chiffon rona senada untuk aura sporty chic yang effortless! 👟🤍\n\nJom dapatkan set Youmilier Danica korang sekarang, tekan beg kuning di bawah untuk survey saiz dan warna pilihan sebelum kehabisan! 👇💛",
+  "hashtags": "#SetSukanMuslimah #CasualModestSet #YoumilierDanica #OOTDMuslimahMY #BajuSukanWanita #SportyChicMY",
+  "bgm_prompt": "Upbeat modern lo-fi acoustic groove, cheerful cafe pop tempo 112 BPM, fingerpicked clean acoustic guitar melody, warm Rhodes electric piano chords, smooth analog sub-bass, crisp light hip-hop percussion snare, breezy and optimistic atmosphere, stylish Malaysian daily life aesthetic, pure instrumental, strictly no vocals, studio mixed, seamless loop",
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/youmilier_danica_frame1_front.jpg",
+    "keyframes/youmilier_danica_frame2_side.jpg",
+    "keyframes/youmilier_danica_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/youmilier_danica_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/youmilier_danica_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/youmilier_danica_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "source": "gemini_flow_agent",
+    "hook_score": 100,
+    "hook_issues": [],
+    "hook_status": "pass",
+    "hook_archetype": "The Flattering Silhouette / Visual Insecurity Solution",
+    "product_category": "Women Clothing Sets",
+    "supabase_id": "5877f4df-6553-4e4d-9127-5d66a0daf7d3",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-10-03T05:21:31.740452+00:00"
+}

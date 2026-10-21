@@ -1,0 +1,28 @@
+{
+  "prefix": "omcore_yoga_zipup",
+  "created_at": "2026-09-08T17:00:45.536965+00:00",
+  "product_name": "OMCORE Lightweight Yoga Zip-Up Wanita",
+  "opening_line": "Susah betul nak cari jaket sukan yang tak tebal dan tak memerangkap peluh, tapi bila saya cuba jaket yoga OMCORE ni rasa macam tak pakai apa-apa sebab ringan sangat.",
+  "closing_line": "Potongan dia memang elok jatuh di pinggang dari saiz S sampai double XL, korang tengok warna yang korang berkenan dekat beg kuning sebelum kehabisan.",
+  "scenes": {},
+  "caption": null,
+  "hashtags": null,
+  "bgm_prompt": null,
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/omcore_yoga_zipup_frame1_front.jpg",
+    "keyframes/omcore_yoga_zipup_frame2_side.jpg",
+    "keyframes/omcore_yoga_zipup_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/omcore_yoga_zipup_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/omcore_yoga_zipup_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/omcore_yoga_zipup_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "source": "backfill_history",
+    "supabase_id": "73746bac-5d2a-4865-b879-a32290a59560",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-09-08T17:00:45.536965+00:00"
+}

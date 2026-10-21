@@ -1,0 +1,30 @@
+{
+  "prefix": "inner_mockneck",
+  "created_at": "2026-09-14T22:10:33.168166+00:00",
+  "product_name": "Mid-High Collar Inner Wear Muslimah Baju Inner Kolar Separuh Tinggi",
+  "opening_line": "Selalu tak korang rasa leceh bila nak pakai baju kolar luas atau blazer, sebab inner leher biasa senang terlondeh sampai nampak aurat? Bila saya cuba baju inner kolar separuh tinggi ni, terus rasa lega sebab potongan mock neck dia kemas tutup leher tanpa rasa tercekik langsung.",
+  "closing_line": "Sesuai sangat dijadikan wardrobe basic untuk korang lapiskan dengan cardigan atau gayakan kosong macam ni je. Korang yang nak pastikan leher sentiasa terlindung dengan selesa, jemput tekan beg kuning sekarang untuk borong warna-warna asas kegemaran korang.",
+  "scenes": {},
+  "caption": null,
+  "hashtags": null,
+  "bgm_prompt": null,
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/inner_mockneck_frame1_front.jpg",
+    "keyframes/inner_mockneck_frame2_side.jpg",
+    "keyframes/inner_mockneck_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/inner_mockneck_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/inner_mockneck_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/inner_mockneck_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "collar": "Mid-High Mock Neck",
+    "fabric": "Stretch Cotton Modal",
+    "category": "Muslimah Inner Wear",
+    "supabase_id": "a7a6204b-8ce3-4248-a232-2959e9b6d8f6",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-09-14T22:10:33.168166+00:00"
+}

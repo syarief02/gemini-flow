@@ -1,0 +1,28 @@
+{
+  "prefix": "bgm_polo_denim",
+  "created_at": "2026-09-07T08:04:32.111139+00:00",
+  "product_name": "BGM Polo Denim Blouse Butterfly Embroidery Full Button",
+  "opening_line": "Nak nampak kemas tanpa fikir lama, saya suka blouse denim ini sebab warna biru dia senang sangat dipadankan.",
+  "closing_line": "Kalau korang cari blouse yang terus nampak siap untuk keluar, tengok pilihan warna dan saiznya di beg kuning.",
+  "scenes": {},
+  "caption": null,
+  "hashtags": null,
+  "bgm_prompt": null,
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/bgm_polo_denim_frame1_front.jpg",
+    "keyframes/bgm_polo_denim_frame2_side.jpg",
+    "keyframes/bgm_polo_denim_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/bgm_polo_denim_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/bgm_polo_denim_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/bgm_polo_denim_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "source": "backfill_history",
+    "supabase_id": "c479a2f4-64c4-4fb6-9061-35ac450f3564",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-09-07T08:04:32.111139+00:00"
+}

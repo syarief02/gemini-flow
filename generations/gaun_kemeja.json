@@ -1,0 +1,28 @@
+{
+  "prefix": "gaun_kemeja",
+  "created_at": "2026-09-07T14:29:40.941089+00:00",
+  "product_name": "Gaun Kemeja Midi Elegan Cinched Waist Shirt Dress",
+  "opening_line": "Ramai yang ingat nak dapat old money look yang nampak classy macam ni kena berhabis beratus ringgit, padahal gaun kemeja berpinggang ramping ni buat gaya kita automatik nampak mahal.",
+  "closing_line": "Ada banyak pilihan warna menarik dari saiz XS sampai tiga XL, korang klik beg kuning sekarang untuk grab warna idaman korang hari ini.",
+  "scenes": {},
+  "caption": null,
+  "hashtags": null,
+  "bgm_prompt": null,
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/gaun_kemeja_frame1_front.jpg",
+    "keyframes/gaun_kemeja_frame2_side.jpg",
+    "keyframes/gaun_kemeja_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/gaun_kemeja_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/gaun_kemeja_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/gaun_kemeja_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "source": "backfill_history",
+    "supabase_id": "caa0f7db-6df9-469f-9f4c-a2347f0eada7",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-09-07T14:29:40.941089+00:00"
+}

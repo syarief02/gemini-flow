@@ -1,0 +1,27 @@
+{
+  "prefix": "adelia_batwing",
+  "created_at": "2026-09-16T21:16:39.404486+00:00",
+  "product_name": "MS121 MODA STORE Blouse Muslimah Baggy Batwing Labuh Adelia 121 Top",
+  "opening_line": "Nak cari baju harian yang betul-betul labuh cover peha tapi dalam masa yang sama potongan dia tetap nampak moden dan bergaya bukan senang tau. Sebab tu blouse longtop berjalur Adelia 121 daripada Moda Store ni terus jadi pilihan nombor satu saya, jenis tunic muslimah yang jatuh terletak elok tanpa rasa berat langsung.",
+  "closing_line": "Paling menarik, saiz dia memang mesra badan dari empat puluh sampailah seratus dua puluh kilogram, jadi potongan longtop ni kekal beralun sopan cover bahagian belakang dengan cantik. Siapa yang nak tunic labuh santai ironless macam ni, boleh dapatkan terus melalui beg kuning di bawah sebelum warna pilihan korang habis.",
+  "scenes": {},
+  "caption": null,
+  "hashtags": null,
+  "bgm_prompt": null,
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/adelia_batwing_frame1_front.jpg",
+    "keyframes/adelia_batwing_frame2_side.jpg",
+    "keyframes/adelia_batwing_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/adelia_batwing_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/adelia_batwing_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/adelia_batwing_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "supabase_id": "573cf331-db0a-4f90-a65b-30b6c3ded578",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-09-16T21:16:39.404486+00:00"
+}

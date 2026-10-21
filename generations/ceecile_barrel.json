@@ -1,0 +1,52 @@
+{
+  "prefix": "ceecile_barrel",
+  "created_at": "2026-09-28T13:32:26.612683+00:00",
+  "product_name": "Ceecile Barrel Cutting CozyFlow Wide-Leg Casual Pants Sweatpants",
+  "opening_line": "Ingat sweatpants hanya untuk duduk rumah atau nampak macam baru bangun tidur je ke? Tengok seluar potongan barrel CozyFlow jenama Ceecile ni, rekaan melengkung beralun dekat bahagian tepi ni auto ubah gaya santai jadi nampak macam fesyen model off-duty yang kemas gila!",
+  "closing_line": "Ada pilihan saiz dari M sampai dua XL dengan tali pinggang boleh laras yang sangat mesra untuk semua saiz badan. Kalau korang nak seluar santai yang selesa tapi nampak mahal untuk sesi OOTD, jom rebut warna warm taupe ni dekat beg kuning sekarang!",
+  "scenes": {
+    "scene_1": {
+      "camera": "Front-facing medium shot with subtle slow zoom-in",
+      "visual": "Malaysian Muslim woman wearing a neat light cream chiffon hijab, an off-white minimal relaxed cropped sporty windbreaker jacket, and the stylish Ceecile Barrel Cutting CozyFlow Wide-Leg Casual Pants in warm taupe / mochaccino beige with curved outer seams and drawstrings. Empty hands resting naturally low at her sides.",
+      "dialogue_en": "Think sweatpants are only for lounging at home or looking like you just rolled out of bed? Look at these Ceecile CozyFlow barrel cutting pants: the curved balloon silhouette along the outer leg instantly elevates casual loungewear into an effortlessly chic model-off-duty aesthetic!",
+      "dialogue_ms": "Ingat sweatpants hanya untuk duduk rumah atau nampak macam baru bangun tidur je ke? Tengok seluar potongan barrel CozyFlow jenama Ceecile ni, rekaan melengkung beralun dekat bahagian tepi ni auto ubah gaya santai jadi nampak macam fesyen model off-duty yang kemas gila!"
+    },
+    "scene_2": {
+      "camera": "Smooth 3/4 side profile camera tracking",
+      "visual": "Distinctive barrel balloon silhouette and fluid drape of the warm taupe pants. Highlights the curved side seam contour, comfortable elasticated ribbed waistband with drawstrings, deep functional side pockets, and relaxed wide-leg ankle taper. Empty hands, one hand resting naturally near her side seam.",
+      "dialogue_en": "The CozyFlow heavyweight cotton fabric drapes beautifully without feeling bulky, giving you supreme all-day softness while the curved side seams create an elongating, flattering shape.",
+      "dialogue_ms": "Material kapas tebal CozyFlow ni jatuh beralun sangat cantik tanpa rasa kaku, bagi keselesaan lembut sepanjang hari manakala jahitan melengkung di sisi bagi efek kaki nampak lebih runcing dan kemas."
+    },
+    "scene_3": {
+      "camera": "Over-the-shoulder glance",
+      "visual": "Woman turns back towards the camera with a confident, warm smile. Both arms rest naturally low at her sides with completely empty hands (no bags, no water bottles, no props, no waving). Soft natural morning daylight on the minimalist terrace.",
+      "dialogue_en": "Available in sizes M up to 2XL with an adjustable elastic waistband to fit every body type comfortably. If you want casual pants that feel like pajamas but look totally high-end for cafe OOTDs, grab this warm taupe shade from the yellow basket now!",
+      "dialogue_ms": "Ada pilihan saiz dari M sampai dua XL dengan tali pinggang boleh laras yang sangat mesra untuk semua saiz badan. Kalau korang nak seluar santai yang selesa tapi nampak mahal untuk sesi OOTD, jom rebut warna warm taupe ni dekat beg kuning sekarang!"
+    }
+  },
+  "caption": "Ingat sweatpants untuk duduk rumah je ke? 👀✨\n\nBila sarung Ceecile Barrel Cutting CozyFlow Pants ni, terus auto jatuh cinta! Potongan barrel yang melengkung kembang di bahagian luar dan tirus sedikit di bawah ni memang genius: langsung tak nampak menggelebeh, malah bagi ilusi kaki nampak panjang beralun ala gaya model off-duty!\n\nKelebihan seluar Ceecile Barrel Cutting CozyFlow yang buat saya suka:\n✨ Rekaan potongan barrel unik yang moden dan memberi ilusi bentuk kaki lebih tinggi\n✨ Fabrik CozyFlow kapas tebal yang sangat lembut, selesa, dan beralun cantik\n✨ Pinggang bergetah fleksibel bersama tali pencerut boleh laras dari saiz M hingga 2XL\n✨ Poket sisi yang luas dan praktikal untuk simpan barangan harian\n✨ Tona warna warm taupe yang mudah disuai padan untuk sesi lepak kafe mahupun bersiar santai\n\nPadankan dengan baju cropped atau jaket ringkas untuk gaya streetwear yang minimalis dan chic sepanjang hari. Selesa tahap maksimum! ☕👟\n\nNak upgrade gaya santai korang jadi lebih estetik, grab saiz korang dekat beg kuning sekarang sebelum licin! 👇💛\n\n#BarrelPants #CeecileMalaysia #WideLegSweatpants #OOTDKafe #CasualStreetwearMY #SeluarViral",
+  "hashtags": "#BarrelPants #CeecileMalaysia #WideLegSweatpants #OOTDKafe #CasualStreetwearMY #SeluarViral",
+  "bgm_prompt": "Genre: Chill lo-fi indie pop groove with modern urban cafe aesthetic. Instrumentation: Mellow acoustic guitar chords, warm Rhodes electric piano riffs, soft vinyl crackle, laid-back lo-fi hip-hop drum groove, and subtle deep sub-bass. Mood: Cozy, effortlessly stylish, breezy, modern urban lifestyle vibe. Tempo: 98 BPM, smooth relaxing rhythmic swing matched for lifestyle fashion showcase video pacing. Production: Pure instrumental, strictly no vocals, warm lo-fi tape saturation mastering, balanced stereo mix, seamless loopable progression.",
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/ceecile_barrel_frame1_front.jpg",
+    "keyframes/ceecile_barrel_frame2_side.jpg",
+    "keyframes/ceecile_barrel_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/ceecile_barrel_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/ceecile_barrel_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/ceecile_barrel_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "hook_score": 100,
+    "hook_issues": [],
+    "hook_source": "Live TikTok search ranked #1 of 3 candidates",
+    "hook_status": "pass",
+    "hook_archetype": "The Price-Quality Myth-Buster",
+    "hook_ranking_method": "live_search_then_rank",
+    "supabase_id": "7e1d3bf6-322e-4210-b42d-cb48790f43c4",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-09-28T13:32:26.612683+00:00"
+}

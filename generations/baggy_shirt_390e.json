@@ -1,0 +1,30 @@
+{
+  "prefix": "baggy_shirt_390e",
+  "created_at": "2026-09-16T18:17:01.336189+00:00",
+  "product_name": "#390E Baju Blouse Kemeja Labuh Muslimah Baggy Style S-6XL",
+  "opening_line": "Bila kita berbadan comel atau nak cari kemeja yang betul-betul longgar tak melekap, susah sebenarnya nak jumpa kemeja labuh yang saiz dia sampai 6XL kan? Tapi blouse kemeja potongan baggy kod 390E ni memang faham sangat jiwa kita yang nak nampak kemas tanpa rasa rimas.",
+  "closing_line": "Korang boleh pakai butang penuh untuk gaya ke pejabat atau buka butang jadikan outerwear santai waktu cuti. Siapa yang nak kemeja labuh serba boleh saiz S sampai 6XL macam ni, jom singgah beg kuning untuk pilih kod warna yang korang berkenan sebelum saiz habis.",
+  "scenes": {},
+  "caption": null,
+  "hashtags": null,
+  "bgm_prompt": null,
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/baggy_shirt_390e_frame1_front.jpg",
+    "keyframes/baggy_shirt_390e_frame2_side.jpg",
+    "keyframes/baggy_shirt_390e_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/baggy_shirt_390e_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/baggy_shirt_390e_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/baggy_shirt_390e_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "category": "Muslimah Blouse / Kemeja Labuh",
+    "model_code": "#390E",
+    "size_range": "S-6XL",
+    "supabase_id": "b8979353-2b60-416f-900c-f5f4b2b5c243",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-09-16T18:17:01.336189+00:00"
+}

@@ -1,0 +1,31 @@
+{
+  "prefix": "knit",
+  "created_at": "2026-09-10T07:50:28.300293+00:00",
+  "product_name": "VERMILLION V17032 Baju Wanita Lengan 3/4 Rajut S-XXL | A stylish, lightweight 3/",
+  "opening_line": "Visual: A calm, front-facing medium shot of a stylish Malaysian woman wearing an elegant 3/4 sleeve knit top in a modern",
+  "closing_line": "Visual: An over-the-shoulder glance of the woman as she turns slightly, holding her handbag casually and offering a poli",
+  "scenes": {
+    "scene_1_intro": "Visual: A calm, front-facing medium shot of a stylish Malaysian woman wearing an elegant 3/4 sleeve knit top in a modern minimal cafe setting. She has a natural, warm smile and maintains comfortable, steady eye contact. The camera slowly and smoothly zooms in. Ensure there are no text overlays or watermarks. Audio: Generate a realistic Malaysian Malay female voice with a calm, friendly, and polished KL tone, speaking naturally: 'Bila cuaca tak menentu dekat luar panas tapi pejabat sejuk, baju knit dengan lengan tiga suku macam ni sebenarnya penyelamat keadaan. Dia tak rasa tebal rimas, tapi still bagi vibe yang sangat kemas dan sopan.'",
+    "scene_3_outro": "Visual: An over-the-shoulder glance of the woman as she turns slightly, holding her handbag casually and offering a polite, effortless smile. The setting has soft, warm lighting. Natural posture without awkward waving. Ensure there are no text overlays or watermarks. Audio: Generate a realistic Malaysian Malay female voice with a warm, polite recommendation tone: 'Sesuai sangat untuk korang yang nak nampak effortlessly stylish pergi kerja atau keluar santai hujung minggu. Cuba tengok kejap warna-warna lembut yang masih ada dalam beg kuning.'",
+    "scene_2_detail": "Visual: A side profile shot of the woman, gently touching the soft, high-quality knit texture of the sleeve. The camera gracefully pans along the clean stitching and soft fabric of the top to highlight its premium stretchable texture. Relaxed and authentic movement. Ensure there are no text overlays or watermarks. Audio: Generate a realistic Malaysian Malay female voice with an informative, helpful tone: 'Tengok pada jahitan rajut dia, halus sangat dan jenis lembut yang beralun ikut badan, bukan jenis keras mencucuk kulit tu. Bahagian lengan suku ni pun elok terletak, tak payah nak sibuk lipat-lipat bila kita nak buat kerja.'"
+  },
+  "caption": "Susah nak cari baju kerja yang selesa tapi still nampak profesional? Kadang-kadang pakai kemeja biasa rasa rimas, nak pakai t-shirt biasa pula nampak terlalu santai.\n\nKnit top lengan 3/4 ni memang jawapan paling tepat. Material rajut premium yang lembut, tak tebal, dan stretchable dari saiz S sampai XXL. Sesuai sangat untuk pakai pergi office atau casual outing hujung minggu tanpa risau peluh.\n\nPilihan warna pun semua jenis minimalist yang senang nak match dengan tudung atau pants korang. Jom singgah beg kuning untuk dapatkan warna feveret korang hari ini!",
+  "hashtags": "",
+  "bgm_prompt": "A warm, organic lo-fi acoustic indie pop track, soft acoustic guitar strumming, gentle rhodes piano chords, minimal clean electric bass, and a relaxed, steady drum beat, warm cozy lifestyle aesthetic, 110 BPM, pure instrumental, no vocals",
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/knit_frame1_front.jpg",
+    "keyframes/knit_frame2_side.jpg",
+    "keyframes/knit_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/knit_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/knit_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/knit_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "supabase_id": "0f83ba42-aa37-4de9-b5a6-454f08c4c78a",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-09-10T07:50:28.300293+00:00"
+}

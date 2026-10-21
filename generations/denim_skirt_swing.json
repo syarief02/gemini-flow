@@ -1,0 +1,46 @@
+{
+  "prefix": "denim_skirt_swing",
+  "created_at": "2026-10-05T12:38:33.620267+00:00",
+  "product_name": "Denim Skirt Multiple Buttons Solid Color Retro Loose Large Swing Jeans Skirt Wanita Plus Size",
+  "opening_line": "Korang perasan tak kenapa skirt denim kembang payung empat butang ni tengah viral gila sekarang? Rahsia dia dekat rekaan pinggang tinggi berbutang kemas dengan potongan buaian kembang beralun yang auto sorok bahagian peha dan bagi efek kaki nampak tinggi lampai!",
+  "closing_line": "Sesuai sangat untuk gayakan pergi kerja santai mahupun lepak kafe hujung minggu. Korang boleh tengok ukuran penuh dan grab warna denim kegemaran korang dekat beg kuning bawah!",
+  "scenes": {
+    "scene_1": {
+      "visual": "A smooth front-facing medium-to-full camera shot with subtle slow zoom-in on an aesthetic 24-year-old Malaysian Muslim woman in a sunlit modern Kuala Lumpur cafe courtyard. She is wearing an off-white soft chiffon bawal hijab, tucked-in cream ribbed long-sleeve knit top, and a light washed denim blue maxi swing skirt featuring 4 prominent vertical metal buttons on the front fly and vertical tailored princess panel seams flaring into a dramatic wide umbrella swing hem at ankle length. Her arms rest relaxed down by her sides with completely empty open hands, absolutely no bags, no cups, no props. She makes warm friendly eye contact with the camera and speaks with natural facial animation and genuine enthusiasm.",
+      "spoken_malay": "Korang perasan tak kenapa skirt denim kembang payung empat butang ni tengah viral gila sekarang? Rahsia dia dekat rekaan pinggang tinggi berbutang kemas dengan potongan buaian kembang beralun yang auto sorok bahagian peha dan bagi efek kaki nampak tinggi lampai!"
+    },
+    "scene_2": {
+      "visual": "A smooth three-quarter (3/4) side tracking camera shot gently panning around the same Malaysian Muslim woman in the sunlit travertine courtyard. She wears the identical cream chiffon hijab, cream ribbed knit top, and light blue washed denim maxi swing skirt. She turns slightly, showcasing the side profile and rich umbrella swing volume of the denim fabric as it drapes gracefully without clinging to her hips. Her arms rest naturally low at her sides with empty hands, lightly swaying with subtle motion, completely prop-free. She smiles charismatically toward the camera while speaking.",
+      "spoken_malay": "Paling best, fabrik denim dia jenis lembut ringan dan tak keras kejung langsung tau. Bila kita jalan atau pusing sikit, alun buaian kembang payung dia jatuh cantik sangat, tak melekat dekat punggung, dan saiz ada dari S sampai empat XL!"
+    },
+    "scene_3": {
+      "visual": "A smooth full-length camera shot starting from behind at an over-the-shoulder angle, showing the clean rear waistband, vertical panel seams, and graceful umbrella flare hemline of the light washed denim maxi skirt. The Malaysian Muslim woman gently turns her head back over her shoulder towards the camera with a warm inviting smile, her arms resting naturally low at her sides with completely empty open hands. Strictly no bags, no purse, no phone, no waving, and no raised hands. The soft morning light illuminates the rich denim texture.",
+      "spoken_malay": "Sesuai sangat untuk gayakan pergi kerja santai mahupun lepak kafe hujung minggu. Korang boleh tengok ukuran penuh dan grab warna denim kegemaran korang dekat beg kuning bawah!"
+    }
+  },
+  "caption": "Korang tengah cari skirt jeans yang tak kejung dan selesa melangkah seharian? 💙✨\n\nSkirt denim kembang payung rekaan empat butang ni memang penyelamat gaya! Potongan buaian kembang A-line dia jatuh beralun cantik tanpa melekat pada pinggul, jadi rasa sangat selesa dan bebas bergerak sepanjang hari. Rekaan pinggang tinggi berbutang kemas pula auto beri ilusi siluet ramping dan kaki nampak lebih tinggi lampai.\n\nKelebihan skirt denim kembang payung ni yang buat saya suka:\n✨ Fabrik Denim Lembut: Kain denim berkualiti yang ringan, sejuk, dan langsung tak keras kejung\n✨ Rekaan 4 Butang Kemas: Butang logam menegak di bahagian pinggang yang kukuh dan bergaya retro\n✨ Potongan Kembang Payung: Alun buaian A-line yang flowy dan menutup aurat dengan sempurna\n✨ Jahitan Panel Menegak: Garisan puteri yang kemas untuk kesan visual badan lebih langsing\n✨ Pilihan Saiz Mesra Plus Size: Dari saiz S hingga 4XL, sesuai untuk pelbagai bentuk badan\n\nSenang sangat nak suai padan dengan blouse, kemeja tuck-in, atau knitted top untuk gaya kasual chic mahupun ke pejabat. ☕🌿\n\nKorang boleh semak ukuran penuh dan dapatkan warna denim kegemaran korang dekat beg kuning bawah sekarang! 👇💛\n\n#SkirtDenimLabuh #SkirtJeansWanita #SkirtKembangPayung #MuslimahFashionMY #OOTDMuslimahMY",
+  "hashtags": "#SkirtDenimLabuh #SkirtJeansWanita #SkirtKembangPayung #MuslimahFashionMY #OOTDMuslimahMY",
+  "bgm_prompt": "Upbeat indie chill cafe pop, modern acoustic groove, 112 BPM. Clean fingerpicked acoustic guitar melodies, warm Fender Rhodes electric piano chords, smooth melodic upright bass, crisp lo-fi snare and subtle tambourine groove. Breezy, optimistic, stylish, relaxing daytime Malaysian urban cafe atmosphere. Pure instrumental, strictly no vocals, organic acoustic mix, warm mastering, seamless loopable edit for fashion short video.",
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/denim_skirt_swing_frame1_front.jpg",
+    "keyframes/denim_skirt_swing_frame2_side.jpg",
+    "keyframes/denim_skirt_swing_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/denim_skirt_swing_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/denim_skirt_swing_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/denim_skirt_swing_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "url": "https://vt.tiktok.com/ZS9DaMmFmjW3o-N4Dfy/",
+    "shop": "Miss Rose Shop",
+    "hook_score": 100,
+    "hook_issues": [],
+    "hook_status": "pass",
+    "hook_archetype": "The Flattering Silhouette / Visual Insecurity Solution",
+    "supabase_id": "643695cb-3c98-4a22-ab72-3936a2060bfc",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-10-05T12:38:33.620267+00:00"
+}

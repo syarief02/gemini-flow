@@ -1,0 +1,52 @@
+{
+  "prefix": "youmilier_tessa",
+  "created_at": "2026-10-03T04:35:10.763353+00:00",
+  "product_name": "YOUMILIER TESSA MINIMALIST EMBROIDERED MODEST SET",
+  "opening_line": "Pernah tak korang buka almari penuh baju tapi still pening nak suai padan setiap kali nak lepak kafe? Tengok set Muslimah Youmilier Tessa ni, gabungan kemeja labuh bersulam bunga minimalis dengan seluar beralun sepadan ni terus buat gaya santai korang nampak effortlessly chic!",
+  "closing_line": "Potongan longgar beralun ni memang sesuai untuk semua bentuk badan dari gaya santai sampai semi-formal. Kalau korang nak tampil kemas berseri tanpa pening fikir matching baju, jom dapatkan set Youmilier Tessa ni dekat beg kuning sekarang!",
+  "scenes": {
+    "scene_1": {
+      "camera": "Front-facing medium shot with subtle slow zoom-in",
+      "visual": "Malaysian Muslim woman wearing a neat light warm cream chiffon hijab, the elegant YOUMILIER TESSA MINIMALIST EMBROIDERED MODEST SET in soft khaki / light beige featuring a loose long-sleeve button-down tunic shirt with a pointed collar and delicate brown floral embroidery on the chest pocket, paired with matching loose flowy wide-leg palazzo pants. Empty hands resting naturally low at her sides.",
+      "dialogue_en": "Ever opened a wardrobe full of clothes but still stressed over how to match an outfit for cafe hopping? Look at this Youmilier Tessa Muslimah set: the pairing of a long tunic shirt with minimalist floral pocket embroidery and matching flowy wide-leg pants instantly makes your casual look effortlessly chic!",
+      "dialogue_ms": "Pernah tak korang buka almari penuh baju tapi still pening nak suai padan setiap kali nak lepak kafe? Tengok set Muslimah Youmilier Tessa ni, gabungan kemeja labuh bersulam bunga minimalis dengan seluar beralun sepadan ni terus buat gaya santai korang nampak effortlessly chic!"
+    },
+    "scene_2": {
+      "camera": "Smooth 3/4 side profile camera tracking",
+      "visual": "Loose, fluid drape of the soft khaki tunic shirt and matching wide-leg palazzo pants. Highlights the breathable crinkle-textured cotton blend fabric, single-button wudhu-friendly cuffs, and the fine brown floral line embroidery on the chest pocket. Empty hands, one hand resting naturally near her side seam.",
+      "dialogue_en": "Notice the thoughtful tailoring: the textured cotton fabric is lightweight and breathable for tropical weather, completely ironless, and flows gracefully without clinging to your body.",
+      "dialogue_ms": "Tengok kemasan jahitan dia: fabrik cotton bertekstur ni sangat ringan dan sejuk untuk cuaca kita, jenis ironless, dan beralun sopan tanpa melekat langsung pada badan."
+    },
+    "scene_3": {
+      "camera": "Over-the-shoulder glance",
+      "visual": "Woman turns back towards the camera with a confident, radiant smile. Both arms rest naturally low at her sides with completely empty hands (no bags, no water bottles, no props, no waving). Soft natural morning daylight highlights the clean rear tunic cut, central back pleat, flowy wide palazzo pants, and white mules on the aesthetic cafe terrace.",
+      "dialogue_en": "This relaxed loose cut flatters every body type effortlessly, versatile from casual daily wear to smart-casual outings. If you want a put-together look without the headache of matching outfits, grab this Youmilier Tessa set from the yellow basket now!",
+      "dialogue_ms": "Potongan longgar beralun ni memang sesuai untuk semua bentuk badan dari gaya santai sampai semi-formal. Kalau korang nak tampil kemas berseri tanpa pening fikir matching baju, jom dapatkan set Youmilier Tessa ni dekat beg kuning sekarang!"
+    }
+  },
+  "caption": "Pening nak matching baju setiap kali nak keluar lepak? ☕✨\n\nBaju set Muslimah Youmilier Tessa Minimalist Embroidered ni memang penyelamat hari-hari kita! Rekaan dua helai lengkap dengan kemeja labuh berkolar dan seluar palazzo beralun sepadan, sarung je terus siap lima minit nampak elegan dan kemas ala gaya effortlessly chic.\n\nKelebihan Youmilier Tessa Embroidered Modest Set yang buat saya suka:\n✨ Rekaan set 2-piece sedondon yang jimat masa bersiap tanpa perlu pening suai padan\n✨ Perincian sulaman bunga minimalis yang manis dan eksklusif pada poket dada\n✨ Fabrik cotton bertekstur yang sejuk, ringan, dan tidak perlu digosok beriya (ironless)\n✨ Potongan labuh A-line yang sopan menutup punggung serta seluar palazzo longgar beralun\n✨ Tona warna soft khaki yang neutral, tenang, dan sangat estetik untuk sesi OOTD kafe\n\nPadankan dengan tudung bawal atau shawl polos bersama kasut mules untuk gaya harian yang selesa dari pagi sampai ke malam. Gaya ringkas tapi nampak mahal! 🌸👜\n\nNak tampil kemas dan bergaya tanpa bazir masa bersiap, jom dapatkan set korang dekat beg kuning sekarang sebelum saiz habis! 👇💛\n\n#BajuSetMuslimah #CoordSetMalaysia #Youmilier #OOTDKafe #MuslimahFashionMY #OutfitMudah",
+  "hashtags": "#BajuSetMuslimah #CoordSetMalaysia #Youmilier #OOTDKafe #MuslimahFashionMY #OutfitMudah",
+  "bgm_prompt": "Genre: Cozy acoustic cafe pop with light sunny bossa nova groove. Instrumentation: Warm nylon-string acoustic guitar picking, soft Rhodes electric piano chords, gentle brushed acoustic snare, warm double bass groove, and subtle cheerful flute melodies. Mood: Breezy, relaxed, sophisticated, cheerful, modern aesthetic lifestyle vibe. Tempo: 104 BPM, smooth laid-back rhythm perfectly synchronized with short-form fashion lookbook pacing. Production: Pure instrumental, strictly no vocals, warm organic acoustic mastering, airy stereo separation, seamless loopable progression.",
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/youmilier_tessa_frame1_front.jpg",
+    "keyframes/youmilier_tessa_frame2_side.jpg",
+    "keyframes/youmilier_tessa_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/youmilier_tessa_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/youmilier_tessa_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/youmilier_tessa_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "hook_score": 100,
+    "hook_issues": [],
+    "hook_source": "Live TikTok search ranked #1 of 3 candidates",
+    "hook_status": "pass",
+    "hook_archetype": "The Visual Pattern Interrupt / Direct Question",
+    "hook_ranking_method": "live_search_then_rank",
+    "supabase_id": "f736bb05-8e41-4045-81af-9daac03da7c7",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-10-03T04:35:10.763353+00:00"
+}

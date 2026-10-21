@@ -1,0 +1,43 @@
+{
+  "prefix": "soft_yellow_striped_blouse",
+  "created_at": "2026-10-18T15:20:35.984339+00:00",
+  "product_name": "[Stock At Klang] Baju Kuning Guest Blouse Wanita Plus Size Stripe Soft Yellow Classy Yellow Top Kemeja",
+  "opening_line": "Bila dapat jemputan kenduri kahwin tema kuning, mesti ramai pening kepala takut nampak malap atau kusam kan? Korang tengok kemeja blaus jalur rona soft butter yellow ni, tona kuning pastel lembut ni auto buat kulit nampak cerah berseri dan potongan kembang lengan tiga suku ni sopan gila!",
+  "closing_line": "Sama ada nak buat baju tetamu kenduri, masuk pejabat, atau santai hujung minggu, senang sangat nak suai padan dengan seluar mahupun skirt. Jom tekan beg kuning dekat bawah sekarang untuk dapatkan saiz idaman korang sebelum stok habis licin!",
+  "scenes": {
+    "scene1": {
+      "frame_visual": "Front view full-length shot of Malaysian Muslim model in soft butter yellow striped blouse with spread collar and 3/4 lantern puff sleeves, tucked into tailored cream trousers, warm smile with empty hands.",
+      "opening_line": "Bila dapat jemputan kenduri kahwin tema kuning, mesti ramai pening kepala takut nampak malap atau kusam kan? Korang tengok kemeja blaus jalur rona soft butter yellow ni, tona kuning pastel lembut ni auto buat kulit nampak cerah berseri dan potongan kembang lengan tiga suku ni sopan gila!"
+    },
+    "scene2": {
+      "dialogue": "Material dia rasa ringan dan sejuk beralun bila kena cuaca panas Malaysia, langsung tak melekit pada badan. Ditambah pula dengan jalur halus menegak dan lengan gelembung ni, terus bagi efek langsing terletak untuk apa jua bentuk tubuh dari saiz S sampai plus size!",
+      "frame_visual": "3/4 side profile medium shot highlighting breezy drape of the blouse, lantern puff sleeves with gathered cuffs, and cream trousers silhouette with empty hands."
+    },
+    "scene3": {
+      "closing_line": "Sama ada nak buat baju tetamu kenduri, masuk pejabat, atau santai hujung minggu, senang sangat nak suai padan dengan seluar mahupun skirt. Jom tekan beg kuning dekat bawah sekarang untuk dapatkan saiz idaman korang sebelum stok habis licin!",
+      "frame_visual": "Over-the-shoulder medium shot showing back yoke, neat stripes, lantern sleeves, cream chiffon hijab drape, turning back with warm smile and empty hands."
+    }
+  },
+  "caption": "Bila dapat jemputan kenduri kahwin tema kuning, mesti ramai pening kepala takut nampak kusam kan? ✨\n\nKorang tengok kemeja blaus jalur rona soft butter yellow ni: tona kuning pastel lembut ni memang auto naikkan seri wajah dan langsung tak buat kulit nampak malap! Ditambah pula dengan perincian jalur halus menegak dan potongan lengan gelembung tiga suku yang kembang beralun, terus bagi siluet ramping dan sopan terletak. Sesuai sangat untuk gayakan ke majlis kenduri, hari kerja di pejabat, mahupun santai hujung minggu.\n\nKelebihan blaus kemeja jalur kuning lembut ni yang buat saya suka:\n✨ Tona Kuning Pastel Lembut: Warna butter yellow yang manis, menaikkan seri kulit tanpa nampak terlalu terang atau mencolok mata.\n✨ Jalur Menegak Slimming Effect: Corak pinstripes halus yang memberi ilusi badan kelihatan lebih tinggi dan ramping.\n✨ Lengan Gelembung Tiga Suku: Potongan 3/4 lantern puff sleeves yang selesa, menutup lengan dengan kemas dan bergaya ala Korean chic.\n✨ Fabrik Sejuk Beralun: Material ringan dan breathable yang sangat selesa dan tidak melekit walau dipakai bawah cuaca panas terik Malaysia.\n✨ Saiz Mesra S Hingga Plus Size: Potongan loose flowy yang terletak kemas pada pelbagai bentuk tubuh wanita.\n\nPadankan dengan seluar tailored rona krim atau skirt pleated untuk penampilan yang eksklusif dan manis dipandang! 💛\n\nJom tekan beg kuning dekat bawah sekarang untuk dapatkan saiz pilihan korang sebelum stok habis licin! 👇💛\n\n#BajuKuningGuest #BlouseWanitaPlusSize #KemejaStripe #OutfitKenduri #KoreanStyleBlouse #MuslimahStyleMY",
+  "hashtags": "#BajuKuningGuest #BlouseWanitaPlusSize #KemejaStripe #OutfitKenduri #KoreanStyleBlouse #MuslimahStyleMY",
+  "bgm_prompt": "Upbeat lo-fi indie acoustic cafe pop, featuring bright fingerpicked acoustic guitar, subtle warm Rhodes electric piano chords, crisp lo-fi drum groove, soft shaker, and round warm melodic bass. Sunny, breezy, modern Malaysian aesthetic lifestyle vibe, relaxing and optimistic tempo at 110 BPM. Pure instrumental, strictly no vocals, loopable high quality production.",
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/soft_yellow_striped_blouse_frame1_front.jpg",
+    "keyframes/soft_yellow_striped_blouse_frame2_side.jpg",
+    "keyframes/soft_yellow_striped_blouse_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/soft_yellow_striped_blouse_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/soft_yellow_striped_blouse_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/soft_yellow_striped_blouse_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "folder": "20261018_231705",
+    "pdp_url": "https://shop.tiktok.com/my/pdp/1731267929690834157",
+    "tiktok_url": "https://vt.tiktok.com/ZS9UHDJ7yCT5Y-8ZTZ1/",
+    "supabase_id": "83751999-ad3b-46e2-aa07-df3a82612aa4",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-10-18T15:20:35.984339+00:00"
+}

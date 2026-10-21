@@ -1,0 +1,35 @@
+{
+  "prefix": "korean_trench_coat",
+  "created_at": "2026-10-09T15:00:49.552969+00:00",
+  "product_name": "High-end Korean Style Mid-Length Trench Coat Workwear Jacket",
+  "opening_line": "Korang yang berbadan genit selalu tak rasa susah nak cari trench coat yang bila sarung langsung tak buat badan nampak tenggelam macam pinjam baju orang? Tengok trench coat gaya Korea rona emerald green ni, potongan paras peha dengan kolar lapel kemas ni auto bagi ilusi badan nampak tinggi dan terletak elok!",
+  "closing_line": "Memang sesuai sangat untuk gaya pejabat harian, pembentangan penting, mahupun lepak kafe hujung minggu. Jom tekan beg kuning dekat bawah sekarang untuk semak ukuran dan grab saiz pilihan korang sebelum baucar diskaun tamat!",
+  "scenes": {
+    "scene_1": "Scene 1 Front View Prompt",
+    "scene_2": "Scene 2 3/4 Side Profile Prompt",
+    "scene_3": "Scene 3 Over-the-Shoulder Prompt"
+  },
+  "caption": "Full caption text",
+  "hashtags": "#TrenchCoatMY #KoreanStyleWanita #OOTDOfficeMY #BlazerWanita #OuterwearMuslimah",
+  "bgm_prompt": "Upbeat modern chic Korean indie pop...",
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/korean_trench_coat_frame1_front.jpg",
+    "keyframes/korean_trench_coat_frame2_side.jpg",
+    "keyframes/korean_trench_coat_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/korean_trench_coat_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/korean_trench_coat_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/korean_trench_coat_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "hook_score": 100,
+    "hook_issues": [],
+    "hook_status": "pass",
+    "hook_archetype": "The Flattering Silhouette / Visual Insecurity Solution",
+    "supabase_id": "79c537c5-9bbf-4f4d-812e-7e38e8eaf87f",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-10-09T15:00:49.552969+00:00"
+}

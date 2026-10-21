@@ -1,0 +1,27 @@
+{
+  "prefix": "linda_baggy_linen",
+  "created_at": "2026-09-17T23:27:47.383904+00:00",
+  "product_name": "BLOUSE BAGGY LINDA MATERIAL LINEN PREMIUM BY Tira Legacy",
+  "opening_line": "Ramai yang selalu serik bila beli blouse baggy online sebab ingatkan kain sejuk, rupa-rupanya dapat material polyester yang panas dan melekit pada peluh kan? Tapi blouse Linda keluaran Tira Legacy ni memang guna linen premium asli, jenis tekstur tenunan mewah yang bila pakai tengah panas pun rasa beralun sejuk.",
+  "closing_line": "Bahagian belakang baju ni sengaja direka labuh tiga puluh inci untuk pastikan pinggul tertutup rapi bila kita berjalan. Siapa yang nak rasa sendiri kualiti linen premium yang sejuk dan nampak eksklusif macam ni, boleh terus klik beg kuning di bawah untuk pilih warna kegemaran korang.",
+  "scenes": {},
+  "caption": null,
+  "hashtags": null,
+  "bgm_prompt": null,
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/linda_baggy_linen_frame1_front.jpg",
+    "keyframes/linda_baggy_linen_frame2_side.jpg",
+    "keyframes/linda_baggy_linen_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/linda_baggy_linen_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/linda_baggy_linen_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/linda_baggy_linen_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "supabase_id": "9cc328f0-27d9-45c7-9e73-92f032dbf80e",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-09-17T23:27:47.383904+00:00"
+}

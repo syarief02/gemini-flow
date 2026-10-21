@@ -1,0 +1,47 @@
+{
+  "prefix": "pandaeyes_cheromi",
+  "created_at": "2026-10-03T13:37:14.169173+00:00",
+  "product_name": "PANDAEYES CHEROMI Leher-V Blous Modis SOFT TOYOBO | Blouse V-Neck Modern 92067",
+  "opening_line": "Tahu tak kenapa blouse Toyobo Pandaeyes Cheromi ni jadi rebutan orang kerja pejabat? Fabrik Soft Toyobo dia jenis jatuh sejuk beralun, kolar V ada zip tersembunyi yang kemas, dan labuh curve hem dia auto cover bahagian pinggul dengan elok!",
+  "closing_line": "Senang sangat nak suai padan dengan seluar slack mahupun skirt untuk gaya smart casual yang kemas. Ada banyak pilihan warna manis menanti korang, jom tekan beg kuning sekarang sebelum saiz korang habis!",
+  "scenes": {
+    "scene_1": {
+      "prompt": "A smooth front-facing medium camera shot with subtle slow zoom-in on an aesthetic Malaysian Muslim woman in an off-white chiffon hijab, wearing the soft sage green Soft Toyobo blouse with a notched V-neckline and curved hem, paired with tailored crisp white wide-leg trousers and clean white pointed mules. She offers a warm natural smile and direct comfortable eye contact. Both arms rest naturally low at her sides with empty hands, standing in an aesthetic modern Kuala Lumpur cafe courtyard. For the audio, generate a highly realistic female voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent—strictly NOT an Indonesian accent. Explicitly translate the following English text into standard Malaysian Malay for the spoken audio: \"Do you know why this Pandaeyes Cheromi Toyobo blouse is in such high demand among office professionals? The Soft Toyobo fabric has a cooling, fluid drape, the V-collar features a neat hidden zipper, and the modest curved hemline gracefully covers the hips!\" Ensure there are no text overlays or watermarks.",
+      "spoken_malay": "Tahu tak kenapa blouse Toyobo Pandaeyes Cheromi ni jadi rebutan orang kerja pejabat? Fabrik Soft Toyobo dia jenis jatuh sejuk beralun, kolar V ada zip tersembunyi yang kemas, dan labuh curve hem dia auto cover bahagian pinggul dengan elok!"
+    },
+    "scene_2": {
+      "prompt": "A graceful 3/4 side profile medium shot of the same Malaysian Muslim woman in the soft sage green Toyobo blouse and white trousers. The camera tracks smoothly to highlight the stretchable elasticated wrist cuffs, the neat hidden front zip at the notched V-neckline, and the flattering side profile of the curved hemline. Both arms rest naturally low at her sides with empty hands. For the audio, generate a highly realistic female voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent—strictly NOT an Indonesian accent. Explicitly translate the following English text into standard Malaysian Malay for the spoken audio: \"Look at these stretchable elastic wrist cuffs, so effortless to pull up when taking ablution. The relaxed cut drapes cleanly without clinging, stays cool through long busy workdays, and resists wrinkles effortlessly!\" Ensure there are no text overlays or watermarks.",
+      "spoken_malay": "Tengok kemasan pergelangan tangan bergetah ni, senang gila nak sinsing bila nak ambil wuduk. Potongan dia longgar terletak elok, tak panas walau seharian berkejar mesyuarat, dan kainnya tahan kedut!"
+    },
+    "scene_3": {
+      "prompt": "An elegant rear three-quarter full-length shot of the same Malaysian Muslim woman turning gracefully to glance over her shoulder back toward the camera with a radiant, friendly smile. Both arms rest naturally low at her sides with completely empty hands, showing the rear drape of the curved hemline covering the hips and the clean flow of the white wide-leg trousers against the travertine stone walkway and lush greenery. For the audio, generate a highly realistic female voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent—strictly NOT an Indonesian accent. Explicitly translate the following English text into standard Malaysian Malay for the spoken audio: \"It is so easy to mix and match with office slacks or modest skirts for a polished smart casual look. There are plenty of sweet colorways waiting for you, so tap that yellow basket now before your size runs out!\" Ensure there are no text overlays or watermarks.",
+      "spoken_malay": "Senang sangat nak suai padan dengan seluar slack mahupun skirt untuk gaya smart casual yang kemas. Ada banyak pilihan warna manis menanti korang, jom tekan beg kuning sekarang sebelum saiz korang habis!"
+    }
+  },
+  "caption": "Tahu tak kenapa blouse Toyobo Pandaeyes Cheromi ni jadi pilihan ramai wanita bekerja? 💼✨\n\nBila nak ke pejabat atau kelas, kita mesti nak baju yang cepat bersiap, kain sejuk, dan potongan sopan yang tak melekap. Blouse Cheromi daripada Pandaeyes ni memang penyelamat harian sebab material Soft Toyobo dia nampak mewah, kemas, dan langsung tak jarang!\n\nKelebihan Pandaeyes Cheromi Blouse ni yang buat saya suka:\n✨ Fabrik Soft Toyobo Premium: Serat rapat, rasa sejuk di kulit, beralun lembut dan tahan kedut\n✨ Kolar Leher-V dengan Hidden Zip: Rekaan moden kemas, mudah sarung dan mesra ibu menyusu\n✨ Lengan Stretchable Cuff: Pergelangan tangan bergetah anjal, senang tarik bila nak ambil wuduk\n✨ Potongan Curve Hem Labuh: Bahagian bawah melengkung anggun, elok menutup aurat pinggul\n✨ Mudah Suai Padan: Sesuai digayakan ke pejabat, kuliah, kenduri mahupun santai hujung minggu\n\nTip gaya kemas: Padankan dengan seluar palazzo putih atau slack gelap dan kasut mules untuk penampilan smart casual yang profesional! 🤍👡\n\nJom dapatkan blouse Pandaeyes Cheromi korang hari ni, tekan beg kuning di bawah untuk survey saiz dan pilihan warna kegemaran sebelum stok habis! 👇💛",
+  "hashtags": "#BlouseToyobo #PandaeyesCheromi #BlouseMuslimah #BajuKerjaWanita #OOTDPejabatMY #BlouseVNeck",
+  "bgm_prompt": "Upbeat modern acoustic lo-fi pop, cheerful cafe groove tempo 110 BPM, melodic fingerpicked acoustic guitar, subtle Rhodes electric piano chords, smooth warm analog bassline, crisp clean lo-fi rimshot and shaker percussion, bright optimistic morning vibe, stylish Malaysian urban lifestyle aesthetic, pure instrumental, strictly no vocals, loopable studio mix",
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/pandaeyes_cheromi_frame1_front.jpg",
+    "keyframes/pandaeyes_cheromi_frame2_side.jpg",
+    "keyframes/pandaeyes_cheromi_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/pandaeyes_cheromi_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/pandaeyes_cheromi_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/pandaeyes_cheromi_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "source": "gemini_flow_agent",
+    "hook_rank": "#1 Winner",
+    "hook_score": 100,
+    "hook_issues": [],
+    "hook_status": "pass",
+    "hook_archetype": "The Visual Pattern Interrupt / Direct Question",
+    "product_category": "Blouses & Shirts",
+    "supabase_id": "0ca21c07-7597-4b82-b024-b011f8b97ed7",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-10-03T13:37:14.169173+00:00"
+}

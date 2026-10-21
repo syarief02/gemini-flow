@@ -1,0 +1,29 @@
+{
+  "prefix": "korean_sherpa_fleece_jacket",
+  "created_at": "2026-10-12T16:04:45.149732+00:00",
+  "product_name": "Jaket Kapas Bulu Bebiri Sherpa Fleece Wanita Longgar Gaya Korea Pendek dan Tebal",
+  "opening_line": "Sumpah lembut gebu gila macam bulu anak beruang! Korang yang selalu menggigil dalam pejabat aircond sejuk beku atau tengah plan nak bercuti ke Genting dan Kundasang, tengok jaket sherpa fleece Korea rona putih susu ni, sarung je terus rasa hangat selesa dan gambar OOTD auto nampak comel gila!",
+  "closing_line": "Perincian butang kontras coklat ni memang naikkan seri gaya kasual korang setiap kali melangkah keluar. Jom tekan beg kuning dekat bawah sekarang untuk dapatkan jaket gebu idaman korang sebelum saiz pilihan licin!",
+  "scenes": {},
+  "caption": "Sumpah lembut gebu gila macam bulu anak beruang! ✨\n\nKorang yang selalu menggigil dalam pejabat aircond sejuk beku atau tengah plan nak bercuti ke Genting dan Kundasang, tengok jaket sherpa fleece Korea rona putih susu ni, sarung je terus rasa hangat selesa dan gambar OOTD auto nampak comel gila!\n\nKelebihan jaket fleece gebu Korea ni yang buat saya suka:\n✨ Tekstur faux lamb wool premium: Sangat gebu dan lembut disentuh, langsung tak gatal atau kasar pada kulit\n✨ Penebat haba yang selesa: Memberi kehangatan yang cukup tanpa rasa rimas atau berkuap\n✨ Kolar kemeja dengan 4 butang kontras coklat: Sentuhan retro chic yang menaikkan seri gaya kasual\n✨ Potongan santai paras pinggul: Memberi ilusi badan lebih kemas dan kaki nampak lebih lampai\n✨ Serba guna dan versatil: Sesuai digayakan ke pejabat, dewan kuliah, percutian tanah tinggi, ataupun lepak kafe santai\n\nTips penggayaan: Padankan bersama baju knit dalaman rona mocha, seluar denim lurus, dan tudung bawal chiffon rona karamel untuk gaya 'cozy K-fashion' yang sangat memukau! 🍂\n\nJom tekan beg kuning dekat bawah sekarang untuk dapatkan saiz dan warna idaman korang sebelum stok habis! 👇💛",
+  "hashtags": "#JaketBulu #SherpaJacketMY #TeddyFleeceMY #OuterwearMuslimah #BajuSejukComel #OOTDHijabMY",
+  "bgm_prompt": null,
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/korean_sherpa_fleece_jacket_frame1_front.jpg",
+    "keyframes/korean_sherpa_fleece_jacket_frame2_side.jpg",
+    "keyframes/korean_sherpa_fleece_jacket_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/korean_sherpa_fleece_jacket_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/korean_sherpa_fleece_jacket_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/korean_sherpa_fleece_jacket_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "folder": "20261013_000111",
+    "product_url": "https://vt.tiktok.com/ZS9UegfdYt8vk-tJr4T/",
+    "supabase_id": "43983bed-067b-42da-bc49-470d0b4b54a4",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-10-12T16:04:45.149732+00:00"
+}

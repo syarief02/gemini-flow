@@ -1,0 +1,28 @@
+{
+  "prefix": "mink",
+  "created_at": "2026-08-29T02:45:00+00:00",
+  "product_name": "Faux Mink Long Trench Coat",
+  "opening_line": "Potongan trench coat panjang macam ni memang nampak effortlessly chic...",
+  "closing_line": "Pilihan warna lain ada dekat beg kuning sekarang.",
+  "scenes": {},
+  "caption": null,
+  "hashtags": null,
+  "bgm_prompt": null,
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/mink_frame1_front.jpg",
+    "keyframes/mink_frame2_side.jpg",
+    "keyframes/mink_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/mink_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/mink_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/mink_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "source": "backfill_history",
+    "supabase_id": "2e8c8a94-248d-42a1-97b9-8191ceea7c25",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-08-29T02:45:00+00:00"
+}

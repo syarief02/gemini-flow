@@ -1,0 +1,31 @@
+{
+  "prefix": "lana_top_cotton",
+  "created_at": "2026-09-18T17:59:44.469337+00:00",
+  "product_name": "LANA TOP Cotton Plain - Baju Kemeja Wanita Selesa",
+  "opening_line": "Perasan tak kenapa ada kemeja kerja yang bila kita pakai nampak mahal macam beli dekat butik padahal santai gila? Rahsianya ada dekat Lana Top daripada Alaiaa ni sebab dia guna material Japanese cotton yang sejuk dan jatuh terletak kemas.",
+  "closing_line": "Lana Top ni ada banyak pilihan warna minimalist yang senang matching. Kalau korang tengah cari kemeja kerja yang labuh tutup aurat dan selesa sepanjang hari, jemput tekan beg kuning sekarang sebelum saiz habis.",
+  "scenes": {
+    "scene_1_intro": "A smooth front-facing medium camera shot with subtle slow zoom-in on an aesthetic 25-year-old Malaysian Muslim woman...",
+    "scene_3_outro": "A gentle cinematic over-the-shoulder medium shot of the 25-year-old Malaysian woman turned in a 3/4 rear glance...",
+    "scene_2_product": "A slow, graceful cinematic 3/4 side profile camera pan showcasing the subtle drape and tailoring..."
+  },
+  "caption": "Perasan tak kenapa ada kemeja kerja yang nampak mahal macam butik tapi santai gila bila pakai? ✨\n\nRahsianya ada dekat Lana Top material Japanese cotton ni:\nKain jenis sejuk, lembut pada kulit, dan tak mudah renyuk walaupun duduk meeting berjam-jam dalam pejabat berhawa dingin.\n\nKelebihan Lana Top yang buat saya suka:\n✨ Material Japanese Cotton: Kain berkualiti, breathable dan sangat selesa\n✨ Hidden Button Placket: Kemas bertutup, selamat dan mesra penyusuan (nursing friendly)\n✨ Rekaan Wudhu-Friendly: Pergelangan tangan berbutang senang disingsing\n✨ Poket Sisi Dalam: Senang nak letak telefon atau kunci tanpa perlu pegang beg\n✨ Inverted Box Pleat di Belakang: Potongan beralun anggun dan labuh menutup punggung\n\nSesuai digayakan untuk:\n- Masuk pejabat dengan seluar straight-cut atau slack\n- Gaya santai kasual dengan jeans dan sneakers putih\n- OOTD kuliah atau urusan rasmi harian\n\nPilihan saiz dan warna earth tone yang cantik ada di beg kuning 👇💛\n\n#LanaTop #KemejaWanita #BlouseMuslimah #BajuKerjaWanita #OOTDPejabat #MuslimahStyleMY",
+  "hashtags": "#LanaTop #KemejaWanita #BlouseMuslimah #BajuKerjaWanita #OOTDPejabat #MuslimahStyleMY",
+  "bgm_prompt": "Upbeat, breezy lo-fi indie chill pop, crisp fingerpicked acoustic guitar intro, smooth Rhodes electric piano chords, light syncopated lo-fi drum groove, warm melodic analog synth bass, refreshing modern Malaysian cafe aesthetic, uplifting lifestyle atmosphere, 112 BPM, pure instrumental, no vocals, high-production studio mix, seamless loopable arrangement",
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/lana_top_cotton_frame1_front.jpg",
+    "keyframes/lana_top_cotton_frame2_side.jpg",
+    "keyframes/lana_top_cotton_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/lana_top_cotton_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/lana_top_cotton_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/lana_top_cotton_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "supabase_id": "284c2175-a00a-4894-9ffe-66c560eb1df7",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-09-18T17:59:44.469337+00:00"
+}

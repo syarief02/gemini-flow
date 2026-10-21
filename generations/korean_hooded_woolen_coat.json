@@ -1,0 +1,38 @@
+{
+  "prefix": "korean_hooded_woolen_coat",
+  "created_at": "2026-10-10T16:54:31.253168+00:00",
+  "product_name": "Kot Bulu Wanita Bertudung Berhud Gaya Kasual Malas Panjang Sederhana",
+  "opening_line": "Siapa cakap bila nak bergaya effortless chic kita kena berjam-jam gosok baju dan padankan aksesori sarat? Korang tengok kot bulu labuh berhud rona taupe ni, sarung je atas baju basic terus ubah gaya korang jadi nampak mahal dan santai ala drama Korea dalam tiga saat!",
+  "closing_line": "Potongan labuh berhud ni memang penyelamat bila nak keluar cepat tapi nak tetap nampak kemas dan eksklusif. Jom tekan beg kuning dekat bawah sekarang untuk dapatkan warna idaman korang sebelum saiz pilihan habis!",
+  "scenes": {
+    "scene_1_intro": "A smooth front-facing medium camera shot with subtle slow zoom-in on an aesthetic Malaysian Muslim woman wearing a sleek black chiffon bawal hijab and the Korean-style heather taupe greige hooded woolen mid-length overcoat over a fitted black high-neck knit top and tailored black trousers. She stands in a sunlit architectural courtyard with warm morning light, looking directly into the camera with a relaxed, pleasant smile and empty hands naturally at her sides. For the audio, generate a highly realistic female voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent—strictly NOT an Indonesian accent. Explicitly translate the following English text into standard Malaysian Malay for the spoken audio: \"Who says looking effortlessly chic requires hours of ironing and excessive accessorizing? Look at this hooded woolen mid-length coat in soft taupe; just slipping it over a basic inner top instantly elevates your entire look into an expensive, relaxed Korean drama style in three seconds!\" Ensure there are no text overlays or watermarks.",
+    "scene_3_outro": "A smooth over-the-shoulder medium shot showing the clean back view of the same Malaysian Muslim woman, showcasing how the casual slouchy hood drapes gracefully over the upper back and how the knee-length coat modestly covers the hips and legs. She turns her head back over her shoulder towards the camera with a gentle, inviting smile. Both arms rest naturally low at her sides with completely empty open hands (strictly no bag, no phone, no props). The camera gently pulls back in the warm sunlit courtyard. For the audio, generate a highly realistic female voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent—strictly NOT an Indonesian accent. Explicitly translate the following English text into standard Malaysian Malay for the spoken audio: \"This hooded mid-length cut is truly a lifesaver when you need to head out quickly yet still want to look polished and exclusive. Click the yellow basket below right now to claim your favorite color before popular sizes sell out!\" Ensure there are no text overlays or watermarks.",
+    "scene_2_details": "A graceful slow lateral tracking shot at a three-quarter side angle around the same Malaysian Muslim woman in the heather taupe greige hooded woolen coat. The camera gently glides to accentuate the open-front drape, the relaxed attached hood resting on the shoulders, the deep front hip patch pockets, and the loose knee-length silhouette over black tailored pants. Her arms remain low with completely empty hands as she gently glances towards the lens with a warm, confident expression. For the audio, generate a highly realistic female voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent—strictly NOT an Indonesian accent. Explicitly translate the following English text into standard Malaysian Malay for the spoken audio: \"What makes me love it so much is the soft felt woolen fabric that flows so smoothly without feeling heavy or bulky at all. The relaxed shawl hood and deep patch pockets make it effortlessly practical whether you are heading into an air-conditioned office or enjoying a casual weekend outing.\" Ensure there are no text overlays or watermarks."
+  },
+  "caption": "Siapa cakap bila nak bergaya effortless chic kita kena berjam-jam gosok baju dan padankan aksesori sarat? ✨\n\nKorang tengok kot bulu labuh berhud rona taupe greige ni, sarung je atas baju basic terus ubah gaya korang jadi nampak mahal dan santai ala drama Korea dalam tiga saat! \n\nKelebihan kot bulu berhud santai ni yang buat saya suka:\n✨ Rekaan kolar selendang bersambung hud: Gaya kasual malas yang auto buat leher nampak jinjang dan bahu terletak elok\n✨ Fabrik felt woolen lembut: Hangat dan selesa tanpa rasa tebal atau berat pada badan\n✨ Potongan 'open front' moden: Memberi ilusi badan lebih tinggi dan langsing beralun\n✨ Dua poket tampal depan yang luas: Mudah dan praktikal untuk letak telefon atau barangan kecil\n✨ Panjang sederhana paras lutut: Sopan menutup pinggul dan paha, sesuai untuk gaya Muslimah santai mahupun kerja\n\nTips penggayaan: Padankan dengan baju inner leher tinggi rona hitam, seluar lurus gelap, dan tudung bawal chiffon hitam untuk gaya 'quiet luxury' yang sangat memukau! 🍂\n\nJom tekan beg kuning dekat bawah sekarang untuk dapatkan saiz dan warna idaman korang sebelum kehabisan stok! 👇💛",
+  "hashtags": "#KotBuluWanita #HoodedCoatMY #OuterwearMuslimah #KoreanStyleMY #GayaEffortless #OOTDMuslimah",
+  "bgm_prompt": "Upbeat lo-fi indie cafe groove instrumental, warm acoustic guitar picking, smooth mellow electric piano keys, gentle deep bass, subtle crisp lo-fi drum beats with brush snare, warm sunny morning courtyard mood, relaxed stylish Malaysian lifestyle aesthetic, 110 BPM, pure instrumental, no vocals, polished acoustic mixing, seamless loop.",
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/korean_hooded_woolen_coat_frame1_front.jpg",
+    "keyframes/korean_hooded_woolen_coat_frame2_side.jpg",
+    "keyframes/korean_hooded_woolen_coat_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/korean_hooded_woolen_coat_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/korean_hooded_woolen_coat_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/korean_hooded_woolen_coat_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "color": "Heather Taupe / Greige",
+    "folder": "20261011_005039",
+    "hook_score": 100,
+    "hook_issues": [],
+    "hook_status": "pass",
+    "product_url": "https://vt.tiktok.com/ZS9D3Y9y6r5kt-FNGn8/",
+    "hook_archetype": "The Price-Quality Myth-Buster",
+    "supabase_id": "a5dcae1b-3f27-4933-b93b-de84707eb9d3",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-10-10T16:54:31.253168+00:00"
+}

@@ -1,0 +1,31 @@
+{
+  "prefix": "korean_blazer",
+  "created_at": "2026-09-20T19:08:53.95442+00:00",
+  "product_name": "Korean Style Blazer Women Long with Full Lining",
+  "opening_line": "Dulu saya selalu rasa nak nampak macam CEO atau wanita bekerjaya yang confident kena berhabis ratusan ringgit dekat butik mewah. Tapi sejak jumpa Korean Longline Blazer yang ada full lining ni, sarung saja atas baju t-shirt atau inner biasa, terus auto bertukar jadi corporate chic yang berkarisma gila!",
+  "closing_line": "Potongan blazer ni memang jenis labuh melepasi paras pinggul, jadi kita yang berhijab boleh melangkah dengan cukup anggun dan sopan. Kalau korang nak upgrade gaya kerja atau presentation korang ke tahap seterusnya, cepat-cepat check beg kuning dekat penjuru skrin untuk checkout blazer impian korang hari ni!",
+  "scenes": {
+    "scene_1": "A smooth front-facing medium camera shot with subtle slow zoom-in on an elegant 25-year-old Malaysian Muslim woman...",
+    "scene_2": "Camera smoothly transitions to a 3/4 side profile view with a slow graceful pan...",
+    "scene_3": "A gentle slow-motion camera shot from behind in a 3/4 back view..."
+  },
+  "caption": "Dulu saya selalu rasa nak nampak kemas macam wanita korporat berkarisma kena belanja ratusan ringgit beli sut butik! 💼✨\n\nTapi sejak sarung Korean Style Longline Blazer ni, terus jatuh cinta. Struktur dia terletak cantik, ada full lining kemas dekat bahagian dalam, dan potongan labuh dia melepasi paras pinggul jadi memang mesra muslimah. Sarung atas blouse biasa atau inner hitam pun dah cukup untuk buat penampilan nampak profesional dan mahal!\n\nKelebihan Korean Longline Blazer yang buat berbaloi gila:\n✨ Rekaan Kolar Notched Lapel: Rekaan kolar klasik moden yang memberi ilusi leher jenjang dan bahu terletak kemas\n✨ Lapisan Penuh (Full Lining): Selesa pada kulit, tak panas, dan struktur blazer kekal kemas tak mudah renyuk\n✨ Potongan Longline Menutup Pinggul: Labuh 26 hingga 29 inci yang menutup paras punggung dengan sopan\n✨ Poket Sisi Berfungsi (Flap Pockets): Praktikal untuk letak kad atau aksesori kecil semasa bergerak aktif\n✨ Pilihan Saiz Luas S hingga 5XL: Sesuai untuk pelbagai bentuk badan (tip: disarankan ambil 1 saiz lebih besar untuk keselesaan lengan)\n\nTips gaya: Padankan dengan seluar slack potongan lurus dan kasut heels bertutup untuk gaya mesyuarat, atau sarung bersama denim untuk smart-casual outing! 👠\n\nJom cepat-cepat check beg kuning dekat bawah untuk lock warna dan saiz pilihan korang sebelum stok licin! 👇💛\n\n#BlazerWanita #KoreanBlazer #BlazerLabuh #OutfitKePejabat #OOTDKerja #MuslimahStyleMY",
+  "hashtags": "#BlazerWanita #KoreanBlazer #BlazerLabuh #OutfitKePejabat #OOTDKerja #MuslimahStyleMY",
+  "bgm_prompt": "Sophisticated corporate cafe lo-fi groove, 112 BPM, modern clean electric guitar rhythm, smooth Rhodes keyboard harmony, warm analog synth bass, subtle crisp snare and hi-hat beat, confident chic urban lifestyle vibe, pure instrumental, strictly no vocals, no lyrics, high-end commercial mix.",
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/korean_blazer_frame1_front.jpg",
+    "keyframes/korean_blazer_frame2_side.jpg",
+    "keyframes/korean_blazer_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/korean_blazer_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/korean_blazer_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/korean_blazer_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "supabase_id": "833ed390-f7c2-4011-95ea-ed7c9a7c29a1",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-09-20T19:08:53.95442+00:00"
+}

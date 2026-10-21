@@ -1,0 +1,38 @@
+{
+  "prefix": "korean_woolen_coat",
+  "created_at": "2026-10-09T17:41:46.048231+00:00",
+  "product_name": "Kot wanita gaya Korea potongan longgar kolar lapel rekaan berkancing dua baris warna oatmeal",
+  "opening_line": "Tahu tak rahsia wanita berkerjaya nampak mewah ala 'old money' setiap hari tanpa perlu berhabis ribuan ringgit dekat butik mewah? Korang tengok kot labuh dua baris butang rona oat ni, fabrik woolen dia jatuh lembut dan potongan lapel lebar ni auto ubah gaya korang nampak eksklusif gila!",
+  "closing_line": "Sesuai sangat untuk gayakan ke pejabat, urusan kerja formal, mahupun percutian ke luar negara. Jom tekan beg kuning dekat bawah sekarang untuk dapatkan saiz dan warna idaman korang sebelum stok habis!",
+  "scenes": {
+    "scene_1_intro": "A smooth front-facing medium camera shot with subtle slow zoom-in on an aesthetic Malaysian Muslim woman wearing a modern cream chiffon bawal hijab and the Korean-style oatmeal beige double-breasted woolen mid-length coat over a dark mocha top and tailored black trousers. She stands in a sunlit architectural courtyard with warm morning lighting, smiling warmly and naturally into the lens. Her arms rest naturally low at her sides with empty hands. For the audio, generate a highly realistic female voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent—strictly NOT an Indonesian accent. Explicitly translate the following English text into standard Malaysian Malay for the spoken audio: \"Do you know the secret of career women looking effortlessly luxurious and 'old money' every day without spending thousands at luxury boutiques? Look at this double-breasted woolen mid-length coat in soft oatmeal beige; the fabric drapes so smoothly and the structured wide lapel collar instantly transforms your outfit to look remarkably exclusive!\" Ensure there are no text overlays or watermarks.",
+    "scene_3_outro": "A smooth over-the-shoulder medium shot focusing on the same Malaysian Muslim woman from behind, showing the clean back construction of the oatmeal beige woolen coat covering the hips. She gracefully turns her head back over her shoulder towards the camera with a warm, genuine smile. Both arms rest naturally low at her sides with completely empty open hands (strictly no handbag, no purse, no props). The camera gently pulls back slightly in the warm sunlit courtyard. For the audio, generate a highly realistic female voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent—strictly NOT an Indonesian accent. Explicitly translate the following English text into standard Malaysian Malay for the spoken audio: \"It is so perfect for office styling, formal work events, or even overseas vacations. Click the yellow basket below right now to get your ideal size and color before stock runs out!\" Ensure there are no text overlays or watermarks.",
+    "scene_2_details": "A graceful slow lateral camera tracking shot at a three-quarter side angle around the same Malaysian Muslim woman in the oatmeal beige double-breasted woolen coat. The camera gently glides to highlight the coat's structured silhouette, the four black buttons, clean pocket flaps, and the mid-thigh loose drape over tailored black trousers. Her arms remain naturally low with empty hands as she gently turns her head towards the camera with a confident, pleasant expression against the sunlit travertine courtyard background. For the audio, generate a highly realistic female voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent—strictly NOT an Indonesian accent. Explicitly translate the following English text into standard Malaysian Malay for the spoken audio: \"What makes me love it so much is the loose-fit tailored cutting that flatters every body shape, plus the brushed woolen texture that gives a structured silhouette without feeling stiff or heavy. The deep front flap pockets make it super practical too.\" Ensure there are no text overlays or watermarks."
+  },
+  "caption": "Tahu tak rahsia wanita berkerjaya nampak mewah ala 'old money' setiap hari tanpa perlu berhabis ribuan ringgit dekat butik mewah? ✨\n\nBila sarung kot potongan Korea berkancing dua baris rona oatmeal ni, terus jatuh cinta dengan kualiti fabrik woolen dia yang lembut dan potongan kolar lapel lebar yang nampak berkarisma gila. Rekaan moden yang ringkas tapi auto naikkan seri penampilan harian korang:\n\nKelebihan kot Korea berkancing dua baris ni:\n✨ Potongan lapel lebar berstruktur kemas: Memberi ilusi bahu tegak dan badan lebih lampai\n✨ Rekaan dua baris butang kontras hitam: Sentuhan gaya klasik British dan Korea yang sentiasa evergreen\n✨ Fabrik campuran woolen lembut: Hangat dan selesa tanpa rasa kaku atau berat pada badan\n✨ Dua poket hadapan berpenutup luas: Rekaan praktikal dan mudah untuk simpan telefon atau kad\n✨ Panjang sederhana paras peha: Sesuai untuk gaya Muslimah santai mahupun urusan kerja formal\n\nTips penggayaan: Padankan bersama baju knit rona gelap di bahagian dalam, seluar lurus hitam, dan tudung bawal chiffon rona krim untuk penampilan 'quiet luxury' yang memukau! 🍂\n\nJom tekan beg kuning dekat bawah sekarang untuk dapatkan saiz idaman korang sebelum promosi tamat! 👇💛",
+  "hashtags": "#KotWanita #KoreanCoatMY #OuterwearMuslimah #OOTDPejabat #GayaOldMoney #FashionMuslimahMY",
+  "bgm_prompt": "Upbeat modern lo-fi chill pop instrumental, warm Rhodes electric piano chords, fingerpicked acoustic guitar accents, smooth sub bassline, subtle crisp lo-fi drum beats with soft snare, gentle ambient textures, warm cafe vibe, sophisticated yet relaxing Malaysian lifestyle aesthetic, 112 BPM, pure instrumental, no vocals, high quality mix, seamless loop.",
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/korean_woolen_coat_frame1_front.jpg",
+    "keyframes/korean_woolen_coat_frame2_side.jpg",
+    "keyframes/korean_woolen_coat_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/korean_woolen_coat_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/korean_woolen_coat_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/korean_woolen_coat_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "color": "Oatmeal Beige",
+    "folder": "20261010_013636",
+    "hook_score": 100,
+    "hook_issues": [],
+    "hook_status": "pass",
+    "product_url": "https://vt.tiktok.com/ZS9DnTdfwA1gw-Xlel1/",
+    "hook_archetype": "The Hidden Gem / Secret Discovery",
+    "supabase_id": "8310da51-1a66-4d7b-b0b1-b992f1c5da8c",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-10-09T17:41:46.048231+00:00"
+}

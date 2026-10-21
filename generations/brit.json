@@ -1,0 +1,28 @@
+{
+  "prefix": "brit",
+  "created_at": "2026-09-02T14:21:33.500898+00:00",
+  "product_name": "Kot Trench Panjang Sederhana Gaya British Korea Bertali Pinggang",
+  "opening_line": "Bila sarung kot trench gaya British macam ni, automatik rasa macam tengah jalan dekat bandar London atau Seoul.",
+  "closing_line": "Kain dia jenis tahan angin dan tak mudah renyuk, korang boleh terus tengok saiz yang tinggal dekat beg kuning.",
+  "scenes": {},
+  "caption": null,
+  "hashtags": null,
+  "bgm_prompt": null,
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/brit_frame1_front.jpg",
+    "keyframes/brit_frame2_side.jpg",
+    "keyframes/brit_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/brit_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/brit_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/brit_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "source": "backfill_history",
+    "supabase_id": "4acf8fdd-3849-4745-bb3c-ffcfd2ae3e07",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-09-02T14:21:33.500898+00:00"
+}

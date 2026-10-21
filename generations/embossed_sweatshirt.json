@@ -1,0 +1,28 @@
+{
+  "prefix": "embossed_sweatshirt",
+  "created_at": "2026-09-08T18:05:19.252576+00:00",
+  "product_name": "Baju Muslim Oversized Embossed 3D Sweatshirt Blouse",
+  "opening_line": "Sweatshirt biasa selalu nampak kosong kan? Tapi bila ada tekstur timbul corak huruf 3D macam ni, terus naik seri gaya santai ala Korea walaupun sarung seringkas mungkin.",
+  "closing_line": "Warna pastel manis macam ni memang buat muka nampak awet muda, korang tekan beg kuning sekarang untuk pilih warna kegemaran sebelum licin.",
+  "scenes": {},
+  "caption": null,
+  "hashtags": null,
+  "bgm_prompt": null,
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/embossed_sweatshirt_frame1_front.jpg",
+    "keyframes/embossed_sweatshirt_frame2_side.jpg",
+    "keyframes/embossed_sweatshirt_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/embossed_sweatshirt_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/embossed_sweatshirt_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/embossed_sweatshirt_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "source": "backfill_history",
+    "supabase_id": "fcccb555-4519-44a7-b7e9-8adee3974fcf",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-09-08T18:05:19.252576+00:00"
+}

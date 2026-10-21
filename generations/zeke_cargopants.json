@@ -1,0 +1,31 @@
+{
+  "prefix": "zeke_cargopants",
+  "created_at": "2026-09-11T18:02:47.143742+00:00",
+  "product_name": "ZEKE B0037 Lelaki Gemuk Seluar Panjang Cargo Working Pants",
+  "opening_line": "Ramai orang fikir seluar kerja yang tahan lasak mesti jenis keras dan tak fleksibel bila kita nak duduk lama. Tapi seluar potongan lurus ZEKE ni buktikan pinggang bergetah dengan kain twill lembut memang kombinasi paling selesa untuk lelaki.",
+  "closing_line": "Pakai dengan kemeja untuk kerja boleh, sarung dengan t-shirt kosong untuk lepak hujung minggu pun kemas. Korang yang nak cari seluar serba boleh macam ni, pastikan tekan beg kuning bawah untuk semak carta ukuran sebelum habis saiz.",
+  "scenes": {
+    "scene_1_intro": "A smooth front-facing medium shot with a subtle slow zoom-in on a confident, well-groomed Malaysian Malay man in his late 20s. He is wearing the ZEKE B0037 classic khaki tan straight leg casual working pants featuring an elastic drawstring waistband and clean knee panel stitching, paired with a fitted black crewneck t-shirt and clean white sneakers. He stands in a bright, modern urban Kuala Lumpur pedestrian boulevard with contemporary towers in the soft background. He smiles warmly and speaks naturally with relaxed posture and comfortable eye contact. For the audio, generate a highly realistic male voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent—strictly NOT an Indonesian accent. Explicitly translate the following English text into standard Malaysian Malay for the spoken audio: \"Ramai orang fikir seluar kerja yang tahan lasak mesti jenis keras dan tak fleksibel bila kita nak duduk lama. Tapi seluar potongan lurus ZEKE ni buktikan pinggang bergetah dengan kain twill lembut memang kombinasi paling selesa untuk lelaki.\" Ensure there are no text overlays or watermarks.",
+    "scene_3_outro": "An over-the-shoulder angle medium shot capturing the clean back silhouette, rear pocket with neat stitching, and smooth ankle drape of the khaki pants under soft natural daylight. The Malaysian Malay man turns his head back towards the camera with an effortless, friendly smile. His arms rest naturally at his sides or loosely in pockets—strictly no waving and no raised hands. For the audio, generate a highly realistic male voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent—strictly NOT an Indonesian accent. Explicitly translate the following English text into standard Malaysian Malay for the spoken audio: \"Pakai dengan kemeja untuk kerja boleh, sarung dengan t-shirt kosong untuk lepak hujung minggu pun kemas. Korang yang nak cari seluar serba boleh macam ni, pastikan tekan beg kuning bawah untuk semak carta ukuran sebelum habis saiz.\" Ensure there are no text overlays or watermarks.",
+    "scene_2_detail": "A graceful 3/4 side profile medium shot with a slow cinematic camera pan showcasing the straight-leg drape, durable breathable cotton-twill texture, deep front slash pockets, and elastic waistline of the ZEKE B0037 khaki pants. The Malaysian Malay man places one hand effortlessly into his front pocket and takes a relaxed step, demonstrating the freedom of movement and non-restrictive cut that flatters any build. For the audio, generate a highly realistic male voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent—strictly NOT an Indonesian accent. Explicitly translate the following English text into standard Malaysian Malay for the spoken audio: \"Potongan lurus dia bagi ruang cukup selesa dekat peha dan betis, jadi tak ada rasa melekat langsung walaupun kita banyak bergerak. Poket sisi dia pun dalam, senang nak simpan telefon atau kunci tanpa rasa terjulur keluar.\" Ensure there are no text overlays or watermarks."
+  },
+  "caption": "Paling letih bila kena pakai seluar kerja yang kainnya keras dan menjerut pinggang sepanjang hari kan? 👖\n\nSeluar Panjang Potongan Lurus ZEKE B0037 ni memang jawapan paling tepat untuk lelaki yang mahukan keselesaan maksimum tanpa mengorbankan kekemasan. Rekaan pinggang bergetah penuh dengan tali serut membolehkan saiz dilaras mengikut keselesaan perut, manakala potongan lurus memberi siluet kaki yang kemas dan berstruktur.\n\nKelebihan seluar kerja lurus ZEKE yang buat ramai lelaki suka:\n✨ Pinggang bergetah & bertali serut: Boleh laras ikut keselesaan, sangat mesra saiz dan tidak mencengkam\n✨ Potongan lurus moden: Memberi ilusi kaki lebih kemas dan tidak melekat pada peha\n✨ Fabrik twill kapas tahan lasak: Material berstruktur yang tidak mudah renyuk dan selesa bernafas\n✨ Poket sisi dalam & poket belakang kemas: Muat telefon pintar dan dompet dengan selamat\n✨ Rekaan versatil: Sesuai untuk suasana kerja santai, urusan harian, atau lepak kafe\n\nPadankan saja dengan t-shirt ringkas untuk gaya streetwear hujung minggu, atau gayakan bersama kemeja kasual untuk waktu kerja. 👟\n\nJom upgrade seluar harian korang sekarang, semak pilihan warna dan carta ukuran dekat beg kuning sebelum stok kehabisan! 👇💛\n\n#SeluarLelaki #CargoPantsMen #WorkingPantsMY #OOTDLelaki #SeluarKerjaLelaki",
+  "hashtags": "#SeluarLelaki #CargoPantsMen #WorkingPantsMY #OOTDLelaki #SeluarKerjaLelaki",
+  "bgm_prompt": "Smooth modern urban lo-fi groove, fingerpicked acoustic guitar, subtle Rhodes keyboard chords, crisp rhythmic rim-shot beat, warm deep synth bassline, 112 BPM, relaxed stylish menswear lifestyle vibe, balanced studio mix, pure instrumental, strictly no vocals",
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/zeke_cargopants_frame1_front.jpg",
+    "keyframes/zeke_cargopants_frame2_side.jpg",
+    "keyframes/zeke_cargopants_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/zeke_cargopants_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/zeke_cargopants_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/zeke_cargopants_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "supabase_id": "e9b0c666-1e3c-48dc-8953-fa7e0173455b",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-09-11T18:02:47.143742+00:00"
+}

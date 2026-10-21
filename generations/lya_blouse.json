@@ -1,0 +1,31 @@
+{
+  "prefix": "lya_blouse",
+  "created_at": "2026-09-20T18:37:02.266861+00:00",
+  "product_name": "LYA BLOUSE Mawar Cotton Satin Silk Tunic",
+  "opening_line": "Korang perasan tak, susah betul nak cari kemeja yang nampak mahal dan berkarisma macam gaya 'old money', tapi pada masa sama sopan dan selesa pakai seharian? Cuba tengok Lya Blouse daripada Mawar Cotton ni, kilauan satin sutera dia ada aura eksklusif dan kolar cekak musang yang terus buat gaya kita nampak sangat kemas dan berprofil tinggi.",
+  "closing_line": "Potongan melengkung dekat sisi dengan labuh belakang dia memang cover bahagian punggung dengan cukup selamat bila kita melangkah. Untuk korang yang nak kemeja versatile yang nampak mewah untuk pergi kerja atau santai hujung minggu, lekaskan langkah ke beg kuning sekarang untuk pilih warna yang menawan hati korang.",
+  "scenes": {
+    "scene_1": "A smooth front-facing medium camera shot with subtle slow zoom-in on an aesthetic 25-year-old Malaysian Muslim woman...",
+    "scene_2": "A slow graceful 3/4 side profile camera pan along the flowing silhouette...",
+    "scene_3": "A gentle slow-motion camera shot from behind in a 3/4 back view..."
+  },
+  "caption": "Korang perasan tak, susah betul nak cari kemeja kerja yang nampak mahal ala old money tapi tetap selesa dan sopan untuk cuaca kita? 🤔✨\n\nBila sarung Lya Blouse daripada Mawar Cotton ni, terus rasa level keyakinan naik mendadak! Material satin sutera dia ada kilauan lembut yang nampak eksklusif gila, tak melekap pada badan, dan potongan kolar cekak musang buat gaya kita nampak kemas berkarisma dari pagi sampai ke petang.\n\nKelebihan Lya Blouse Mawar Cotton yang buat jatuh cinta:\n✨ Material Silky Satin Lembut: Sejuk pada kulit, jatuh beralun mewah dan tak mudah renyuk\n✨ Rekaan Kolar Cekak Musang: Memberi ilusi leher jenjang dan penampilan professional moden\n✨ Potongan Curved Hem & Labuh Belakang: Menutup bahagian pinggul dan punggung dengan sangat sopan\n✨ Ciri Mesra Wuduk: Pergelangan tangan berbutang kemas yang mudah disinsing bila-bila masa\n✨ Fleksibiliti Gaya: Sesuai digayakan masuk pejabat, majlis makan malam, ataupun keluar santai hujung minggu\n\nTips gaya: Padankan dengan seluar palazo tona neutral atau pleated skirt untuk tampil anggun minimalis! 🤍\n\nJom lekaskan langkah ke beg kuning dekat bawah untuk lock kod warna pilihan korang sekarang sebelum kehabisan saiz! 👇💛\n\n#LyaBlouse #MawarCotton #KemejaWanita #BlouseSatin #OutfitKePejabat #MuslimahStyleMY",
+  "hashtags": "#LyaBlouse #MawarCotton #KemejaWanita #BlouseSatin #OutfitKePejabat #MuslimahStyleMY",
+  "bgm_prompt": "Warm acoustic groove mixed with upbeat lo-fi cafe pop, 110 BPM, gentle fingerstyle acoustic guitar, subtle warm Rhodes electric piano chords, smooth clean analog bassline, crisp laid-back rimshot percussion, fashionable Kuala Lumpur lifestyle vibe, breezy and optimistic, pure instrumental, no vocals, strictly no lyrics, seamless loopable production.",
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/lya_blouse_frame1_front.jpg",
+    "keyframes/lya_blouse_frame2_side.jpg",
+    "keyframes/lya_blouse_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/lya_blouse_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/lya_blouse_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/lya_blouse_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "supabase_id": "64d1fbdd-fe99-4075-83dd-d0655fb4fe30",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-09-20T18:37:02.266861+00:00"
+}

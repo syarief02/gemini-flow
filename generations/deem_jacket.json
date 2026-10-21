@@ -1,0 +1,30 @@
+{
+  "prefix": "deem_jacket",
+  "created_at": "2026-09-14T14:13:40.1784+00:00",
+  "product_name": "DEEM Perempuan Jaket Women Hooded Jacket Embroidered Logo",
+  "opening_line": "Kadang-kadang bila cuaca tak menentu, nak cari jaket kasual yang ringan dan tak tebal sangat memang agak mencabar kan? Bila saya sarung jaket two-tone berhud daripada DEEM ni, terus jatuh hati sebab gabungan warna merah jambu lembut dengan kelabu gelap dia memang nampak aesthetic gila.",
+  "closing_line": "Jaket santai macam ni senang sangat nak suai padan dengan seluar palazzo atau denim bila nak pergi kelas mahupun cafe hopping. Siapa yang nak tambah jaket bergaya ala streetwear macam ni, jemput singgah beg kuning untuk pilih saiz korang sebelum warna pastel ni kehabisan.",
+  "scenes": {},
+  "caption": null,
+  "hashtags": null,
+  "bgm_prompt": null,
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/deem_jacket_frame1_front.jpg",
+    "keyframes/deem_jacket_frame2_side.jpg",
+    "keyframes/deem_jacket_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/deem_jacket_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/deem_jacket_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/deem_jacket_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "sku": "Raglan Sleeve Windbreaker",
+    "brand": "DEEM",
+    "category": "Women Hooded Jacket",
+    "supabase_id": "3bf97659-3b28-4201-b10b-22ceb7816a45",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-09-14T14:13:40.1784+00:00"
+}

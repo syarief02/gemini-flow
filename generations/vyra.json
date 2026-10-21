@@ -1,0 +1,28 @@
+{
+  "prefix": "vyra",
+  "created_at": "2026-08-28T12:15:00+00:00",
+  "product_name": "Vyra Set Skirt",
+  "opening_line": "Hari ni saya nak share satu set skirt yang sangat versatile...",
+  "closing_line": "Korang boleh tekan beg kuning kalau nak tengok saiz yang ada.",
+  "scenes": {},
+  "caption": null,
+  "hashtags": null,
+  "bgm_prompt": null,
+  "bgm_title": null,
+  "keyframes": [
+    "keyframes/vyra_frame1_front.jpg",
+    "keyframes/vyra_frame2_side.jpg",
+    "keyframes/vyra_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/vyra_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/vyra_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/vyra_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "source": "backfill_history",
+    "supabase_id": "c75637e3-eb08-47ac-9fb2-701eb9403547",
+    "imported_from": "generations/supabase_export_2026-10-21.json"
+  },
+  "updated_at": "2026-08-28T12:15:00+00:00"
+}
