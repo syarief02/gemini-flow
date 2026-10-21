@@ -429,7 +429,7 @@ Deliver to the user in this exact order:
 
 ### Step 9: Save the Generation Record & History (in the repo)
 
-**Goal:** Keep everything needed to re-render, resend or audit a product in the repo (pushed to GitHub in Step 10), and prevent hook fatigue across runs. **Supabase is not used by the pipeline any more:** its legacy keys were disabled on 2026-10-20 and the user chose GitHub as the store on 2026-10-21. (`supabase_client.py` remains only for the unused web app, `webapp.py`.)
+**Goal:** Keep everything needed to re-render, resend or audit a product in the repo (pushed to GitHub in Step 10), and prevent hook fatigue across runs. **Supabase is not used by the pipeline any more:** its legacy keys were disabled on 2026-10-20 and the user chose GitHub as the store on 2026-10-21. On 2026-10-21 the `gemini_flow_generations` table and the `gemini-flow-keyframes` bucket were removed from Supabase after a verified export (`generations/supabase_export_2026-10-21.json`, `keyframes/`, `media/`). The Supabase project is shared with other programs (BubatRent/Rent2Go, forex, MQL): never touch anything there. (`supabase_client.py` remains only for the unused web app, `webapp.py`.)
 
 **Save the record BEFORE rendering (Step 6):** `automate_flow.py` reads the prompts from it.
 
