@@ -1,0 +1,47 @@
+{
+  "prefix": "fleece_wool_midlength_coat",
+  "created_at": "2026-10-26T01:34:09+08:00",
+  "product_name": "Kot Wanita Potongan Longgar Panjang Sederhana Kain Campuran Bulu Biri-Biri",
+  "opening_line": "Siapa dekat sini tempat kerja sejuk macam peti ais sampai menggigil? Kot labuh campuran bulu ni penyelamat terbaik, kain dia hangat selesa tapi potongan terletak kemas tak nampak tebal!",
+  "closing_line": "Ada banyak pilihan warna menarik macam moka, hitam, dan biru klasik. Kalau korang nak nampak mewah bergaya ke pejabat tanpa rasa sejuk, cepat tekan beg kuning sebelum saiz habis!",
+  "scenes": {
+    "visual_prompts": {
+      "scene_1": "Static locked-off vertical shot, the camera does not move. A graceful 24-year-old Malaysian Muslimah model wearing an elegant camel-tan mid-length fleece wool-blend coat with notched lapels and two-button closure, a neat nude-camel chiffon hijab, a black inner top, and tailored black trousers stands in a bright sunlit minimalist boutique interior. She faces forward with a warm natural smile, talking continuously, then turns smoothly forty-five degrees to her left into a side profile while speaking. Natural daylight, smooth wool texture. No camera movement. No background music.",
+      "scene_2": "Static locked-off vertical shot, the camera does not move. The same Malaysian Muslimah model stands in three-quarter side profile, talking with warm expressive facial expressions. She turns smoothly further away from the camera into an over-the-shoulder glance while continuing to speak naturally. The shot highlights the clean elongating straight-cut silhouette of the mid-length coat falling below the knee and the structured tailored shoulders. Both empty hands rest naturally at sides. No camera movement. No background music.",
+      "scene_3": "Static locked-off vertical shot, the camera does not move. The same Malaysian Muslimah model is initially seen in an over-the-shoulder glance, talking comfortably. She pivots smoothly back around to face directly towards the camera, returning to her confident front-facing posture with a cheerful friendly smile, finishing her closing sentence seamlessly. Full outfit from hijab to trousers clearly visible. No camera movement. No background music."
+    },
+    "spoken_dialogue": {
+      "scene_1": "Siapa dekat sini tempat kerja sejuk macam peti ais sampai menggigil? Kot labuh campuran bulu ni penyelamat terbaik, kain dia hangat selesa tapi potongan terletak kemas tak nampak tebal!",
+      "scene_2": "Tengok bila pusing ke sisi, potongan dia jatuh lurus melepasi paras lutut, memang sopan dan kemas. Kolar blazer dengan butang depan ni bagi efek badan nampak lebih tinggi dan profesional.",
+      "scene_3": "Ada banyak pilihan warna menarik macam moka, hitam, dan biru klasik. Kalau korang nak nampak mewah bergaya ke pejabat tanpa rasa sejuk, cepat tekan beg kuning sebelum saiz habis!"
+    },
+    "scene_1_intro": "Static locked-off vertical shot, the camera does not move. A graceful 24-year-old Malaysian Muslimah model wearing an elegant camel-tan mid-length fleece wool-blend coat with notched lapels and two-button closure, a neat nude-camel chiffon hijab, a black inner top, and tailored black trousers stands in a bright sunlit minimalist boutique interior. She faces forward with a warm natural smile, talking continuously, then turns smoothly forty-five degrees to her left into a side profile while speaking. Natural daylight, smooth wool texture. No camera movement. No background music.\n\nSpoken Malay (Lip-sync): \"Siapa dekat sini tempat kerja sejuk macam peti ais sampai menggigil? Kot labuh campuran bulu ni penyelamat terbaik, kain dia hangat selesa tapi potongan terletak kemas tak nampak tebal!\"",
+    "scene_2_detail": "Static locked-off vertical shot, the camera does not move. The same Malaysian Muslimah model stands in three-quarter side profile, talking with warm expressive facial expressions. She turns smoothly further away from the camera into an over-the-shoulder glance while continuing to speak naturally. The shot highlights the clean elongating straight-cut silhouette of the mid-length coat falling below the knee and the structured tailored shoulders. Both empty hands rest naturally at sides. No camera movement. No background music.\n\nSpoken Malay (Lip-sync): \"Tengok bila pusing ke sisi, potongan dia jatuh lurus melepasi paras lutut, memang sopan dan kemas. Kolar blazer dengan butang depan ni bagi efek badan nampak lebih tinggi dan profesional.\"",
+    "scene_3_outro": "Static locked-off vertical shot, the camera does not move. The same Malaysian Muslimah model is initially seen in an over-the-shoulder glance, talking comfortably. She pivots smoothly back around to face directly towards the camera, returning to her confident front-facing posture with a cheerful friendly smile, finishing her closing sentence seamlessly. Full outfit from hijab to trousers clearly visible. No camera movement. No background music.\n\nSpoken Malay (Lip-sync): \"Ada banyak pilihan warna menarik macam moka, hitam, dan biru klasik. Kalau korang nak nampak mewah bergaya ke pejabat tanpa rasa sejuk, cepat tekan beg kuning sebelum saiz habis!\""
+  },
+  "caption": "Siapa dekat sini tempat kerja dia sejuk macam peti ais sampai menggigil? Kot labuh campuran bulu gaya Korea ni memang penyelamat korang! Potongan dia jatuh lurus melepasi paras lutut, nampak sangat kemas, sopan dan automatik buat badan nampak lebih tinggi. Kain lembut tahan sejuk tapi tak berat atau mengembang. Sesuai sangat digayakan ke pejabat, dewan kuliah, atau travel. Jom upgrade gaya kerja korang sekarang, tekan beg kuning di bawah sebelum warna kegemaran korang habis! 👇✨",
+  "hashtags": "#KotLabuh #LongCoatMalaysia #WoolCoat #OOTDMalaysia #ModestFashionMY #BajuKerja #OfficeLook #KoreanStyleMalaysia #TikTokShopMY #BegKuning",
+  "bgm_prompt": "Elegant corporate chillhop with warm mellow Rhodes keys, smooth muted electric guitar, subtle soft acoustic drums, confident modern aesthetic cafe groove, 98 BPM, inspiring autumn city vibe, purely instrumental, strictly no vocals.",
+  "bgm_title": "Fleece Wool Midlength Coat - BGM Instrumental",
+  "keyframes": [
+    "keyframes/fleece_wool_midlength_coat_frame1_front.jpg",
+    "keyframes/fleece_wool_midlength_coat_frame2_side.jpg",
+    "keyframes/fleece_wool_midlength_coat_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/fleece_wool_midlength_coat_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/fleece_wool_midlength_coat_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/fleece_wool_midlength_coat_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "tiktok_url": "https://vt.tiktok.com/ZS9y8t37vLeBq-ZQLG1/",
+    "pdp_url": "https://shop.tiktok.com/my/pdp/1734023087505638786",
+    "hook_score": 100,
+    "hook_status": "pass",
+    "hook_archetype": "The Visual Pattern Interrupt / Direct Question",
+    "hook_issues": [],
+    "keyframe_provider": "ImageGen / native generation tool, 3/3 active",
+    "reference_image": "keyframes/fleece_wool_midlength_coat_product.jpg"
+  },
+  "updated_at": "2026-10-26T01:34:09+08:00"
+}
