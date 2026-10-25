@@ -8,7 +8,7 @@ Fast, mobile-first web app that generates:
 - Suno AI Instrumental BGM Prompt
 - Supabase cloud database synchronization
 
-Supports Vercel Serverless, Railway, and local execution.
+Supports local execution and self-hosted server environments.
 """
 
 from __future__ import annotations
@@ -228,7 +228,7 @@ def find_matching_keyframes(query_text: str) -> Dict[str, Optional[str]]:
             if f.lower().endswith((".jpg", ".jpeg", ".png", ".webp")):
                 candidates.add(f)
 
-    # Always check Supabase Storage bucket as well (works on Vercel and remote clients)
+    # Always check Supabase Storage bucket as well (works for remote clients and local instances)
     for bf in get_supabase_bucket_files():
         if bf.lower().endswith((".jpg", ".jpeg", ".png", ".webp")):
             candidates.add(bf)
