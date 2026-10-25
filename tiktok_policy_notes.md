@@ -4,7 +4,7 @@
 # AI agents MUST check this file AND search online for the latest updates
 # BEFORE generating any content. If new rules are found, update this file.
 #
-# Last Verified: 2026-10-18
+# Last Verified: 2026-10-26
 
 ---
 
@@ -123,6 +123,7 @@ These are rules we enforce on ourselves to maintain a clean account health:
 
 | Date | Change | Source |
 |------|--------|--------|
+| 2026-10-26 | Live compliance review: Verified late-October 2026 TikTok Shop Malaysia enforcement updates: Creator Health Rating (CHR 2.0, 0-1,000 pts) strict monitoring, prohibition of absolute/unverified superiority price claims ("cheapest anywhere"), mandatory accurate product-content match against official listings, and ongoing mandatory AIGC disclosure toggle. Content generator strictly conforms with zero-direct-price rule and compliant AIGC disclosure. | TikTok Shop Malaysia Creator Policy Updates & Seller Compliance Bulletin (Oct 2026) |
 | 2026-10-18 | Live compliance review: Verified mid-October 2026 TikTok Shop AIGC Seller Playbook enforcement (strict scrutiny on AI imagery altering physical traits like cut/material in Fashion, mandatory AIGC disclosure toggle, and 30-day creator grace periods for affiliate commission changes). Pipeline maintains 100% adherence. | TikTok Shop Malaysia Seller Center & Creator Compliance Bulletin (Oct 2026) |
 | 2026-10-11 | Live compliance review: Verified October 2026 updates including strict AIGC policy against exaggerating product features/alterations, mandatory synthetic media disclosure toggle, and affiliate account health requirements (PPS >= 3.5, CHR >= 150). Content generator strictly aligns. | TikTok Shop Creator Policy Updates & Seller Playbook (Oct 2026) |
 | 2026-10-09 | Live compliance review: Verified October 2026 content policy updates in Malaysia/SEA, enforcing strict moderation against absolute price claims ("cheapest price anywhere"), unverified wellness/health outcome claims, and mandatory AIGC disclosure. Our zero-direct-price rule and AIGC toggle workflow remain 100% compliant. | TikTok Shop Malaysia Seller Center & Creator Policy Updates (Oct 2026) |
