@@ -232,25 +232,6 @@ def save_generation_history(
         })
         print(f"🗂️ Saved generation record: {record_file.relative_to(record_file.parent.parent)}")
 
-        # Cloud sync to Supabase if enabled
-        try:
-            from supabase_client import save_generation_record, is_supabase_enabled
-            if is_supabase_enabled():
-                save_generation_record(
-                    product_name=product_name,
-                    opening_line=opening_line,
-                    closing_line=closing_line,
-                    metadata=meta,
-                    scenes=scenes or {},
-                    caption=caption,
-                    hashtags=hashtags,
-                    bgm_prompt=bgm_prompt,
-                    keyframe_urls=kf["urls"]
-                )
-        except Exception as e_sb:
-            print(f"Notice: Supabase cloud sync: {e_sb}")
-
-
 SYSTEM_PROMPT = """You are a top Malaysian TikTok e-commerce content strategist who creates VIRAL short-form video scripts.
 You specialize in creating spoken dialogue that feels like a real person talking to their bestie—NOT a product brochure being read aloud.
 
