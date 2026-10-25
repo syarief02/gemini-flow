@@ -131,21 +131,13 @@ async def setup_suno(prompt_text: str = None, title_text: str = None):
     except Exception as e_lyr:
         print(f"Lyrics editor clear notice: {e_lyr}")
 
-    # 5. Fill Styles of Music textarea
+    # 5. Fill Styles of Music textarea (explicitly excluding Cowriter assistant prompt)
     styles_ta = suno_page.locator(
-        "textarea[placeholder*='dubstep elements'], "
-        "textarea[placeholder*='miami bass'], "
-        "textarea[placeholder*='mystical atmosphere'], "
-        "textarea[placeholder*='smooth female vocals'], "
-        "textarea[placeholder*='techno dubstep'], "
-        "textarea[placeholder*='dance floor'], "
-        "textarea[placeholder*='Style of Music'], "
-        "textarea[placeholder*='style'], "
-        "div:has-text('Styles') textarea"
+        "textarea:not([placeholder='Ask anything']):not([aria-label='Cowriter prompt']):not([aria-label='Script']):not([aria-label='Tone'])"
     ).first
 
     if await styles_ta.is_visible(timeout=3000):
-        print("Typing BGM style prompt into Suno...")
+        print("Typing BGM style prompt into Suno Style box...")
         await styles_ta.click(force=True)
         await styles_ta.fill("")
         await styles_ta.fill(target_prompt)
