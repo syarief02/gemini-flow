@@ -14,28 +14,34 @@ if sys.platform == "win32":
 DEFAULT_INBOX_URL = "https://mail.google.com/mail/u/0/#inbox"
 
 
-def get_latest_caption(prefix: str = None) -> str:
-    """Caption + hashtags from generations/<prefix>.json, or from the newest record without a prefix.
-
-    Never falls back to a stored sample caption: sending another product's caption is worse than not sending.
-    """
+def get_record_info(prefix: str = None) -> tuple[str, str, str]:
+    """Retrieve (caption, tiktok_url, product_name) from record."""
     from generation_store import latest_record, load_record
 
     record = load_record(prefix) if prefix else latest_record()
     if not record or not (record.get("caption") or "").strip():
         where = f"generations/{prefix}.json" if prefix else "generations/"
         raise RuntimeError(f"No caption found in {where}. Pass --caption or --file instead.")
-    print(f"Caption from record: {record.get('product_name')} ({record.get('prefix')})")
+    
+    product_name = record.get("product_name", "")
+    prefix_str = record.get("prefix", "")
+    print(f"Loaded record: {product_name} ({prefix_str})")
+    
     cap = record["caption"].strip()
     tags = (record.get("hashtags") or "").strip()
-    if tags and tags not in cap:
-        return f"{cap}\n\n{tags}"
-    return cap
+    full_caption = f"{cap}\n\n{tags}".strip() if tags and tags not in cap else cap
+    
+    meta = record.get("metadata") or {}
+    tiktok_url = meta.get("tiktok_url") or meta.get("source_url") or ""
+    
+    return full_caption, tiktok_url, product_name
 
 
-async def reply_with_clean_format(caption_text: str = None, thread_url: str = None):
-    target_caption = (caption_text or get_latest_caption()).strip()
-
+async def reply_with_clean_format(
+    caption_text: str = None,
+    thread_url: str = None,
+    search_query: str = None
+):
     print("Step 1: Connecting to Brave over CDP on port 9222...")
     p = await async_playwright().start()
     browser = None
@@ -58,31 +64,73 @@ async def reply_with_clean_format(caption_text: str = None, thread_url: str = No
     if not gmail_page:
         print("Opening new tab to Gmail...")
         gmail_page = await context.new_page()
-        if thread_url:
-            await gmail_page.goto(thread_url.strip(), wait_until="domcontentloaded")
-        else:
-            await gmail_page.goto(DEFAULT_INBOX_URL, wait_until="domcontentloaded")
+
+    await gmail_page.bring_to_front()
+
+    if thread_url:
+        print(f"Navigating directly to specified thread: {thread_url}")
+        await gmail_page.goto(thread_url.strip(), wait_until="domcontentloaded")
+        await gmail_page.wait_for_timeout(3000)
     else:
-        await gmail_page.bring_to_front()
-        if thread_url and thread_url.strip() not in gmail_page.url:
-            print(f"Navigating to specified thread: {thread_url}")
-            await gmail_page.goto(thread_url.strip(), wait_until="domcontentloaded")
+        # Always navigate to inbox first to clear any stale open thread
+        print("Navigating to Gmail inbox to find target thread...")
+        await gmail_page.goto(DEFAULT_INBOX_URL, wait_until="domcontentloaded")
+        await gmail_page.wait_for_timeout(3000)
 
-    await gmail_page.wait_for_timeout(3000)
+        target_row = None
 
-    # If we are on inbox list (not inside an active thread), open the top/latest email thread
-    is_inside_thread = bool(re.search(r'#(?:inbox|all|sent)/[A-Za-z0-9_-]+', gmail_page.url))
-    if not is_inside_thread:
-        print("Currently on inbox list or overview. Opening the latest email thread...")
-        top_thread = gmail_page.locator("tr.zA, div[role='main'] table tbody tr").first
-        if await top_thread.is_visible(timeout=5000):
-            await top_thread.click()
+        # Clean search query (e.g. extract shortcode if it's a URL)
+        clean_search = (search_query or "").strip()
+        url_match = re.search(r"vt\.tiktok\.com/([A-Za-z0-9_-]+)", clean_search)
+        query_token = url_match.group(1) if url_match else clean_search
+
+        if query_token:
+            print(f"Looking for thread containing: '{query_token}'...")
+            # Step A: Scan top inbox rows
+            rows = await gmail_page.locator("tr.zA").all()
+            for i, r in enumerate(rows[:25]):
+                txt = await r.inner_text()
+                if query_token in txt:
+                    print(f"Match found in inbox Row {i}!")
+                    target_row = r
+                    break
+
+            # Step B: If not in top rows, search Gmail search bar
+            if not target_row:
+                print(f"Not in top visible rows. Using Gmail search bar for '{query_token}'...")
+                search_input = gmail_page.locator("input[aria-label*='Search mail'], input[name='q']").first
+                if await search_input.is_visible(timeout=3000):
+                    await search_input.click()
+                    await search_input.fill(clean_search)
+                    await gmail_page.keyboard.press("Enter")
+                    await gmail_page.wait_for_timeout(3000)
+                    result_rows = await gmail_page.locator("tr.zA, div[role='main'] table tbody tr").all()
+                    if result_rows:
+                        print(f"Found {len(result_rows)} search result(s). Selecting first match...")
+                        target_row = result_rows[0]
+                    else:
+                        print("WARNING: Search returned no results.")
+
+        if target_row:
+            print("Opening matched thread...")
+            await target_row.click()
             await gmail_page.wait_for_timeout(3000)
-            print(f"Opened thread: {gmail_page.url}")
         else:
-            print("Notice: No visible thread rows found in inbox table, attempting to stay on current page.")
+            # Fallback only if no search query was given: top thread
+            print("Notice: No specific search query matched. Opening top thread in inbox...")
+            top_thread = gmail_page.locator("tr.zA, div[role='main'] table tbody tr").first
+            if await top_thread.is_visible(timeout=5000):
+                await top_thread.click()
+                await gmail_page.wait_for_timeout(3000)
 
-    await gmail_page.wait_for_timeout(2000)
+    print(f"Active thread URL: {gmail_page.url}")
+
+    # Double check that thread is open
+    is_inside_thread = bool(re.search(r'#(?:inbox|all|sent|search)/[A-Za-z0-9_-]+', gmail_page.url))
+    if not is_inside_thread:
+        print("Notice: May not be inside a thread, attempting reply trigger anyway.")
+
+    await gmail_page.wait_for_timeout(1500)
 
     # Click Reply button or press 'r'
     reply_btn = gmail_page.locator("span[role='button']:has-text('Reply'), div[role='button']:has-text('Reply'), [aria-label*='Reply']").last
@@ -114,7 +162,7 @@ async def reply_with_clean_format(caption_text: str = None, thread_url: str = No
         await gmail_page.evaluate("""() => {
             const bodyBox = document.querySelector("div[role='textbox'][aria-label*='Message Body'], div[role='textbox']");
             if (bodyBox) {
-                const quotes = Array.from(bodyBox.querySelectorAll("div.gmail_quote, div.gmail_extra, blockquote, .gmail_quote, [class*='quote']"));
+                const quotes = bodyBox.querySelectorAll("div.gmail_quote, blockquote, div.ajR");
                 quotes.forEach(q => q.remove());
             }
         }""")
@@ -130,7 +178,7 @@ async def reply_with_clean_format(caption_text: str = None, thread_url: str = No
 
         # Step 2d: Enter pure clean caption content
         print("Entering pure clean caption content...")
-        await body_box.fill(target_caption)
+        await body_box.fill(caption_text)
         await gmail_page.wait_for_timeout(1000)
 
         # Locate Send button
@@ -143,12 +191,15 @@ async def reply_with_clean_format(caption_text: str = None, thread_url: str = No
             await gmail_page.screenshot(path=str(screenshot_sent))
             print(f"Saved sent confirmation screenshot: {screenshot_sent}")
             print("CLEAN EMAIL REPLY SENT SUCCESSFULLY!")
+            await p.stop()
             return True
         else:
             print("Send button not found directly.")
+            await p.stop()
             return False
     else:
         print("Composer textbox not found.")
+        await p.stop()
         return False
 
 
@@ -159,9 +210,12 @@ if __name__ == "__main__":
     parser.add_argument("--prefix", type=str, help="Send the caption from generations/<prefix>.json")
     parser.add_argument("--latest", action="store_true", help="Send the caption from the newest record in generations/")
     parser.add_argument("--thread-url", type=str, help="Target Gmail thread URL")
+    parser.add_argument("--search", type=str, help="Search query or product link to find the exact email thread")
     args = parser.parse_args()
 
     chosen_caption = None
+    search_q = args.search
+
     if args.caption:
         chosen_caption = args.caption
     elif args.file:
@@ -176,7 +230,14 @@ if __name__ == "__main__":
             except Exception:
                 chosen_caption = content
     else:
-        chosen_caption = get_latest_caption(args.prefix)
+        cap, link, title = get_record_info(args.prefix)
+        chosen_caption = cap
+        if not search_q:
+            search_q = link or title
 
-    success = asyncio.run(reply_with_clean_format(caption_text=chosen_caption, thread_url=args.thread_url))
+    success = asyncio.run(reply_with_clean_format(
+        caption_text=chosen_caption,
+        thread_url=args.thread_url,
+        search_query=search_q
+    ))
     sys.exit(0 if success else 1)
