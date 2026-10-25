@@ -1,0 +1,46 @@
+{
+  "prefix": "desince_hijab_friendly_blazer",
+  "created_at": "2026-10-26T04:21:07+08:00",
+  "product_name": "DESINCE Women Korean Style Blazer",
+  "opening_line": "Korang pening kepala fikir baju apa nak pakai masa presentation FYP nanti? Blazer potongan Korea ni mesra hijab dan labuh menutup pinggul, sarung je terus rasa yakin macam profesional!",
+  "closing_line": "Padankan dengan seluar potongan lurus dan tudung bawal macam saya, terus nampak bersedia untuk skor markah A. Nak tampil kemas bergaya masa viva nanti, cepat tekan beg kuning sebelum kehabisan saiz!",
+  "scenes": {
+    "visual_prompts": {
+      "scene_1": "Static locked-off vertical shot, the camera does not move. A young Malaysian Muslimah wearing a neat nude taupe bawal chiffon hijab, a tailored Korean-style taupe-mocha grey single-breasted blazer over a ribbed cream inner top, cream tailored trousers, and white loafers stands centered in a minimalist studio. Both hands remain empty and relaxed at her sides. She smiles warmly at the camera, then gently pivots her body forty-five degrees to her right to reveal the blazer's clean side drape and structured shoulder line, speaking continuously with realistic lip-sync. Clear Malaysian Malay female voice. No background music, only her voice and soft ambient sound.",
+      "scene_2": "Static locked-off vertical shot, the camera does not move. The same young Malaysian Muslimah in the nude taupe hijab, taupe blazer, cream trousers, and white loafers begins in a side profile view, hands resting completely empty at her sides. She smoothly turns further away into an elegant over-the-shoulder angle, glancing back toward the viewer with a friendly smile while showcasing the seamless back silhouette and modest hip-covering length, speaking continuously with realistic lip-sync. Clear Malaysian Malay female voice. No background music, only her voice and soft ambient sound.",
+      "scene_3": "Static locked-off vertical shot, the camera does not move. The same young Malaysian Muslimah in the nude taupe hijab, taupe blazer, cream trousers, and white loafers begins in an over-the-shoulder pose, hands relaxed and empty at her sides. She turns smoothly back to face the camera directly in a front-facing stance, delivering a confident, warm sign-off smile, completing a seamless 360-degree loop while speaking continuously with realistic lip-sync. Clear Malaysian Malay female voice. No background music, only her voice and soft ambient sound."
+    },
+    "spoken_dialogue": {
+      "scene_1": "Korang pening kepala fikir baju apa nak pakai masa presentation FYP nanti? Blazer potongan Korea ni mesra hijab dan labuh menutup pinggul, sarung je terus rasa yakin macam profesional!",
+      "scene_2": "Tengok bila pusing ke sisi, potongan dia kemas jatuh melepasi peha tanpa menampakkan bentuk badan. Fabrik lembut tak mudah renyuk, kolar lapel pun terletak rapi sepanjang hari pembentangan.",
+      "scene_3": "Padankan dengan seluar potongan lurus dan tudung bawal macam saya, terus nampak bersedia untuk skor markah A. Nak tampil kemas bergaya masa viva nanti, cepat tekan beg kuning sebelum kehabisan saiz!"
+    },
+    "scene_1_intro": "Static locked-off vertical shot, the camera does not move. A young Malaysian Muslimah wearing a neat nude taupe bawal chiffon hijab, a tailored Korean-style taupe-mocha grey single-breasted blazer over a ribbed cream inner top, cream tailored trousers, and white loafers stands centered in a minimalist studio. Both hands remain empty and relaxed at her sides. She smiles warmly at the camera, then gently pivots her body forty-five degrees to her right to reveal the blazer's clean side drape and structured shoulder line, speaking continuously with realistic lip-sync. Clear Malaysian Malay female voice. No background music, only her voice and soft ambient sound.\n\nSpoken Malay (Lip-sync): \"Korang pening kepala fikir baju apa nak pakai masa presentation FYP nanti? Blazer potongan Korea ni mesra hijab dan labuh menutup pinggul, sarung je terus rasa yakin macam profesional!\"",
+    "scene_2_detail": "Static locked-off vertical shot, the camera does not move. The same young Malaysian Muslimah in the nude taupe hijab, taupe blazer, cream trousers, and white loafers begins in a side profile view, hands resting completely empty at her sides. She smoothly turns further away into an elegant over-the-shoulder angle, glancing back toward the viewer with a friendly smile while showcasing the seamless back silhouette and modest hip-covering length, speaking continuously with realistic lip-sync. Clear Malaysian Malay female voice. No background music, only her voice and soft ambient sound.\n\nSpoken Malay (Lip-sync): \"Tengok bila pusing ke sisi, potongan dia kemas jatuh melepasi peha tanpa menampakkan bentuk badan. Fabrik lembut tak mudah renyuk, kolar lapel pun terletak rapi sepanjang hari pembentangan.\"",
+    "scene_3_outro": "Static locked-off vertical shot, the camera does not move. The same young Malaysian Muslimah in the nude taupe hijab, taupe blazer, cream trousers, and white loafers begins in an over-the-shoulder pose, hands relaxed and empty at her sides. She turns smoothly back to face the camera directly in a front-facing stance, delivering a confident, warm sign-off smile, completing a seamless 360-degree loop while speaking continuously with realistic lip-sync. Clear Malaysian Malay female voice. No background music, only her voice and soft ambient sound.\n\nSpoken Malay (Lip-sync): \"Padankan dengan seluar potongan lurus dan tudung bawal macam saya, terus nampak bersedia untuk skor markah A. Nak tampil kemas bergaya masa viva nanti, cepat tekan beg kuning sebelum kehabisan saiz!\""
+  },
+  "caption": "Pening kepala fikir baju presentation atau viva FYP nanti? Sarung blazer gaya Korea ni, terus auto kemas, berkarisma dan konfiden depan panel! Potongan labuh mesra hijab, kain selesa tak panas. Tekan beg kuning sekarang sebelum kehabisan saiz! 👇✨",
+  "hashtags": "#blazerwanita #blazerhijabfriendly #blazerstudent #outfitpresentation #bajupresentation #blazerkoreanstyle #ootdstudent #tiktokshopmalaysia",
+  "bgm_prompt": "Upbeat lo-fi study beat with warm Rhodes electric piano, mellow muted nylon guitar, smooth acoustic bass groove, gentle vinyl crackle, uplifting confident campus vibe, strictly instrumental, no vocals.",
+  "bgm_title": "Campus Presentation Chill",
+  "keyframes": [
+    "keyframes/desince_hijab_friendly_blazer_frame1_front.jpg",
+    "keyframes/desince_hijab_friendly_blazer_frame2_side.jpg",
+    "keyframes/desince_hijab_friendly_blazer_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/desince_hijab_friendly_blazer_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/desince_hijab_friendly_blazer_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/desince_hijab_friendly_blazer_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "source_url": "https://shop.tiktok.com/my/pdp/1737445658023069042",
+    "tiktok_url": "https://vt.tiktok.com/ZS9yLhwvAEGxD-vrRfs/",
+    "category": "Pakaian & Fesyen",
+    "hook_archetype": "The FOMO / FYP Social Proof Trend",
+    "hook_score": 100,
+    "hook_status": "pass",
+    "hook_issues": []
+  },
+  "updated_at": "2026-10-26T04:21:07+08:00"
+}
