@@ -1,0 +1,47 @@
+{
+  "prefix": "korean_corduroy_retro_jacket",
+  "created_at": "2026-10-26T01:04:46+08:00",
+  "product_name": "Korean Style Corduroy Casual Jacket Women Retro Loose All Match Long Sleeved Top",
+  "opening_line": "Bosan asyik sarung cardigan nipis atau denim biasa bila keluar jalan? Jaket korduroi retro ni ada tekstur jalur timbul yang buat pakaian santai korang automatik nampak ada gaya dan mahal!",
+  "closing_line": "Warna moka retro ni senang sangat nak padankan dengan tudung dan seluar kegemaran korang. Kalau nak bergaya aesthetic santai macam ni, cepat tekan beg kuning sebelum saiz habis!",
+  "scenes": {
+    "visual_prompts": {
+      "scene_1": "Static locked-off vertical shot, the camera does not move. A graceful 24-year-old Malaysian Muslimah model wearing a vintage mocha-brown corduroy cropped jacket with lantern sleeves, a neat nude beige chiffon hijab, and flowing wide-leg cream trousers stands in a bright sunlit minimalist Scandinavian cafe. She faces forward with a warm natural smile, talking continuously, then turns smoothly forty-five degrees to her left into a side profile while speaking. Natural daylight, photorealistic texture on the corduroy ridges. No camera movement. No background music.",
+      "scene_2": "Static locked-off vertical shot, the camera does not move. The same Malaysian Muslimah model stands in three-quarter side profile, talking with warm expressive facial expressions. She turns smoothly further away from the camera into an over-the-shoulder glance while continuing to speak naturally. The shot highlights the balloon lantern sleeve volume, the gathered cuffs, and the clean boxy drape of the cropped jacket. Both empty hands rest naturally at sides. No camera movement. No background music.",
+      "scene_3": "Static locked-off vertical shot, the camera does not move. The same Malaysian Muslimah model is initially seen in an over-the-shoulder glance, talking comfortably. She pivots smoothly back around to face directly towards the camera, returning to her confident front-facing posture with a cheerful friendly smile, finishing her closing sentence seamlessly. Full outfit from hijab to trousers clearly visible. No camera movement. No background music."
+    },
+    "spoken_dialogue": {
+      "scene_1": "Bosan asyik sarung cardigan nipis atau denim biasa bila keluar jalan? Jaket korduroi retro ni ada tekstur jalur timbul yang buat pakaian santai korang automatik nampak ada gaya dan mahal!",
+      "scene_2": "Tengok potongan cropped dan lengan gelembung dia, memang terletak cantik sangat. Fabrik korduroi ni lembut beralun dan tak rasa kaku, sesuai sangat untuk cuaca santai atau masuk pejabat berhawa dingin.",
+      "scene_3": "Warna moka retro ni senang sangat nak padankan dengan tudung dan seluar kegemaran korang. Kalau nak bergaya aesthetic santai macam ni, cepat tekan beg kuning sebelum saiz habis!"
+    },
+    "scene_1_intro": "Static locked-off vertical shot, the camera does not move. A graceful 24-year-old Malaysian Muslimah model wearing a vintage mocha-brown corduroy cropped jacket with lantern sleeves, a neat nude beige chiffon hijab, and flowing wide-leg cream trousers stands in a bright sunlit minimalist Scandinavian cafe. She faces forward with a warm natural smile, talking continuously, then turns smoothly forty-five degrees to her left into a side profile while speaking. Natural daylight, photorealistic texture on the corduroy ridges. No camera movement. No background music.\n\nSpoken Malay (Lip-sync): \"Bosan asyik sarung cardigan nipis atau denim biasa bila keluar jalan? Jaket korduroi retro ni ada tekstur jalur timbul yang buat pakaian santai korang automatik nampak ada gaya dan mahal!\"",
+    "scene_2_detail": "Static locked-off vertical shot, the camera does not move. The same Malaysian Muslimah model stands in three-quarter side profile, talking with warm expressive facial expressions. She turns smoothly further away from the camera into an over-the-shoulder glance while continuing to speak naturally. The shot highlights the balloon lantern sleeve volume, the gathered cuffs, and the clean boxy drape of the cropped jacket. Both empty hands rest naturally at sides. No camera movement. No background music.\n\nSpoken Malay (Lip-sync): \"Tengok potongan cropped dan lengan gelembung dia, memang terletak cantik sangat. Fabrik korduroi ni lembut beralun dan tak rasa kaku, sesuai sangat untuk cuaca santai atau masuk pejabat berhawa dingin.\"",
+    "scene_3_outro": "Static locked-off vertical shot, the camera does not move. The same Malaysian Muslimah model is initially seen in an over-the-shoulder glance, talking comfortably. She pivots smoothly back around to face directly towards the camera, returning to her confident front-facing posture with a cheerful friendly smile, finishing her closing sentence seamlessly. Full outfit from hijab to trousers clearly visible. No camera movement. No background music.\n\nSpoken Malay (Lip-sync): \"Warna moka retro ni senang sangat nak padankan dengan tudung dan seluar kegemaran korang. Kalau nak bergaya aesthetic santai macam ni, cepat tekan beg kuning sebelum saiz habis!\""
+  },
+  "caption": "Bosan asyik sarung outerwear biasa bila nak keluar jalan? Korang patut tengok jaket korduroi retro potongan cropped ni! Tekstur jalur timbul dia memang naikkan aura aesthetic, tambah pula lengan gelembung yang buat gaya santai nampak lebih kemas dan mahal. Kain korduroi lembut tak panas, selesa sangat dipakai harian atau ke pejabat berhawa dingin. Jom gayakan outfit vintage santai korang sekarang, tekan beg kuning di bawah sebelum warna pilihan habis! 👇✨",
+  "hashtags": "#JaketKorduroi #CorduroyJacket #OOTDMalaysia #OuterwearMalaysia #KoreanStyleMalaysia #VintageAesthetic #ModestFashionMY #BajuSantai #TikTokShopMY #BegKuning",
+  "bgm_prompt": "Warm acoustic indie-pop with mellow electric guitar chords, gentle upright piano, soft subtle rim clicks, cozy upbeat cafe atmosphere, 102 BPM, sunlit afternoon coffee shop aesthetic, purely instrumental, strictly no vocals.",
+  "bgm_title": "Korean Corduroy Retro Jacket - BGM Instrumental",
+  "keyframes": [
+    "keyframes/korean_corduroy_retro_jacket_frame1_front.jpg",
+    "keyframes/korean_corduroy_retro_jacket_frame2_side.jpg",
+    "keyframes/korean_corduroy_retro_jacket_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/korean_corduroy_retro_jacket_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/korean_corduroy_retro_jacket_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/korean_corduroy_retro_jacket_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "tiktok_url": "https://vt.tiktok.com/ZS9y8bx2FNDjX-5mgP8/",
+    "pdp_url": "https://shop.tiktok.com/my/pdp/1729630732871567732",
+    "hook_score": 100,
+    "hook_status": "pass",
+    "hook_archetype": "The Price-Quality Myth-Buster / Unfinished Outfit Fix",
+    "hook_issues": [],
+    "keyframe_provider": "ImageGen / native generation tool, 3/3 active",
+    "reference_image": "keyframes/korean_corduroy_retro_jacket_product.jpg"
+  },
+  "updated_at": "2026-10-26T01:04:46+08:00"
+}
