@@ -2,3 +2,4 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "ignoreCommand": "exit 0"
 }
+

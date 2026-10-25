@@ -1,0 +1,45 @@
+{
+  "prefix": "casual_loose_cardigan_blazer",
+  "created_at": "2026-10-26T02:48:43+08:00",
+  "product_name": "Casual Loose Cardigan Blazer",
+  "opening_line": "Bosan asyik pakai blazer kerja warna gelap yang kaku dan panas? Kardigan blazer fuchsia ni potongan longgar beralun, sarung je terus buat gaya korang nampak ceria dan penuh keyakinan!",
+  "closing_line": "Padankan dengan seluar hitam dan inner putih macam saya, memang terus nampak profesional dan bergaya. Kalau nak tampil berani dan bertenaga ke pejabat, cepat tekan beg kuning sebelum saiz habis!",
+  "scenes": {
+    "visual_prompts": {
+      "scene_1": "Static locked-off vertical shot, the camera does not move. A young Malaysian Muslimah wearing an ivory blush-pink chiffon hijab, a vibrant fuchsia-pink casual loose-cut cardigan blazer over a crisp white inner top, black trousers, and white loafers stands centered in a warm neutral studio. Both hands remain empty and relaxed at her sides. She smiles warmly at the camera, then gently pivots her body forty-five degrees to her right to reveal the blazer's flowing side drape, speaking continuously with realistic lip-sync. Clear Malaysian Malay female voice. No background music, only her voice and soft ambient sound.",
+      "scene_2": "Static locked-off vertical shot, the camera does not move. The same young Malaysian Muslimah in the ivory hijab, fuchsia cardigan blazer, black trousers, and white loafers begins in a side profile view, hands resting completely empty at her sides. She smoothly turns further away into an elegant over-the-shoulder angle, glancing back toward the viewer with a friendly smile while showcasing the seamless back silhouette and relaxed fit, speaking continuously with realistic lip-sync. Clear Malaysian Malay female voice. No background music, only her voice and soft ambient sound.",
+      "scene_3": "Static locked-off vertical shot, the camera does not move. The same young Malaysian Muslimah in the ivory hijab, fuchsia cardigan blazer, black trousers, and white loafers begins in an over-the-shoulder pose, hands relaxed and empty at her sides. She turns smoothly back to face the camera directly in a front-facing stance, delivering a confident, warm sign-off smile, completing a seamless 360-degree loop while speaking continuously with realistic lip-sync. Clear Malaysian Malay female voice. No background music, only her voice and soft ambient sound."
+    },
+    "spoken_dialogue": {
+      "scene_1": "Bosan asyik pakai blazer kerja warna gelap yang kaku dan panas? Kardigan blazer fuchsia ni potongan longgar beralun, sarung je terus buat gaya korang nampak ceria dan penuh keyakinan!",
+      "scene_2": "Tengok bila pusing ke sisi, fabrik dia lembut beralun dan jatuh cantik melepasi pinggul. Kolar blazer kemas tanpa span bahu yang tebal, jadi badan langsung tak rasa rimas atau sendat.",
+      "scene_3": "Padankan dengan seluar hitam dan inner putih macam saya, memang terus nampak profesional dan bergaya. Kalau nak tampil berani dan bertenaga ke pejabat, cepat tekan beg kuning sebelum saiz habis!"
+    },
+    "scene_1_intro": "Static locked-off vertical shot, the camera does not move. A young Malaysian Muslimah wearing an ivory blush-pink chiffon hijab, a vibrant fuchsia-pink casual loose-cut cardigan blazer over a crisp white inner top, black trousers, and white loafers stands centered in a warm neutral studio. Both hands remain empty and relaxed at her sides. She smiles warmly at the camera, then gently pivots her body forty-five degrees to her right to reveal the blazer's flowing side drape, speaking continuously with realistic lip-sync. Clear Malaysian Malay female voice. No background music, only her voice and soft ambient sound.\n\nSpoken Malay (Lip-sync): \"Bosan asyik pakai blazer kerja warna gelap yang kaku dan panas? Kardigan blazer fuchsia ni potongan longgar beralun, sarung je terus buat gaya korang nampak ceria dan penuh keyakinan!\"",
+    "scene_2_detail": "Static locked-off vertical shot, the camera does not move. The same young Malaysian Muslimah in the ivory hijab, fuchsia cardigan blazer, black trousers, and white loafers begins in a side profile view, hands resting completely empty at her sides. She smoothly turns further away into an elegant over-the-shoulder angle, glancing back toward the viewer with a friendly smile while showcasing the seamless back silhouette and relaxed fit, speaking continuously with realistic lip-sync. Clear Malaysian Malay female voice. No background music, only her voice and soft ambient sound.\n\nSpoken Malay (Lip-sync): \"Tengok bila pusing ke sisi, fabrik dia lembut beralun dan jatuh cantik melepasi pinggul. Kolar blazer kemas tanpa span bahu yang tebal, jadi badan langsung tak rasa rimas atau sendat.\"",
+    "scene_3_outro": "Static locked-off vertical shot, the camera does not move. The same young Malaysian Muslimah in the ivory hijab, fuchsia cardigan blazer, black trousers, and white loafers begins in an over-the-shoulder pose, hands relaxed and empty at her sides. She turns smoothly back to face the camera directly in a front-facing stance, delivering a confident, warm sign-off smile, completing a seamless 360-degree loop while speaking continuously with realistic lip-sync. Clear Malaysian Malay female voice. No background music, only her voice and soft ambient sound.\n\nSpoken Malay (Lip-sync): \"Padankan dengan seluar hitam dan inner putih macam saya, memang terus nampak profesional dan bergaya. Kalau nak tampil berani dan bertenaga ke pejabat, cepat tekan beg kuning sebelum saiz habis!\""
+  },
+  "caption": "Dah bosan dengan blazer kerja warna gelap yang kaku? Sarung kardigan blazer fuchsia ni, terus auto ceria dan bergaya! Potongan longgar selesa, tak panas langsung. Tekan beg kuning sekarang sebelum kehabisan saiz! 👇✨",
+  "hashtags": "#blazerwanita #cardiganblazer #blazermuslimah #ootdkerja #fashionmalaysia #bajukerjaaesthetic #blazerloose #tiktokshopmalaysia",
+  "bgm_prompt": "Upbeat tropical retail pop, bouncy acoustic rhythm guitar, smooth funky bassline, light electronic percussion, bright cheerful synth accents, uplifting energetic modern mall vibe, instrumental only, no vocals, no background singing.",
+  "bgm_title": "Bright Fuchsia Groove",
+  "keyframes": [
+    "keyframes/casual_loose_cardigan_blazer_frame1_front.jpg",
+    "keyframes/casual_loose_cardigan_blazer_frame2_side.jpg",
+    "keyframes/casual_loose_cardigan_blazer_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/casual_loose_cardigan_blazer_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/casual_loose_cardigan_blazer_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/casual_loose_cardigan_blazer_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "source_url": "https://shop.tiktok.com/my/pdp/1729460683642930485",
+    "category": "Pakaian & Fesyen",
+    "hook_archetype": "The Unspoken Daily Dilemma (Tropical Climate / Comfort)",
+    "hook_score": 100,
+    "hook_status": "pass",
+    "hook_issues": []
+  },
+  "updated_at": "2026-10-26T02:48:43+08:00"
+}
