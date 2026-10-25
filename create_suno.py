@@ -133,6 +133,9 @@ async def setup_suno(prompt_text: str = None, title_text: str = None):
 
     # 5. Fill Styles of Music textarea
     styles_ta = suno_page.locator(
+        "textarea[placeholder*='dubstep elements'], "
+        "textarea[placeholder*='miami bass'], "
+        "textarea[placeholder*='mystical atmosphere'], "
         "textarea[placeholder*='smooth female vocals'], "
         "textarea[placeholder*='techno dubstep'], "
         "textarea[placeholder*='dance floor'], "
@@ -192,9 +195,29 @@ async def setup_suno(prompt_text: str = None, title_text: str = None):
 
         print("Clicking Create button to generate instrumental BGM...")
         await create_btn.click(force=True)
-        await suno_page.wait_for_timeout(6000)
+        await suno_page.wait_for_timeout(4000)
         await suno_page.screenshot(path="suno_generating.png")
-        print("Saved suno_generating.png - BGM generation successfully initiated!")
+
+        # Verify whether song creation actually initiated or hit free credit limit
+        has_new_song = await suno_page.evaluate("""(title) => {
+            const txt = document.body.innerText || '';
+            return txt.includes(title) || txt.includes('Today');
+        }""", target_title)
+
+        out_of_credits = await suno_page.evaluate("""() => {
+            const els = Array.from(document.querySelectorAll('a, button, div, span'));
+            const earn = els.find(e => (e.innerText || '').trim() === 'Earn Credits');
+            return !!earn;
+        }""")
+
+        if has_new_song:
+            print("Saved suno_generating.png - BGM generation successfully initiated!")
+        elif out_of_credits:
+            print("⚠️ Notice: Suno AI account currently has 0 daily credits remaining (shows 'Earn Credits').")
+            print("Prompt and title are filled in Suno's composer, ready to create once credits refresh.")
+        else:
+            print("Saved suno_generating.png - Create button clicked.")
+
         await p.stop()
         return True
     else:
