@@ -23,7 +23,7 @@ Every AI agent operating in this repository MUST memorize and adhere strictly to
 
 | Area | ❌ FATAL MISTAKE (NEVER DO THIS) | ✅ CORRECT BEHAVIOR (MANDATORY) |
 |------|-----------------------------------|----------------------------------|
-| **Gmail Promo Reply** | Adding greetings ("Salam Syarief"), section headers ("MAKLUMAT PRODUK"), Flow video prompts, Suno prompts, dividers (`===`), image or GitHub links, or leaving Gmail quoted text / previous thread content. | **STRICTLY AND ONLY THE CLEAN TIKTOK CAPTION + HASHTAGS.** Always expand and delete quoted text (`div.gmail_quote` / `div.ajR`) before typing. No greetings, headers, prompts, dividers, or quoted text. |
+| **Gmail Promo Reply** | Composing a brand new email thread, replying to a random or top email without verifying the product link, adding greetings ("Salam Syarief"), section headers ("MAKLUMAT PRODUK"), Flow video prompts, Suno prompts, dividers (`===`), image or GitHub links, or leaving Gmail quoted text / previous thread content. | **ALWAYS CHECK EXACT PRODUCT LINK IN EMAIL FIRST, THEN REPLY.** Search Gmail for the exact product link/shortcode. If no email contains that exact link, **ABORT IMMEDIATELY** (never compose a new email, never reply to an unrelated email). Once opened, verify the thread body contains the link, expand and delete quoted text (`div.gmail_quote` / `div.ajR`), and enter **STRICTLY AND ONLY THE CLEAN TIKTOK CAPTION + HASHTAGS**. |
 | **Brave CDP Connection** | Attempting to connect to an existing Brave instance without flags or launching without `--remote-allow-origins=*`, or calling `browser.close()` which kills the user's window. | Always launch with `--remote-debugging-port=9222 --remote-allow-origins=*`. **NEVER call `browser.close()`** so the user's visible interactive window stays open on desktop. |
 | **Keyframe Consistency** | Adding handbags, totes, phones, coffee cups, tumblers, waving hands, or changing hijab/bottoms between frames. | **Strict Zero-Prop & Empty-Hands Rule.** Both hands empty at sides. Same model, same modest hijab, same outfit head-to-toe, same background across all 3 frames. |
 | **Flow AI Parameters** | Using 5s/8s duration, landscape 16:9, or text-to-video mode. | **Duration = 10s**, **Orientation = Portrait (9:16)**, **Model = Omni 1.1 Flash**, **Mode = Video + Frames** (Frame 1➡️2, Frame 2➡️3, Frame 3➡️1), **720p**, **x1**. |
@@ -665,8 +665,8 @@ Whenever the user supplies a TikTok Shop product link:
    - Types visual prompt + `Spoken Malay (Lip-sync)` line and starts renders only after every check passes. Then do Post-Render QA (Step 6 §6).
 2. **Gmail Promo Package Reply (`reply_gmail.py`)**:
    - Tab: `https://mail.google.com/mail/u/0/#inbox`
-   - Finds the active promo thread (`(no subject)` or product link thread).
-   - Clicks **Reply**, fills **STRICTLY AND ONLY THE CLEAN TIKTOK CAPTION + HASHTAGS** (zero greetings, zero metadata headers, zero prompts), and clicks **Send**.
+   - Checks and verifies the email thread containing the **exact TikTok product link** first. If not found, aborts immediately (never replies to wrong threads, never composes new emails).
+   - Once verified, clicks **Reply**, fills **STRICTLY AND ONLY THE CLEAN TIKTOK CAPTION + HASHTAGS** (zero greetings, zero metadata headers, zero prompts, zero quoted text), and clicks **Send**.
 3. **Suno AI Instrumental BGM (`create_suno.py`)**:
    - Tab: `https://suno.com/create`
    - Sets mode to **Instrumental** (strictly no vocals).
@@ -697,16 +697,20 @@ Whenever the user supplies a TikTok Shop product link:
 * **Root Cause:** Calling `await browser.close()` in Playwright CDP scripts.
 * **Guaranteed Solution:** NEVER call `browser.close()` on CDP sessions. Simply let the Python script end or call `await p.stop()`. This cleanly detaches the automation listener while keeping the user's interactive browser window alive and visible on their desktop.
 
-### 3. Gmail Reply Formatting Violations
-* **Symptoms:** The user rejects the email reply because it contains greetings, headers, prompt boxes, or dividers.
-* **Root Cause:** Confusing chat deliverable layout with email reply content.
-* **Guaranteed Solution:** The email reply MUST contain **ONLY THE RAW TIKTOK CAPTION + HASHTAGS**.
-  - No "Salam Syarief"
-  - No "MAKLUMAT PRODUK"
-  - No "FLOW AI PROMPT"
-  - No "SUNO BGM"
-  - No "===" or "---"
-  - Pure, direct copy box content only.
+### 3. Gmail Reply Thread Matching & Formatting Violations
+* **Symptoms:** The user rejects the email reply because it is a new email thread, was sent to an unrelated thread (broker statement, newsletter), or contains greetings, headers, prompt boxes, or dividers.
+* **Root Cause:** Blindly clicking the top thread in inbox when the search fails, calling compose to send a new email, or confusing chat layout with email content.
+* **Guaranteed Solution:**
+  1. **Check exact product link first:** Search Gmail for the exact TikTok product link or shortcode (`ZS...`).
+  2. **Verify thread content:** Once opened, inspect the email body. It MUST contain the exact product link.
+  3. **Strict Abort Gate:** If no email contains that exact link, **ABORT IMMEDIATELY**. Never reply to an unrelated email and never compose a new email thread.
+  4. The email reply MUST contain **ONLY THE RAW TIKTOK CAPTION + HASHTAGS** inside the user's original thread.
+     - No "Salam Syarief"
+     - No "MAKLUMAT PRODUK"
+     - No "FLOW AI PROMPT"
+     - No "SUNO BGM"
+     - No "===" or "---"
+     - Pure, direct copy box content only.
 
 ### 4. Suno AI Generating Songs with Vocals
 * **Symptoms:** Suno generates songs with singing, which clashes with the Flow AI voiceover.
