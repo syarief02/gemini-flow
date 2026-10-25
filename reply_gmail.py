@@ -72,7 +72,6 @@ async def reply_with_clean_format(
         await gmail_page.goto(thread_url.strip(), wait_until="domcontentloaded")
         await gmail_page.wait_for_timeout(3000)
     else:
-        # Clean search query (extract TikTok shortcode or use clean link)
         clean_search = (search_query or "").strip()
         if not clean_search:
             print("❌ FATAL ERROR: No product link or search query provided to reply_gmail.py.")
@@ -83,66 +82,100 @@ async def reply_with_clean_format(
         url_match = re.search(r"vt\.tiktok\.com/([A-Za-z0-9_-]+)", clean_search)
         query_token = url_match.group(1) if url_match else clean_search
 
-        print(f"Step 2: Checking Gmail for email containing exact product link '{clean_search}' (token: '{query_token}')...")
-        
-        # Ensure desktop viewport for full Gmail layout
-        await gmail_page.set_viewport_size({"width": 1400, "height": 900})
-        await gmail_page.goto(DEFAULT_INBOX_URL, wait_until="domcontentloaded")
-        await gmail_page.wait_for_timeout(3000)
+        # Check if current Gmail tab is ALREADY viewing the target thread
+        already_on_target = False
+        try:
+            page_text = await gmail_page.evaluate('''() => {
+                const mainEl = document.querySelector('div[role="main"], div.nH, body');
+                return mainEl ? mainEl.innerText : '';
+            }''')
+            if query_token in page_text or clean_search in page_text:
+                print(f"✅ Active Gmail tab is ALREADY viewing the thread containing '{query_token}'!")
+                already_on_target = True
+        except Exception:
+            pass
 
-        target_row = None
+        if not already_on_target:
+            # Check other Gmail tabs if any
+            for p_cand in context.pages:
+                if p_cand != gmail_page and "mail.google.com" in p_cand.url:
+                    try:
+                        p_text = await p_cand.evaluate('''() => {
+                            const mainEl = document.querySelector('div[role="main"], div.nH, body');
+                            return mainEl ? mainEl.innerText : '';
+                        }''')
+                        if query_token in p_text or clean_search in p_text:
+                            print(f"✅ Found another Gmail tab already viewing '{query_token}'! Switching...")
+                            gmail_page = p_cand
+                            await gmail_page.bring_to_front()
+                            already_on_target = True
+                            break
+                    except Exception:
+                        pass
 
-        # Step 2a: Scan top inbox rows
-        rows = await gmail_page.locator("tr.zA").all()
-        for i, r in enumerate(rows[:30]):
-            txt = await r.inner_text()
-            if query_token in txt or clean_search in txt:
-                print(f"Match found in visible inbox Row {i}!")
-                target_row = r
-                break
+        if not already_on_target:
+            print(f"Step 2: Checking Gmail for email containing exact product link '{clean_search}' (token: '{query_token}')...")
+            
+            # Ensure desktop viewport for full Gmail layout
+            await gmail_page.set_viewport_size({"width": 1400, "height": 900})
+            await gmail_page.goto(DEFAULT_INBOX_URL, wait_until="domcontentloaded")
+            await gmail_page.wait_for_timeout(3000)
 
-        # Step 2b: If not in top rows, search Gmail using the search box
-        if not target_row:
-            print(f"Not in top visible rows. Using Gmail search for '{query_token}'...")
-            try:
-                # Try focusing search box via shortcut '/' or direct selector
-                await gmail_page.keyboard.press("/")
-                await gmail_page.wait_for_timeout(500)
-                active_is_search = await gmail_page.evaluate('''() => {
-                    const el = document.activeElement;
-                    return el && (el.name === 'q' || el.getAttribute('role') === 'combobox' || el.type === 'text');
-                }''')
-                if not active_is_search:
+            target_row = None
+
+            # Step 2a: Scan top inbox rows
+            rows = await gmail_page.locator("tr.zA").all()
+            for i, r in enumerate(rows[:30]):
+                txt = await r.inner_text()
+                if query_token in txt or clean_search in txt:
+                    print(f"Match found in visible inbox Row {i}!")
+                    target_row = r
+                    break
+
+            # Step 2b: If not in top rows, search Gmail using the search box
+            if not target_row:
+                print(f"Not in top visible rows. Using Gmail search for '{query_token}'...")
+                try:
                     search_input = gmail_page.locator("input[name='q'], input[aria-label*='Search'], input[aria-label*='Ask']").first
-                    await search_input.click()
-                
-                await gmail_page.keyboard.press("Control+A")
-                await gmail_page.keyboard.type(f'"{query_token}"')
-                await gmail_page.keyboard.press("Enter")
-                await gmail_page.wait_for_timeout(3000)
+                    if await search_input.is_visible(timeout=2000):
+                        await search_input.click()
+                    else:
+                        await gmail_page.keyboard.press("/")
+                        await gmail_page.wait_for_timeout(500)
+                    
+                    await gmail_page.keyboard.press("Control+A")
+                    # Search raw query token (no quotes) for reliable substring matching
+                    await gmail_page.keyboard.type(query_token)
+                    await gmail_page.keyboard.press("Enter")
+                    await gmail_page.wait_for_timeout(3000)
 
-                result_rows = await gmail_page.locator("tr.zA, div[role='main'] table tbody tr").all()
-                for r in result_rows[:15]:
-                    txt = await r.inner_text()
-                    if query_token in txt or clean_search in txt:
-                        target_row = r
-                        print("Match verified in search result rows!")
-                        break
-            except Exception as e_search:
-                print(f"Notice during search: {e_search}")
+                    result_rows = await gmail_page.locator("tr.zA, div[role='main'] table tbody tr").all()
+                    for r in result_rows[:15]:
+                        txt = await r.inner_text()
+                        if query_token in txt or clean_search in txt:
+                            target_row = r
+                            print("Match verified in search result rows!")
+                            break
+                    
+                    if not target_row and result_rows:
+                        # Fallback: test top search result row
+                        print("Inspecting top search result row...")
+                        target_row = result_rows[0]
+                except Exception as e_search:
+                    print(f"Notice during search: {e_search}")
 
-        # MANDATORY CHECK: If no matching thread exists, ABORT IMMEDIATELY!
-        if not target_row:
-            print(f"\n❌ FATAL PIPELINE GATE FAILED:")
-            print(f"   No email thread found containing the exact product link '{clean_search}'.")
-            print(f"   RULE: Never reply to an unrelated email thread and never compose a brand new email.")
-            print(f"   Action: Please email the TikTok product link from your mobile to your Gmail first, then rerun.")
-            await p.stop()
-            return False
+            # MANDATORY CHECK: If no matching thread exists, ABORT IMMEDIATELY!
+            if not target_row:
+                print(f"\n❌ FATAL PIPELINE GATE FAILED:")
+                print(f"   No email thread found containing the exact product link '{clean_search}'.")
+                print(f"   RULE: Never reply to an unrelated email thread and never compose a brand new email.")
+                print(f"   Action: Please email the TikTok product link from your mobile to your Gmail first, then rerun.")
+                await p.stop()
+                return False
 
-        print("Opening matched email thread...")
-        await target_row.click()
-        await gmail_page.wait_for_timeout(3000)
+            print("Opening matched email thread...")
+            await target_row.click()
+            await gmail_page.wait_for_timeout(3000)
 
     print(f"Active thread URL: {gmail_page.url}")
 

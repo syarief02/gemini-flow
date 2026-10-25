@@ -35,7 +35,7 @@ Every AI agent operating in this repository MUST memorize and adhere strictly to
 | **Suno AI BGM** | Generating songs with vocal lyrics or background singing. | **Instrumental mode MUST be toggled ON.** TikTok promos use spoken Malay lip-sync voiceovers; vocals clash with speech. |
 | **Spoken Dialogue & Caption** | Using Indonesian words ("banget", "emang", "bgt"), em-dashes (`—`), or mentioning direct prices. | **Standard Malaysian Malay (KL accent)**, pronoun "saya" (never "aku"), zero em-dashes (use `:` or `,`), zero prices (direct to "beg kuning"). |
 | **Hook Selection** | Banning valid hook formulas or reusing openers from the last 7 recorded entries. | **Never ban valid hooks.** Live search MY TikTok data, rank candidate hooks, audit with `verify_hook_quality()`, and avoid the last 7 entries. |
-| **Saving to GitHub** | Leaving a product only on this PC (no `generations/<prefix>.json`, keyframes not committed), or relying on Supabase (Supabase is NOT used by Gemini Flow; the shared database is reserved strictly for other projects). | Save the full record with `save_generation_history(prefix=...)` (Step 9), then commit and push `generations/<prefix>.json`, `keyframes/<prefix>_*` and the history (Step 10). The repo is public: no credentials or tracking URLs in records. |
+| **Saving to GitHub & Cloud** | Leaving a product only on this PC (no `generations/<prefix>.json`, keyframes not committed). | Save the full record with `save_generation_history(prefix=...)` (Step 9), commit and push `generations/<prefix>.json`, `keyframes/<prefix>_*` and history (Step 10). When Supabase env keys are present, sync record via `supabase_client.py`. No secret credentials or sensitive tokens in public records. |
 
 ---
 

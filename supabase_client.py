@@ -29,11 +29,8 @@ SUPABASE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY") or os.getenv("SUPABASE_ANO
 
 
 def is_supabase_enabled() -> bool:
-    """Check if Supabase is enabled for Gemini Flow.
-    Permanently disabled: Gemini Flow is 100% self-contained in GitHub (generations/ and keyframes/).
-    The user's shared Supabase project is reserved solely for other applications.
-    """
-    return False
+    """Check if Supabase is enabled for Gemini Flow."""
+    return bool(SUPABASE_URL and SUPABASE_KEY)
 
 
 def get_supabase_client():
