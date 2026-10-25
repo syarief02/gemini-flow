@@ -1,0 +1,28 @@
+# Exclude media and keyframe assets from Vercel Serverless Function bundle
+# Keyframes are stored on GitHub and Supabase Storage CDN, not in Vercel
+keyframes/
+media/
+output/
+extracted_flow_video/
+archived_assets/
+scratch/
+generations/
+
+# Media binaries
+*.jpg
+*.jpeg
+*.png
+*.webp
+*.gif
+*.mp4
+*.wav
+*.mp3
+*.zip
+*.log
+*.tmp
+
+# Version control and editor
+.git
+.github
+.vscode
+.claude
