@@ -34,8 +34,8 @@ from PIL import Image, ImageChops, ImageStat
 from playwright.async_api import async_playwright
 
 if sys.platform == "win32":
-    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
-    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace", line_buffering=True)
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace", line_buffering=True)
 
 WORKSPACE = Path(__file__).resolve().parent
 FLOW_URL = "https://flow.google.com/?pli=1&authuser=5"
