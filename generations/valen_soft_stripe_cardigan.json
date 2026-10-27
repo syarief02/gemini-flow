@@ -1,0 +1,46 @@
+{
+  "prefix": "valen_soft_stripe_cardigan",
+  "created_at": "2026-10-27T23:37:30+08:00",
+  "product_name": "VALEN Soft Stripe Women Knit Cardigan",
+  "opening_line": "Korang perasan tak cuaca panas terik tapi bila masuk dewan kuliah sejuk macam kutub utara? Kardigan knitwear berjalur VALEN ni penyelamat paling aesthetic, kain sejuk bernafas dan tak gatal langsung!",
+  "closing_line": "Padankan dengan seluar putih dan tudung bawal macam saya, terus lengkap gaya santai chic ke mana saja. Korang yang nak ootd aesthetic ni, cepat tekan beg kuning sebelum saiz moka ni habis!",
+  "scenes": {
+    "visual_prompts": {
+      "scene_1": "Static locked-off vertical shot, the camera does not move. A young Malaysian Muslimah wearing a neat taupe bawal chiffon hijab, a mocha brown fine-knit button-up cardigan with paired thin white horizontal stripes, cream tailored trousers, and white loafers stands centered in a minimalist studio. Both hands remain empty and relaxed at her sides. She smiles warmly at the camera, then gently pivots her body forty-five degrees to her right to reveal the cardigan's clean side profile and neat button placket, speaking continuously with realistic lip-sync. Clear Malaysian Malay female voice. No background music, only her voice and soft ambient sound.",
+      "scene_2": "Static locked-off vertical shot, the camera does not move. The same young Malaysian Muslimah in the taupe hijab, mocha striped cardigan, cream trousers, and white loafers begins in a side profile view, hands resting completely empty at her sides. She smoothly turns further away into an elegant over-the-shoulder angle, glancing back toward the viewer with a friendly smile while showcasing the continuous white stripes across the back and neat ribbed waist band, speaking continuously with realistic lip-sync. Clear Malaysian Malay female voice. No background music, only her voice and soft ambient sound.",
+      "scene_3": "Static locked-off vertical shot, the camera does not move. The same young Malaysian Muslimah in the taupe hijab, mocha striped cardigan, cream trousers, and white loafers begins in an over-the-shoulder pose, hands relaxed and empty at her sides. She turns smoothly back to face the camera directly in a front-facing stance, delivering a confident, warm sign-off smile, completing a seamless 360-degree loop while speaking continuously with realistic lip-sync. Clear Malaysian Malay female voice. No background music, only her voice and soft ambient sound."
+    },
+    "spoken_dialogue": {
+      "scene_1": "Korang perasan tak cuaca panas terik tapi bila masuk dewan kuliah sejuk macam kutub utara? Kardigan knitwear berjalur VALEN ni penyelamat paling aesthetic, kain sejuk bernafas dan tak gatal langsung!",
+      "scene_2": "Bila pusing ke sisi, jalur putih minimalist ni jatuh kemas dan butang depan dia kukuh tak mudah tercabut. Tekstur knit dia lembut beralun, selesa sangat dipakai seharian tanpa rasa panas berpeluh.",
+      "scene_3": "Padankan dengan seluar putih dan tudung bawal macam saya, terus lengkap gaya santai chic ke mana saja. Korang yang nak ootd aesthetic ni, cepat tekan beg kuning sebelum saiz moka ni habis!"
+    },
+    "scene_1_intro": "Static locked-off vertical shot, the camera does not move. A young Malaysian Muslimah wearing a neat taupe bawal chiffon hijab, a mocha brown fine-knit button-up cardigan with paired thin white horizontal stripes, cream tailored trousers, and white loafers stands centered in a minimalist studio. Both hands remain empty and relaxed at her sides. She smiles warmly at the camera, then gently pivots her body forty-five degrees to her right to reveal the cardigan's clean side profile and neat button placket, speaking continuously with realistic lip-sync. Clear Malaysian Malay female voice. No background music, only her voice and soft ambient sound.\n\nSpoken Malay (Lip-sync): \"Korang perasan tak cuaca panas terik tapi bila masuk dewan kuliah sejuk macam kutub utara? Kardigan knitwear berjalur VALEN ni penyelamat paling aesthetic, kain sejuk bernafas dan tak gatal langsung!\"",
+    "scene_2_detail": "Static locked-off vertical shot, the camera does not move. The same young Malaysian Muslimah in the taupe hijab, mocha striped cardigan, cream trousers, and white loafers begins in a side profile view, hands resting completely empty at her sides. She smoothly turns further away into an elegant over-the-shoulder angle, glancing back toward the viewer with a friendly smile while showcasing the continuous white stripes across the back and neat ribbed waist band, speaking continuously with realistic lip-sync. Clear Malaysian Malay female voice. No background music, only her voice and soft ambient sound.\n\nSpoken Malay (Lip-sync): \"Bila pusing ke sisi, jalur putih minimalist ni jatuh kemas dan butang depan dia kukuh tak mudah tercabut. Tekstur knit dia lembut beralun, selesa sangat dipakai seharian tanpa rasa panas berpeluh.\"",
+    "scene_3_outro": "Static locked-off vertical shot, the camera does not move. The same young Malaysian Muslimah in the taupe hijab, mocha striped cardigan, cream trousers, and white loafers begins in an over-the-shoulder pose, hands relaxed and empty at her sides. She turns smoothly back to face the camera directly in a front-facing stance, delivering a confident, warm sign-off smile, completing a seamless 360-degree loop while speaking continuously with realistic lip-sync. Clear Malaysian Malay female voice. No background music, only her voice and soft ambient sound.\n\nSpoken Malay (Lip-sync): \"Padankan dengan seluar putih dan tudung bawal macam saya, terus lengkap gaya santai chic ke mana saja. Korang yang nak ootd aesthetic ni, cepat tekan beg kuning sebelum saiz moka ni habis!\""
+  },
+  "caption": "Korang selalu mengadu luar panas terik tapi bila masuk bilik aircond terus menggigil? Kardigan rajut belang lembut ni memang penyelamat gaya harian korang! Kain knitwear dia sejuk bernafas, lembut tak gatal pada kulit langsung, dan potongan dia auto nampak kemas terletak. Padankan dengan seluar santai, terus dapat look aesthetic ala Korea yang effortless. Tekan beg kuning sekarang untuk grab warna moka kegemaran ramai ni! 👇✨",
+  "hashtags": "#cardiganwanita #cardiganknitwear #cardiganstripe #cardiganhijab #cardigankoreanstyle #outfitideasmalaysia #ootdhijabmalaysia #tiktokshopmalaysia",
+  "bgm_prompt": "Upbeat mellow acoustic lo-fi indie pop with acoustic guitar strumming, gentle warm keys, soft percussive groove, uplifting cozy sunny afternoon aesthetic, strictly instrumental, no vocals.",
+  "bgm_title": "Sunny Afternoon Knit Chill",
+  "keyframes": [
+    "keyframes/valen_soft_stripe_cardigan_frame1_front.jpg",
+    "keyframes/valen_soft_stripe_cardigan_frame2_side.jpg",
+    "keyframes/valen_soft_stripe_cardigan_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/valen_soft_stripe_cardigan_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/valen_soft_stripe_cardigan_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/valen_soft_stripe_cardigan_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "source_url": "https://shop.tiktok.com/my/pdp/1736509995346200219",
+    "tiktok_url": "https://vt.tiktok.com/ZS9yrkDEjnctv-HyDyl/",
+    "category": "Pakaian & Fesyen",
+    "hook_archetype": "The Unspoken Daily Dilemma (Tropical Climate / Comfort)",
+    "hook_score": 100,
+    "hook_status": "pass",
+    "hook_issues": []
+  },
+  "updated_at": "2026-10-27T23:37:30+08:00"
+}
