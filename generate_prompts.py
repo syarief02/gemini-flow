@@ -344,7 +344,14 @@ STRICT RULES
 
 7. SUNO BGM: ONE comprehensive, highly detailed instrumental style prompt for Suno's 'Song Description' / 'Style of Music' box. STRICTLY NO LYRICS (instrumental only, no vocals, to prevent clashing with the Flow AI spoken Malay dialogue). Include genre, subgenre, specific instruments, tempo BPM (105-115 BPM), mood, and high-quality production attributes tailored to the product vibe.
 
-8. NO REPEATING GENERIC LINES across products. Analyze the exact collar type, fabric, drawstring, length, pocket style, sleeve detail, and specific silhouette benefits.
+8. KEYFRAME IMAGE PROMPTS & LIFESTYLE BACKGROUND RULES:
+   - STRICTLY FORBID blank, flat, plain, or sterile studio backdrops (NEVER use "minimalist studio", "plain studio background", "neutral grey wall", or "white studio backdrop"). These keywords cause image generators to paint a featureless, empty cardboard cutout void.
+   - MANDATORY RICH LIFESTYLE ENVIRONMENT: Every keyframe prompt MUST describe a realistic, aesthetic lifestyle interior or setting with architectural details, depth of field, and natural lighting:
+     • Space: e.g. bright sunlit modern minimalist Kuala Lumpur cafe with light oak tables and rattan chairs; or chic Japandi/Scandinavian living room with a light linen sofa, sheer curtains, and textured travertine/terrazzo floors; or an aesthetic boutique lounge.
+     • Accents & Lighting: Subtle potted indoor greenery (fiddle-leaf fig / monstera) in soft focus, warm natural morning or afternoon daylight streaming through large windows with gentle shadows and soft bokeh.
+     • Invariant Continuity: The exact same model, hijab, garment, bottoms, shoes, empty hands (strictly zero props), and same lifestyle background across all three frames.
+
+9. NO REPEATING GENERIC LINES across products. Analyze the exact collar type, fabric, drawstring, length, pocket style, sleeve detail, and specific silhouette benefits.
 
 ═══════════════════════════════════════════════════════════════
 OUTPUT SCHEMA (Return valid JSON)

@@ -568,6 +568,7 @@ if __name__ == "__main__":
     parser.add_argument("--project-url", type=str, help="Override the product's recorded Flow project")
     parser.add_argument("--create-project", type=str, metavar="NAME",
                         help="Create this product's own Flow project named NAME, record it for --prefix, and exit")
+    parser.add_argument("--force", action="store_true", help="Force creating a fresh project even if prefix already exists")
     parser.add_argument("--dry-run", action="store_true", help="Run every check and screenshot, but do not submit")
     parser.add_argument("--latest", action="store_true", help="Kept for compatibility; the newest keyframe trio is the default")
     args = parser.parse_args()
@@ -576,7 +577,7 @@ if __name__ == "__main__":
         if not args.prefix:
             parser.error("--create-project needs --prefix (the product's keyframe prefix)")
         existing = load_projects().get(args.prefix)
-        if existing:
+        if existing and not args.force:
             print(f"'{args.prefix}' already has its Flow project '{existing['name']}': {existing['url']}")
             sys.exit(0)
 
