@@ -326,13 +326,32 @@ def sync_local_history_to_supabase(history_path: Optional[str | Path] = None) ->
     }
 
 
+def ensure_storage_bucket_exists(bucket_name: str = "gemini-flow-keyframes") -> bool:
+    """Ensure that the Supabase storage bucket exists and is public."""
+    client = get_supabase_client()
+    if not client:
+        return False
+    try:
+        buckets = client.storage.list_buckets()
+        existing = [b.name if hasattr(b, "name") else b.get("name") for b in (buckets or [])]
+        if bucket_name not in existing:
+            client.storage.create_bucket(bucket_name, options={"public": True})
+            print(f"Created public Supabase storage bucket '{bucket_name}'.")
+        return True
+    except Exception as e:
+        if "already exists" in str(e).lower() or "duplicate" in str(e).lower():
+            return True
+        print(f"Notice ensuring bucket '{bucket_name}': {e}")
+        return False
+
+
 def upload_keyframe_to_supabase(
     local_path: str | Path,
     remote_filename: Optional[str] = None
 ) -> Optional[str]:
     """
     Upload a local keyframe image to Supabase Storage bucket 'gemini-flow-keyframes'.
-    Returns the public CDN URL or None on failure.
+    Returns the public CDN URL or None on failure. Auto-creates the bucket if missing.
     """
     client = get_supabase_client()
     if not client:
@@ -344,19 +363,112 @@ def upload_keyframe_to_supabase(
         return None
 
     fname = remote_filename or path_obj.name
-    try:
-        file_bytes = path_obj.read_bytes()
-        mime = "image/jpeg" if fname.lower().endswith((".jpg", ".jpeg")) else "image/png"
-        client.storage.from_("gemini-flow-keyframes").upload(
-            fname,
-            file_bytes,
-            {"content-type": mime, "upsert": "true"}
-        )
-        cdn_url = f"{SUPABASE_URL}/storage/v1/object/public/gemini-flow-keyframes/{fname}"
-        return cdn_url
-    except Exception as err:
-        print(f"Supabase storage upload notice for {fname}: {err}")
-        return None
+    file_bytes = path_obj.read_bytes()
+    mime = "image/jpeg" if fname.lower().endswith((".jpg", ".jpeg")) else "image/png"
+
+    for attempt in range(2):
+        try:
+            client.storage.from_("gemini-flow-keyframes").upload(
+                fname,
+                file_bytes,
+                {"content-type": mime, "upsert": "true"}
+            )
+            cdn_url = f"{SUPABASE_URL}/storage/v1/object/public/gemini-flow-keyframes/{fname}"
+            return cdn_url
+        except Exception as err:
+            if ("bucket not found" in str(err).lower() or "404" in str(err)) and attempt == 0:
+                print(f"Bucket missing, attempting auto-creation for '{fname}'...")
+                ensure_storage_bucket_exists("gemini-flow-keyframes")
+                continue
+            print(f"Supabase storage upload notice for {fname}: {err}")
+            return None
+    return None
+
+
+def upload_prefix_keyframes_to_supabase(
+    prefix: str,
+    keyframes_dir: Optional[str | Path] = None
+) -> Dict[str, str]:
+    """
+    Upload all keyframe images for a specific product prefix to Supabase Storage.
+    Returns a dictionary mapping filename to its public CDN URL.
+    """
+    target_dir = Path(keyframes_dir) if keyframes_dir else Path(__file__).resolve().parent / "keyframes"
+    prefix_clean = prefix.lower().replace("-", "_").strip("_")
+    files = list(target_dir.glob(f"{prefix_clean}*"))
+    cdn_map = {}
+    for f in sorted(files):
+        if f.suffix.lower() in [".jpg", ".jpeg", ".png"]:
+            url = upload_keyframe_to_supabase(f)
+            if url:
+                cdn_map[f.name] = url
+    return cdn_map
+
+
+def sync_all_generations_to_supabase(
+    generations_dir: Optional[str | Path] = None
+) -> Dict[str, Any]:
+    """
+    Sync all JSON generation records from the generations/ directory to Supabase DB.
+    """
+    client = get_supabase_client()
+    if not client:
+        return {"status": "error", "message": "Supabase client not initialized"}
+
+    target_dir = Path(generations_dir) if generations_dir else Path(__file__).resolve().parent / "generations"
+    if not target_dir.is_dir():
+        return {"status": "error", "message": f"Directory not found: {target_dir}"}
+
+    gen_files = list(target_dir.glob("*.json"))
+    added = 0
+    updated = 0
+    errors = 0
+
+    for f in gen_files:
+        if "export" in f.name:
+            continue
+        try:
+            data = json.loads(f.read_text(encoding="utf-8"))
+            p_name = (data.get("product_name") or data.get("title") or "").strip()
+            o_line = (data.get("opening_line") or "").strip()
+            c_line = (data.get("closing_line") or "").strip()
+            if not p_name or not o_line:
+                continue
+
+            scenes = data.get("scenes")
+            caption = data.get("caption")
+            hashtags = data.get("hashtags")
+            bgm_prompt = data.get("bgm_prompt")
+            if not bgm_prompt and isinstance(data.get("suno_bgm"), dict):
+                bgm_prompt = data["suno_bgm"].get("style")
+            keyframe_urls = data.get("keyframe_urls")
+            metadata = data.get("metadata") or {}
+
+            synced = save_generation_record(
+                product_name=p_name,
+                opening_line=o_line,
+                closing_line=c_line,
+                scenes=scenes,
+                caption=caption,
+                hashtags=hashtags,
+                bgm_prompt=bgm_prompt,
+                keyframe_urls=keyframe_urls,
+                metadata=metadata
+            )
+            if synced:
+                added += 1
+            else:
+                errors += 1
+        except Exception as e_file:
+            print(f"Error syncing {f.name}: {e_file}")
+            errors += 1
+
+    return {
+        "status": "success",
+        "total_files": len(gen_files),
+        "synced": added,
+        "errors": errors
+    }
 
 
 def sync_all_keyframes_to_supabase(

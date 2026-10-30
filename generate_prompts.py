@@ -232,6 +232,28 @@ def save_generation_history(
         })
         print(f"🗂️ Saved generation record: {record_file.relative_to(record_file.parent.parent)}")
 
+        # Auto-sync generation record and keyframes to Supabase
+        try:
+            from supabase_client import is_supabase_enabled, save_generation_record, upload_prefix_keyframes_to_supabase
+            if is_supabase_enabled():
+                cdn_map = upload_prefix_keyframes_to_supabase(prefix)
+                if cdn_map:
+                    meta["supabase_keyframe_urls"] = cdn_map
+                save_generation_record(
+                    product_name=product_name,
+                    opening_line=opening_line,
+                    closing_line=closing_line,
+                    scenes=scenes,
+                    caption=caption,
+                    hashtags=hashtags,
+                    bgm_prompt=bgm_prompt,
+                    keyframe_urls=kf["urls"],
+                    metadata=meta
+                )
+                print(f"☁️ Auto-synced '{product_name}' to Supabase database & storage.")
+        except Exception as e_supa:
+            print(f"Notice: Supabase auto-sync: {e_supa}")
+
 SYSTEM_PROMPT = """You are a top Malaysian TikTok e-commerce content strategist who creates VIRAL short-form video scripts.
 You specialize in creating spoken dialogue that feels like a real person talking to their bestie—NOT a product brochure being read aloud.
 
