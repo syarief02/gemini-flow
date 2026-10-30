@@ -1,0 +1,46 @@
+{
+  "prefix": "bgm_odette_stripe_mini_dress",
+  "created_at": "2026-10-31T00:03:30+08:00",
+  "product_name": "BGM Mini Dress Odette Colour Stripe",
+  "opening_line": "Tahu tak kenapa shirt dress potongan A-line ni jadi kegemaran wanita berhijab? Corak jalur hijau sage ni bagi ilusi pinggul ramping dan badan tinggi, sarung je terus siap tanpa rasa rimas!",
+  "closing_line": "Padankan dengan seluar putih dan tudung bawal macam saya, memang terus nampak kemas bergaya ke pejabat mahupun santai. Nak tampil berseri dan tinggi lampai, cepat tekan beg kuning sekarang!",
+  "scenes": {
+    "visual_prompts": {
+      "scene_1": "Static locked-off vertical shot, the camera does not move. A young Malaysian Muslimah wearing a neat light grey bawal chiffon hijab, a sage green and white vertical striped longline shirt tunic dress with crisp pointed collar and front white button placket, tailored off-white trousers, and cream pointed heels stands centered in a minimalist studio. Both hands remain empty and relaxed at her sides. She smiles warmly at the camera, then gently pivots her body forty-five degrees to her right to reveal the tunic's clean side drape and curved hemline, speaking continuously with realistic lip-sync. Clear Malaysian Malay female voice. No background music, only her voice and soft ambient sound.",
+      "scene_2": "Static locked-off vertical shot, the camera does not move. The same young Malaysian Muslimah in the light grey hijab, sage green striped tunic dress, off-white trousers, and cream heels begins in a side profile view, hands resting completely empty at her sides. She smoothly turns further away into an elegant over-the-shoulder angle, glancing back toward the viewer with a friendly smile while showcasing the continuous vertical stripes across the back and modest thigh-covering length, speaking continuously with realistic lip-sync. Clear Malaysian Malay female voice. No background music, only her voice and soft ambient sound.",
+      "scene_3": "Static locked-off vertical shot, the camera does not move. The same young Malaysian Muslimah in the light grey hijab, sage green striped tunic dress, off-white trousers, and cream heels begins in an over-the-shoulder pose, hands relaxed and empty at her sides. She turns smoothly back to face the camera directly in a front-facing stance, delivering a confident, warm sign-off smile, completing a seamless 360-degree loop while speaking continuously with realistic lip-sync. Clear Malaysian Malay female voice. No background music, only her voice and soft ambient sound."
+    },
+    "spoken_dialogue": {
+      "scene_1": "Tahu tak kenapa shirt dress potongan A-line ni jadi kegemaran wanita berhijab? Corak jalur hijau sage ni bagi ilusi pinggul ramping dan badan tinggi, sarung je terus siap tanpa rasa rimas!",
+      "scene_2": "Tengok bila pusing ke sisi, potongan dia labuh melepasi peha dengan belahan melengkung yang sangat flowy. Fabrik cotton berkualiti ni sejuk bernafas, kolar kemeja pun terletak kemas sepanjang hari.",
+      "scene_3": "Padankan dengan seluar putih dan tudung bawal macam saya, memang terus nampak kemas bergaya ke pejabat mahupun santai. Nak tampil berseri dan tinggi lampai, cepat tekan beg kuning sekarang!"
+    },
+    "scene_1_intro": "Static locked-off vertical shot, the camera does not move. A young Malaysian Muslimah wearing a neat light grey bawal chiffon hijab, a sage green and white vertical striped longline shirt tunic dress with crisp pointed collar and front white button placket, tailored off-white trousers, and cream pointed heels stands centered in a minimalist studio. Both hands remain empty and relaxed at her sides. She smiles warmly at the camera, then gently pivots her body forty-five degrees to her right to reveal the tunic's clean side drape and curved hemline, speaking continuously with realistic lip-sync. Clear Malaysian Malay female voice. No background music, only her voice and soft ambient sound.\n\nSpoken Malay (Lip-sync): \"Tahu tak kenapa shirt dress potongan A-line ni jadi kegemaran wanita berhijab? Corak jalur hijau sage ni bagi ilusi pinggul ramping dan badan tinggi, sarung je terus siap tanpa rasa rimas!\"",
+    "scene_2_detail": "Static locked-off vertical shot, the camera does not move. The same young Malaysian Muslimah in the light grey hijab, sage green striped tunic dress, off-white trousers, and cream heels begins in a side profile view, hands resting completely empty at her sides. She smoothly turns further away into an elegant over-the-shoulder angle, glancing back toward the viewer with a friendly smile while showcasing the continuous vertical stripes across the back and modest thigh-covering length, speaking continuously with realistic lip-sync. Clear Malaysian Malay female voice. No background music, only her voice and soft ambient sound.\n\nSpoken Malay (Lip-sync): \"Tengok bila pusing ke sisi, potongan dia labuh melepasi peha dengan belahan melengkung yang sangat flowy. Fabrik cotton berkualiti ni sejuk bernafas, kolar kemeja pun terletak kemas sepanjang hari.\"",
+    "scene_3_outro": "Static locked-off vertical shot, the camera does not move. The same young Malaysian Muslimah in the light grey hijab, sage green striped tunic dress, off-white trousers, and cream heels begins in an over-the-shoulder pose, hands relaxed and empty at her sides. She turns smoothly back to face the camera directly in a front-facing stance, delivering a confident, warm sign-off smile, completing a seamless 360-degree loop while speaking continuously with realistic lip-sync. Clear Malaysian Malay female voice. No background music, only her voice and soft ambient sound.\n\nSpoken Malay (Lip-sync): \"Padankan dengan seluar putih dan tudung bawal macam saya, memang terus nampak kemas bergaya ke pejabat mahupun santai. Nak tampil berseri dan tinggi lampai, cepat tekan beg kuning sekarang!\""
+  },
+  "caption": "Pening kepala cari kemeja yang labuh sopan dan tak jarang untuk pakai harian? Kemeja tunik berjalur Odette ni penyelamat paling selesa! Potongan A-line labuh paras peha yang flowy dan mesra hijab, corak jalur menegak pula automatik bagi efek nampak tinggi dan ramping. Kain cotton sejuk tak melekap langsung pada badan. Tekan beg kuning sekarang untuk grab warna hijau sage yang manis ni! 👇✨",
+  "hashtags": "#shirtdress #tunikhijab #bajutunik #shirtdressmalaysia #blauslabuh #outfithijabmalaysia #ootdmuslimah #tiktokshopmalaysia",
+  "bgm_prompt": "Upbeat cheerful lo-fi indie acoustic with bright acoustic guitar strums, breezy Rhodes electric keys, soft shaker rhythm, warm uplifting morning aesthetic, strictly instrumental, no vocals.",
+  "bgm_title": "Breezy Sage Morning Acoustic",
+  "keyframes": [
+    "keyframes/bgm_odette_stripe_mini_dress_frame1_front.jpg",
+    "keyframes/bgm_odette_stripe_mini_dress_frame2_side.jpg",
+    "keyframes/bgm_odette_stripe_mini_dress_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/bgm_odette_stripe_mini_dress_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/bgm_odette_stripe_mini_dress_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/bgm_odette_stripe_mini_dress_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "source_url": "https://shop.tiktok.com/my/pdp/1738086662076400730",
+    "tiktok_url": "https://vt.tiktok.com/ZS9ymVcVHDoTk-zDnfq/",
+    "category": "Pakaian & Fesyen",
+    "hook_archetype": "The Visual Pattern Interrupt / Direct Question",
+    "hook_score": 100,
+    "hook_status": "pass",
+    "hook_issues": []
+  },
+  "updated_at": "2026-10-31T00:03:30+08:00"
+}
