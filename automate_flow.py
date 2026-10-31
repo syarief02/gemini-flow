@@ -373,8 +373,9 @@ async def attach_frame(page, slot_index: int, frame: Path):
         rows = overlay.locator("button.asset-item")
         for _ in range(timeout_ms // 250):
             for i in range(await rows.count()):
-                # Row text is "<name>" (narrow layout) or "<name>\nImage" (wide layout).
-                if (await rows.nth(i).inner_text()).strip().split("\n")[0].strip() == frame.name:
+                # Row text can be "<name>", "<name>\nImage", or "image\n<name>".
+                row_lines = [line.strip() for line in (await rows.nth(i).inner_text()).split("\n") if line.strip()]
+                if frame.name in row_lines or frame.stem in row_lines:
                     await rows.nth(i).click()
                     # Wide layout previews the asset first and needs an explicit 'Add to prompt'.
                     for _ in range(8):
