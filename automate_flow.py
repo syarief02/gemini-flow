@@ -34,8 +34,8 @@ from PIL import Image, ImageChops, ImageStat
 from playwright.async_api import async_playwright
 
 if sys.platform == "win32":
-    sys.stdout.reconfigure(encoding="utf-8", errors="replace", line_buffering=True)
-    sys.stderr.reconfigure(encoding="utf-8", errors="replace", line_buffering=True)
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace", line_buffering=True)  # type: ignore[attr-defined]
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace", line_buffering=True)  # type: ignore[attr-defined]
 
 WORKSPACE = Path(__file__).resolve().parent
 FLOW_URL = "https://flow.google.com/?pli=1&authuser=5"
@@ -119,8 +119,9 @@ def load_scene_prompts(prefix: str) -> dict:
     for i in (1, 2, 3):
         vis = visual.get(f"scene_{i}") or (combined[i] or "").split("Spoken Malay (Lip-sync):")[0]
         dia = spoken.get(f"scene_{i}")
-        if not dia and combined[i] and "Spoken Malay (Lip-sync):" in combined[i]:
-            dia = combined[i].split("Spoken Malay (Lip-sync):", 1)[1]
+        intro = combined[i]
+        if not dia and intro and "Spoken Malay (Lip-sync):" in intro:
+            dia = intro.split("Spoken Malay (Lip-sync):", 1)[1]
         out["visual"][i] = (vis or "").strip()
         out["dialogue"][i] = (dia or "").strip().strip('"').strip()
     return out
@@ -176,7 +177,7 @@ def build_scene_prompt(visual: str, dialogue: str) -> str:
 # ---------------------------------------------------------------------------
 
 def _thumb(img: Image.Image) -> Image.Image:
-    return img.convert("L").resize((32, 56), Image.BILINEAR)
+    return img.convert("L").resize((32, 56), Image.Resampling.BILINEAR)
 
 
 def closest_keyframe(image_bytes: bytes, candidates: list[Path]) -> tuple[Path, dict[str, float]]:
