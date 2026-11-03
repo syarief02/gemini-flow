@@ -1,0 +1,61 @@
+{
+  "prefix": "carine_loose_double_breasted_blazer",
+  "created_at": "2026-11-03T18:15:35+08:00",
+  "product_name": "CARINE Loose Double-Breasted Blazer (Emas)",
+  "opening_line": "Ramai ingat nak nampak aura mewah macam ni wajib beli blazer butik ratusan ringgit. Padahal blazer dua dada potongan longgar berbutang emas ni buat gaya korang automatik nampak sangat berprofil tinggi!",
+  "closing_line": "Padankan dengan seluar potongan lurus dan tudung rona senada macam saya, terus bersedia untuk mesyuarat mahupun santai hujung minggu. Korang tekan je beg kuning sekarang untuk grab warna emas sebelum habis stok!",
+  "scenes": {
+    "scene_1_intro": {
+      "visual_prompt": "Static locked-off vertical shot, the camera does not move. A graceful Malaysian Muslimah model wearing a neat cream bawal chiffon hijab, an elegant modern CARINE loose-cut double-breasted blazer in warm golden khaki with polished gold buttons over a tucked-in cream inner top, off-white tailored wide-leg trousers, and cream pointed flats stands in a bright sunlit Japandi executive lounge with arched windows, sheer white curtains, textured cream limewash walls, and a potted olive tree in soft focus. Both hands remain empty and relaxed low at her sides. She smiles warmly and confidently at the camera, then gently pivots forty-five degrees to her right to reveal the blazer's flattering loose silhouette and structured shoulder drape, speaking continuously with realistic lip-sync. Clear Malaysian Malay female voice. No background music, only her voice and soft ambient sound.",
+      "spoken_dialogue": "Ramai ingat nak nampak aura mewah macam ni wajib beli blazer butik ratusan ringgit. Padahal blazer dua dada potongan longgar berbutang emas ni buat gaya korang automatik nampak sangat berprofil tinggi!"
+    },
+    "scene_2_detail": {
+      "visual_prompt": "Static locked-off vertical shot, the camera does not move. The same graceful Malaysian Muslimah in the cream hijab, CARINE golden khaki loose blazer, off-white wide-leg trousers, and cream pointed flats begins in a 3/4 side profile view, hands resting completely empty at her sides, in the identical sunlit Japandi lounge. She smoothly turns further into an elegant over-the-shoulder angle, glancing back toward the viewer with a friendly smile while showcasing the smooth anti-wrinkle drape, neat flap pockets, and back silhouette, speaking continuously with realistic lip-sync. Clear Malaysian Malay female voice. No background music, only her voice and soft ambient sound.",
+      "spoken_dialogue": "Material poliester premium ni memang jatuh terletak cantik, tak jarang, dan tak mudah renyuk sepanjang hari. Rekaan lapel kemas bersama deretan butang emas ni bagi impak gaya ala wanita korporat moden."
+    },
+    "scene_3_outro": {
+      "visual_prompt": "Static locked-off vertical shot, the camera does not move. The same graceful Malaysian Muslimah in the cream hijab, CARINE golden khaki loose blazer, off-white trousers, and cream flats begins in an over-the-shoulder pose, hands relaxed and empty at her sides, in the identical sunlit Japandi lounge. She turns smoothly back to face the camera directly in a front-facing stance, delivering a confident, warm sign-off smile, completing a seamless 360-degree loop while speaking continuously with realistic lip-sync. Clear Malaysian Malay female voice. No background music, only her voice and soft ambient sound.",
+      "spoken_dialogue": "Padankan dengan seluar potongan lurus dan tudung rona senada macam saya, terus bersedia untuk mesyuarat mahupun santai hujung minggu. Korang tekan je beg kuning sekarang untuk grab warna emas sebelum habis stok!"
+    },
+    "visual_prompts": {
+      "scene_1": "Static locked-off vertical shot, the camera does not move. A graceful Malaysian Muslimah model wearing a neat cream bawal chiffon hijab, an elegant modern CARINE loose-cut double-breasted blazer in warm golden khaki with polished gold buttons over a tucked-in cream inner top, off-white tailored wide-leg trousers, and cream pointed flats stands in a bright sunlit Japandi executive lounge with arched windows, sheer white curtains, textured cream limewash walls, and a potted olive tree in soft focus. Both hands remain empty and relaxed low at her sides. She smiles warmly and confidently at the camera, then gently pivots forty-five degrees to her right to reveal the blazer's flattering loose silhouette and structured shoulder drape, speaking continuously with realistic lip-sync. Clear Malaysian Malay female voice. No background music, only her voice and soft ambient sound.",
+      "scene_2": "Static locked-off vertical shot, the camera does not move. The same graceful Malaysian Muslimah in the cream hijab, CARINE golden khaki loose blazer, off-white wide-leg trousers, and cream pointed flats begins in a 3/4 side profile view, hands resting completely empty at her sides, in the identical sunlit Japandi lounge. She smoothly turns further into an elegant over-the-shoulder angle, glancing back toward the viewer with a friendly smile while showcasing the smooth anti-wrinkle drape, neat flap pockets, and back silhouette, speaking continuously with realistic lip-sync. Clear Malaysian Malay female voice. No background music, only her voice and soft ambient sound.",
+      "scene_3": "Static locked-off vertical shot, the camera does not move. The same graceful Malaysian Muslimah in the cream hijab, CARINE golden khaki loose blazer, off-white trousers, and cream flats begins in an over-the-shoulder pose, hands relaxed and empty at her sides, in the identical sunlit Japandi lounge. She turns smoothly back to face the camera directly in a front-facing stance, delivering a confident, warm sign-off smile, completing a seamless 360-degree loop while speaking continuously with realistic lip-sync. Clear Malaysian Malay female voice. No background music, only her voice and soft ambient sound."
+    },
+    "spoken_dialogue": {
+      "scene_1": "Ramai ingat nak nampak aura mewah macam ni wajib beli blazer butik ratusan ringgit. Padahal blazer dua dada potongan longgar berbutang emas ni buat gaya korang automatik nampak sangat berprofil tinggi!",
+      "scene_2": "Material poliester premium ni memang jatuh terletak cantik, tak jarang, dan tak mudah renyuk sepanjang hari. Rekaan lapel kemas bersama deretan butang emas ni bagi impak gaya ala wanita korporat moden.",
+      "scene_3": "Padankan dengan seluar potongan lurus dan tudung rona senada macam saya, terus bersedia untuk mesyuarat mahupun santai hujung minggu. Korang tekan je beg kuning sekarang untuk grab warna emas sebelum habis stok!"
+    }
+  },
+  "caption": "Aura 'girl boss' yang kemas dan mewah tanpa perlu belanja ratusan ringgit! CARINE Loose Double-Breasted Blazer rona emas ni potongan longgar moden dengan perincian butang emas yang menyerlahkan lagi gaya korporat mahupun santai korang. Kain poliester berkualiti tinggi yang jatuh cantik, tak mudah berkedut, dan selesa sepanjang hari. Padankan dengan seluar slack dan tudung senada macam saya, terus nampak berkarisma. Tekan beg kuning di bawah sekarang sebelum kehabisan saiz!",
+  "hashtags": "#blazerwanita #blazerhijab #carineblazer #outfitkerjawanita #ootdoffice #blazerdoubledbreasted #blazermalaysia #fashionhijab #racuntiktokshop #bajukerjawanita",
+  "bgm_prompt": "Modern luxury lounge beat, smooth ambient chillout, warm electric piano chords, subtle groovy bassline, soft crisp percussion, elegant stylish corporate aesthetic, pure instrumental, strictly no vocals",
+  "bgm_title": "Modern Corporate Chic Lounge",
+  "keyframes": [
+    "keyframes/carine_loose_double_breasted_blazer_frame1_front.jpg",
+    "keyframes/carine_loose_double_breasted_blazer_frame2_side.jpg",
+    "keyframes/carine_loose_double_breasted_blazer_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/carine_loose_double_breasted_blazer_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/carine_loose_double_breasted_blazer_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/carine_loose_double_breasted_blazer_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "tiktok_url": "https://vt.tiktok.com/ZS9ynkR4CmLoq-iiiLS/",
+    "category": "Pakaian & Fesyen",
+    "product_id": "1729627764058720729",
+    "hook_archetype": "The Price-Quality Myth-Buster",
+    "hook_score": 100,
+    "hook_status": "pass",
+    "hook_issues": [],
+    "supabase_keyframe_urls": {
+      "carine_loose_double_breasted_blazer_frame1_front.jpg": "https://blqsgijvdvzwnqeltoje.supabase.co/storage/v1/object/public/gemini-flow-keyframes/carine_loose_double_breasted_blazer_frame1_front.jpg",
+      "carine_loose_double_breasted_blazer_frame2_side.jpg": "https://blqsgijvdvzwnqeltoje.supabase.co/storage/v1/object/public/gemini-flow-keyframes/carine_loose_double_breasted_blazer_frame2_side.jpg",
+      "carine_loose_double_breasted_blazer_frame3_shoulder.jpg": "https://blqsgijvdvzwnqeltoje.supabase.co/storage/v1/object/public/gemini-flow-keyframes/carine_loose_double_breasted_blazer_frame3_shoulder.jpg",
+      "carine_loose_double_breasted_blazer_product.jpg": "https://blqsgijvdvzwnqeltoje.supabase.co/storage/v1/object/public/gemini-flow-keyframes/carine_loose_double_breasted_blazer_product.jpg"
+    }
+  },
+  "updated_at": "2026-11-03T18:15:35+08:00"
+}

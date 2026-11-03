@@ -300,6 +300,7 @@ async def get_flow_page(browser, project_url: str):
     page = match[0] if match else await context.new_page()  # never repurpose another project's tab
     if not match or "/edit/" in page.url:
         await page.goto(root, wait_until="domcontentloaded")
+    await page.set_viewport_size({"width": 1440, "height": 900})
     await page.bring_to_front()
     await page.locator(f"{COMPOSER} [contenteditable='true']").wait_for(timeout=20000)
     print(f"Active Flow project: {page.url}")
