@@ -1,0 +1,61 @@
+{
+  "prefix": "set_jaket_sut_wanita_mewah",
+  "created_at": "2026-11-06T02:22:39+08:00",
+  "product_name": "Set Wanita Bergaya Dewi Jaket Sut Fesyen Mewah",
+  "opening_line": "Korang selalu pening kepala setiap pagi fikir baju apa nak padankan? Set jaket sut gaya dewi dua helai ni penyelamat terbaik, sarung sedondon terus naik aura mewah tanpa pening matching baju!",
+  "closing_line": "Sesuai sangat untuk pembentangan universiti, temu duga kerja, mahupun gaya harian eksekutif muda macam saya. Korang tekan je beg kuning sekarang untuk cuba set sut gaya dewi yang elegan ni!",
+  "scenes": {
+    "scene_1_intro": {
+      "visual_prompt": "Static locked-off vertical shot, the camera does not move. A graceful Malaysian Muslimah model wearing an elegant champagne-cream bawal chiffon hijab, a matching luxury tailored 2-piece champagne-cream suit set over a clean white inner top, and pointed cream heels stands in a bright sunlit Kuala Lumpur luxury penthouse lounge with arched floor-to-ceiling windows, sheer white curtains, textured cream limewash walls, and a potted plant in soft focus. Both hands remain empty and relaxed low at her sides. She smiles warmly and confidently at the camera, then gently pivots forty-five degrees to her right to reveal the suit's structured shoulders and tailored waistline, speaking continuously with realistic lip-sync. Clear Malaysian Malay female voice. No background music, only her voice and soft ambient sound.",
+      "spoken_dialogue": "Korang selalu pening kepala setiap pagi fikir baju apa nak padankan? Set jaket sut gaya dewi dua helai ni penyelamat terbaik, sarung sedondon terus naik aura mewah tanpa pening matching baju!"
+    },
+    "scene_2_detail": {
+      "visual_prompt": "Static locked-off vertical shot, the camera does not move. The same graceful Malaysian Muslimah in the champagne-cream hijab, matching luxury suit set, and pointed heels begins in a 3/4 side profile view, hands resting completely empty at her sides, in the identical sunlit luxury penthouse lounge. She smoothly turns further into an elegant over-the-shoulder angle, glancing back toward the viewer with a friendly smile while showcasing the smooth fabric drape, structured collar, and clean trouser tailoring, speaking continuously with realistic lip-sync. Clear Malaysian Malay female voice. No background music, only her voice and soft ambient sound.",
+      "spoken_dialogue": "Material sut premium ni beralun lembut, tak jarang, dan tak mudah renyuk sepanjang hari. Rekaan kolar kemas bersama potongan pinggang bertali ni bagi efek tubuh nampak sangat langsing dan berkarisma."
+    },
+    "scene_3_outro": {
+      "visual_prompt": "Static locked-off vertical shot, the camera does not move. The same graceful Malaysian Muslimah in the champagne-cream hijab, matching luxury suit set, and pointed heels begins in an over-the-shoulder pose, hands relaxed and empty at her sides, in the identical sunlit penthouse lounge. She turns smoothly back to face the camera directly in a front-facing stance, delivering a confident, warm sign-off smile, completing a seamless 360-degree loop while speaking continuously with realistic lip-sync. Clear Malaysian Malay female voice. No background music, only her voice and soft ambient sound.",
+      "spoken_dialogue": "Sesuai sangat untuk pembentangan universiti, temu duga kerja, mahupun gaya harian eksekutif muda macam saya. Korang tekan je beg kuning sekarang untuk cuba set sut gaya dewi yang elegan ni!"
+    },
+    "visual_prompts": {
+      "scene_1": "Static locked-off vertical shot, the camera does not move. A graceful Malaysian Muslimah model wearing an elegant champagne-cream bawal chiffon hijab, a matching luxury tailored 2-piece champagne-cream suit set over a clean white inner top, and pointed cream heels stands in a bright sunlit Kuala Lumpur luxury penthouse lounge with arched floor-to-ceiling windows, sheer white curtains, textured cream limewash walls, and a potted plant in soft focus. Both hands remain empty and relaxed low at her sides. She smiles warmly and confidently at the camera, then gently pivots forty-five degrees to her right to reveal the suit's structured shoulders and tailored waistline, speaking continuously with realistic lip-sync. Clear Malaysian Malay female voice. No background music, only her voice and soft ambient sound.",
+      "scene_2": "Static locked-off vertical shot, the camera does not move. The same graceful Malaysian Muslimah in the champagne-cream hijab, matching luxury suit set, and pointed heels begins in a 3/4 side profile view, hands resting completely empty at her sides, in the identical sunlit luxury penthouse lounge. She smoothly turns further into an elegant over-the-shoulder angle, glancing back toward the viewer with a friendly smile while showcasing the smooth fabric drape, structured collar, and clean trouser tailoring, speaking continuously with realistic lip-sync. Clear Malaysian Malay female voice. No background music, only her voice and soft ambient sound.",
+      "scene_3": "Static locked-off vertical shot, the camera does not move. The same graceful Malaysian Muslimah in the champagne-cream hijab, matching luxury suit set, and pointed heels begins in an over-the-shoulder pose, hands relaxed and empty at her sides, in the identical sunlit penthouse lounge. She turns smoothly back to face the camera directly in a front-facing stance, delivering a confident, warm sign-off smile, completing a seamless 360-degree loop while speaking continuously with realistic lip-sync. Clear Malaysian Malay female voice. No background music, only her voice and soft ambient sound."
+    },
+    "spoken_dialogue": {
+      "scene_1": "Korang selalu pening kepala setiap pagi fikir baju apa nak padankan? Set jaket sut gaya dewi dua helai ni penyelamat terbaik, sarung sedondon terus naik aura mewah tanpa pening matching baju!",
+      "scene_2": "Material sut premium ni beralun lembut, tak jarang, dan tak mudah renyuk sepanjang hari. Rekaan kolar kemas bersama potongan pinggang bertali ni bagi efek tubuh nampak sangat langsing dan berkarisma.",
+      "scene_3": "Sesuai sangat untuk pembentangan universiti, temu duga kerja, mahupun gaya harian eksekutif muda macam saya. Korang tekan je beg kuning sekarang untuk cuba set sut gaya dewi yang elegan ni!"
+    }
+  },
+  "caption": "Tak perlu pening kepala lagi nak matching baju kerja atau presentation setiap pagi! Set Jaket Sut Wanita Gaya Dewi dua helai sedondon rona champagne-cream ni ada potongan tailored mewah yang automatik bagi ilusi tubuh ramping dan postur kemas. Fabrik sut premium beralun lembut yang sejuk, tak jarang, dan tak mudah berkedut sepanjang hari. Sangat sesuai untuk viva universiti, temu duga kerja, mahupun gaya harian eksekutif muda. Padankan dengan tudung bawal dan kasut tumit senada macam saya untuk tampil anggun berkarisma. Tekan beg kuning di bawah sekarang sebelum stok promosi habis!",
+  "hashtags": "#setsutwanita #blazerset #outfitkerja #ootdoffice #bajutemuduga #setblazerwanita #suitsforwomen #fashionhijab #racuntiktokshop #bajukurungmoden",
+  "bgm_prompt": "Elegant luxury corporate chillhop, smooth acoustic guitar chords, warm Rhodes electric piano, mellow upright bass groove, delicate crisp percussion, graceful inspiring aesthetic, pure instrumental, strictly no vocals",
+  "bgm_title": "Goddess Elegant Suite Lounge",
+  "keyframes": [
+    "keyframes/set_jaket_sut_wanita_mewah_frame1_front.jpg",
+    "keyframes/set_jaket_sut_wanita_mewah_frame2_side.jpg",
+    "keyframes/set_jaket_sut_wanita_mewah_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/set_jaket_sut_wanita_mewah_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/set_jaket_sut_wanita_mewah_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/set_jaket_sut_wanita_mewah_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "tiktok_url": "https://vt.tiktok.com/ZS9yobJmYWRco-r2ER5/",
+    "category": "Pakaian & Fesyen",
+    "product_id": "dewi-suit-set-2026",
+    "hook_archetype": "Conversational Organic Recommendation",
+    "hook_score": 100,
+    "hook_status": "pass",
+    "hook_issues": [],
+    "supabase_keyframe_urls": {
+      "set_jaket_sut_wanita_mewah_frame1_front.jpg": "https://blqsgijvdvzwnqeltoje.supabase.co/storage/v1/object/public/gemini-flow-keyframes/set_jaket_sut_wanita_mewah_frame1_front.jpg",
+      "set_jaket_sut_wanita_mewah_frame2_side.jpg": "https://blqsgijvdvzwnqeltoje.supabase.co/storage/v1/object/public/gemini-flow-keyframes/set_jaket_sut_wanita_mewah_frame2_side.jpg",
+      "set_jaket_sut_wanita_mewah_frame3_shoulder.jpg": "https://blqsgijvdvzwnqeltoje.supabase.co/storage/v1/object/public/gemini-flow-keyframes/set_jaket_sut_wanita_mewah_frame3_shoulder.jpg",
+      "set_jaket_sut_wanita_mewah_product.jpg": "https://blqsgijvdvzwnqeltoje.supabase.co/storage/v1/object/public/gemini-flow-keyframes/set_jaket_sut_wanita_mewah_product.jpg"
+    }
+  },
+  "updated_at": "2026-11-06T02:22:39+08:00"
+}
