@@ -131,12 +131,20 @@ async def setup_suno(prompt_text: str = None, title_text: str = None):
     except Exception as e_lyr:
         print(f"Lyrics editor clear notice: {e_lyr}")
 
-    # 5. Fill Styles of Music textarea (explicitly excluding Cowriter assistant prompt)
+    # 5. Fill Styles of Music textarea (explicitly locating Styles box)
     styles_ta = suno_page.locator(
+        "textarea[aria-label='Styles'], "
+        "textarea[placeholder*='dubstep'], "
+        "textarea[placeholder*='high-energy'], "
         "textarea:not([placeholder='Ask anything']):not([aria-label='Cowriter prompt']):not([aria-label='Script']):not([aria-label='Tone'])"
     ).first
 
-    if await styles_ta.is_visible(timeout=3000):
+    try:
+        await styles_ta.scroll_into_view_if_needed(timeout=5000)
+    except Exception:
+        pass
+
+    if await styles_ta.is_visible(timeout=5000):
         print("Typing BGM style prompt into Suno Style box...")
         await styles_ta.click(force=True)
         await styles_ta.fill("")
@@ -151,6 +159,11 @@ async def setup_suno(prompt_text: str = None, title_text: str = None):
         "input[placeholder*='title'], "
         "input[aria-label*='Title']"
     ).first
+    try:
+        await title_inp.scroll_into_view_if_needed(timeout=3000)
+    except Exception:
+        pass
+
     try:
         if not await title_inp.is_visible(timeout=1000):
             await suno_page.evaluate("""() => {
@@ -175,6 +188,7 @@ async def setup_suno(prompt_text: str = None, title_text: str = None):
     # 7. Locate and Click Create Button
     create_btn = suno_page.locator(
         "button:has-text('Create'), "
+        "button[aria-label*='Create song'], "
         "button[aria-label='Create']"
     ).last
 
@@ -190,16 +204,15 @@ async def setup_suno(prompt_text: str = None, title_text: str = None):
         await suno_page.wait_for_timeout(4000)
         await suno_page.screenshot(path="suno_generating.png")
 
-        # Verify whether song creation actually initiated or hit free credit limit
+        # Verify whether song creation actually initiated
         has_new_song = await suno_page.evaluate("""(title) => {
             const txt = document.body.innerText || '';
             return txt.includes(title) || txt.includes('Today');
         }""", target_title)
 
         out_of_credits = await suno_page.evaluate("""() => {
-            const els = Array.from(document.querySelectorAll('a, button, div, span'));
-            const earn = els.find(e => (e.innerText || '').trim() === 'Earn Credits');
-            return !!earn;
+            const txt = document.body.innerText || '';
+            return txt.includes('0 credits left') || txt.includes('0 credits remaining') || txt.includes('Insufficient credits');
         }""")
 
         if has_new_song:
