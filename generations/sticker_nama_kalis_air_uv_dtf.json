@@ -1,0 +1,54 @@
+{
+  "prefix": "sticker_nama_kalis_air_uv_dtf",
+  "created_at": "2026-11-07T23:09:40+08:00",
+  "product_name": "STICKER NAMA KALIS AIR | UV DTF | CUSTOM NAMA ANAK",
+  "opening_line": "Korang pernah tak pening kepala botol air anak asyik tertukar dekat sekolah? Sticker nama UV DTF kalis air ni penyelamat terbaik, cetakan timbul tiga D tahan calar dan tak tertanggal walau dibasuh.",
+  "closing_line": "Boleh cetak nama anak dan pilih pelbagai kartun comel yang anak suka untuk persediaan sekolah. Korang yang nak barang anak selamat tak tertukar, cepat tekan beg kuning sebelum slot tempahan penuh!",
+  "scenes": {
+    "scene_1_intro": {
+      "visual_prompt": "Static locked-off vertical 9:16 portrait shot, the camera does not move. A graceful 26-year-old Malaysian Muslimah mother in a soft beige chiffon hijab and pastel sage green tunic blouse stands in a sunlit Japandi study room with a light oak desk in the background. She faces forward with a gentle, confident expression, speaking clearly with natural lip-sync and expressive warm facial gestures, then smoothly turns 45 degrees to her side profile to settle into the end pose. Both hands remain empty and rest naturally low at her sides. No camera movement, no props in hands, no background music. Spoken Malay (Lip-sync): \"Korang pernah tak pening kepala botol air anak asyik tertukar dekat sekolah? Sticker nama UV DTF kalis air ni penyelamat terbaik, cetakan timbul tiga D tahan calar dan tak tertanggal walau dibasuh.\"",
+      "spoken_dialogue": "Korang pernah tak pening kepala botol air anak asyik tertukar dekat sekolah? Sticker nama UV DTF kalis air ni penyelamat terbaik, cetakan timbul tiga D tahan calar dan tak tertanggal walau dibasuh."
+    },
+    "scene_2_detail": {
+      "visual_prompt": "Static locked-off vertical 9:16 portrait shot, the camera does not move. A graceful 26-year-old Malaysian Muslimah mother in a soft beige chiffon hijab and pastel sage green tunic blouse stands in the sunlit Japandi study room beside the light oak desk. Starting in a 45-degree side profile, she speaks with warm conviction and natural lip-sync, gesturing subtly with her head and smiling warmly as she turns smoothly to glance back over her shoulder towards the camera, settling into the end pose. Both hands remain completely empty and rest naturally low at her sides. No camera movement, no props in hands, no background music. Spoken Malay (Lip-sync): \"Pelekat pindahan filem ni sangat mudah digunakan, cuma kupas dan lekat kemas pada bekas makanan mahupun botol. Hasilnya nampak macam cetakan terus dari kilang yang sangat eksklusif dan tahan lasak.\"",
+      "spoken_dialogue": "Pelekat pindahan filem ni sangat mudah digunakan, cuma kupas dan lekat kemas pada bekas makanan mahupun botol. Hasilnya nampak macam cetakan terus dari kilang yang sangat eksklusif dan tahan lasak."
+    },
+    "scene_3_outro": {
+      "visual_prompt": "Static locked-off vertical 9:16 portrait shot, the camera does not move. A graceful 26-year-old Malaysian Muslimah mother in a soft beige chiffon hijab and pastel sage green tunic blouse stands in the sunlit Japandi study room. Starting with her glance back over her shoulder, she speaks warmly with natural lip-sync and turns gracefully back to face the camera directly in a confident full-front pose for a seamless 360-degree loop. Both hands remain completely empty and rest naturally low at her sides. No camera movement, no props in hands, no background music. Spoken Malay (Lip-sync): \"Boleh cetak nama anak dan pilih pelbagai kartun comel yang anak suka untuk persediaan sekolah. Korang yang nak barang anak selamat tak tertukar, cepat tekan beg kuning sebelum slot tempahan penuh!\"",
+      "spoken_dialogue": "Boleh cetak nama anak dan pilih pelbagai kartun comel yang anak suka untuk persediaan sekolah. Korang yang nak barang anak selamat tak tertukar, cepat tekan beg kuning sebelum slot tempahan penuh!"
+    },
+    "visual_prompts": {
+      "scene_1": "Static locked-off vertical 9:16 portrait shot, the camera does not move. A graceful 26-year-old Malaysian Muslimah mother in a soft beige chiffon hijab and pastel sage green tunic blouse stands in a sunlit Japandi study room with a light oak desk in the background. She faces forward with a gentle, confident expression, speaking clearly with natural lip-sync and expressive warm facial gestures, then smoothly turns 45 degrees to her side profile to settle into the end pose. Both hands remain empty and rest naturally low at her sides. No camera movement, no props in hands, no background music. Spoken Malay (Lip-sync): \"Korang pernah tak pening kepala botol air anak asyik tertukar dekat sekolah? Sticker nama UV DTF kalis air ni penyelamat terbaik, cetakan timbul tiga D tahan calar dan tak tertanggal walau dibasuh.\"",
+      "scene_2": "Static locked-off vertical 9:16 portrait shot, the camera does not move. A graceful 26-year-old Malaysian Muslimah mother in a soft beige chiffon hijab and pastel sage green tunic blouse stands in the sunlit Japandi study room beside the light oak desk. Starting in a 45-degree side profile, she speaks with warm conviction and natural lip-sync, gesturing subtly with her head and smiling warmly as she turns smoothly to glance back over her shoulder towards the camera, settling into the end pose. Both hands remain completely empty and rest naturally low at her sides. No camera movement, no props in hands, no background music. Spoken Malay (Lip-sync): \"Pelekat pindahan filem ni sangat mudah digunakan, cuma kupas dan lekat kemas pada bekas makanan mahupun botol. Hasilnya nampak macam cetakan terus dari kilang yang sangat eksklusif dan tahan lasak.\"",
+      "scene_3": "Static locked-off vertical 9:16 portrait shot, the camera does not move. A graceful 26-year-old Malaysian Muslimah mother in a soft beige chiffon hijab and pastel sage green tunic blouse stands in the sunlit Japandi study room. Starting with her glance back over her shoulder, she speaks warmly with natural lip-sync and turns gracefully back to face the camera directly in a confident full-front pose for a seamless 360-degree loop. Both hands remain completely empty and rest naturally low at her sides. No camera movement, no props in hands, no background music. Spoken Malay (Lip-sync): \"Boleh cetak nama anak dan pilih pelbagai kartun comel yang anak suka untuk persediaan sekolah. Korang yang nak barang anak selamat tak tertukar, cepat tekan beg kuning sebelum slot tempahan penuh!\""
+    },
+    "spoken_dialogue": {
+      "scene_1": "Korang pernah tak pening kepala botol air anak asyik tertukar dekat sekolah? Sticker nama UV DTF kalis air ni penyelamat terbaik, cetakan timbul tiga D tahan calar dan tak tertanggal walau dibasuh.",
+      "scene_2": "Pelekat pindahan filem ni sangat mudah digunakan, cuma kupas dan lekat kemas pada bekas makanan mahupun botol. Hasilnya nampak macam cetakan terus dari kilang yang sangat eksklusif dan tahan lasak.",
+      "scene_3": "Boleh cetak nama anak dan pilih pelbagai kartun comel yang anak suka untuk persediaan sekolah. Korang yang nak barang anak selamat tak tertukar, cepat tekan beg kuning sebelum slot tempahan penuh!"
+    }
+  },
+  "caption": "Dah tak payah pening kepala barang anak asyik tertukar atau hilang dekat sekolah! 🎒✨ Sticker nama UV DTF ni teknologi cetakan timbul 3D yang kalis air dan tahan calar. Basuh tumbler atau bekas makanan hari-hari pun tak tanggal! Boleh custom nama anak dengan pilihan kartun comel kegemaran mereka. Dapatkan sekarang di beg kuning sebelum slot tempahan penuh! 👇💛",
+  "hashtags": "#stickernama #stickernamaanak #uvdtfsticker #stickerkalisair #backtoschoolmalaysia #barangsekolahanak #customstickernama #racuntiktok #tiktokshopmalaysia #ibubapaprihatin",
+  "bgm_prompt": "Bright playful acoustic pop, cheerful upbeat tempo, gentle glockenspiel chimes, warm ukulele strums, light snappy percussion, cheerful friendly atmosphere, clean melodic production, aesthetic parenting vibe, purely instrumental, no vocals",
+  "bgm_title": "Playful Kids Back to School Pop",
+  "keyframes": [
+    "keyframes/sticker_nama_kalis_air_uv_dtf_frame1_front.jpg",
+    "keyframes/sticker_nama_kalis_air_uv_dtf_frame2_side.jpg",
+    "keyframes/sticker_nama_kalis_air_uv_dtf_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/sticker_nama_kalis_air_uv_dtf_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/sticker_nama_kalis_air_uv_dtf_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/sticker_nama_kalis_air_uv_dtf_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "url": "https://vt.tiktok.com/ZS9fNv2j26DDk-nemYE/",
+    "token": "ZS9fNv2j26DDk-nemYE",
+    "hook_archetype": "The Visual Pattern Interrupt / Direct Question",
+    "hook_score": 100,
+    "hook_status": "pass",
+    "hook_issues": []
+  },
+  "updated_at": "2026-11-07T23:09:40+08:00"
+}
