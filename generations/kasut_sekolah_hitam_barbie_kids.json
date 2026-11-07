@@ -1,0 +1,54 @@
+{
+  "prefix": "kasut_sekolah_hitam_barbie_kids",
+  "created_at": "2026-11-08T00:47:18+08:00",
+  "product_name": "Kasut Sekolah Hitam Barbie Black School Shoes Kids Girl (BB8011 | BB8015) - Kideeland",
+  "opening_line": "Siapa cakap kasut sekolah hitam budak perempuan mesti jenis keras yang cepat koyak? Kasut edisi Barbie rasmi ni rekaan pelekat tali mudah pakai, material kulit sintetik lembut dan sangat tahan lasak.",
+  "closing_line": "Tersedia dari saiz kanak-kanak kecil hingga murid sekolah rendah dengan perincian tulisan Barbie yang comel. Korang yang nak anak melangkah selesa dan bersemangat, cepat tekan beg kuning sebelum saiz habis!",
+  "scenes": {
+    "scene_1_intro": {
+      "visual_prompt": "Static locked-off vertical 9:16 portrait shot, the camera does not move. A graceful 26-year-old Malaysian Muslimah mother in a soft dusty rose chiffon hijab and matching tunic blouse stands in a sunlit Japandi home foyer beside a light oak shoe bench. She faces forward with a gentle, confident expression, speaking clearly with natural lip-sync and expressive warm facial gestures, then smoothly turns 45 degrees to her side profile to settle into the end pose. Both hands remain empty and rest naturally low at her sides. No camera movement, no props in hands, no background music. Spoken Malay (Lip-sync): \"Siapa cakap kasut sekolah hitam budak perempuan mesti jenis keras yang cepat koyak? Kasut edisi Barbie rasmi ni rekaan pelekat tali mudah pakai, material kulit sintetik lembut dan sangat tahan lasak.\"",
+      "spoken_dialogue": "Siapa cakap kasut sekolah hitam budak perempuan mesti jenis keras yang cepat koyak? Kasut edisi Barbie rasmi ni rekaan pelekat tali mudah pakai, material kulit sintetik lembut dan sangat tahan lasak."
+    },
+    "scene_2_detail": {
+      "visual_prompt": "Static locked-off vertical 9:16 portrait shot, the camera does not move. A graceful 26-year-old Malaysian Muslimah mother in a soft dusty rose chiffon hijab and matching tunic blouse stands in the sunlit Japandi home foyer beside the wooden shoe bench. Starting in a 45-degree side profile, she speaks with warm conviction and natural lip-sync, gesturing subtly with her head and smiling warmly as she turns smoothly to glance back over her shoulder towards the camera, settling into the end pose. Both hands remain completely empty and rest naturally low at her sides. No camera movement, no props in hands, no background music. Spoken Malay (Lip-sync): \"Rekaan kasut gaya Mary Jane ni ada lubang pengudaraan halus di bahagian depan, jadi kaki anak kekal berangin tanpa bau peluh. Tapak getahnya mencengkam kemas agar anak selamat berlari di sekolah.\"",
+      "spoken_dialogue": "Rekaan kasut gaya Mary Jane ni ada lubang pengudaraan halus di bahagian depan, jadi kaki anak kekal berangin tanpa bau peluh. Tapak getahnya mencengkam kemas agar anak selamat berlari di sekolah."
+    },
+    "scene_3_outro": {
+      "visual_prompt": "Static locked-off vertical 9:16 portrait shot, the camera does not move. A graceful 26-year-old Malaysian Muslimah mother in a soft dusty rose chiffon hijab and matching tunic blouse stands in the sunlit Japandi home foyer. Starting with her glance back over her shoulder, she speaks warmly with natural lip-sync and turns gracefully back to face the camera directly in a confident full-front pose for a seamless 360-degree loop. Both hands remain completely empty and rest naturally low at her sides. No camera movement, no props in hands, no background music. Spoken Malay (Lip-sync): \"Tersedia dari saiz kanak-kanak kecil hingga murid sekolah rendah dengan perincian tulisan Barbie yang comel. Korang yang nak anak melangkah selesa dan bersemangat, cepat tekan beg kuning sebelum saiz habis!\"",
+      "spoken_dialogue": "Tersedia dari saiz kanak-kanak kecil hingga murid sekolah rendah dengan perincian tulisan Barbie yang comel. Korang yang nak anak melangkah selesa dan bersemangat, cepat tekan beg kuning sebelum saiz habis!"
+    },
+    "visual_prompts": {
+      "scene_1": "Static locked-off vertical 9:16 portrait shot, the camera does not move. A graceful 26-year-old Malaysian Muslimah mother in a soft dusty rose chiffon hijab and matching tunic blouse stands in a sunlit Japandi home foyer beside a light oak shoe bench. She faces forward with a gentle, confident expression, speaking clearly with natural lip-sync and expressive warm facial gestures, then smoothly turns 45 degrees to her side profile to settle into the end pose. Both hands remain empty and rest naturally low at her sides. No camera movement, no props in hands, no background music. Spoken Malay (Lip-sync): \"Siapa cakap kasut sekolah hitam budak perempuan mesti jenis keras yang cepat koyak? Kasut edisi Barbie rasmi ni rekaan pelekat tali mudah pakai, material kulit sintetik lembut dan sangat tahan lasak.\"",
+      "scene_2": "Static locked-off vertical 9:16 portrait shot, the camera does not move. A graceful 26-year-old Malaysian Muslimah mother in a soft dusty rose chiffon hijab and matching tunic blouse stands in the sunlit Japandi home foyer beside the wooden shoe bench. Starting in a 45-degree side profile, she speaks with warm conviction and natural lip-sync, gesturing subtly with her head and smiling warmly as she turns smoothly to glance back over her shoulder towards the camera, settling into the end pose. Both hands remain completely empty and rest naturally low at her sides. No camera movement, no props in hands, no background music. Spoken Malay (Lip-sync): \"Rekaan kasut gaya Mary Jane ni ada lubang pengudaraan halus di bahagian depan, jadi kaki anak kekal berangin tanpa bau peluh. Tapak getahnya mencengkam kemas agar anak selamat berlari di sekolah.\"",
+      "scene_3": "Static locked-off vertical 9:16 portrait shot, the camera does not move. A graceful 26-year-old Malaysian Muslimah mother in a soft dusty rose chiffon hijab and matching tunic blouse stands in the sunlit Japandi home foyer. Starting with her glance back over her shoulder, she speaks warmly with natural lip-sync and turns gracefully back to face the camera directly in a confident full-front pose for a seamless 360-degree loop. Both hands remain completely empty and rest naturally low at her sides. No camera movement, no props in hands, no background music. Spoken Malay (Lip-sync): \"Tersedia dari saiz kanak-kanak kecil hingga murid sekolah rendah dengan perincian tulisan Barbie yang comel. Korang yang nak anak melangkah selesa dan bersemangat, cepat tekan beg kuning sebelum saiz habis!\""
+    },
+    "spoken_dialogue": {
+      "scene_1": "Siapa cakap kasut sekolah hitam budak perempuan mesti jenis keras yang cepat koyak? Kasut edisi Barbie rasmi ni rekaan pelekat tali mudah pakai, material kulit sintetik lembut dan sangat tahan lasak.",
+      "scene_2": "Rekaan kasut gaya Mary Jane ni ada lubang pengudaraan halus di bahagian depan, jadi kaki anak kekal berangin tanpa bau peluh. Tapak getahnya mencengkam kemas agar anak selamat berlari di sekolah.",
+      "scene_3": "Tersedia dari saiz kanak-kanak kecil hingga murid sekolah rendah dengan perincian tulisan Barbie yang comel. Korang yang nak anak melangkah selesa dan bersemangat, cepat tekan beg kuning sebelum saiz habis!"
+    }
+  },
+  "caption": "Dah tak payah risau anak mengadu kaki sakit atau melecet bila balik sekolah! 🎒✨ Kasut sekolah hitam Barbie rasmi ni ada kusyen dalaman warna merah jambu yang super empuk, tapak getah anti gelincir, dan tali pelekat velcro yang sangat mudah dipakai. Kaki anak kekal berangin dan selesa sepanjang hari. Jom dapatkan sekarang di beg kuning sebelum saiz anak korang kehabisan! 👇💛",
+  "hashtags": "#kasutsekolah #kasutsekolahhitam #kasutbarbie #kasutsekolahbudak #backtoschoolmalaysia #kasutsekolahviral #kideeland #kelengkapansekolah #racuntiktok #tiktokshopmalaysia",
+  "bgm_prompt": "Bright cheerful acoustic pop, energetic playful tempo, uplifting melodic glockenspiel, joyful acoustic guitar rhythm, bouncy bassline, crisp snappy handclaps, feel-good innocent morning vibe, clean aesthetic production, purely instrumental, strictly no vocals",
+  "bgm_title": "Cheerful Steps Barbie Kids Pop",
+  "keyframes": [
+    "keyframes/kasut_sekolah_hitam_barbie_kids_frame1_front.jpg",
+    "keyframes/kasut_sekolah_hitam_barbie_kids_frame2_side.jpg",
+    "keyframes/kasut_sekolah_hitam_barbie_kids_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/kasut_sekolah_hitam_barbie_kids_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/kasut_sekolah_hitam_barbie_kids_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/kasut_sekolah_hitam_barbie_kids_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "url": "https://vt.tiktok.com/ZS9fFr5ryaab1-RkZXg/",
+    "token": "ZS9fFr5ryaab1-RkZXg",
+    "hook_archetype": "The Stereotype-Buster / Pain-Point Contrast",
+    "hook_score": 100,
+    "hook_status": "pass",
+    "hook_issues": []
+  },
+  "updated_at": "2026-11-08T00:47:18+08:00"
+}
