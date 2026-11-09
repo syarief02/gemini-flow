@@ -1,0 +1,60 @@
+{
+  "prefix": "set_sut_dewi_temuduga_profesional",
+  "created_at": "2026-11-09T23:17:12.177664+08:00",
+  "product_name": "Set Wanita Bergaya Dewi Model Baru Jaket Sut Fesyen Mewah Temuduga Pelajar Universiti Pakaian Kerja Profesional",
+  "opening_line": "Korang tahu tak rahsia tampil menonjol masa temuduga kerja bukan sekadar pakai warna hitam biasa? Set sut dua helai berbutang emas ni ada potongan kemas yang automatik bina aura eksekutif muda.",
+  "closing_line": "Set padanan lengkap ni buat korang terus siap bergaya tanpa pening fikir matching setiap pagi. Korang yang nak skor first impression terbaik masa interview, cepat tekan beg kuning sebelum kehabisan saiz!",
+  "scenes": {
+    "scene_1_intro": {
+      "visual_prompt": "Static locked-off vertical 9:16 portrait shot, the camera does not move. A graceful 26-year-old Malaysian Muslimah professional in an ivory chiffon hijab, crisp cream inner blouse, and a vibrant marigold yellow tailored double-breasted suit set with gold embossed buttons stands in a sunlit executive corporate lounge with floor-to-ceiling windows and light oak herringbone floors. She faces forward with a pleasant, confident expression and gentle smile, speaking with natural lip-sync and warm facial expressions, then smoothly turns 45 degrees to her side profile to settle into the end pose. Both hands remain completely empty and rest naturally low at her sides. No camera movement, no props in hands, no background music. Spoken Malay (Lip-sync): \"Korang tahu tak rahsia tampil menonjol masa temuduga kerja bukan sekadar pakai warna hitam biasa? Set sut dua helai berbutang emas ni ada potongan kemas yang automatik bina aura eksekutif muda.\"",
+      "spoken_dialogue": "Korang tahu tak rahsia tampil menonjol masa temuduga kerja bukan sekadar pakai warna hitam biasa? Set sut dua helai berbutang emas ni ada potongan kemas yang automatik bina aura eksekutif muda."
+    },
+    "scene_2_detail": {
+      "visual_prompt": "Static locked-off vertical 9:16 portrait shot, the camera does not move. A graceful 26-year-old Malaysian Muslimah professional in the vibrant marigold yellow tailored suit set and ivory chiffon hijab stands in the sunlit executive corporate lounge. Starting in a 45-degree side profile, she speaks with warm conviction and natural lip-sync, smiling as she gestures subtly with her head and turns smoothly to glance back over her shoulder towards the camera, settling into the end pose. Both hands remain completely empty and rest naturally low at her sides. No camera movement, no props in hands, no background music. Spoken Malay (Lip-sync): \"Fabriknya sangat lembut dan beralun kemas bila berjalan, manakala potongan seluar lurus berpinggang selesa buat korang rasa yakin bergerak tanpa rasa melekat atau panas waktu berdepan panel penemuduga.\"",
+      "spoken_dialogue": "Fabriknya sangat lembut dan beralun kemas bila berjalan, manakala potongan seluar lurus berpinggang selesa buat korang rasa yakin bergerak tanpa rasa melekat atau panas waktu berdepan panel penemuduga."
+    },
+    "scene_3_outro": {
+      "visual_prompt": "Static locked-off vertical 9:16 portrait shot, the camera does not move. A graceful 26-year-old Malaysian Muslimah professional in the vibrant marigold yellow tailored suit set and ivory chiffon hijab stands in the sunlit executive corporate lounge. Starting with her glance back over her shoulder, she speaks warmly with natural lip-sync and turns gracefully back to face the camera directly in a confident full-front pose for a seamless 360-degree loop. Both hands remain completely empty and rest naturally low at her sides. No camera movement, no props in hands, no background music. Spoken Malay (Lip-sync): \"Set padanan lengkap ni buat korang terus siap bergaya tanpa pening fikir matching setiap pagi. Korang yang nak skor first impression terbaik masa interview, cepat tekan beg kuning sebelum kehabisan saiz!\"",
+      "spoken_dialogue": "Set padanan lengkap ni buat korang terus siap bergaya tanpa pening fikir matching setiap pagi. Korang yang nak skor first impression terbaik masa interview, cepat tekan beg kuning sebelum kehabisan saiz!"
+    },
+    "visual_prompts": {
+      "scene_1": "Static locked-off vertical 9:16 portrait shot, the camera does not move. A graceful 26-year-old Malaysian Muslimah professional in an ivory chiffon hijab, crisp cream inner blouse, and a vibrant marigold yellow tailored double-breasted suit set with gold embossed buttons stands in a sunlit executive corporate lounge with floor-to-ceiling windows and light oak herringbone floors. She faces forward with a pleasant, confident expression and gentle smile, speaking with natural lip-sync and warm facial expressions, then smoothly turns 45 degrees to her side profile to settle into the end pose. Both hands remain completely empty and rest naturally low at her sides. No camera movement, no props in hands, no background music. Spoken Malay (Lip-sync): \"Korang tahu tak rahsia tampil menonjol masa temuduga kerja bukan sekadar pakai warna hitam biasa? Set sut dua helai berbutang emas ni ada potongan kemas yang automatik bina aura eksekutif muda.\"",
+      "scene_2": "Static locked-off vertical 9:16 portrait shot, the camera does not move. A graceful 26-year-old Malaysian Muslimah professional in the vibrant marigold yellow tailored suit set and ivory chiffon hijab stands in the sunlit executive corporate lounge. Starting in a 45-degree side profile, she speaks with warm conviction and natural lip-sync, smiling as she gestures subtly with her head and turns smoothly to glance back over her shoulder towards the camera, settling into the end pose. Both hands remain completely empty and rest naturally low at her sides. No camera movement, no props in hands, no background music. Spoken Malay (Lip-sync): \"Fabriknya sangat lembut dan beralun kemas bila berjalan, manakala potongan seluar lurus berpinggang selesa buat korang rasa yakin bergerak tanpa rasa melekat atau panas waktu berdepan panel penemuduga.\"",
+      "scene_3": "Static locked-off vertical 9:16 portrait shot, the camera does not move. A graceful 26-year-old Malaysian Muslimah professional in the vibrant marigold yellow tailored suit set and ivory chiffon hijab stands in the sunlit executive corporate lounge. Starting with her glance back over her shoulder, she speaks warmly with natural lip-sync and turns gracefully back to face the camera directly in a confident full-front pose for a seamless 360-degree loop. Both hands remain completely empty and rest naturally low at her sides. No camera movement, no props in hands, no background music. Spoken Malay (Lip-sync): \"Set padanan lengkap ni buat korang terus siap bergaya tanpa pening fikir matching setiap pagi. Korang yang nak skor first impression terbaik masa interview, cepat tekan beg kuning sebelum kehabisan saiz!\""
+    },
+    "spoken_dialogue": {
+      "scene_1": "Korang tahu tak rahsia tampil menonjol masa temuduga kerja bukan sekadar pakai warna hitam biasa? Set sut dua helai berbutang emas ni ada potongan kemas yang automatik bina aura eksekutif muda.",
+      "scene_2": "Fabriknya sangat lembut dan beralun kemas bila berjalan, manakala potongan seluar lurus berpinggang selesa buat korang rasa yakin bergerak tanpa rasa melekat atau panas waktu berdepan panel penemuduga.",
+      "scene_3": "Set padanan lengkap ni buat korang terus siap bergaya tanpa pening fikir matching setiap pagi. Korang yang nak skor first impression terbaik masa interview, cepat tekan beg kuning sebelum kehabisan saiz!"
+    }
+  },
+  "caption": "Dah dapat panggilan temuduga kerja tapi masih buntu fikir baju apa yang nampak berwibawa? 💼✨ Set sut dua helai rona kuning keemasan bergaya dewi ni ada potongan pinggang kemas dengan perincian butang emas mewah. Fabriknya lembut beralun, selesa dipakai sepanjang hari tanpa rasa panas, dan seluar slack potongan lurus yang auto nampak tinggi langsing. Sarung sedondon terus naik aura eksekutif muda! Jom dapatkan sekarang di beg kuning sebelum saiz korang kehabisan! 👇💛",
+  "hashtags": "#setsutwanita #blazertemuduga #blazerwanita #ootdinterview #bajukerjawanita #setsutkuning #formalwearmalaysia #pakaianpejabat #racuntiktok #tiktokshopmalaysia",
+  "bgm_prompt": "Inspiring corporate pop chic, midtempo confident groove, warm bright Rhodes piano chords, gentle acoustic guitar strumming, smooth clean bassline, subtle snap percussion, polished executive elegance, purely instrumental, strictly no vocals",
+  "bgm_title": "Golden Ambition Corporate Chic",
+  "keyframes": [
+    "keyframes/set_sut_dewi_temuduga_profesional_frame1_front.jpg",
+    "keyframes/set_sut_dewi_temuduga_profesional_frame2_side.jpg",
+    "keyframes/set_sut_dewi_temuduga_profesional_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/set_sut_dewi_temuduga_profesional_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/set_sut_dewi_temuduga_profesional_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/set_sut_dewi_temuduga_profesional_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "url": "https://vt.tiktok.com/ZS9fkWcUpgqhD-6P3dU/",
+    "token": "ZS9fkWcUpgqhD-6P3dU",
+    "hook_archetype": "The Hidden Gem / Secret Discovery",
+    "hook_score": 100,
+    "hook_status": "pass",
+    "hook_issues": []
+  },
+  "updated_at": "2026-11-09T23:17:12.177664+08:00",
+  "supabase_keyframe_urls": {
+    "set_sut_dewi_temuduga_profesional_frame1_front.jpg": "https://blqsgijvdvzwnqeltoje.supabase.co/storage/v1/object/public/gemini-flow-keyframes/set_sut_dewi_temuduga_profesional_frame1_front.jpg",
+    "set_sut_dewi_temuduga_profesional_frame2_side.jpg": "https://blqsgijvdvzwnqeltoje.supabase.co/storage/v1/object/public/gemini-flow-keyframes/set_sut_dewi_temuduga_profesional_frame2_side.jpg",
+    "set_sut_dewi_temuduga_profesional_frame3_shoulder.jpg": "https://blqsgijvdvzwnqeltoje.supabase.co/storage/v1/object/public/gemini-flow-keyframes/set_sut_dewi_temuduga_profesional_frame3_shoulder.jpg",
+    "set_sut_dewi_temuduga_profesional_product.jpg": "https://blqsgijvdvzwnqeltoje.supabase.co/storage/v1/object/public/gemini-flow-keyframes/set_sut_dewi_temuduga_profesional_product.jpg"
+  }
+}
