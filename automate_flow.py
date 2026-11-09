@@ -202,7 +202,21 @@ async def connect_to_brave(port: int = 9222):
        accepts the websocket path written to its DevToolsActivePort file; the first connection waits
        for the user to approve a prompt in Brave, later ones connect straight away.
     """
+    import urllib.request
     p = await async_playwright().start()
+
+    # Try fetching exact live webSocketDebuggerUrl from /json/version first
+    try:
+        with urllib.request.urlopen(f"http://127.0.0.1:{port}/json/version", timeout=3) as resp:
+            v_data = json.loads(resp.read().decode())
+            ws_url = v_data.get("webSocketDebuggerUrl")
+            if ws_url:
+                print(f"Connecting to live Brave CDP at {ws_url}...")
+                browser = await p.chromium.connect_over_cdp(ws_url, timeout=15000)
+                return p, browser
+    except Exception:
+        pass
+
     try:
         browser = await p.chromium.connect_over_cdp(f"http://127.0.0.1:{port}", timeout=6000)
         return p, browser

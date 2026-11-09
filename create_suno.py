@@ -61,6 +61,19 @@ async def setup_suno(prompt_text: str = None, title_text: str = None):
         if "/create" not in suno_page.url:
             await suno_page.goto(SUNO_URL, wait_until="domcontentloaded")
 
+    # Force desktop viewport so composer panel is never collapsed into mobile layout
+    try:
+        cdp = await context.new_cdp_session(suno_page)
+        await cdp.send("Emulation.setDeviceMetricsOverride", {
+            "width": 1400,
+            "height": 900,
+            "deviceScaleFactor": 1,
+            "mobile": False
+        })
+        print("Set desktop viewport override (1400x900).")
+    except Exception as e_em:
+        print(f"Viewport override notice: {e_em}")
+
     print("Waiting for Suno page to settle...")
     await suno_page.wait_for_timeout(3000)
 
