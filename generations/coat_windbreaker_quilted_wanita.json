@@ -1,0 +1,60 @@
+{
+  "prefix": "coat_windbreaker_quilted_wanita",
+  "created_at": "2026-11-10T01:03:50.783408+08:00",
+  "product_name": "2026 New Model Women's Quilted Warm Windbreaker Coat, Thickened for Spring, Autumn, and Winter, Slim-Fit, Mid-Length Coat",
+  "opening_line": "Korang yang nak bercuti tempat sejuk tapi takut nampak kembung macam tilam, tengok ni! Kot windbreaker kalis angin ni ada lapisan fleece tebal tapi potongan pinggangnya automatik buat tubuh nampak ramping.",
+  "closing_line": "Perincian tali pinggang belakangnya buat siluet tubuh kekal terbentuk cantik untuk gambar OOTD percutian. Korang yang nak melancong selesa tanpa rasa sejuk menggigil, cepat tekan beg kuning sebelum saiz habis!",
+  "scenes": {
+    "scene_1_intro": {
+      "visual_prompt": "Static locked-off vertical 9:16 portrait shot, the camera does not move. A graceful 26-year-old Malaysian Muslimah traveler in a soft mocha chiffon hijab, black mock-neck knit inner, and a tailored warm taupe mid-length fleece-lined windbreaker trench coat stands in a sunlit executive lounge with floor-to-ceiling windows and light oak wood floors. She faces forward with a pleasant, confident expression and friendly smile, speaking with natural lip-sync and warm facial expressions, then smoothly turns 45 degrees to her side profile to settle into the end pose. Both hands remain completely empty and rest naturally low at her sides. No camera movement, no props in hands, no background music. Spoken Malay (Lip-sync): \"Korang yang nak bercuti tempat sejuk tapi takut nampak kembung macam tilam, tengok ni! Kot windbreaker kalis angin ni ada lapisan fleece tebal tapi potongan pinggangnya automatik buat tubuh nampak ramping.\"",
+      "spoken_dialogue": "Korang yang nak bercuti tempat sejuk tapi takut nampak kembung macam tilam, tengok ni! Kot windbreaker kalis angin ni ada lapisan fleece tebal tapi potongan pinggangnya automatik buat tubuh nampak ramping."
+    },
+    "scene_2_detail": {
+      "visual_prompt": "Static locked-off vertical 9:16 portrait shot, the camera does not move. A graceful 26-year-old Malaysian Muslimah traveler in the warm taupe mid-length fleece-lined windbreaker trench coat and mocha chiffon hijab stands in the sunlit executive lounge. Starting in a 45-degree side profile, she speaks with warm conviction and natural lip-sync, smiling as she gestures subtly with her head and turns smoothly to glance back over her shoulder towards the camera, settling into the end pose. Both hands remain completely empty and rest naturally low at her sides. No camera movement, no props in hands, no background music. Spoken Malay (Lip-sync): \"Fabrik luarnya kalis angin tegap dengan kolar lapel lebar yang elegan, manakala bahagian dalam dilapisi fleece lembut yang sangat selesa dan memerangkap haba badan sepanjang hari waktu travel.\"",
+      "spoken_dialogue": "Fabrik luarnya kalis angin tegap dengan kolar lapel lebar yang elegan, manakala bahagian dalam dilapisi fleece lembut yang sangat selesa dan memerangkap haba badan sepanjang hari waktu travel."
+    },
+    "scene_3_outro": {
+      "visual_prompt": "Static locked-off vertical 9:16 portrait shot, the camera does not move. A graceful 26-year-old Malaysian Muslimah traveler in the warm taupe mid-length fleece-lined windbreaker trench coat and mocha chiffon hijab stands in the sunlit executive lounge. Starting with her glance back over her shoulder, she speaks warmly with natural lip-sync and turns gracefully back to face the camera directly in a confident full-front pose for a seamless 360-degree loop. Both hands remain completely empty and rest naturally low at her sides. No camera movement, no props in hands, no background music. Spoken Malay (Lip-sync): \"Perincian tali pinggang belakangnya buat siluet tubuh kekal terbentuk cantik untuk gambar OOTD percutian. Korang yang nak melancong selesa tanpa rasa sejuk menggigil, cepat tekan beg kuning sebelum saiz habis!\"",
+      "spoken_dialogue": "Perincian tali pinggang belakangnya buat siluet tubuh kekal terbentuk cantik untuk gambar OOTD percutian. Korang yang nak melancong selesa tanpa rasa sejuk menggigil, cepat tekan beg kuning sebelum saiz habis!"
+    },
+    "visual_prompts": {
+      "scene_1": "Static locked-off vertical 9:16 portrait shot, the camera does not move. A graceful 26-year-old Malaysian Muslimah traveler in a soft mocha chiffon hijab, black mock-neck knit inner, and a tailored warm taupe mid-length fleece-lined windbreaker trench coat stands in a sunlit executive lounge with floor-to-ceiling windows and light oak wood floors. She faces forward with a pleasant, confident expression and friendly smile, speaking with natural lip-sync and warm facial expressions, then smoothly turns 45 degrees to her side profile to settle into the end pose. Both hands remain completely empty and rest naturally low at her sides. No camera movement, no props in hands, no background music. Spoken Malay (Lip-sync): \"Korang yang nak bercuti tempat sejuk tapi takut nampak kembung macam tilam, tengok ni! Kot windbreaker kalis angin ni ada lapisan fleece tebal tapi potongan pinggangnya automatik buat tubuh nampak ramping.\"",
+      "scene_2": "Static locked-off vertical 9:16 portrait shot, the camera does not move. A graceful 26-year-old Malaysian Muslimah traveler in the warm taupe mid-length fleece-lined windbreaker trench coat and mocha chiffon hijab stands in the sunlit executive lounge. Starting in a 45-degree side profile, she speaks with warm conviction and natural lip-sync, smiling as she gestures subtly with her head and turns smoothly to glance back over her shoulder towards the camera, settling into the end pose. Both hands remain completely empty and rest naturally low at her sides. No camera movement, no props in hands, no background music. Spoken Malay (Lip-sync): \"Fabrik luarnya kalis angin tegap dengan kolar lapel lebar yang elegan, manakala bahagian dalam dilapisi fleece lembut yang sangat selesa dan memerangkap haba badan sepanjang hari waktu travel.\"",
+      "scene_3": "Static locked-off vertical 9:16 portrait shot, the camera does not move. A graceful 26-year-old Malaysian Muslimah traveler in the warm taupe mid-length fleece-lined windbreaker trench coat and mocha chiffon hijab stands in the sunlit executive lounge. Starting with her glance back over her shoulder, she speaks warmly with natural lip-sync and turns gracefully back to face the camera directly in a confident full-front pose for a seamless 360-degree loop. Both hands remain completely empty and rest naturally low at her sides. No camera movement, no props in hands, no background music. Spoken Malay (Lip-sync): \"Perincian tali pinggang belakangnya buat siluet tubuh kekal terbentuk cantik untuk gambar OOTD percutian. Korang yang nak melancong selesa tanpa rasa sejuk menggigil, cepat tekan beg kuning sebelum saiz habis!\""
+    },
+    "spoken_dialogue": {
+      "scene_1": "Korang yang nak bercuti tempat sejuk tapi takut nampak kembung macam tilam, tengok ni! Kot windbreaker kalis angin ni ada lapisan fleece tebal tapi potongan pinggangnya automatik buat tubuh nampak ramping.",
+      "scene_2": "Fabrik luarnya kalis angin tegap dengan kolar lapel lebar yang elegan, manakala bahagian dalam dilapisi fleece lembut yang sangat selesa dan memerangkap haba badan sepanjang hari waktu travel.",
+      "scene_3": "Perincian tali pinggang belakangnya buat siluet tubuh kekal terbentuk cantik untuk gambar OOTD percutian. Korang yang nak melancong selesa tanpa rasa sejuk menggigil, cepat tekan beg kuning sebelum saiz habis!"
+    }
+  },
+  "caption": "Dah rancang nak pergi bercuti tempat sejuk tapi pening fikir baju apa yang hangat tapi tak nampak kembung? ❄️🧥 Kot windbreaker labuh gaya Korea ni dilapisi 'fleece' tebal di bahagian dalam yang sangat lembut dan memerangkap haba badan. Rekaan kalis angin dengan tali pinggang kemas di belakang buat siluet tubuh kekal ramping dan terletak cantik untuk gambar OOTD travel korang. Tak payah risau sejuk menggigil lagi! Jom dapatkan sekarang di beg kuning sebelum saiz korang kehabisan! 👇💛",
+  "hashtags": "#wintercoat #windbreakerwanita #kotmusimsejuk #traveloutfitmalaysia #jaketwinter #trenchcoatmalaysia #ootdholiday #bajusejukwanita #racuntiktok #tiktokshopmalaysia",
+  "bgm_prompt": "Cozy melodic wanderlust pop, warm uplifting acoustic guitar picking, gentle cinematic piano chords, unhurried bouncy bassline, soft ambient travel atmosphere, crisp organic percussion, purely instrumental, strictly no vocals",
+  "bgm_title": "Wanderlust Warmth Travel Pop",
+  "keyframes": [
+    "keyframes/coat_windbreaker_quilted_wanita_frame1_front.jpg",
+    "keyframes/coat_windbreaker_quilted_wanita_frame2_side.jpg",
+    "keyframes/coat_windbreaker_quilted_wanita_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/coat_windbreaker_quilted_wanita_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/coat_windbreaker_quilted_wanita_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/coat_windbreaker_quilted_wanita_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "url": "https://vt.tiktok.com/ZS9fBYCyh3954-AeyK4/",
+    "token": "ZS9fBYCyh3954-AeyK4",
+    "hook_archetype": "Conversational Organic Recommendation",
+    "hook_score": 100,
+    "hook_status": "pass",
+    "hook_issues": []
+  },
+  "updated_at": "2026-11-10T01:03:50.783408+08:00",
+  "supabase_keyframe_urls": {
+    "coat_windbreaker_quilted_wanita_frame1_front.jpg": "https://blqsgijvdvzwnqeltoje.supabase.co/storage/v1/object/public/gemini-flow-keyframes/coat_windbreaker_quilted_wanita_frame1_front.jpg",
+    "coat_windbreaker_quilted_wanita_frame2_side.jpg": "https://blqsgijvdvzwnqeltoje.supabase.co/storage/v1/object/public/gemini-flow-keyframes/coat_windbreaker_quilted_wanita_frame2_side.jpg",
+    "coat_windbreaker_quilted_wanita_frame3_shoulder.jpg": "https://blqsgijvdvzwnqeltoje.supabase.co/storage/v1/object/public/gemini-flow-keyframes/coat_windbreaker_quilted_wanita_frame3_shoulder.jpg",
+    "coat_windbreaker_quilted_wanita_product.jpg": "https://blqsgijvdvzwnqeltoje.supabase.co/storage/v1/object/public/gemini-flow-keyframes/coat_windbreaker_quilted_wanita_product.jpg"
+  }
+}
