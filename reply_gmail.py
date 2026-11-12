@@ -243,10 +243,24 @@ async def reply_with_clean_format(
         await gmail_page.keyboard.press("Backspace")
         await gmail_page.wait_for_timeout(500)
 
-        # Step 2d: Enter pure clean caption content
+        # Step 2d: Enter pure clean caption content via document.execCommand('insertText')
         print("Entering pure clean caption content...")
-        await body_box.fill(caption_text)
-        await gmail_page.wait_for_timeout(1000)
+        import base64
+        cap_b64 = base64.b64encode(caption_text.encode('utf-8')).decode('ascii')
+        await gmail_page.evaluate("""(b64) => {
+            const binary = atob(b64);
+            const bytes = Uint8Array.from(binary, c => c.charCodeAt(0));
+            const text = new TextDecoder('utf-8').decode(bytes);
+            const box = document.querySelector("div[role='textbox'][aria-label*='Message Body'], div[role='textbox']");
+            if (box) {
+                box.focus();
+                document.execCommand('selectAll', false, null);
+                document.execCommand('delete', false, null);
+                document.execCommand('insertText', false, text);
+                box.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+        }""", cap_b64)
+        await gmail_page.wait_for_timeout(1500)
 
         # Locate Send button
         send_btn = gmail_page.locator("div[role='button']:has-text('Send'), [data-tooltip*='Send']").last
