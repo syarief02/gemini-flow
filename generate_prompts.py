@@ -71,10 +71,39 @@ def get_recently_used_phrases(last_n: int = 7) -> str:
     lines.append("")
     lines.append(f"Avoid reusing the {len(recent)} entries above. Phrases older than this list are fine to reuse.")
     lines.append("Write genuinely different phrasing — not just rearranging the same words or swapping synonyms.")
+
+    # Variety brief: what the recent hooks have in common, so the next one can break the pattern.
+    lines.append("")
+    lines.append("🎛️ HOOK VARIETY BRIEF (a hook = ANGLE + FORMAT; vary the FORMAT, not just the topic):")
+    formats = suggest_hook_formats(last_n)
+    used = [f"{f['key']} x{f['uses_in_window']}" for f in formats if f['uses_in_window']]
+    lines.append("  Formats in the entries above: " + (", ".join(used) or "none detected"))
+    lines.append("  Formats NOT used recently (prefer the one that fits this product best):")
+    for f in formats:
+        if not f["uses_in_window"]:
+            lines.append(f"    - {f['key']}: {f['name']}. {f['how']} e.g. \"{f['example']}\"")
+
+    openers = [(_words(e.get("opening_line", "")) or [""])[0] for e in recent]
+    overused_openers = sorted({w for w in openers if w and openers.count(w) >= 2}, key=lambda w: -openers.count(w))
+    if overused_openers:
+        lines.append("  Opening words to avoid this time: " +
+                     ", ".join(f"'{w.capitalize()}' ({openers.count(w)}x)" for w in overused_openers))
+    questions = sum(_hook_sentence(e.get("opening_line", "")).endswith("?") for e in recent)
+    if questions >= len(recent) / 2:
+        lines.append(f"  {questions} of {len(recent)} recent hooks were questions: try a statement, confession or warning.")
+
+    worn = sorted({label for e in recent for label in _worn_out(e.get("opening_line", "") + " " + e.get("closing_line", ""))})
+    lines.append("  Worn-out phrases (don't use): " + ", ".join(label for _, label in WORN_OUT_PHRASES))
+    if worn:
+        lines.append("    ...of which these appear in the entries above: " + ", ".join(worn))
+    lines.append(f"  Hook sentence (the first sentence) = {HOOK_SENTENCE_MAX_WORDS} words or fewer. "
+                 "Open a loop that Scene 2 or 3 closes.")
+    lines.append("  Scene 3 closer: close the Scene 1 loop, give her own pick, or a practical tip from the listing. "
+                 "No 'cepat tekan beg kuning sebelum saiz habis'; urgency only if the listing shows it.")
     return "\n".join(lines)
 
 def detect_hook_archetype(opening_line: str) -> str:
-    """Classify an opening hook into one of the proven viral TikTok e-commerce archetypes."""
+    """Classify an opening hook into one of the proven viral TikTok e-commerce archetypes (its ANGLE)."""
     if not opening_line:
         return "Unclassified / Organic Intro"
     line = opening_line.lower()
@@ -92,16 +121,239 @@ def detect_hook_archetype(opening_line: str) -> str:
         return "The Visual Pattern Interrupt / Direct Question"
     elif any(k in line for k in ['siapa cakap', 'mesti ke', 'boyish', 'maskulin', 'gelap je', 'ingat mesti']):
         return "The Stereotype-Buster / Pain-Point Contrast"
-    elif any(k in line for k in ['patutlah', 'asyik lalu', 'fyp', 'viral', 'ramai cari']):
+    # "presentation FYP" is a final-year project, not the For You page, so match the feed phrases only.
+    elif any(k in line for k in ['patutlah', 'asyik lalu', 'dekat fyp', 'lalu fyp', 'masuk fyp', 'viral', 'ramai cari']):
         return "The FOMO / FYP Social Proof Trend"
     return "Conversational Organic Recommendation"
 
-def verify_hook_quality(opening_line: str, last_7_entries: list = None) -> dict:
-    """Verify that the opening hook satisfies 2-second viral retention and policy standards."""
-    issues = []
-    if not opening_line or len(opening_line.strip()) < 20:
-        return {'status': 'fail', 'issues': ['Hook is missing or too short.'], 'hook_score': 0, 'archetype': 'Unknown'}
 
+# ── Hook FORMATS ──────────────────────────────────────────────────────────────
+# The archetype above is the hook's ANGLE (what it is about). The FORMAT is HOW it is said:
+# the sentence shape and the speaker's stance. In Oct-Nov 2026 the angle changed every run but
+# the format never did: 12 of 15 hooks used "korang", 10 of 15 were questions, none were first
+# person, and every one scored 100/100 (user: "too boring", 2026-11-15).
+# No format is banned. Formats used recently are only down-ranked by verify_hook_quality().
+# Every format is spoken only: the shot is static, her hands stay empty, no props, no gestures.
+# Never invent events, other people's reactions, comments, review counts or stock levels the
+# listing doesn't show (TikTok "Accurate Claims" and "Fake stories" rules). Her own opinion
+# of what is visible is fine.
+HOOK_FORMATS = {
+    "direct_question": {
+        "name": "Soalan Terus (Direct Question)",
+        "how": "Ask the viewer one sharp question about a pain point.",
+        "example": "Kenapa kemeja putih kita cepat sangat nampak lusuh?",
+        "cues": [r"\b(perasan|pernah|tahu) tak\b", r"^(siapa|kenapa|apa)\b"],
+    },
+    "turn_reveal": {
+        "name": "Tunggu Saya Pusing (Turn Reveal)",
+        "how": "Tease what she shows when she turns. Scene 2, where she turns to the back, pays it off.",
+        "example": "Depan dia nampak macam kot biasa je, tapi tunggu saya pusing.",
+        "cues": [r"\btunggu\b.*\bpusing\b", r"\bbila saya pusing\b"],
+    },
+    "dont_buy": {
+        "name": "Jangan Beli Kalau (Reverse Warning)",
+        "how": "Warn who should NOT buy it, in a way that is really a benefit.",
+        "example": "Jangan beli blazer ni kalau korang memang suka rasa panas dekat ofis.",
+        "cues": [r"^jangan beli\b", r"^jangan\b.*\bkalau\b"],
+    },
+    "honest_take": {
+        "name": "Pendapat Jujur (Honest Take)",
+        "how": "Open with her own bold, first-person opinion about the item.",
+        "example": "Jujur, ni kemeja linen paling senang jaga yang saya pernah ada.",
+        "cues": [r"\bjujur\b", r"\bterus terang\b", r"\bpendapat saya\b", r"^saya (rasa|berani|nak cakap)\b"],
+    },
+    "confession": {
+        "name": "Saya Mengaku (Confession)",
+        "how": "Admit a relatable habit of her own, then show how the item fits it.",
+        "example": "Saya mengaku, saya memang malas gosok baju pagi-pagi.",
+        "cues": [r"\bsaya mengaku\b", r"^saya (memang )?jenis\b"],
+    },
+    "numbered": {
+        "name": "Tiga Sebab (Numbered, one per scene)",
+        "how": "Promise two or three reasons and deliver one per scene, so viewers stay for all three clips.",
+        "example": "Ada tiga benda pasal jaket ni yang buat saya tak nak tanggal.",
+        "cues": [r"\b(dua|tiga|empat|lima|2|3|4|5) (sebab|benda|perkara|cara|detail|rahsia)\b"],
+    },
+    "detail_tease": {
+        "name": "Satu Detail Kecil (Detail Tease)",
+        "how": "Point at one small, specific detail most people miss and say why it matters.",
+        "example": "Ada satu detail kecil dekat kolar kot ni yang ramai tak perasan.",
+        "cues": [r"\bsatu detail\b", r"\bdetail kecil\b", r"\bramai tak perasan\b"],
+    },
+    "scenario": {
+        "name": "Situasi (Mini Scene)",
+        "how": "Drop the viewer into one specific moment, in present tense, without a question.",
+        "example": "Pukul tujuh pagi, tudung belum siap, baju pun belum gosok.",
+        "cues": [r"^(bayangkan|situasi|pov)\b", r"^pukul \w+"],
+    },
+    "this_not_that": {
+        "name": "Ini, Bukan Itu (Contrast Statement)",
+        "how": "Define the item by what it is not, in one confident statement.",
+        "example": "Kot ni untuk nampak kemas, bukan nampak macam nak main ski.",
+        "cues": [r",\s*bukan\b", r"\bbukan untuk\b"],
+    },
+    "myth_statement": {
+        "name": "Ramai Ingat (Myth Statement)",
+        "how": "State a common belief, then flip it in the next sentence. A statement, not a question.",
+        "example": "Ramai ingat jaket tebal mesti buat badan nampak besar.",
+        "cues": [r"\bramai (orang )?(ingat|sangka|fikir)\b", r"\bpadahal\b"],
+    },
+    "identity_callout": {
+        "name": "Ni Untuk Yang (Call-out)",
+        "how": "Name exactly who it is for (height, job, body worry) so the right viewer stops.",
+        "example": "Ni untuk yang bertubuh kecil dan selalu rasa kot labuh terlalu panjang.",
+        "cues": [r"^(ni|ini|khas) untuk\b", r"^kalau korang\b", r"^korang yang\b"],
+    },
+}
+
+# Specific shapes first; direct_question last, because many of the others can also end with "?".
+_FORMAT_DETECT_ORDER = [
+    "turn_reveal", "dont_buy", "numbered", "detail_tease", "confession", "honest_take",
+    "scenario", "myth_statement", "this_not_that", "identity_callout", "direct_question",
+]
+
+# The first sentence is the hook. Spoken Malay runs at about 3 words a second, so 12 words lands
+# in the first 2-4 seconds; the rest of the 28-32-word Scene 1 line explains it.
+HOOK_SENTENCE_MAX_WORDS = 12
+
+# Filler that came back again and again in Oct-Nov 2026 hooks and closers. Flagged, not banned.
+WORN_OUT_PHRASES = [
+    (r"\bpenyelamat terbaik\b", "penyelamat terbaik"),
+    (r"\bauto(matik)?\b", "automatik / auto"),
+    (r"\bpening kepala\b", "pening kepala"),
+    (r"\btengok ni\b", "tengok ni"),
+    (r"\bmacam marshmallow\b", "macam marshmallow"),
+    (r"\bnaik aura\b", "naik aura"),
+    (r"\bjangan tunggu lagi\b", "jangan tunggu lagi"),
+    (r"\bcepat tekan\b", "cepat tekan"),
+    (r"\bsebelum\b[^.!?]{0,25}\b(habis|licin|kehabisan|tamat)\b", "sebelum saiz/stok habis"),
+]
+
+# Words too common to count as a "repeated phrase" on their own (CTA core + fillers).
+_FILLER_WORDS = {
+    "beg", "kuning", "dekat", "di", "dalam", "tekan", "klik", "ke", "bawah", "sekarang",
+    "ni", "ini", "tu", "yang", "dan", "dia", "korang", "saya", "je", "untuk", "dengan",
+}
+
+
+def _words(text: str) -> list:
+    return re.findall(r"[a-z0-9']+(?:-[a-z0-9']+)*", (text or "").lower())
+
+
+def _hook_sentence(line: str) -> str:
+    """The first spoken sentence: what the viewer hears in the first 2-4 seconds."""
+    line = (line or "").strip()
+    m = re.search(r"[?!.](\s|$)", line)
+    return line[:m.end()].strip() if m else line
+
+
+def detect_hook_format(opening_line: str) -> str:
+    """Classify HOW a hook is said (a HOOK_FORMATS key), or 'other'."""
+    hook = _hook_sentence(opening_line).lower()
+    if not hook:
+        return "other"
+    for key in _FORMAT_DETECT_ORDER:
+        if any(re.search(cue, hook) for cue in HOOK_FORMATS[key]["cues"]):
+            return key
+    return "direct_question" if hook.endswith("?") else "other"
+
+
+def _entry_format(entry: dict) -> str:
+    return entry.get("hook_format") or detect_hook_format(entry.get("opening_line", ""))
+
+
+def _worn_out(text: str) -> list:
+    low = (text or "").lower()
+    return [label for rx, label in WORN_OUT_PHRASES if re.search(rx, low)]
+
+
+def _phrase_ngrams(text: str, n: int = 3) -> set:
+    w = _words(text)
+    return {" ".join(w[i:i + n]) for i in range(len(w) - n + 1)
+            if not set(w[i:i + n]) <= _FILLER_WORDS}
+
+
+def _shared_phrases(text: str, others: list, min_hits: int = 2, limit: int = 5) -> list:
+    """3-word phrases in `text` that already appear in at least `min_hits` of `others`."""
+    other_sets = [_phrase_ngrams(o) for o in others]
+    counts = {g: sum(g in s for s in other_sets) for g in _phrase_ngrams(text)}
+    hits = sorted((g for g, c in counts.items() if c >= min_hits), key=lambda g: (-counts[g], g))
+    return [(g, counts[g]) for g in hits[:limit]]
+
+
+def _recent_for_check(window: int = 7, opening_line: str = None, product_name: str = None) -> list:
+    """The last `window` history entries, minus this hook and earlier versions of this product."""
+    entries = [e for e in load_generation_history(window + 5)
+               if e.get("opening_line") != opening_line
+               and not (product_name and e.get("product") == product_name)]
+    return entries[-window:]
+
+
+def check_hook_freshness(opening_line: str, recent: list, hook_format: str = None) -> list:
+    """Warnings for a hook that would sound like the recent ones. Empty list = fresh."""
+    warnings = []
+    hook = _hook_sentence(opening_line)
+    hook_words = _words(hook)
+    if len(hook_words) > HOOK_SENTENCE_MAX_WORDS:
+        warnings.append(f"Hook sentence is {len(hook_words)} words; keep the first sentence to "
+                        f"{HOOK_SENTENCE_MAX_WORDS} or fewer so it lands in the first 2-4 seconds.")
+    for label in _worn_out(opening_line):
+        warnings.append(f"Worn-out phrase '{label}' (used again and again in past hooks).")
+    if not recent:
+        return warnings
+
+    n = len(recent)
+    first = hook_words[0] if hook_words else ""
+    openers = [(_words(e.get("opening_line", "")) or [""])[0] for e in recent]
+    if first and (openers.count(first) >= 2 or openers[-1] == first):
+        warnings.append(f"Starts with '{first.capitalize()}' like {openers.count(first)} of the last {n} hooks"
+                        f"{' (including the last one)' if openers[-1] == first else ''}; start with a different word.")
+
+    fmt = hook_format or detect_hook_format(opening_line)
+    recent_fmts = [_entry_format(e) for e in recent]
+    if fmt in HOOK_FORMATS and (recent_fmts[-1] == fmt or recent_fmts.count(fmt) >= 3):
+        warnings.append(f"Format '{fmt}' was used in {recent_fmts.count(fmt)} of the last {n} hooks"
+                        f"{' (including the last one)' if recent_fmts[-1] == fmt else ''}; "
+                        "pick a fresher one from suggest_hook_formats().")
+
+    if hook.endswith("?"):
+        questions = sum(_hook_sentence(e.get("opening_line", "")).endswith("?") for e in recent)
+        if questions >= 4:
+            warnings.append(f"{questions} of the last {n} hooks were questions; a statement, "
+                            "confession or warning will stand out more.")
+
+    shared = _shared_phrases(opening_line, [e.get("opening_line", "") for e in recent])
+    if shared:
+        warnings.append("Repeats phrases from recent hooks: " + ", ".join(f"'{g}' ({c}x)" for g, c in shared))
+    return warnings
+
+
+def check_closing_freshness(closing_line: str, recent: list) -> list:
+    """Warnings for a Scene 3 sign-off that sounds like the recent ones."""
+    warnings = [f"Worn-out phrase '{label}' (used again and again in past closers)."
+                for label in _worn_out(closing_line)]
+    shared = _shared_phrases(closing_line, [e.get("closing_line", "") for e in recent or []])
+    if shared:
+        warnings.append("Repeats phrases from recent closers: " + ", ".join(f"'{g}' ({c}x)" for g, c in shared))
+    return warnings
+
+
+def verify_hook_quality(opening_line: str, last_7_entries: list = None, closing_line: str = None,
+                        product_name: str = None, hook_format: str = None) -> dict:
+    """Audit a Scene 1 hook (and optionally the Scene 3 closer) for language and freshness.
+
+    `issues` are hard problems (missing, Indonesian words, 'aku'). `warnings` say how the hook
+    repeats recent ones (opening word, format, question streak, shared or worn-out phrases) or
+    is too long to land in 2 seconds. hook_score = 100 - 25 per issue - 10 per warning, so the
+    score ranks candidates instead of giving everything 100. Nothing here bans a hook.
+    History is read from generation_history.json unless `last_7_entries` is given; entries with
+    this exact hook or the same `product_name` (an earlier version of this run) are skipped.
+    """
+    if not opening_line or len(opening_line.strip()) < 20:
+        return {'status': 'fail', 'issues': ['Hook is missing or too short.'], 'warnings': [],
+                'hook_score': 0, 'archetype': 'Unknown', 'format': 'other'}
+
+    issues = []
     line_lower = opening_line.lower()
 
     # Blacklist Indonesian slang
@@ -114,25 +366,40 @@ def verify_hook_quality(opening_line: str, last_7_entries: list = None) -> dict:
     if re.search(r'\baku\b', line_lower):
         issues.append("Uses 'aku' instead of professional/friendly 'saya'")
 
-    # 2-second retention hook trigger (expanded with live-search-derived patterns)
-    triggers = [
-        'korang', 'perasan tak', 'tahu tak', 'susah betul', 'ramai orang',
-        'siapa dekat sini', 'dengan cuaca', 'pagi-pagi', 'kadang-kadang',
-        'pernah tak', 'tengok', 'siapa cakap', 'patutlah', 'mesti ke',
-        'selalu sangat', 'jangan', 'stop', 'satu je', 'ubah terus',
-    ]
-    has_trigger = any(t in line_lower for t in triggers)
-    if not has_trigger:
-        issues.append("Lacks a clear 2-second scroll-stopping trigger phrase.")
+    recent = last_7_entries if last_7_entries is not None else _recent_for_check(7, opening_line, product_name)
+    warnings = check_hook_freshness(opening_line, recent, hook_format)
 
-    archetype = detect_hook_archetype(opening_line)
-
-    return {
-        'status': 'pass' if not issues else 'warn',
+    result = {
+        'status': 'fail' if issues else ('warn' if warnings else 'pass'),
         'issues': issues,
-        'hook_score': max(0, 100 - len(issues) * 20),
-        'archetype': archetype
+        'warnings': warnings,
+        'hook_score': max(0, 100 - 25 * len(issues) - 10 * len(warnings)),
+        'archetype': detect_hook_archetype(opening_line),
+        'format': hook_format or detect_hook_format(opening_line),
+        'hook_sentence_words': len(_words(_hook_sentence(opening_line))),
     }
+    if closing_line:
+        closing_warnings = check_closing_freshness(closing_line, recent)
+        result['closing_warnings'] = closing_warnings
+        result['closing_score'] = max(0, 100 - 10 * len(closing_warnings))
+    return result
+
+
+def suggest_hook_formats(last_n: int = 7) -> list:
+    """All hook formats, freshest first: unused in the last `last_n` entries, then least recently used."""
+    recent_fmts = [_entry_format(e) for e in load_generation_history(last_n)]
+
+    def entries_ago(key):
+        for age, f in enumerate(reversed(recent_fmts), 1):
+            if f == key:
+                return age
+        return last_n + 1  # not used in the window
+
+    return [
+        {"key": key, **{k: v for k, v in info.items() if k != "cues"},
+         "uses_in_window": recent_fmts.count(key), "last_used_entries_ago": entries_ago(key)}
+        for key, info in sorted(HOOK_FORMATS.items(), key=lambda kv: -entries_ago(kv[0]))
+    ]
 
 def save_generation_history(
     product_name: str,
@@ -145,19 +412,23 @@ def save_generation_history(
     keyframe_urls: list = None,
     metadata: dict = None,
     prefix: str = None,
-    bgm_title: str = None
+    bgm_title: str = None,
+    hook_format: str = None
 ):
     """Append a new entry to the generation history file.
 
-    Just stores the raw opening and closing text — no rigid categories.
-    The point is simply to know what was already said so the next generation avoids it.
+    Stores the raw opening and closing text plus the hook's format, so the next generation
+    can avoid both the same words and the same sentence shape.
+    `hook_format` is the HOOK_FORMATS key the hook was written in; detected from the text if omitted.
 
     With `prefix` (the keyframe prefix), the full record is also saved to
     generations/<prefix>.json, which automate_flow.py renders from and Step 10 commits.
     `keyframe_urls` is accepted for older callers; the record lists the keyframes found for `prefix`.
     """
-    # Compute hook quality audit
-    hook_audit = verify_hook_quality(opening_line)
+    # Compute hook quality audit against the previous entries (not this product's own earlier save)
+    hook_audit = verify_hook_quality(opening_line, closing_line=closing_line,
+                                     product_name=product_name, hook_format=hook_format)
+    hook_format = hook_audit.get("format")
 
     try:
         data = _read_history_file()
@@ -184,6 +455,7 @@ def save_generation_history(
             existing_entry["timestamp"] = datetime.now(timezone.utc).astimezone().isoformat()
             existing_entry["closing_line"] = closing_line
             existing_entry["hook_archetype"] = hook_audit.get("archetype")
+            existing_entry["hook_format"] = hook_format
             existing_entry["hook_score"] = hook_audit.get("hook_score")
         else:
             data["generations"].append({
@@ -192,6 +464,7 @@ def save_generation_history(
                 "opening_line": opening_line,
                 "closing_line": closing_line,
                 "hook_archetype": hook_audit.get("archetype"),
+                "hook_format": hook_format,
                 "hook_score": hook_audit.get("hook_score")
             })
 
@@ -201,7 +474,10 @@ def save_generation_history(
             with open(tmp_path, 'w', encoding='utf-8') as f:
                 json.dump(data, f, indent=2, ensure_ascii=False)
             os.replace(tmp_path, HISTORY_FILE)
-            print(f"📝 Saved generation history for: {product_name} (Hook: {hook_audit.get('archetype')}, Score: {hook_audit.get('hook_score')}/100)")
+            print(f"📝 Saved generation history for: {product_name} (Hook: {hook_audit.get('archetype')}, "
+                  f"Format: {hook_format}, Score: {hook_audit.get('hook_score')}/100)")
+            for w in hook_audit.get("warnings", []) + hook_audit.get("closing_warnings", []):
+                print(f"   ⚠️ {w}")
         except Exception as e_hist:
             print(f"Notice: local history file write: {e_hist}")
 
@@ -210,9 +486,12 @@ def save_generation_history(
         from generation_store import find_keyframes, save_record
         meta = dict(metadata or {})
         meta.setdefault("hook_archetype", hook_audit.get("archetype"))
+        meta.setdefault("hook_format", hook_format)
         meta.setdefault("hook_score", hook_audit.get("hook_score"))
         meta.setdefault("hook_status", hook_audit.get("status"))
         meta.setdefault("hook_issues", hook_audit.get("issues"))
+        meta.setdefault("hook_warnings", hook_audit.get("warnings"))
+        meta.setdefault("closing_warnings", hook_audit.get("closing_warnings"))
         kf = find_keyframes(prefix)
         if not kf["all_present"]:
             print(f"WARNING: keyframe trio for '{prefix}' is incomplete in keyframes/: {kf['paths']}")
@@ -270,8 +549,10 @@ STRICT RULES
    - ALWAYS use "saya" (NOT "aku") as the first-person pronoun. "Saya" sounds more polished and professional while still being friendly.
 
 2. SPEAKING PERSONALITY & VIRAL HOOK ENGINE (2-SECOND RETENTION RULE):
-   - You MUST craft the most compelling, scroll-stopping hook angle for this specific product.
-   - Stop the scroll in the first 2 seconds! Choose one of the 8 proven Malaysian TikTok Shop viral hook archetypes:
+   - You MUST craft the most compelling, scroll-stopping hook for this specific product.
+   - A hook = ANGLE (what it is about) + FORMAT (how it is said). Hooks got boring when the angle changed but
+     every hook was still the same "Korang ...?" question. Vary the FORMAT every time.
+   - Stop the scroll in the first 2 seconds! ANGLE: choose one of the 8 proven Malaysian TikTok Shop viral hook archetypes:
      1. The Unspoken Daily Dilemma / Tropical Climate Dilemma (e.g. cuaca panas rasa macam sauna vs material kalis air sejuk selesa).
      2. The Flattering Silhouette / Visual Insecurity Solution (e.g. takut peha nampak besar / cutting kembang vs efek auto-slimming).
      3. The Price-Quality Myth-Buster (e.g. sangka kena berhabis ratusan ringgit dekat outdoor brand vs kualiti padu mampu milik).
@@ -280,8 +561,28 @@ STRICT RULES
      6. The Relatable Lifestyle Dilemma (e.g. bangun lambat, malas nak iron baju, nak cepat pergi kerja/kuliah).
      7. The Stereotype-Buster / Pain-Point Contrast (e.g. "Siapa cakap jaket kalis air mesti nampak boyish?").
      8. The FOMO / FYP Social Proof Trend (e.g. "Patutlah asyik lalu dekat FYP...").
+   - FORMAT: say it in one of these sentence shapes. Prefer one listed under "Formats NOT used recently":
+     • Soalan Terus: "Kenapa kemeja putih kita cepat sangat nampak lusuh?"
+     • Tunggu Saya Pusing: "Depan dia nampak macam kot biasa je, tapi tunggu saya pusing." (Scene 2 pays it off)
+     • Jangan Beli Kalau: "Jangan beli blazer ni kalau korang memang suka rasa panas dekat ofis."
+     • Pendapat Jujur: "Jujur, ni kemeja linen paling senang jaga yang saya pernah ada."
+     • Saya Mengaku: "Saya mengaku, saya memang malas gosok baju pagi-pagi."
+     • Tiga Sebab: "Ada tiga benda pasal jaket ni yang buat saya tak nak tanggal." (one reason per scene)
+     • Satu Detail Kecil: "Ada satu detail kecil dekat kolar kot ni yang ramai tak perasan."
+     • Situasi: "Pukul tujuh pagi, tudung belum siap, baju pun belum gosok."
+     • Ini, Bukan Itu: "Kot ni untuk nampak kemas, bukan nampak macam nak main ski."
+     • Ramai Ingat: "Ramai ingat jaket tebal mesti buat badan nampak besar." (flip it in the next sentence)
+     • Ni Untuk Yang: "Ni untuk yang bertubuh kecil dan selalu rasa kot labuh terlalu panjang."
+   - FRESHNESS: don't start with the same word as the recent hooks (most Oct-Nov 2026 hooks started with "Korang").
+     The hook sentence (the first sentence) is 12 words or fewer; the next 1-2 sentences explain it.
+     Never use these worn-out phrases: "penyelamat terbaik", "automatik"/"auto", "pening kepala", "tengok ni",
+     "macam marshmallow", "naik aura", "jangan tunggu lagi", "cepat tekan", "sebelum saiz/stok habis".
+   - OPEN A LOOP: Scene 1 promises something Scene 2 or 3 delivers (what she shows when she turns, reasons two
+     and three, the small detail), so viewers stay for all three clips.
+   - Never invent events, other people's reactions, comments, review counts or stock levels the listing doesn't
+     support (TikTok "Accurate Claims" and "Fake stories" rules). Her own opinion of what is visible is fine.
    - Ensure the hook IMMEDIATELY hooks the viewer, connects directly to the product's #1 USP, and feels completely organic.
-   - DO NOT repeat any angle or phrasing from the last 7 recorded entries in the anti-repetition list.
+   - DO NOT repeat any angle, format or phrasing from the last 7 recorded entries in the anti-repetition list.
    - Speak in a CALM, FRIENDLY, and EFFORTLESS tone—like a creator sharing an honest daily outfit recommendation.
    - AVOID forced hyper-excitement, exaggerated whispers, dramatic screaming, or fake hype.
    - Natural, smooth conversational flow (steady pace, pleasant rhythm, clear pronunciation).
@@ -321,6 +622,11 @@ STRICT RULES
    ║ • CREATE a completely fresh, original sign-off CTA every  ║
    ║   time. Do NOT copy-paste from previous products. Write   ║
    ║   it on the spot like a real human would naturally say it. ║
+   ║ • Close the Scene 1 loop, give her own pick ("Saya ambil  ║
+   ║   warna krim, korang?"), or a practical listing tip.      ║
+   ║ • NO "cepat tekan beg kuning sebelum saiz habis", NO      ║
+   ║   "jangan tunggu lagi". Urgency only if the listing shows ║
+   ║   real low stock or an end-dated promo.                   ║
    ║ • Camera: Static locked-off shot. She turns from her back║
    ║   to face the camera, talking the whole time.            ║
    ║ • Tone: Friendly, effortless, polite recommendation.     ║
@@ -571,7 +877,42 @@ Generate completely unique, non-repeating prompts and copy tailored specifically
         print(f"Error calling Gemini API: {e}")
         raise e
 
+def _print_hook_audit(candidates: list, closing_line: str = None):
+    for i, cand in enumerate(candidates, 1):
+        a = verify_hook_quality(cand, closing_line=closing_line if i == 1 else None)
+        print(f"\nCandidate {i}: score {a['hook_score']}/100 | format {a['format']} | "
+              f"hook sentence {a.get('hook_sentence_words', 0)} words | {a['archetype']}")
+        print(f"  \"{cand}\"")
+        for msg in a["issues"]:
+            print(f"  ❌ {msg}")
+        for msg in a["warnings"]:
+            print(f"  ⚠️ {msg}")
+        if a.get("closing_warnings") is not None:
+            print(f"  Closer score {a['closing_score']}/100")
+            for msg in a["closing_warnings"]:
+                print(f"  ⚠️ Closer: {msg}")
+
+
 if __name__ == "__main__":
+    # Step 4 helpers:
+    #   python generate_prompts.py --hook-brief
+    #   python generate_prompts.py --audit-hook "<candidate 1>" "<candidate 2>" ... [--closing "<scene 3 line>"]
+    if len(sys.argv) > 1 and sys.argv[1] == "--hook-brief":
+        print(get_recently_used_phrases(last_n=7) or "No generation history yet: every format is fresh.")
+        sys.exit(0)
+    if len(sys.argv) > 1 and sys.argv[1] == "--audit-hook":
+        args = sys.argv[2:]
+        closing = None
+        if "--closing" in args:
+            idx = args.index("--closing")
+            closing = args[idx + 1] if idx + 1 < len(args) else None
+            args = args[:idx] + args[idx + 2:]
+        if not args:
+            print('Usage: python generate_prompts.py --audit-hook "<hook 1>" "<hook 2>" [--closing "<scene 3 line>"]')
+            sys.exit(1)
+        _print_hook_audit(args, closing)
+        sys.exit(0)
+
     if len(sys.argv) > 1:
         info_path = Path(sys.argv[1])
         if not info_path.is_file():

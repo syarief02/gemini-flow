@@ -35,7 +35,7 @@ Every AI agent operating in this repository MUST memorize and adhere strictly to
 | **Flow AI Camera & Dialogue Fit** | "Camera glides / pans / zooms / orbits" (all 3 keyframes share one background, so camera moves cause warping). Spoken lines of ~40+ words (cut off before the clip ends) **or** short "spec list" lines of 14-21 words with colons (stretched, robotic, unnatural: the user rejected these on 2026-10-20). | Open every scene with **"Static locked-off vertical shot, the camera does not move."** and make the **model turn in place** from the Start pose to the End pose. Spoken line = **2-3 natural conversational sentences, 28-32 words** (hard limits 24-34), no colons, she **talks through the whole clip, including while turning**. Add **"No background music"** (Suno BGM is layered later). |
 | **Suno AI BGM** | Generating songs with vocal lyrics or background singing. | **Instrumental mode MUST be toggled ON.** TikTok promos use spoken Malay lip-sync voiceovers; vocals clash with speech. |
 | **Spoken Dialogue & Caption** | Using Indonesian words ("banget", "emang", "bgt"), em-dashes (`—`), or mentioning direct prices. | **Standard Malaysian Malay (KL accent)**, pronoun "saya" (never "aku"), zero em-dashes (use `:` or `,`), zero prices (direct to "beg kuning"). |
-| **Hook Selection** | Banning valid hook formulas or reusing openers from the last 7 recorded entries. | **Never ban valid hooks.** Live search MY TikTok data, rank candidate hooks, audit with `verify_hook_quality()`, and avoid the last 7 entries. |
+| **Hook Selection** | Banning valid hook formulas, reusing openers from the last 7 recorded entries, or writing every hook as the same "Korang ...?" question full of "penyelamat terbaik / automatik" and closing with "cepat tekan beg kuning sebelum saiz habis" (the user called this boring on 2026-11-15). | **Never ban valid hooks, but vary the format.** Run `python generate_prompts.py --hook-brief`, live search MY TikTok data, write 3+ candidates in **3 different hook formats**, score them with `--audit-hook` (it scores freshness: opening word, format, question streak, repeated and worn-out phrases), pick the top one, and vary the Scene 3 closer too. |
 | **Saving to GitHub & Cloud** | Leaving a product only on this PC (no `generations/<prefix>.json`, keyframes not committed). | Save the full record with `save_generation_history(prefix=...)` (Step 9), commit and push `generations/<prefix>.json`, `keyframes/<prefix>_*` and history (Step 10). When Supabase env keys are present, sync record via `supabase_client.py`. No secret credentials or sensitive tokens in public records. |
 
 ---
@@ -162,17 +162,18 @@ Before writing Scene 1 dialogue, the agent MUST follow this exact 3-step process
 > The agent MUST NOT skip the live search and rely solely on the internal archetype list.
 
 > **Step 4b. Rank Candidate Hooks (MANDATORY EVERY RUN)**:
-> From the live search results combined with the 8 proven archetypes below, create **at least 3 candidate hooks** in Malaysian Malay. Rank them by:
-> 1. **Immediacy** (30%): Does it deliver value in <2 seconds?
-> 2. **Specificity** (25%): Does it name a concrete pain point + product differentiator?
-> 3. **Social proof / pattern interrupt power** (20%)
+> First run `python generate_prompts.py --hook-brief`. It lists the last 7 hooks and closers, the formats they used, the **formats not used recently**, overused opening words, and worn-out phrases.
+> From the live search results, the 8 angles and the 11 formats below, create **at least 3 candidate hooks** in Malaysian Malay, **each in a different format** (three versions of the same "Korang ...?" question don't count). Rank them by:
+> 1. **Immediacy** (25%): Does the first sentence (12 words max) deliver value in <2 seconds?
+> 2. **Specificity** (20%): Does it name a concrete pain point + product differentiator?
+> 3. **Pattern interrupt power** (15%): Would it make *you* stop scrolling?
 > 4. **Malaysian locale resonance** (15%): Relatable local scenario
-> 5. **Non-repetition vs last 7 entries** (10%)
-> Run `verify_hook_quality()` on each candidate and display results.
+> 5. **Freshness** (25%): the `hook_score` from the audit (opening word, format, question streak, repeated and worn-out phrases vs the last 7 entries)
+> Score them with `python generate_prompts.py --audit-hook "<full Scene 1 line 1>" "<line 2>" "<line 3>" --closing "<Scene 3 line>"` and display the results.
 
 > **Step 4c. Select Winner (MANDATORY EVERY RUN)**:
-> Pick the **#1 ranked hook** as the Scene 1 opening line. Display the ranking table to the user.
-> **Length & style:** each scene's full spoken line (hook included) is **2-3 natural spoken sentences, 28-32 words** (`automate_flow.py` refuses under 24 or over 34). The hook is the first sentence; the next sentence explains it like a creator talking to a friend, not a spec list.
+> Pick the **#1 ranked hook** as the Scene 1 opening line. Display the ranking table to the user. Pass its format key as `hook_format=` in Step 9.
+> **Length & style:** each scene's full spoken line (hook included) is **2-3 natural spoken sentences, 28-32 words** (`automate_flow.py` refuses under 24 or over 34). The hook is the first sentence (**12 words or fewer**); the next sentence explains it like a creator talking to a friend, not a spec list.
 
 **8 Proven Viral Hook Archetypes (2-Second Retention Rule)**:
 1. **The Unspoken Daily Dilemma (Tropical Climate / Comfort)**: e.g. Hot weather sauna effect, humid sweat, stuffy fabrics vs breathable water-resistant protection.
@@ -184,17 +185,39 @@ Before writing Scene 1 dialogue, the agent MUST follow this exact 3-step process
 7. **The Stereotype-Buster / Pain-Point Contrast**: e.g. "Siapa cakap jaket kalis air mesti nampak boyish?" challenging common assumptions about the product category.
 8. **The FOMO / FYP Social Proof Trend**: e.g. "Patutlah asyik lalu dekat FYP..." leveraging social proof and trend awareness.
 
-**Check History Window & Verify Hook Quality**:
-```python
-from generate_prompts import get_recently_used_phrases, verify_hook_quality, detect_hook_archetype
-print(get_recently_used_phrases())
+**11 Hook Formats (how the hook is said)**:
+The 8 archetypes above are the hook's **angle** (what it's about). The **format** is how it's said: the sentence shape and her stance. In Oct-Nov 2026 the angle changed every run but the format didn't: 12 of 15 hooks used "korang", 10 of 15 were questions, none were first person, and every one scored 100/100. The user called them boring on 2026-11-15. Any angle can go with any format. Prefer a format the brief lists as not used recently, and pick the one that fits the product.
 
-# Audit hook before finalizing
-audit = verify_hook_quality(selected_scene_1_opening)
-print("Hook Archetype:", audit["archetype"])
-print("Quality Audit:", audit)
+| `hook_format` | Name | How it works | Example hook sentence |
+| --- | --- | --- | --- |
+| `direct_question` | Soalan Terus | One sharp question about a pain point | "Kenapa kemeja putih kita cepat sangat nampak lusuh?" |
+| `turn_reveal` | Tunggu Saya Pusing | Tease what she shows when she turns; Scene 2 (turning to the back) pays it off | "Depan dia nampak macam kot biasa je, tapi tunggu saya pusing." |
+| `dont_buy` | Jangan Beli Kalau | Warn who should NOT buy it, as a disguised benefit | "Jangan beli blazer ni kalau korang memang suka rasa panas dekat ofis." |
+| `honest_take` | Pendapat Jujur | Her own bold first-person opinion | "Jujur, ni kemeja linen paling senang jaga yang saya pernah ada." |
+| `confession` | Saya Mengaku | Admit a relatable habit of her own | "Saya mengaku, saya memang malas gosok baju pagi-pagi." |
+| `numbered` | Tiga Sebab | Promise 2-3 reasons, deliver one per scene | "Ada tiga benda pasal jaket ni yang buat saya tak nak tanggal." |
+| `detail_tease` | Satu Detail Kecil | One small detail most people miss, and why it matters | "Ada satu detail kecil dekat kolar kot ni yang ramai tak perasan." |
+| `scenario` | Situasi | Drop the viewer into one moment, present tense, no question | "Pukul tujuh pagi, tudung belum siap, baju pun belum gosok." |
+| `this_not_that` | Ini, Bukan Itu | Define it by what it isn't | "Kot ni untuk nampak kemas, bukan nampak macam nak main ski." |
+| `myth_statement` | Ramai Ingat | State a common belief, flip it in the next sentence | "Ramai ingat jaket tebal mesti buat badan nampak besar." |
+| `identity_callout` | Ni Untuk Yang | Name exactly who it's for | "Ni untuk yang bertubuh kecil dan selalu rasa kot labuh terlalu panjang." |
+
+- **Spoken only.** The shot is static and her hands stay empty, so no format may rely on props, gestures or camera moves. `turn_reveal` uses the turn the scenes already have.
+- **No invented stories.** Never invent events, other people's reactions ("kawan saya tanya..."), comments, review counts or stock levels the listing doesn't show (TikTok "Accurate Claims" and "Fake stories" rules). Her own opinion of what is visible is fine.
+- **Open a loop.** Scene 1 promises something Scene 2 or 3 delivers (what she shows when she turns, reasons two and three, the small detail), so viewers stay for all 30 seconds.
+- **Worn-out phrases** (flagged by the audit, don't use): `penyelamat terbaik`, `automatik` / `auto`, `pening kepala`, `tengok ni`, `macam marshmallow`, `naik aura`, `jangan tunggu lagi`, `cepat tekan`, `sebelum saiz/stok habis`.
+- **Scene 3 closer variety.** Instead of "Korang yang nak X, cepat tekan beg kuning sebelum saiz habis": close the Scene 1 loop, give her own pick ("Saya ambil warna krim, korang nak warna apa?"), or a practical tip from the listing (sizing, care). Mention urgency only when the listing shows real low stock or an end-dated promo.
+
+**Check History Window & Verify Hook Quality**:
+```bash
+# What the last 7 hooks have in common + the formats not used recently:
+python generate_prompts.py --hook-brief
+
+# Score the candidates (full Scene 1 lines) and the planned Scene 3 closer:
+python generate_prompts.py --audit-hook "<candidate 1>" "<candidate 2>" "<candidate 3>" --closing "<Scene 3 line>"
 ```
-Ensure the selected hook and closing line differ from the last 7 recorded entries and achieve a passing quality score.
+The same checks are available in Python as `verify_hook_quality(line, closing_line=...)`, `suggest_hook_formats()` and `detect_hook_format()`.
+`hook_score` starts at 100, loses 25 per language issue (Indonesian words, "aku") and 10 per freshness warning. Nothing is banned: a warning just ranks a candidate lower. Aim for the winner to have no warnings, and fix any closer warnings by rewording the line.
 
 
 ### Step 5: Compose the Full Deliverable Package
@@ -449,6 +472,7 @@ save_generation_history(
     product_name="Product Name Here",
     opening_line="<exact Scene 1 spoken line>",
     closing_line="<exact Scene 3 spoken line>",
+    hook_format="<HOOK_FORMATS key of the winning hook, e.g. turn_reveal>",
     caption="...",
     hashtags="...",
     bgm_prompt="...",
@@ -573,9 +597,10 @@ git push
 - **How it works:**
   1. **Zero Banned Hooks**: NEVER ban any hook styles or formulas. All hook techniques (pain-point questions, relatable confessions, visual pattern interrupts, curiosity gap) are valid.
   2. **Search Internet Data for Best Hooks**: Before writing, search current TikTok e-commerce data and viral retail trends for high-converting hook formulas in Malaysia.
-  3. **Record to Avoid Repetition**: `get_recently_used_phrases(last_n=7)` retrieves the last 7 recorded openers and closers. The new dialogue simply avoids repeating those 7.
-  4. **Auto-Logging**: After generation, `save_generation_history()` logs the newly created hook and CTA to `generation_history.json` and, with `prefix=`, the full record to `generations/<prefix>.json`.
-- **No fixed rotation scripts.** No banned hooks. Data-driven viral hooks with recent history awareness.
+  3. **Record to Avoid Repetition**: `get_recently_used_phrases(last_n=7)` (printed by `python generate_prompts.py --hook-brief`) retrieves the last 7 recorded openers and closers, plus a variety brief: formats used, formats not used recently, overused opening words, question streaks and worn-out phrases.
+  4. **Structural freshness, not just exact text**: `verify_hook_quality()` flags a hook that starts with the same word as recent ones, repeats a recent format, continues a run of questions, shares 3-word phrases with recent hooks, uses a worn-out phrase, or has a first sentence over 12 words. It checks the Scene 3 closer the same way. Each warning costs 10 points; nothing is blocked.
+  5. **Auto-Logging**: After generation, `save_generation_history(..., hook_format=...)` logs the newly created hook, its format and the CTA to `generation_history.json` and, with `prefix=`, the full record (including the audit warnings) to `generations/<prefix>.json`.
+- **No fixed rotation scripts.** No banned hooks. Data-driven viral hooks with recent history awareness. Older entries without a stored `hook_format` are classified from their text.
 
 ---
 

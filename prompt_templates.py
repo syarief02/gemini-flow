@@ -20,7 +20,14 @@ ANTI-REPETITION & VIRAL HOOK SYSTEM (generation_history.json):
   6. The Relatable Lifestyle Dilemma (Waking up late, rushed mornings, ironless prep)
   7. The Stereotype-Buster / Pain-Point Contrast (Challenging category assumptions)
   8. The FOMO / FYP Social Proof Trend (FYP trend awareness, viral discovery)
-- After generating, ALWAYS log the new entry with save_generation_history() from generate_prompts.py.
+- The archetype is only the hook's ANGLE. Also vary its FORMAT (HOOK_FORMATS in generate_prompts.py:
+  turn_reveal, dont_buy, honest_take, confession, numbered, detail_tease, scenario, this_not_that,
+  myth_statement, identity_callout, direct_question). Hooks went stale in Oct-Nov 2026 because every
+  one was a "Korang ...?" question (user feedback 2026-11-15).
+- `python generate_prompts.py --hook-brief` shows what recent hooks share and which formats are fresh;
+  `--audit-hook "<line>" ...` scores candidates for freshness (opening word, format, question streak,
+  repeated and worn-out phrases, hook sentence over 12 words).
+- After generating, ALWAYS log the new entry with save_generation_history(..., hook_format=...) from generate_prompts.py.
 - NO fixed rotation scripts — just be aware of what was already used and create fresh words on the spot.
 """
 
