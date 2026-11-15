@@ -1044,6 +1044,15 @@
       "hook_archetype": "Conversational Organic Recommendation",
       "hook_format": "dont_buy",
       "hook_score": 100
+    },
+    {
+      "product": "Trench Coat untuk Wanita Mid Panjang 2026 Musim Semi Gugur Baru Korea Plus Size Petite British Over Knee Outerwear Jaket dan Atasan - Tops, Jackets",
+      "timestamp": "2026-11-15T20:27:57.923809+08:00",
+      "opening_line": "Depan dia nampak macam kot biasa, tapi tunggu saya pusing belakang. Potongan trench coat navy gaya British ni memang terus bagi aura classy bila melangkah ke mana saja.",
+      "closing_line": "Pilihan terbaik untuk gaya eksekutif mahupun percutian luar negara, tekan beg kuning kalau berminat ya!",
+      "hook_archetype": "Conversational Organic Recommendation",
+      "hook_format": "turn_reveal",
+      "hook_score": 100
     }
   ]
 }
