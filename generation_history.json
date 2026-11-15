@@ -1035,6 +1035,15 @@
       "closing_line": "Korang yang nak bercuti musim sejuk dengan gaya unnie Korea, tekan beg kuning sekarang ya!",
       "hook_archetype": "The Price-Quality Myth-Buster",
       "hook_score": 100
+    },
+    {
+      "product": "New women's mid-length winter down cotton coat, fashionable and slim-fitting 2025, waist-cinching, slimming, thickened jacket",
+      "timestamp": "2026-11-15T09:18:05.530415+08:00",
+      "opening_line": "Jangan beli kot musim sejuk ni kalau suka baju jenis mengembang. Tali cerut pinggang dekat dalam ni memang khas untuk bentuk siluet ramping bila berjalan di tempat salji.",
+      "closing_line": "Sesuai sangat untuk OOTD percutian, tekan beg kuning kalau nak cuba gaya ramping ni ya!",
+      "hook_archetype": "Conversational Organic Recommendation",
+      "hook_format": "dont_buy",
+      "hook_score": 100
     }
   ]
 }
