@@ -485,6 +485,7 @@ def save_generation_history(
     if prefix:
         from generation_store import find_keyframes, save_record
         meta = dict(metadata or {})
+        meta.setdefault("prefix", prefix)
         meta.setdefault("hook_archetype", hook_audit.get("archetype"))
         meta.setdefault("hook_format", hook_format)
         meta.setdefault("hook_score", hook_audit.get("hook_score"))

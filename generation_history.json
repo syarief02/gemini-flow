@@ -1053,6 +1053,15 @@
       "hook_archetype": "Conversational Organic Recommendation",
       "hook_format": "turn_reveal",
       "hook_score": 100
+    },
+    {
+      "product": "[JWD544] Jaket bulu wanita, kot berikat pinggang gaya Korea, kain bulu tiruan yang tebal, lembut, hangat dan selesa, reka bentuk butang di bahagian depan, bergaya untuk perjalanan pada musim sejuk",
+      "timestamp": "2026-11-16T17:54:32.239873+08:00",
+      "opening_line": "Jujur, ni jaket bulu paling lembut yang pernah saya pakai. Rekaan kolar gebu dengan tali pinggang ikat ni terus bagi gaya unnie Korea mewah bila melangkah ke luar.",
+      "closing_line": "Sesuai sangat untuk percutian musim sejuk dan OOTD travel, dapatkan jaket bulu ni di beg kuning ya!",
+      "hook_archetype": "Conversational Organic Recommendation",
+      "hook_format": "honest_take",
+      "hook_score": 100
     }
   ]
 }

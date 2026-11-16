@@ -442,7 +442,9 @@ def sync_all_generations_to_supabase(
             if not bgm_prompt and isinstance(data.get("suno_bgm"), dict):
                 bgm_prompt = data["suno_bgm"].get("style")
             keyframe_urls = data.get("keyframe_urls")
-            metadata = data.get("metadata") or {}
+            metadata = dict(data.get("metadata") or {})
+            if data.get("prefix") and not metadata.get("prefix"):
+                metadata["prefix"] = data.get("prefix")
 
             synced = save_generation_record(
                 product_name=p_name,
@@ -595,6 +597,28 @@ def fetch_generation_by_id(record_id: str) -> Optional[Dict[str, Any]]:
         return data[0] if data else None
     except Exception as e:
         print(f"Supabase fetch by ID notice: {e}")
+        return None
+
+
+def fetch_generation_by_prefix(prefix: str) -> Optional[Dict[str, Any]]:
+    """Fetch a single generation record by its product prefix directly from Supabase."""
+    client = get_supabase_client()
+    if not client or not prefix:
+        return None
+    try:
+        clean = prefix.lower().replace("-", "_").strip("_")
+        response = (
+            client.table("gemini_flow_generations")
+            .select("*")
+            .eq("metadata->>prefix", clean)
+            .order("created_at", desc=True)
+            .limit(1)
+            .execute()
+        )
+        data = response.data or []
+        return data[0] if data else None
+    except Exception as e:
+        print(f"Supabase fetch by prefix notice: {e}")
         return None
 
 
