@@ -217,7 +217,7 @@ async def connect_to_brave(port: int = 9222):
             ws_url = v_data.get("webSocketDebuggerUrl")
             if ws_url:
                 print(f"Connecting to live Brave CDP at {ws_url}...")
-                browser = await p.chromium.connect_over_cdp(ws_url, timeout=15000)
+                browser = await p.chromium.connect_over_cdp(ws_url, timeout=60000)
                 return p, browser
     except Exception:
         pass

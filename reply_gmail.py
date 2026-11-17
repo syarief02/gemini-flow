@@ -46,7 +46,7 @@ async def reply_with_clean_format(
     p = await async_playwright().start()
     browser = None
     try:
-        browser = await p.chromium.connect_over_cdp("http://127.0.0.1:9222", timeout=5000)
+        browser = await p.chromium.connect_over_cdp("http://127.0.0.1:9222", timeout=20000)
         print("Connected to Brave!")
     except Exception as e:
         print(f"Could not connect to Brave: {e}")

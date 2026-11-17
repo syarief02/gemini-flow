@@ -622,6 +622,43 @@ def fetch_generation_by_prefix(prefix: str) -> Optional[Dict[str, Any]]:
         return None
 
 
+def log_telemetry(
+    action_type: str,
+    status: str = "SUCCESS",
+    details: Optional[Dict[str, Any]] = None,
+    agent_name: str = "GeminiFlow"
+) -> bool:
+    """Log an execution or telemetry event directly to ai_agent_telemetry in Supabase."""
+    client = get_supabase_client()
+    if not client:
+        return False
+    try:
+        payload = {
+            "agent_name": agent_name,
+            "action_type": action_type,
+            "status": status,
+            "details": details or {}
+        }
+        client.table("ai_agent_telemetry").insert(payload).execute()
+        return True
+    except Exception as e:
+        print(f"Notice logging telemetry to Supabase: {e}")
+        return False
+
+
+def fetch_generations_summary(limit: int = 10) -> List[Dict[str, Any]]:
+    """Fetch structured generation records from the v_gemini_flow_generations_summary view."""
+    client = get_supabase_client()
+    if not client:
+        return []
+    try:
+        res = client.table("v_gemini_flow_generations_summary").select("*").order("created_at", desc=True).limit(limit).execute()
+        return res.data or []
+    except Exception as e:
+        print(f"Notice fetching summary view: {e}")
+        return []
+
+
 def get_database_health() -> Dict[str, Any]:
     """Comprehensive health check across REST API, database tables, and Storage bucket."""
     client = get_supabase_client()
