@@ -36,6 +36,7 @@ Every AI agent operating in this repository MUST memorize and adhere strictly to
 | **Suno AI BGM** | Generating songs with vocal lyrics or background singing. | **Instrumental mode MUST be toggled ON.** TikTok promos use spoken Malay lip-sync voiceovers; vocals clash with speech. |
 | **Spoken Dialogue & Caption** | Using Indonesian words ("banget", "emang", "bgt"), em-dashes (`—`), or mentioning direct prices. | **Standard Malaysian Malay (KL accent)**, pronoun "saya" (never "aku"), zero em-dashes (use `:` or `,`), zero prices (direct to "beg kuning"). |
 | **Hook Selection** | Banning valid hook formulas, reusing openers from the last 7 recorded entries, or writing every hook as the same "Korang ...?" question full of "penyelamat terbaik / automatik" and closing with "cepat tekan beg kuning sebelum saiz habis" (the user called this boring on 2026-11-15). | **Never ban valid hooks, but vary the format.** Run `python generate_prompts.py --hook-brief`, live search MY TikTok data, write 3+ candidates in **3 different hook formats**, score them with `--audit-hook` (it scores freshness: opening word, format, question streak, repeated and worn-out phrases), pick the top one, and vary the Scene 3 closer too. |
+| **Character Delivery** | The same mannequin performance in every clip: "pleasant, friendly smile, warm facial expressions", a "calm, relaxed" voice, and brochure lines that narrate her turn ("Bila pusing ke tepi, perincian...", "Kemasan belakang...", "...beg kuning ya!"). The user called this boring on 2026-11-17. | **Pick ONE delivery style per product** (`prompt_templates.DELIVERY_STYLES`, prefer a fresh one from `--hook-brief`) and use its voice and per-scene acting in all 3 prompts. Write 3 beats (hook → her reaction → payoff + verdict) in spoken KL Malay that talks TO the viewer, and score them with `--audit-script`. Expression in her face, head and shoulders; hands stay empty at her sides. |
 | **Saving to GitHub & Cloud** | Leaving a product only on this PC (no `generations/<prefix>.json`, keyframes not committed). | Save the full record with `save_generation_history(prefix=...)` (Step 9), commit and push `generations/<prefix>.json`, `keyframes/<prefix>_*` and history (Step 10). When Supabase env keys are present, sync record via `supabase_client.py`. No secret credentials or sensitive tokens in public records. |
 
 ---
@@ -219,6 +220,50 @@ python generate_prompts.py --audit-hook "<candidate 1>" "<candidate 2>" "<candid
 The same checks are available in Python as `verify_hook_quality(line, closing_line=...)`, `suggest_hook_formats()` and `detect_hook_format()`.
 `hook_score` starts at 100, loses 25 per language issue (Indonesian words, "aku") and 10 per freshness warning. Nothing is banned: a warning just ranks a candidate lower. Aim for the winner to have no warnings, and fix any closer warnings by rewording the line.
 
+### Step 4d. Character Delivery: How She Promotes (MANDATORY EVERY RUN)
+
+A fresh hook isn't enough if the rest of the video is a mannequin reading a catalogue. Until 2026-11-17 every clip had the same performance ("pleasant, friendly smile, warm facial expressions, turns 45 degrees") in a "calm, relaxed" voice, Scene 2 always opened "Bila pusing ke tepi, perincian...", Scene 3 always opened "Kemasan belakang..." and ended "...beg kuning ya!". The user called it boring.
+
+**1. Pick ONE delivery style for the whole product** (`DELIVERY_STYLES` in `prompt_templates.py`). The brief lists which ones are fresh; pick the one that fits the product and the hook format (e.g. `turn_reveal` + `playful_tease`, `dont_buy` + `honest_sister`). Pass it as `delivery_style=` in Step 9.
+
+| `delivery_style` | Persona | Voice | How she talks |
+| --- | --- | --- | --- |
+| `excited_bestie` | Kawan Baik Teruja | Bright, genuinely excited, quick light laugh | Reacts out loud (serius, eh, gila), short punchy sentences |
+| `honest_sister` | Kakak Jujur | Warm, confident, matter-of-fact, playful edge | Clear verdict plus one honest "not for you if..." aside |
+| `playful_tease` | Usik Manja | Cheeky, rising intonation on the tease, warm laugh | Opens loops and pays them off ("kan saya dah cakap") |
+| `insider_tip` | Kongsi Rahsia | Drops her voice slightly on the tip, then brightens (never a whisper) | Shares a tip or styling trick ("tip saya, ramai tak tahu") |
+| `confident_stylist` | Stylist Yakin | Poised, upbeat, crisp | Decisive styling advice ("padan dengan", "pakai dengan") |
+
+Each style also has an `acting` line per scene (eyebrows, smile, head tilt, nod, a glance at the detail, a shoulder shrug). Put scene N's acting line in scene N's visual prompt, and the style's `voice` in every scene's audio direction (`Her delivery is <voice>.`).
+
+**2. Write 3 beats, not 3 product descriptions:**
+- **Scene 1, the hook (curiosity):** the hook sentence, then why she cares.
+- **Scene 2, her reaction (delight):** her honest reaction to ONE detail, how it feels, and a real moment it matters to korang (ofis aircond, naik LRT pagi, kenduri, travel). Pay off the Scene 1 loop or set up the last reveal.
+- **Scene 3, the verdict (confidence):** close the Scene 1 loop, give her verdict or own pick, then a fresh CTA.
+
+**3. Rules for every spoken line:**
+- She talks TO the viewer: every line has "korang", a quick question ("kan?"), or her own reaction ("saya", "serius").
+- Never narrate her own turn ("Bila pusing ke tepi...", "Kemasan belakang...", "Pandangan belakang..."). The viewer can see her turn; tell them why the detail matters.
+- Spoken KL Malay, not brochure Malay. Avoid `perincian`, `kemasan`, `rekaan`, `mahupun`, `manakala`, `dilapisi`, `pilihan terbaik`, `sangat praktikal`, `bila melangkah`, `terletak elok`, and `-nya` on the garment (say "fabrik dia", not "fabriknya").
+- Each scene starts with a different word, and Scenes 2 and 3 don't start like the recent products' Scenes 2 and 3 (the brief lists them). Never end a line with "ya".
+- Same word count, colon and claim rules as before (28-32 words, no colons, nothing the listing doesn't support).
+
+**4. Expression lives in her face, eyes, head and shoulders.** Her hands stay empty and relaxed at her sides: no hand gestures, no waving, no props. Hands are where Flow morphs most, and every end keyframe has her hands at her sides.
+
+❌ Before (trench coat, 2026-11-16), Scene 2: *"Bila pusing ke tepi, nampak perincian epaulet bahu dengan tali pinggang ikat kemas. Kemasan tali bergesper di pergelangan tangan buat siluet badan nampak lebih tinggi ramping dan kemas."* (script score 60/100)
+✅ After (`turn_reveal` + `playful_tease`), Scenes 1-3:
+> "Depan dia nampak macam kot biasa je kan, tapi tunggu saya pusing. Serius, korang takkan sangka belakang dia ada detail yang buat saya terus jatuh cinta dengan trench coat navy ni."
+> "Ha, korang tengok, belakang dia ada flap kecil dekat bahu, ala trench coat klasik London. Tali pinggang pula boleh ikat ketat sikit, terus pinggang nampak terbentuk, saya suka gila."
+> "Kan saya dah cakap, bukan kot biasa. Pakai dengan seluar slack biasa pun dah nampak macam nak pergi meeting dekat London. Kalau korang nak gaya ni, beg kuning ada dekat bawah."
+(script score 100/100)
+
+**5. Check it:**
+```bash
+python generate_prompts.py --audit-script "<scene 1>" "<scene 2>" "<scene 3>"
+# or, after Step 9: python generate_prompts.py --audit-script --prefix <prefix>
+```
+Each warning costs 10 points per scene; nothing is blocked. Fix every warning you can before saving.
+
 
 ### Step 5: Compose the Full Deliverable Package
 Deliver to the user in this exact order:
@@ -305,18 +350,19 @@ Deliver to the user in this exact order:
    - **Write it the way a Malaysian creator talks to a friend**: natural fillers (`dia`, `je`, `tau`, `memang`, `la`, `korang`), pick 1-2 details per scene and say *why* they matter. Never rattle off a spec list. **No colons or semicolons** in spoken lines (they read as list pauses; the script refuses them). Keep English words to common ones.
      - ✅ `"Saya suka tekstur korduroi dia yang halus ni, rasa vintage sangat. Renda beralun tu ikut sepanjang butang depan, poket dia pun besar, senang nak simpan barang kecil."` (27 words)
      - ❌ `"Tekstur korduroi halus, renda beralun sepanjang butang, dua poket besar: detail vintage yang selesa dipakai harian."` (spec list, colon, 16 words)
-   - **She talks through the whole clip, including while she turns.** Don't make her wait ("finishes speaking, then turns", "speaks once she faces the camera"); that squeezes the speech. The script adds a pace line automatically: *"She speaks continuously in a warm, natural, conversational tone at a relaxed but steady pace, like chatting with a close friend, from the first second until the clip ends, without long pauses, and keeps talking naturally while she turns."*
+   - **She talks through the whole clip, including while she turns.** Don't make her wait ("finishes speaking, then turns", "speaks once she faces the camera"); that squeezes the speech. If the prompt has no pace line of its own (no "continuously"), the script appends `PACE_LINE` from `prompt_templates.py`: *"She talks continuously from the first second until the clip ends, with lively, expressive intonation that rises and falls naturally, stressing the key words and reacting with real feeling like telling a close friend about a great find, never flat or monotone, never shouting or hard-selling, and keeps talking while she turns."* (Until 2026-11-17 it appended a "relaxed but steady pace" line, which made every clip sound flat. It now warns when a prompt still uses that flat direction.)
    - Include **"No background music, only her voice and soft ambient sound."** The Suno instrumental is added in editing.
-   - Hands stay empty and relaxed at her sides; no gestures, no waving, no props.
+   - **She performs, she doesn't pose.** Use the product's delivery style (Step 4d): its acting line for this scene in the visual direction, its voice in the audio direction. Expression lives in her face, eyes, head and shoulders; never the old flat "pleasant, friendly smile / warm facial expressions / calm" direction.
+   - Hands stay empty and relaxed at her sides; no hand gestures, no waving, no props.
 
    **Exact Template for Each Scene in Flow AI** (full per-scene versions in `prompt_templates.py`):
    ```text
-   Static locked-off vertical shot, the camera does not move. {subject + hijab} stands in {keyframe setting}, wearing {exact outfit, bottoms, shoes}. {how she turns from the Start pose to the End pose and when she speaks}. Her hands stay empty and relaxed at her sides the whole time, no gestures, no props. The background, lighting, outfit and hijab stay identical throughout. Soft natural daylight, realistic fabric movement. For the audio, generate a highly realistic female voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent, strictly NOT an Indonesian accent. No background music, only her voice and soft ambient sound. Ensure there are no text overlays or watermarks.
+   Static locked-off vertical shot, the camera does not move. {subject + hijab} stands in {keyframe setting}, wearing {exact outfit, bottoms, shoes}. {how she turns from the Start pose to the End pose while she keeps talking}, and {the delivery style's acting line for this scene}. Her face, eyes, head and shoulders stay expressive and alive the whole time, reacting to what she says, while her hands stay empty and relaxed at her sides, no hand gestures, no props. The background, lighting, outfit and hijab stay identical throughout. Soft natural daylight, realistic fabric movement. For the audio, generate a highly realistic female voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent, strictly NOT an Indonesian accent. Her delivery is {the delivery style's voice}. No background music, only her voice and soft ambient sound. Ensure there are no text overlays or watermarks. {PACE_LINE}
 
    Spoken Malay (Lip-sync): "{2-3 natural spoken Malaysian Malay sentences, 28-32 words, no colons}"
    ```
 
-   **Example, Scene 1 (Striped Split-Cuff Blouse).** The visual part rendered clean on 2026-10-19. The spoken line is rewritten to the 2026-10-20 natural-speech rule; the original 21-word line with a colon sounded stretched.
+   **Example, Scene 1 (Striped Split-Cuff Blouse).** The visual part rendered clean on 2026-10-19 (its "warm natural smile" acting predates the 2026-11-17 delivery styles: add the style's acting and voice when you reuse it). The spoken line is rewritten to the 2026-10-20 natural-speech rule; the original 21-word line with a colon sounded stretched.
    ```text
    Static locked-off vertical shot, the camera does not move. A young Malaysian Muslim woman in a taupe chiffon hijab stands in a sunlit cafe courtyard with rattan chairs and potted palms, wearing a fitted beige blouse with thin latte-tan vertical pinstripes, a pointed collar, small white buttons, a curved hem and split cuffs, with straight navy trousers and cream pointed flats. She starts facing the camera with a warm natural smile and speaks directly to the camera, then slowly pivots in place into a three-quarter angle while keeping eye contact. Her hands stay empty and relaxed at her sides the whole time, no gestures, no props. The background, lighting, outfit and hijab stay identical throughout. Soft natural daylight, realistic fabric movement. For the audio, generate a highly realistic female voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent, strictly NOT an Indonesian accent. No background music, only her voice and soft courtyard ambience. Ensure there are no text overlays or watermarks.
 
@@ -473,6 +519,7 @@ save_generation_history(
     opening_line="<exact Scene 1 spoken line>",
     closing_line="<exact Scene 3 spoken line>",
     hook_format="<HOOK_FORMATS key of the winning hook, e.g. turn_reveal>",
+    delivery_style="<DELIVERY_STYLES key used in all 3 scenes, e.g. playful_tease>",
     caption="...",
     hashtags="...",
     bgm_prompt="...",
@@ -556,7 +603,7 @@ git push
 |------|---------|
 | `generate_prompts.py` | Core engine: SYSTEM_PROMPT, anti-repetition functions, Gemini API caller |
 | `generate_keyframes.py` | Generates 3 consistent 9:16 keyframe images dynamically for any product session |
-| `prompt_templates.py` | Reusable templates for keyframes, Flow AI prompts, caption, and Suno BGM |
+| `prompt_templates.py` | Reusable templates for keyframes, Flow AI prompts, caption, and Suno BGM; `DELIVERY_STYLES` (her voice + acting per scene) and `PACE_LINE` |
 | `automate_flow.py` | Flow AI renderer in Brave via Playwright CDP. Enforces settings, attaches frames by exact filename, pixel-verifies both slots, and refuses to submit on any failed check (`--dry-run` to test) |
 | `reply_gmail.py` | Automated Gmail reply script in Brave browser to dispatch copy packages via CDP |
 | `create_suno.py` | Automated Suno AI BGM instrumental generator in Brave browser via CDP |
@@ -607,8 +654,8 @@ git push
 ## Flow AI Video Prompt Structure
 
 Each scene prompt is **one English paragraph + one verbatim Malay line** (full rules and a verified example in Step 6 §4b; templates in `prompt_templates.py`):
-- **Visual:** `Static locked-off vertical shot, the camera does not move.` + model, hijab, exact outfit and setting from the keyframes + how she turns in place from the Start pose to the End pose + empty relaxed hands.
-- **Audio:** "For the audio, generate a highly realistic female voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent, strictly NOT an Indonesian accent. No background music, only her voice and soft ambient sound. Ensure there are no text overlays or watermarks. She speaks continuously in a warm, natural, conversational tone at a relaxed but steady pace, like chatting with a close friend, from the first second until the clip ends, without long pauses, and keeps talking naturally while she turns."
+- **Visual:** `Static locked-off vertical shot, the camera does not move.` + model, hijab, exact outfit and setting from the keyframes + how she turns in place from the Start pose to the End pose + the delivery style's acting line for that scene + "Her face, eyes, head and shoulders stay expressive and alive the whole time, reacting to what she says, while her hands stay empty and relaxed at her sides, no hand gestures, no props."
+- **Audio:** "For the audio, generate a highly realistic female voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent, strictly NOT an Indonesian accent. Her delivery is {the style's voice}. No background music, only her voice and soft ambient sound. Ensure there are no text overlays or watermarks." + `PACE_LINE` (lively, expressive, talks continuously; see Step 6 §4b).
 - **Dialogue:** `Spoken Malay (Lip-sync): "<verbatim Malaysian Malay, 2-3 natural spoken sentences, 28-32 words, no colons>"`. Write the Malay yourself; never ask Flow to translate English.
 
 **CRITICAL PACKAGING RULE — WRAP IN SAME CODE BOX FOR 1-CLICK COPY:**
@@ -765,6 +812,8 @@ Whenever the user supplies a TikTok Shop product link:
 * **Root Cause:** Spoken line too long for 10s, camera-motion instructions fighting a shared static background, or no "No background music" instruction.
 * **Guaranteed Solution:** 2-3 natural conversational sentences of 28-32 words (not a spec list, no colons), she talks through the whole clip including the turn, `Static locked-off vertical shot, the camera does not move.`, the model turns in place, and `No background music, only her voice and soft ambient sound.` See Step 6 §4b.
 * **Voice sounds stretched, slow, robotic or "weird":** the line is too short or written like a spec list (this happened with the 14-21-word lines of 2026-10-19). Rewrite it as natural speech of 28-32 words.
+* **She looks and sounds like a mannequin reading a catalogue (flat, same smile every clip):** the prompt used the old flat direction ("pleasant, friendly smile", "warm facial expressions", "calm, relaxed"; `automate_flow.py` now warns about these) or the lines narrate her turn in brochure Malay. Apply a delivery style and rewrite the 3 beats (Step 4d), then check with `--audit-script`.
+* **Too much: over-acted, shouting, salesy:** switch to a calmer style (`honest_sister`, `confident_stylist`, `insider_tip`) rather than going back to the flat "calm, relaxed" direction. Agents can't hear audio: the user judges the energy.
 
 ### 8. `automate_flow.py` Prints `ABORTED Scene N`
 * **Meaning:** A pre-submit check failed and nothing was rendered (no credits spent). Read the reason line and `flow_scene<N>_aborted.png`.

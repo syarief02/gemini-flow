@@ -100,6 +100,31 @@ def get_recently_used_phrases(last_n: int = 7) -> str:
                  "Open a loop that Scene 2 or 3 closes.")
     lines.append("  Scene 3 closer: close the Scene 1 loop, give her own pick, or a practical tip from the listing. "
                  "No 'cepat tekan beg kuning sebelum saiz habis'; urgency only if the listing shows it.")
+
+    # Delivery brief: how she promotes across all three scenes.
+    lines.append("")
+    lines.append("🎭 DELIVERY BRIEF (how she promotes; pick ONE style for all 3 scenes, pass it as delivery_style=):")
+    styles = suggest_delivery_styles(last_n)
+    used_styles = [f"{s['key']} x{s['uses_in_window']}" for s in styles if s["uses_in_window"]]
+    lines.append("  Styles in the entries above: " + (", ".join(used_styles) or "none recorded yet"))
+    lines.append("  Fresh styles (prefer the one that fits this product and hook):")
+    for s in styles:
+        if not s["uses_in_window"]:
+            lines.append(f"    - {s['key']}: {s['name']}. Voice: {s['voice']}. Talks: {s['script']}")
+    lines.append("  Beats: Scene 1 hook (curiosity) -> Scene 2 her reaction to ONE detail + a real moment it "
+                 "matters to korang (delight) -> Scene 3 payoff of the hook + her verdict + CTA (confidence).")
+    lines.append("  Every scene talks TO the viewer (korang, a quick question, her own reaction). Never narrate "
+                 "her turn ('Bila pusing ke tepi', 'Kemasan belakang'). Spoken Malay, not brochure words: "
+                 + ", ".join(label.split(" (")[0] for _, label in BROCHURE_PHRASES) + ".")
+    scripts = _recent_scripts(last_n)
+    for scene in (2, 3):
+        ops = [_opener(s.get(scene, "")) for s in scripts]
+        repeated = sorted({o for o in ops if o and ops.count(o) >= 2}, key=lambda o: -ops.count(o))
+        if repeated:
+            lines.append(f"  Recent Scene {scene} openers to avoid: "
+                         + ", ".join(f"'{o}' ({ops.count(o)}x)" for o in repeated))
+    lines.append("  Acting: the style's expression for each scene (face, eyes, head, shoulders). Hands stay empty "
+                 "at her sides. Check the script: python generate_prompts.py --audit-script \"<s1>\" \"<s2>\" \"<s3>\"")
     return "\n".join(lines)
 
 def detect_hook_archetype(opening_line: str) -> str:
@@ -401,6 +426,132 @@ def suggest_hook_formats(last_n: int = 7) -> list:
         for key, info in sorted(HOOK_FORMATS.items(), key=lambda kv: -entries_ago(kv[0]))
     ]
 
+
+# ── Character delivery: how she promotes (Scenes 1-3) ────────────────────────
+# Until 2026-11-17 the hook changed but the rest of every video was identical: Scene 2 opened with
+# "Bila pusing ke tepi...", Scene 3 with "Kemasan belakang..." and ended "...beg kuning ya!", the
+# lines read like a product page, and she acted with the same "pleasant, friendly smile" in a
+# "calm, relaxed" voice. The user called it boring. DELIVERY_STYLES (prompt_templates.py) gives
+# each product a persona; audit_promo_script() catches the brochure habits. Nothing is blocked.
+from prompt_templates import DELIVERY_STYLES  # noqa: E402
+
+# Written-register words that make her sound like she is reading a product page.
+BROCHURE_PHRASES = [
+    (r"\bperincian\b", "perincian (say 'detail')"),
+    (r"\bkemasan\b", "kemasan"),
+    (r"\brekaan\b", "rekaan (say 'design' or 'potongan dia')"),
+    (r"\bmahupun\b", "mahupun (say 'atau')"),
+    (r"\bmanakala\b", "manakala"),
+    (r"\bdilapisi\b", "dilapisi"),
+    (r"\bpilihan terbaik\b", "pilihan terbaik"),
+    (r"\bsangat praktikal\b", "sangat praktikal"),
+    (r"\bbila melangkah\b", "bila melangkah"),
+    (r"\bterletak (elok|cantik|kemas)\b", "terletak elok/cantik"),
+    (r"\b(fabrik|kain|potongan|rekaan|warna|kolar|material|bahagian)nya\b", "'-nya' on the garment (say 'fabrik dia')"),
+]
+# Narrating her own turn instead of telling the viewer why the detail matters.
+_MOVEMENT_NARRATION = (r"\b(bila|masa|kalau) (saya )?pusing\b|\bpandangan (belakang|sisi|tepi)\b"
+                       r"|^(kemasan|bahagian) (belakang|tepi|sisi)\b")
+# Signs she is talking TO someone: the viewer, a question, her own opinion or reaction.
+_TALKING_TO_SOMEONE = r"\bkorang\b|\bkan\b|\?|\bsaya\b|\b(serius|eh|wah|ha|weh|gila)\b"
+_SCENE_KEYS = {1: ("scene_1", "scene_1_intro"), 2: ("scene_2", "scene_2_detail"), 3: ("scene_3", "scene_3_outro")}
+
+
+def _scene_lines(dialogue) -> dict:
+    """{1: line, 2: line, 3: line} from a spoken_dialogue dict (either key style) or a 3-item list."""
+    if isinstance(dialogue, (list, tuple)):
+        return {i: (dialogue[i - 1] if i <= len(dialogue) else "") or "" for i in (1, 2, 3)}
+    d = dialogue or {}
+    return {i: (d.get(a) or d.get(b) or "") for i, (a, b) in _SCENE_KEYS.items()}
+
+
+def _recent_scripts(last_n: int = 7, exclude_prefix: str = None) -> list:
+    """Spoken lines {1,2,3} of the last `last_n` products saved in generations/, oldest first."""
+    from generation_store import GENERATIONS_DIR
+    found = []
+    for path in GENERATIONS_DIR.glob("*.json"):
+        if exclude_prefix and path.stem == exclude_prefix:
+            continue
+        try:
+            rec = json.loads(path.read_text(encoding="utf-8-sig"))
+        except (ValueError, OSError):
+            continue
+        if not isinstance(rec, dict):
+            continue
+        lines = _scene_lines((rec.get("scenes") or {}).get("spoken_dialogue"))
+        if any(lines.values()):
+            found.append((rec.get("created_at") or "", lines))
+    found.sort(key=lambda item: item[0])
+    return [lines for _, lines in found[-last_n:]]
+
+
+def _opener(line: str, n: int = 2) -> str:
+    return " ".join(_words(line)[:n])
+
+
+def audit_promo_script(dialogue, exclude_prefix: str = None, recent: list = None) -> dict:
+    """Check the three spoken lines sound like a creator talking to the viewer, not a brochure.
+
+    `dialogue` is a spoken_dialogue dict or a [scene1, scene2, scene3] list. Per scene it flags
+    brochure words, narrating her own turn (Scenes 2-3), lines with no 'korang', 'saya', question
+    or reaction, the '...ya' ending, and a first two words shared with another scene. Scenes 2-3
+    are also compared with the last 7 products in generations/ (Scene 1 and the Scene 3 phrases
+    are already covered by verify_hook_quality). Each warning costs 10 points; nothing is blocked.
+    """
+    lines = _scene_lines(dialogue)
+    recent = recent if recent is not None else _recent_scripts(7, exclude_prefix)
+    openers = {i: _opener(line) for i, line in lines.items()}
+    report = {}
+    for i, line in lines.items():
+        low = line.lower().strip()
+        if not low:
+            report[f"scene_{i}"] = {"score": 0, "warnings": ["Spoken line is missing."]}
+            continue
+        warns = [f"Brochure word '{label}': say it the way people talk."
+                 for rx, label in BROCHURE_PHRASES if re.search(rx, low)]
+        if i > 1 and re.search(_MOVEMENT_NARRATION, low):
+            warns.append("Narrates her own turn ('bila pusing...', 'kemasan belakang...'); tell the viewer "
+                         "why the detail matters instead.")
+        if not re.search(_TALKING_TO_SOMEONE, low):
+            warns.append("Sounds like a product description: no 'korang', 'saya', question or reaction "
+                         "(serius, eh, gila).")
+        if re.search(r"\bya[\s.!?]*$", low):
+            warns.append("Ends with 'ya', the sign-off crutch.")
+        twins = [j for j, o in openers.items() if j != i and o and o == openers[i]]
+        if twins:
+            warns.append(f"Starts with '{openers[i]}' like scene {twins[0]} of this script.")
+        if i > 1 and recent:
+            past = [r.get(i, "") for r in recent]
+            same = [_opener(p) for p in past].count(openers[i])
+            if openers[i] and same >= 2:
+                warns.append(f"Scene {i} also starts with '{openers[i]}' in {same} of the last {len(recent)} products.")
+            if i == 2:
+                shared = _shared_phrases(line, past)
+                if shared:
+                    warns.append("Repeats phrases from recent Scene 2 lines: "
+                                 + ", ".join(f"'{g}' ({c}x)" for g, c in shared))
+        report[f"scene_{i}"] = {"score": max(0, 100 - 10 * len(warns)), "warnings": warns}
+    report["score"] = round(sum(report[f"scene_{i}"]["score"] for i in (1, 2, 3)) / 3)
+    return report
+
+
+def suggest_delivery_styles(last_n: int = 7) -> list:
+    """All DELIVERY_STYLES, freshest first (unused in the last `last_n` history entries first)."""
+    used = [e.get("delivery_style") for e in load_generation_history(last_n)]
+
+    def entries_ago(key):
+        for age, s in enumerate(reversed(used), 1):
+            if s == key:
+                return age
+        return last_n + 1
+
+    return [
+        {"key": key, "name": info["name"], "voice": info["voice"], "script": info["script"],
+         "uses_in_window": used.count(key), "last_used_entries_ago": entries_ago(key)}
+        for key, info in sorted(DELIVERY_STYLES.items(), key=lambda kv: -entries_ago(kv[0]))
+    ]
+
+
 def save_generation_history(
     product_name: str,
     opening_line: str,
@@ -413,13 +564,15 @@ def save_generation_history(
     metadata: dict = None,
     prefix: str = None,
     bgm_title: str = None,
-    hook_format: str = None
+    hook_format: str = None,
+    delivery_style: str = None
 ):
     """Append a new entry to the generation history file.
 
-    Stores the raw opening and closing text plus the hook's format, so the next generation
-    can avoid both the same words and the same sentence shape.
+    Stores the raw opening and closing text plus the hook's format and the delivery style, so the
+    next generation can avoid the same words, the same sentence shape and the same performance.
     `hook_format` is the HOOK_FORMATS key the hook was written in; detected from the text if omitted.
+    `delivery_style` is the prompt_templates.DELIVERY_STYLES key used for all three scenes.
 
     With `prefix` (the keyframe prefix), the full record is also saved to
     generations/<prefix>.json, which automate_flow.py renders from and Step 10 commits.
@@ -429,6 +582,10 @@ def save_generation_history(
     hook_audit = verify_hook_quality(opening_line, closing_line=closing_line,
                                      product_name=product_name, hook_format=hook_format)
     hook_format = hook_audit.get("format")
+    if delivery_style and delivery_style not in DELIVERY_STYLES:
+        print(f"WARNING: unknown delivery_style '{delivery_style}'; expected one of {list(DELIVERY_STYLES)}")
+    spoken = (scenes or {}).get("spoken_dialogue")
+    script_audit = audit_promo_script(spoken, exclude_prefix=prefix) if spoken else None
 
     try:
         data = _read_history_file()
@@ -456,6 +613,7 @@ def save_generation_history(
             existing_entry["closing_line"] = closing_line
             existing_entry["hook_archetype"] = hook_audit.get("archetype")
             existing_entry["hook_format"] = hook_format
+            existing_entry["delivery_style"] = delivery_style
             existing_entry["hook_score"] = hook_audit.get("hook_score")
         else:
             data["generations"].append({
@@ -465,6 +623,7 @@ def save_generation_history(
                 "closing_line": closing_line,
                 "hook_archetype": hook_audit.get("archetype"),
                 "hook_format": hook_format,
+                "delivery_style": delivery_style,
                 "hook_score": hook_audit.get("hook_score")
             })
 
@@ -478,6 +637,11 @@ def save_generation_history(
                   f"Format: {hook_format}, Score: {hook_audit.get('hook_score')}/100)")
             for w in hook_audit.get("warnings", []) + hook_audit.get("closing_warnings", []):
                 print(f"   ⚠️ {w}")
+            if script_audit:
+                print(f"   🎭 Delivery: {delivery_style or 'NOT SET'} | script score {script_audit['score']}/100")
+                for i in (1, 2, 3):
+                    for w in script_audit[f"scene_{i}"]["warnings"]:
+                        print(f"   ⚠️ Scene {i}: {w}")
         except Exception as e_hist:
             print(f"Notice: local history file write: {e_hist}")
 
@@ -493,6 +657,10 @@ def save_generation_history(
         meta.setdefault("hook_issues", hook_audit.get("issues"))
         meta.setdefault("hook_warnings", hook_audit.get("warnings"))
         meta.setdefault("closing_warnings", hook_audit.get("closing_warnings"))
+        meta.setdefault("delivery_style", delivery_style)
+        if script_audit:
+            meta.setdefault("script_score", script_audit["score"])
+            meta.setdefault("script_warnings", {k: v["warnings"] for k, v in script_audit.items() if k != "score"})
         kf = find_keyframes(prefix)
         if not kf["all_present"]:
             print(f"WARNING: keyframe trio for '{prefix}' is incomplete in keyframes/: {kf['paths']}")
@@ -584,57 +752,62 @@ STRICT RULES
      support (TikTok "Accurate Claims" and "Fake stories" rules). Her own opinion of what is visible is fine.
    - Ensure the hook IMMEDIATELY hooks the viewer, connects directly to the product's #1 USP, and feels completely organic.
    - DO NOT repeat any angle, format or phrasing from the last 7 recorded entries in the anti-repetition list.
-   - Speak in a CALM, FRIENDLY, and EFFORTLESS tone—like a creator sharing an honest daily outfit recommendation.
-   - AVOID forced hyper-excitement, exaggerated whispers, dramatic screaming, or fake hype.
-   - Natural, smooth conversational flow (steady pace, pleasant rhythm, clear pronunciation).
+   - DELIVERY STYLE (how she promotes): pick ONE style for all three scenes, preferring one the brief lists as
+     fresh, and return its key as "delivery_style". Each sets her voice, her acting per scene and how she talks:
+     • excited_bestie (Kawan Baik Teruja): bright, genuinely excited, reacts out loud (serius, eh, gila).
+     • honest_sister (Kakak Jujur): confident honest verdict with a playful edge, one "not for you if" aside.
+     • playful_tease (Usik Manja): cheeky and teasing, opens loops and pays them off with a laugh.
+     • insider_tip (Kongsi Rahsia): shares a tip like a secret, drops her voice slightly, then brightens.
+     • confident_stylist (Stylist Yakin): poised, decisive styling advice (padan dengan, pakai dengan).
+   - Energy is LIVELY and expressive, like telling a best friend about a great find: intonation that rises and
+     falls, stress on the key words, real reactions. Never flat or monotone (the old "calm, relaxed" delivery
+     looked and sounded like a mannequin), and never shouting, hard-selling, fake hype or exaggerated whispering.
 
-3. THE 3-ACT NATURAL VIDEO STRUCTURE (10 seconds each):
+3. THE 3-BEAT PERFORMANCE (10 seconds each). She is a creator TALKING TO the viewer, not a narrator reading a
+   product page. Each scene has its own feeling and starts with a different word.
 
    ╔══════════════════════════════════════════════════════════╗
-   ║ SCENE 1 — "THE CASUAL INTRO" (Frame 1: Front-facing)     ║
+   ║ SCENE 1 — "THE HOOK" (Frame 1: Front-facing)             ║
    ╠══════════════════════════════════════════════════════════╣
-   ║ • A calm, organic conversational opening. Any style is    ║
-   ║   allowed as long as it differs from recent history.       ║
-   ║ • Natural pleasant smile, steady comfortable eye contact.║
-   ║ • NO exaggerated wide-eyes, NO aggressive leaning in.    ║
-   ║ • Camera: Static locked-off shot. She speaks, then pivots║
-   ║   in place from front to a three-quarter angle.          ║
-   ║ • Tone: Warm, relaxed, sincere, friendly.                ║
-   ║ • Body Language: Relaxed shoulders, gentle natural nod.  ║
+   ║ • Feeling: curiosity. The hook, then why she cares.      ║
+   ║ • Acting: the style's Scene 1 expression while she talks ║
+   ║   straight to camera, then pivots in place to a          ║
+   ║   three-quarter angle, still talking.                    ║
    ╚══════════════════════════════════════════════════════════╝
 
    ╔══════════════════════════════════════════════════════════╗
-   ║ SCENE 2 — "THE DETAIL & FEEL" (Frame 2: Side profile)    ║
+   ║ SCENE 2 — "THE REACTION" (Frame 2: Side profile)         ║
    ╠══════════════════════════════════════════════════════════╣
-   ║ • Calmly highlight the real texture, cut, or comfort.    ║
-   ║ • Hands stay empty and relaxed at her sides.             ║
-   ║ • Camera: Static locked-off shot. She turns in place     ║
-   ║   from three-quarter to her back, glancing over shoulder.║
-   ║ • She keeps talking naturally while she turns.           ║
-   ║ • Tone: Informative, honest, helpful styling advice.     ║
+   ║ • Feeling: delight. Her honest reaction to ONE detail,   ║
+   ║   how it feels, and a real moment it matters to korang   ║
+   ║   (ofis aircond, naik LRT pagi, kenduri, travel).        ║
+   ║ • Pay off the Scene 1 loop, or set up the last reveal.   ║
+   ║ • NEVER narrate the turn ("Bila pusing ke tepi...").     ║
+   ║ • Acting: the style's Scene 2 expression as she turns in ║
+   ║   place to her back, glancing over her shoulder.         ║
    ╚══════════════════════════════════════════════════════════╝
 
    ╔══════════════════════════════════════════════════════════╗
-   ║ SCENE 3 — "THE FRIENDLY SIGN-OFF" (Frame 3: Over Shoulder║
+   ║ SCENE 3 — "THE VERDICT" (Frame 3: Over Shoulder)         ║
    ╠══════════════════════════════════════════════════════════╣
-   ║ • A warm, natural recommendation to check yellow basket. ║
-   ║ • STRICTLY FORBID repetitive endings with "...ya" or     ║
-   ║   always ending with "...dekat beg kuning di bawah ya."   ║
-   ║ • CREATE a completely fresh, original sign-off CTA every  ║
-   ║   time. Do NOT copy-paste from previous products. Write   ║
-   ║   it on the spot like a real human would naturally say it. ║
-   ║ • Close the Scene 1 loop, give her own pick ("Saya ambil  ║
-   ║   warna krim, korang?"), or a practical listing tip.      ║
-   ║ • NO "cepat tekan beg kuning sebelum saiz habis", NO      ║
-   ║   "jangan tunggu lagi". Urgency only if the listing shows ║
-   ║   real low stock or an end-dated promo.                   ║
-   ║ • Camera: Static locked-off shot. She turns from her back║
-   ║   to face the camera, talking the whole time.            ║
-   ║ • Tone: Friendly, effortless, polite recommendation.     ║
-   ║ • Body Language: Natural relaxed over-the-shoulder       ║
-   ║   glance, soft pleasant smile, arms resting naturally low ║
-   ║   at her sides with empty hands. STRICTLY NO BAGS/PROPS. ║
+   ║ • Feeling: confidence. Close the Scene 1 loop, give her  ║
+   ║   verdict or her own pick ("Saya ambil warna krim,       ║
+   ║   korang?"), then a fresh CTA to the beg kuning, written ║
+   ║   on the spot like a real person would say it.           ║
+   ║ • NEVER open with "Kemasan belakang..." and NEVER end    ║
+   ║   the line with "ya".                                    ║
+   ║ • NO "cepat tekan beg kuning sebelum saiz habis", NO     ║
+   ║   "jangan tunggu lagi". Urgency only if the listing      ║
+   ║   shows real low stock or an end-dated promo.           ║
+   ║ • Acting: the style's Scene 3 expression as she turns    ║
+   ║   from her back to face the camera, talking throughout.  ║
    ╚══════════════════════════════════════════════════════════╝
+
+   ALL SCENES: expression lives in her face, eyes, head and shoulders. Her hands stay empty and relaxed at her
+   sides: no hand gestures, no waving, no raised hands, STRICTLY NO BAGS/PROPS.
+   Spoken KL Malay, not brochure Malay: never "perincian", "kemasan", "rekaan", "mahupun", "manakala",
+   "dilapisi", "pilihan terbaik", "sangat praktikal", "bila melangkah", "terletak elok", or "fabriknya"
+   (say "fabrik dia"). Every line has "korang", a quick question, or her own reaction.
 
 4. FLOW AI PROMPT FORMAT (Frame-to-Video, 10s):
    - Each scene prompt is a SINGLE English paragraph combining visual + audio instructions.
@@ -642,11 +815,16 @@ STRICT RULES
      background, so NEVER ask for camera pans, zooms, glides or orbits; the SUBJECT turns in place between the
      Start pose and the End pose.
    - Restate the exact model, hijab, garment, bottoms, shoes and setting from the keyframes.
-   - Audio: Instruct Flow to generate realistic Malaysian Malay female voice, plus
-     "No background music, only her voice and soft ambient sound." and
-     "She speaks continuously in a warm, natural, conversational tone at a relaxed but steady pace, like chatting
-     with a close friend, from the first second until the clip ends, without long pauses, and keeps talking
-     naturally while she turns."
+   - Acting: put the delivery style's expression for that scene into the visual direction, plus
+     "Her face, eyes, head and shoulders stay expressive and alive the whole time, reacting to what she says,
+     while her hands stay empty and relaxed at her sides, no hand gestures, no props."
+     Never use the old flat direction ("pleasant, friendly smile", "warm facial expressions", "calm").
+   - Audio: Instruct Flow to generate realistic Malaysian Malay female voice, then "Her delivery is <the style's
+     voice>.", plus "No background music, only her voice and soft ambient sound." and
+     "She talks continuously from the first second until the clip ends, with lively, expressive intonation that
+     rises and falls naturally, stressing the key words and reacting with real feeling like telling a close
+     friend about a great find, never flat or monotone, never shouting or hard-selling, and keeps talking while
+     she turns."
    - Always include: "Ensure there are no text overlays or watermarks."
    - SPOKEN LINE (each scene's spoken_malay_dialogue): 2-3 NATURAL spoken sentences, 28-32 words
      (automate_flow.py refuses under 24 or over 34). Shorter lines get stretched and sound unnatural; ~40+ words
@@ -687,6 +865,8 @@ OUTPUT SCHEMA (Return valid JSON)
 ═══════════════════════════════════════════════════════════════
 {
   "product_summary": "string",
+  "hook_format": "string (one HOOK_FORMATS key, e.g. turn_reveal)",
+  "delivery_style": "string (one delivery style key, e.g. playful_tease)",
   "keyframe_prompts": {
     "frame_1_front": "string",
     "frame_2_side": "string",
@@ -913,6 +1093,27 @@ if __name__ == "__main__":
             sys.exit(1)
         _print_hook_audit(args, closing)
         sys.exit(0)
+    if len(sys.argv) > 1 and sys.argv[1] == "--audit-script":
+        # --audit-script "<scene 1>" "<scene 2>" "<scene 3>"   or   --audit-script --prefix <prefix>
+        args = sys.argv[2:]
+        exclude = None
+        if len(args) == 2 and args[0] == "--prefix":
+            from generation_store import load_record
+            exclude = args[1]
+            rec = load_record(exclude) or {}
+            args = [_scene_lines((rec.get("scenes") or {}).get("spoken_dialogue"))[i] for i in (1, 2, 3)]
+        if len(args) != 3 or not all(args):
+            print('Usage: python generate_prompts.py --audit-script "<scene 1>" "<scene 2>" "<scene 3>"\n'
+                  '       python generate_prompts.py --audit-script --prefix <prefix>')
+            sys.exit(1)
+        rep = audit_promo_script(args, exclude_prefix=exclude)
+        print(f"Script score {rep['score']}/100")
+        for i, line in enumerate(args, 1):
+            r = rep[f"scene_{i}"]
+            print(f"\nScene {i} ({r['score']}/100, {len(_words(line))} words): \"{line}\"")
+            for msg in r["warnings"]:
+                print(f"  ⚠️ {msg}")
+        sys.exit(0)
 
     if len(sys.argv) > 1:
         info_path = Path(sys.argv[1])
@@ -969,7 +1170,9 @@ if __name__ == "__main__":
                     caption=res.get("tiktok_caption"),
                     hashtags=res.get("hashtags"),
                     bgm_prompt=res.get("suno_bgm", {}).get("style"),
-                    prefix=slug
+                    prefix=slug,
+                    hook_format=res.get("hook_format") if res.get("hook_format") in HOOK_FORMATS else None,
+                    delivery_style=res.get("delivery_style")
                 )
             except Exception as e_hist:
                 print(f"History sync notice: {e_hist}")

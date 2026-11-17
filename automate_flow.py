@@ -63,11 +63,12 @@ AUDIO_LINE = (
     "(Bahasa Melayu Malaysia) accent, strictly NOT an Indonesian accent. No background music, "
     "only her voice and soft ambient sound. Ensure there are no text overlays or watermarks."
 )
-PACE_LINE = (
-    "She speaks continuously in a warm, natural, conversational tone at a relaxed but steady pace, "
-    "like chatting with a close friend, from the first second until the clip ends, without long pauses, "
-    "and keeps talking naturally while she turns."
-)
+# Lively pace line (2026-11-17). The old one asked for "a relaxed but steady pace" and was appended to
+# every prompt that lacked it, which made every clip sound flat.
+from prompt_templates import PACE_LINE  # noqa: E402
+# Direction that produced the flat, mannequin-like clips the user called boring (2026-11-17).
+FLAT_DELIVERY_PHRASES = ("relaxed but steady pace", "calm tone", "calm, friendly", "pleasant, friendly smile",
+                         "pleasant friendly smile", "warm facial expressions")
 
 PAIRINGS = {1: (0, 1), 2: (1, 2), 3: (2, 0)}  # Scene: (start frame idx, end frame idx)
 
@@ -164,10 +165,14 @@ def build_scene_prompt(visual: str, dialogue: str) -> str:
     if delayed:
         print(f"WARNING: visual prompt delays her speech {delayed}; let her talk through the whole clip, "
               "including while she turns.")
+    flat = [w for w in FLAT_DELIVERY_PHRASES if w in lowered]
+    if flat:
+        print(f"WARNING: visual prompt uses flat delivery direction {flat}; use the product's delivery style "
+              "(voice + acting) from prompt_templates.DELIVERY_STYLES so she doesn't look and sound like a mannequin.")
 
     if "for the audio" not in lowered:
         visual = f"{visual} {AUDIO_LINE}"
-    if "conversational tone" not in visual.lower():
+    if "continuously" not in visual.lower():  # no pace line of its own (old or new wording)
         visual = f"{visual} {PACE_LINE}"
     return f'{visual}\n\nSpoken Malay (Lip-sync): "{dialogue}"'
 
