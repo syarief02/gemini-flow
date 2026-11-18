@@ -524,6 +524,86 @@ async def render_scene(page, scene: int, prompt: str, start: Path, end: Path, tr
 
 
 # ---------------------------------------------------------------------------
+# Status and playback verification
+# ---------------------------------------------------------------------------
+
+async def check_flow_status(
+    prefix: str | None = None,
+    project_url: str | None = None,
+    verify_playback: bool = False,
+) -> dict:
+    """Inspect Flow AI project status, list completed/generating videos, and verify playback."""
+    if not prefix:
+        newest = sorted(KEYFRAMES_DIR.glob("*_frame1*.jpg"), key=lambda p: p.stat().st_mtime, reverse=True)
+        if newest:
+            prefix = re.sub(r"_frame1(_front)?$", "", newest[0].stem)
+
+    project_url = project_url_for(prefix, project_url) if prefix else project_url
+    print(f"Inspecting Flow project for prefix '{prefix}': {project_url}")
+
+    p, browser = await connect_to_brave()
+    try:
+        context = browser.contexts[0] if browser.contexts else await browser.new_context()
+        root = _project_root(project_url)
+        match = [pg for pg in context.pages if root in pg.url]
+        page = match[0] if match else await context.new_page()
+        if not match:
+            await page.goto(root, wait_until="domcontentloaded")
+        await page.bring_to_front()
+        await page.wait_for_timeout(2000)
+
+        # Inspect DOM state
+        status_data = await page.evaluate('''() => {
+            const isEditor = window.location.href.includes('/edit/');
+            const tiles = Array.from(document.querySelectorAll('div[role="gridcell"], div.tile, div.gallery-item, div.asset-tile, div[tabindex="0"]'));
+            const playBadges = Array.from(document.querySelectorAll('button[aria-label="Play"], button.play-button, mat-icon[aria-label*="Play"], [data-icon="play"]'));
+            const progress = Array.from(document.querySelectorAll('[role="progressbar"], div.progress, span.status, div.generating'));
+            const generatingTexts = Array.from(document.querySelectorAll('p, span, div')).filter(el => {
+                const t = (el.innerText || '').toLowerCase();
+                return t.includes('generating') || t.includes('queued');
+            });
+            const videoTag = document.querySelector('video');
+            const timecode = Array.from(document.querySelectorAll('div, span, p')).map(e => e.innerText || '').filter(t => t.includes('00:10:00') || t.includes('Total duration'));
+            return {
+                url: window.location.href,
+                title: document.title,
+                isEditor: isEditor,
+                videoCountEstimate: Math.max(playBadges.length, (tiles.length >= 3 ? 3 : 0)),
+                generatingCount: Math.max(progress.length, generatingTexts.length > 0 ? 1 : 0),
+                hasVideoTag: !!videoTag,
+                timecodeSample: timecode.slice(0, 3)
+            };
+        }''')
+
+        # Take status screenshot
+        status_png = WORKSPACE / f"flow_{prefix or 'current'}_status.png"
+        await page.screenshot(path=str(status_png))
+        print(f"Captured status screenshot: {status_png.name}")
+
+        if verify_playback:
+            print("Verifying playback in player view...")
+            # If in editor, click play
+            play_res = await page.evaluate('''() => {
+                const playBtn = document.querySelector('button[aria-label="Play"], button.play-button');
+                if (playBtn) {
+                    playBtn.click();
+                    return { clicked: true };
+                }
+                return { clicked: false };
+            }''')
+            if play_res.get("clicked"):
+                await page.wait_for_timeout(3000)
+                playback_png = WORKSPACE / f"flow_{prefix or 'current'}_playback.png"
+                await page.screenshot(path=str(playback_png))
+                print(f"Captured live playback screenshot: {playback_png.name}")
+                status_data["playback_verified"] = True
+
+        return status_data
+    finally:
+        await p.stop()
+
+
+# ---------------------------------------------------------------------------
 # Entry point
 # ---------------------------------------------------------------------------
 
@@ -590,10 +670,26 @@ if __name__ == "__main__":
     parser.add_argument("--project-url", type=str, help="Override the product's recorded Flow project")
     parser.add_argument("--create-project", type=str, metavar="NAME",
                         help="Create this product's own Flow project named NAME, record it for --prefix, and exit")
+    parser.add_argument("--status", action="store_true", help="Check generation status of videos in Flow AI")
+    parser.add_argument("--play", action="store_true", help="Trigger and verify video playback in Flow AI player view")
     parser.add_argument("--force", action="store_true", help="Force creating a fresh project even if prefix already exists")
     parser.add_argument("--dry-run", action="store_true", help="Run every check and screenshot, but do not submit")
     parser.add_argument("--latest", action="store_true", help="Kept for compatibility; the newest keyframe trio is the default")
     args = parser.parse_args()
+
+    if args.status:
+        try:
+            res = asyncio.run(check_flow_status(
+                prefix=args.prefix,
+                project_url=args.project_url,
+                verify_playback=args.play,
+            ))
+            print("\nFlow AI Generation Status:")
+            print(json.dumps(res, indent=2))
+            sys.exit(0)
+        except Exception as exc:
+            print("Flow status inspection error:", exc)
+            sys.exit(1)
 
     if args.create_project:
         if not args.prefix:

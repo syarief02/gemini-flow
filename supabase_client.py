@@ -190,21 +190,38 @@ def save_generation_record(
         payload["keyframe_urls"] = keyframe_urls
 
     try:
-        # Check if a record already exists with the same product_name and opening_line to prevent duplicates
-        existing = (
-            client.table("gemini_flow_generations")
-            .select("id, keyframe_urls")
-            .eq("product_name", product_name)
-            .eq("opening_line", opening_line)
-            .order("created_at", desc=True)
-            .limit(1)
-            .execute()
-        )
+        # Check if record exists by prefix first (most reliable), then by product_name + opening_line
+        prefix_val = (metadata or {}).get("prefix")
         match_id = None
-        for row in (existing.data or []):
-            if row.get("id"):
-                match_id = row["id"]
-                break
+        if prefix_val:
+            prefix_match = (
+                client.table("gemini_flow_generations")
+                .select("id")
+                .eq("metadata->>prefix", prefix_val)
+                .order("created_at", desc=True)
+                .limit(1)
+                .execute()
+            )
+            for row in (prefix_match.data or []):
+                if row.get("id"):
+                    match_id = row["id"]
+                    break
+
+        if not match_id:
+            # Fallback: check by product_name and opening_line to prevent duplicates
+            existing = (
+                client.table("gemini_flow_generations")
+                .select("id, keyframe_urls")
+                .eq("product_name", product_name)
+                .eq("opening_line", opening_line)
+                .order("created_at", desc=True)
+                .limit(1)
+                .execute()
+            )
+            for row in (existing.data or []):
+                if row.get("id"):
+                    match_id = row["id"]
+                    break
 
         if match_id:
             client.table("gemini_flow_generations").update(payload).eq("id", match_id).execute()
@@ -575,7 +592,11 @@ def fetch_recent_generations(limit: int = 7) -> List[Dict[str, Any]]:
             .limit(limit)
             .execute()
         )
-        return response.data or []
+        data = response.data or []
+        for row in data:
+            if "prefix" not in row and isinstance(row.get("metadata"), dict):
+                row["prefix"] = row["metadata"].get("prefix")
+        return data
     except Exception as e:
         print(f"Supabase fetch notice: {e}")
         return []
@@ -594,7 +615,12 @@ def fetch_generation_by_id(record_id: str) -> Optional[Dict[str, Any]]:
             .execute()
         )
         data = response.data or []
-        return data[0] if data else None
+        if not data:
+            return None
+        row = data[0]
+        if "prefix" not in row and isinstance(row.get("metadata"), dict):
+            row["prefix"] = row["metadata"].get("prefix")
+        return row
     except Exception as e:
         print(f"Supabase fetch by ID notice: {e}")
         return None
@@ -616,7 +642,12 @@ def fetch_generation_by_prefix(prefix: str) -> Optional[Dict[str, Any]]:
             .execute()
         )
         data = response.data or []
-        return data[0] if data else None
+        if not data:
+            return None
+        row = data[0]
+        if "prefix" not in row and isinstance(row.get("metadata"), dict):
+            row["prefix"] = row["metadata"].get("prefix", clean)
+        return row
     except Exception as e:
         print(f"Supabase fetch by prefix notice: {e}")
         return None
