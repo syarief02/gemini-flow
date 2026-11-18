@@ -215,26 +215,37 @@ async def reply_with_clean_format(
     if await body_box.is_visible(timeout=4000):
         print("Composer body located.")
 
-        # Step 2a: Check and click "Show trimmed content" button (the '...' button) to expose any quoted text
-        trimmed_btn = gmail_page.locator("div[aria-label*='Show trimmed content'], div[aria-label*='trimmed'], div[aria-label*='potong'], div.ajR").last
-        if await trimmed_btn.is_visible(timeout=1500):
-            print("Found 'Show trimmed content' button. Clicking to expand quoted text...")
-            try:
-                await trimmed_btn.click()
-                await gmail_page.wait_for_timeout(1000)
-            except Exception as e_trim:
-                print(f"Notice expanding trimmed content: {e_trim}")
-
-        # Step 2b: Remove all quoted text elements from the composer DOM
+        # Step 2a: Locate and click the composer's specific "Show trimmed content" button to expand all quoted text
+        print("Expanding composer's trimmed content button to expose hidden quotes...")
         await gmail_page.evaluate("""() => {
-            const bodyBox = document.querySelector("div[role='textbox'][aria-label*='Message Body'], div[role='textbox']");
-            if (bodyBox) {
-                const quotes = bodyBox.querySelectorAll("div.gmail_quote, blockquote, div.ajR");
-                quotes.forEach(q => q.remove());
+            const comp = document.querySelector("div[role='textbox'][aria-label*='Message Body'], div[role='textbox']");
+            const allTrim = Array.from(document.querySelectorAll('div.ajR, div[aria-label*="trimmed"], div[aria-label*="potong"]'));
+            // Target the button directly associated with the compose container (e.g. parent has class 'et' or closest to comp)
+            const compTrim = allTrim.find(b => b.parentElement && b.parentElement.className.includes('et')) || allTrim[allTrim.length - 1];
+            if (compTrim) {
+                compTrim.click();
+            }
+        }""")
+        await gmail_page.wait_for_timeout(1500)
+
+        # Step 2b: Remove all quoted text, blockquotes, and raw 'wrote:' blocks from composer DOM
+        print("Purging all quoted text, blockquotes, and raw quoted lines from composer...")
+        await gmail_page.evaluate("""() => {
+            const comp = document.querySelector("div[role='textbox'][aria-label*='Message Body'], div[role='textbox']");
+            if (comp) {
+                comp.querySelectorAll("div.gmail_quote, blockquote, div.gmail_extra, div.ajR").forEach(q => q.remove());
+                comp.focus();
+                document.execCommand('selectAll', false, null);
+                document.execCommand('delete', false, null);
+                comp.innerHTML = '';
+            }
+            const form = comp ? comp.closest('form, div.M9, table.Ao') : null;
+            if (form) {
+                form.querySelectorAll('div.ajR').forEach(b => b.remove());
             }
         }""")
 
-        # Step 2c: Focus and select all to completely wipe any residual text or quotes
+        # Step 2c: Focus and physically select all & backspace to guarantee zero residual text
         print("Clearing composer completely of any quoted text...")
         await body_box.click()
         await gmail_page.wait_for_timeout(300)
@@ -261,6 +272,26 @@ async def reply_with_clean_format(
             }
         }""", cap_b64)
         await gmail_page.wait_for_timeout(1500)
+
+        # Step 2e: Pre-send verification to ensure strictly ZERO quoted text exists
+        quote_check = await gmail_page.evaluate("""() => {
+            const box = document.querySelector("div[role='textbox'][aria-label*='Message Body'], div[role='textbox']");
+            if (!box) return { hasQuotes: false, textLen: 0 };
+            const txt = box.innerText;
+            return {
+                hasQuotes: txt.includes('wrote:') || txt.includes('menulis:') || box.querySelectorAll('div.gmail_quote, blockquote').length > 0,
+                textLen: txt.trim().length
+            };
+        }""")
+        if quote_check.get("hasQuotes"):
+            print("⚠️ Notice: Residual quotes detected! Performing second-pass clean...")
+            await gmail_page.evaluate("""() => {
+                const box = document.querySelector("div[role='textbox'][aria-label*='Message Body'], div[role='textbox']");
+                if (box) {
+                    box.querySelectorAll("div.gmail_quote, blockquote, div.ajR").forEach(q => q.remove());
+                }
+            }""")
+            await gmail_page.wait_for_timeout(500)
 
         # Locate Send button
         send_btn = gmail_page.locator("div[role='button']:has-text('Send'), [data-tooltip*='Send']").last
