@@ -20,6 +20,14 @@
   "hashtags": "#sutblazerwanita #blazersuit #officewearmalaysia #corporateootd #executivefashion #blazerbirupastel #koreanstyle #pakaiankerja #tiktokshopmalaysia #begkuning",
   "bgm_prompt": "Upbeat elegant nu-jazz groove, warm electric piano, smooth walking bassline, subtle acoustic guitar strums, light crisp brushed snare rhythm, sophisticated modern corporate chic coffee shop aesthetic, polished instrumental, strictly no vocals",
   "bgm_title": "Pastel Blue Executive Lounge Vibe",
+  "suno_bgm": {
+    "title": "Pastel Blue Executive Lounge Vibe",
+    "style": "Upbeat elegant nu-jazz groove, warm electric piano, smooth walking bassline, subtle acoustic guitar strums, light crisp brushed snare rhythm, sophisticated modern corporate chic coffee shop aesthetic, polished instrumental, strictly no vocals",
+    "track_1_url": "https://suno.com/song/5dd5d35c-460a-4fa5-ac09-fffa62e7f4aa",
+    "track_2_url": "https://suno.com/song/38a02525-713c-446c-a1c2-dde680387106",
+    "status": "completed",
+    "mode": "instrumental"
+  },
   "keyframes": [
     "keyframes/set_sut_blazer_profesional_frame1_front.jpg",
     "keyframes/set_sut_blazer_profesional_frame2_side.jpg",
