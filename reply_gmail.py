@@ -85,13 +85,17 @@ async def reply_with_clean_format(
         # Check if current Gmail tab is ALREADY viewing the target thread
         already_on_target = False
         try:
-            page_text = await gmail_page.evaluate('''() => {
-                const mainEl = document.querySelector('div[role="main"], div.nH, body');
-                return mainEl ? mainEl.innerText : '';
+            is_in_thread = await gmail_page.evaluate('''() => {
+                return !!(document.querySelector('div[data-message-id], div.ii.gt, div[aria-label="Message Body"]'));
             }''')
-            if query_token in page_text or clean_search in page_text:
-                print(f"✅ Active Gmail tab is ALREADY viewing the thread containing '{query_token}'!")
-                already_on_target = True
+            if is_in_thread:
+                page_text = await gmail_page.evaluate('''() => {
+                    const mainEl = document.querySelector('div[role="main"], div.nH, body');
+                    return mainEl ? mainEl.innerText : '';
+                }''')
+                if query_token in page_text or clean_search in page_text:
+                    print(f"✅ Active Gmail tab is ALREADY viewing the thread containing '{query_token}'!")
+                    already_on_target = True
         except Exception:
             pass
 
@@ -100,16 +104,20 @@ async def reply_with_clean_format(
             for p_cand in context.pages:
                 if p_cand != gmail_page and "mail.google.com" in p_cand.url:
                     try:
-                        p_text = await p_cand.evaluate('''() => {
-                            const mainEl = document.querySelector('div[role="main"], div.nH, body');
-                            return mainEl ? mainEl.innerText : '';
+                        p_is_thread = await p_cand.evaluate('''() => {
+                            return !!(document.querySelector('div[data-message-id], div.ii.gt, div[aria-label="Message Body"]'));
                         }''')
-                        if query_token in p_text or clean_search in p_text:
-                            print(f"✅ Found another Gmail tab already viewing '{query_token}'! Switching...")
-                            gmail_page = p_cand
-                            await gmail_page.bring_to_front()
-                            already_on_target = True
-                            break
+                        if p_is_thread:
+                            p_text = await p_cand.evaluate('''() => {
+                                const mainEl = document.querySelector('div[role="main"], div.nH, body');
+                                return mainEl ? mainEl.innerText : '';
+                            }''')
+                            if query_token in p_text or clean_search in p_text:
+                                print(f"✅ Found another Gmail tab already viewing '{query_token}'! Switching...")
+                                gmail_page = p_cand
+                                await gmail_page.bring_to_front()
+                                already_on_target = True
+                                break
                     except Exception:
                         pass
 
@@ -118,21 +126,32 @@ async def reply_with_clean_format(
             
             # Ensure desktop viewport for full Gmail layout
             await gmail_page.set_viewport_size({"width": 1400, "height": 900})
-            await gmail_page.goto(DEFAULT_INBOX_URL, wait_until="domcontentloaded")
-            await gmail_page.wait_for_timeout(3000)
-
+            
             target_row = None
 
-            # Step 2a: Scan top inbox rows
-            rows = await gmail_page.locator("tr.zA").all()
-            for i, r in enumerate(rows[:30]):
+            # Step 2a: Check if current page already has visible rows matching the query
+            existing_vis_rows = await gmail_page.locator("tr.zA:visible").all()
+            for i, r in enumerate(existing_vis_rows[:20]):
                 txt = await r.inner_text()
                 if query_token in txt or clean_search in txt:
-                    print(f"Match found in visible inbox Row {i}!")
+                    print(f"Match found in currently visible Row {i}!")
                     target_row = r
                     break
 
-            # Step 2b: If not in top rows, search Gmail using the search box
+            if not target_row:
+                if "#search" not in gmail_page.url:
+                    await gmail_page.goto(DEFAULT_INBOX_URL, wait_until="domcontentloaded")
+                    await gmail_page.wait_for_timeout(3000)
+
+                    rows = await gmail_page.locator("tr.zA:visible").all()
+                    for i, r in enumerate(rows[:30]):
+                        txt = await r.inner_text()
+                        if query_token in txt or clean_search in txt:
+                            print(f"Match found in visible inbox Row {i}!")
+                            target_row = r
+                            break
+
+            # Step 2b: If not in visible rows, search Gmail using the search box
             if not target_row:
                 print(f"Not in top visible rows. Using Gmail search for '{query_token}'...")
                 try:
@@ -149,7 +168,7 @@ async def reply_with_clean_format(
                     await gmail_page.keyboard.press("Enter")
                     await gmail_page.wait_for_timeout(3000)
 
-                    result_rows = await gmail_page.locator("tr.zA, div[role='main'] table tbody tr").all()
+                    result_rows = await gmail_page.locator("tr.zA:visible, div[role='main'] table tbody tr:visible").all()
                     for r in result_rows[:15]:
                         txt = await r.inner_text()
                         if query_token in txt or clean_search in txt:
@@ -174,7 +193,15 @@ async def reply_with_clean_format(
                 return False
 
             print("Opening matched email thread...")
-            await target_row.click()
+            try:
+                clickable = target_row.locator("span.bog, span[email], td.xY").first
+                if await clickable.count() > 0 and await clickable.is_visible():
+                    await clickable.click(timeout=8000)
+                else:
+                    await target_row.click(timeout=8000)
+            except Exception:
+                print("Standard click failed, attempting force click...")
+                await target_row.click(force=True, timeout=8000)
             await gmail_page.wait_for_timeout(3000)
 
     print(f"Active thread URL: {gmail_page.url}")
@@ -237,7 +264,7 @@ async def reply_with_clean_format(
                 comp.focus();
                 document.execCommand('selectAll', false, null);
                 document.execCommand('delete', false, null);
-                comp.innerHTML = '';
+                while (comp.firstChild) comp.removeChild(comp.firstChild);
             }
             const form = comp ? comp.closest('form, div.M9, table.Ao') : null;
             if (form) {
