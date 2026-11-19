@@ -1,0 +1,53 @@
+{
+  "prefix": "kot_bulu_sintetik_berikat_pinggang",
+  "created_at": "2026-11-19T22:09:27+08:00",
+  "product_name": "[JWD554] Kot berikat di pinggang dengan potongan klasik, hujung lengan berhiaskan bulu sintetik, baju luar sejuk diperbuat daripada kain tebal dan lembut.",
+  "opening_line": "Satu detail bulu dekat lengan ni yang buat kot nampak mahal gila. Ramai ingat saya beli baju luar beribu dekat butik, padahal hujung lengan gebu ni yang bawa aura unnie Korea.",
+  "closing_line": "Ikat tali ni ke tepi sikit untuk siluet lebih santai tapi berprofil tinggi. Rahsia OOTD nampak mewah bila bercuti, korang boleh cuba tengok dekat beg kuning tu!",
+  "scenes": {
+    "visual_prompts": {
+      "scene_1": "Static locked-off vertical 9:16 portrait shot, the camera does not move. A graceful 25-year-old Malaysian Muslimah wearing a neat charcoal-black chiffon bawal hijab, fitted black high-neck inner top, tailored heather grey belted wrap coat with a shawl collar, tied waist belt, and lavish plush faux fur cuffs on both wrists, paired with tailored black straight-leg trousers, stands in a sunlit luxury boutique cafe lounge. She faces forward with a poised, confident smile, speaking continuously with natural lip-sync and lively facial expressions, then turns smoothly 45 degrees into her side profile to settle into the end pose. Both hands remain completely empty and rest naturally low at her sides. No camera movement, no props in hands, no background music. Spoken Malay (Lip-sync): \"Satu detail bulu dekat lengan ni yang buat kot nampak mahal gila. Ramai ingat saya beli baju luar beribu dekat butik, padahal hujung lengan gebu ni yang bawa aura unnie Korea.\"",
+      "scene_2": "Static locked-off vertical 9:16 portrait shot, the camera does not move. A graceful 25-year-old Malaysian Muslimah wearing the tailored heather grey belted coat with plush fur cuffs and charcoal-black bawal hijab stands in the sunlit luxury boutique cafe lounge. Starting in a 45-degree side profile, she speaks continuously with bright enthusiasm and natural lip-sync, smiling as she gestures subtly with her head and turns smoothly to glance back over her shoulder towards the camera, settling into the end pose. Both hands remain completely empty and rest naturally low at her sides. No camera movement, no props in hands, no background music. Spoken Malay (Lip-sync): \"Bila saya usap bulu dekat lengan ni, serius lembut gebu tak tercapai akal. Tambah pula tali pinggang ni terus kunci bentuk badan korang supaya tak nampak kembang bila berjalan.\"",
+      "scene_3": "Static locked-off vertical 9:16 portrait shot, the camera does not move. A graceful 25-year-old Malaysian Muslimah wearing the tailored heather grey belted coat with plush fur cuffs and charcoal-black bawal hijab stands in the sunlit luxury boutique cafe lounge. Starting with her glance back over her shoulder, she speaks continuously with warm conviction and natural lip-sync, turning gracefully back to face the camera directly in a confident full-front pose for a seamless 360-degree loop. Both hands remain completely empty and rest naturally low at her sides. No camera movement, no props in hands, no background music. Spoken Malay (Lip-sync): \"Ikat tali ni ke tepi sikit untuk siluet lebih santai tapi berprofil tinggi. Rahsia OOTD nampak mewah bila bercuti, korang boleh cuba tengok dekat beg kuning tu!\""
+    },
+    "spoken_dialogue": {
+      "scene_1": "Satu detail bulu dekat lengan ni yang buat kot nampak mahal gila. Ramai ingat saya beli baju luar beribu dekat butik, padahal hujung lengan gebu ni yang bawa aura unnie Korea.",
+      "scene_2": "Bila saya usap bulu dekat lengan ni, serius lembut gebu tak tercapai akal. Tambah pula tali pinggang ni terus kunci bentuk badan korang supaya tak nampak kembang bila berjalan.",
+      "scene_3": "Ikat tali ni ke tepi sikit untuk siluet lebih santai tapi berprofil tinggi. Rahsia OOTD nampak mewah bila bercuti, korang boleh cuba tengok dekat beg kuning tu!"
+    }
+  },
+  "caption": "Satu detail bulu dekat lengan ni yang buat kot nampak mahal gila. Ramai ingat saya beli baju luar beribu dekat butik, padahal hujung lengan gebu ni yang bawa aura unnie Korea.\n\nBila saya usap bulu dekat lengan ni, serius lembut gebu tak tercapai akal. Tambah pula tali pinggang ni terus kunci bentuk badan korang supaya tak nampak kembang bila berjalan.\n\nIkat tali ni ke tepi sikit untuk siluet lebih santai tapi berprofil tinggi. Rahsia OOTD nampak mewah bila bercuti, korang boleh cuba tengok dekat beg kuning tu! ❄️✨",
+  "hashtags": "#kotwanita #wintercoatmalaysia #koreancoat #fauxfurcoat #ootdmusimsejuk #winteroutfit #bajutravel #quietluxury #tiktokshopmalaysia #begkuning",
+  "bgm_prompt": "Lo-fi winter lounge, gentle Rhodes electric piano chords, soft clean acoustic guitar plucks, unhurried chillout groove, subtle deep bassline, light brushed percussion, warm cozy Seoul boutique aesthetic, polished instrumental, strictly no vocals",
+  "bgm_title": "Heather Grey Seoul Winter Lounge",
+  "keyframes": [
+    "keyframes/kot_bulu_sintetik_berikat_pinggang_frame1_front.jpg",
+    "keyframes/kot_bulu_sintetik_berikat_pinggang_frame2_side.jpg",
+    "keyframes/kot_bulu_sintetik_berikat_pinggang_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/kot_bulu_sintetik_berikat_pinggang_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/kot_bulu_sintetik_berikat_pinggang_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/kot_bulu_sintetik_berikat_pinggang_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "url": "https://vt.tiktok.com/ZS9P8K4sFo7L8-xUvpJ/",
+    "token": "ZS9P8K4sFo7L8",
+    "prefix": "kot_bulu_sintetik_berikat_pinggang",
+    "hook_archetype": "The Price-Quality Myth-Buster",
+    "hook_format": "detail_tease",
+    "hook_score": 100,
+    "hook_status": "pass",
+    "hook_issues": [],
+    "hook_warnings": [],
+    "closing_warnings": [],
+    "delivery_style": "excited_bestie",
+    "script_score": 100,
+    "script_warnings": {
+      "scene_1": [],
+      "scene_2": [],
+      "scene_3": []
+    }
+  },
+  "updated_at": "2026-11-19T22:09:27+08:00"
+}
