@@ -1,0 +1,60 @@
+{
+  "prefix": "beg_sekolah_beruang_pelangi",
+  "created_at": "2026-11-20T21:37:00+08:00",
+  "product_name": "[fesyen] beg sekolah kanak-kanak perempuan, beg galas kanak-kanak dengan reka bentuk beruang pelangi, untuk umur 3–7 tahun, saiz 14 inci",
+  "opening_line": "Ada dua punca anak umur tiga sampai tujuh tahun rajin ke sekolah. Bagi saya, beg galas beruang pelangi pastel ni memang buat si kecil rasa teruja nak tunjuk dekat kawan.",
+  "closing_line": "Poket depan comel ni siap ada cetakan beruang pelangi timbul yang kalis calar. Korang yang nak anak seronok melangkah ke tadika setiap pagi, cuba tengok dekat beg kuning tu sekarang!",
+  "scenes": {
+    "visual_prompts": {
+      "scene_1": "Static locked-off vertical 9:16 portrait shot, the camera does not move. A charming 25-year-old Malaysian Muslimah creator and mother wearing a neat pastel lilac chiffon bawal hijab, modest cream-ivory tailored long tunic blouse, and matching cream straight trousers stands in a sunlit Japandi study entryway with a light oak floor, cream limewash walls, and an arched window. Beside her on a light oak console table, a 14-inch cute pastel lilac Care Bears school backpack with a rainbow cloud motif sits upright. She faces forward with a radiant, welcoming smile, speaking continuously with natural lip-sync and lively facial expressions, then turns smoothly 45 degrees into her side profile to settle into the end pose. Both hands remain completely empty and rest naturally low at her sides. No camera movement, no props in hands, no background music. Spoken Malay (Lip-sync): \"Ada dua punca anak umur tiga sampai tujuh tahun rajin ke sekolah. Bagi saya, beg galas beruang pelangi pastel ni memang buat si kecil rasa teruja nak tunjuk dekat kawan.\"",
+      "scene_2": "Static locked-off vertical 9:16 portrait shot, the camera does not move. The same charming 25-year-old Malaysian Muslimah creator in the pastel lilac chiffon bawal hijab and cream-ivory tunic blouse stands in the sunlit Japandi study entryway beside the light oak console table where the Care Bears school backpack sits. Starting in a 45-degree side profile, she speaks continuously with warm, affectionate conviction and natural lip-sync, gesturing subtly with her head and smiling as she turns smoothly to glance back over her shoulder towards the camera, settling into the end pose. Both hands remain completely empty and rest naturally low at her sides. No camera movement, no props in hands, no background music. Spoken Malay (Lip-sync): \"Punca kedua pula, tali bahu dia ada kusyen span tebal yang lembut gila. Korang tak payah risau anak bawa botol air berat sebab design ni memang lindungi tulang belakang si kecil.\"",
+      "scene_3": "Static locked-off vertical 9:16 portrait shot, the camera does not move. The same charming 25-year-old Malaysian Muslimah creator in the pastel lilac chiffon bawal hijab and cream-ivory tunic blouse stands in the sunlit Japandi study entryway beside the light oak console table with the Care Bears backpack. Starting with her glance back over her shoulder, she speaks continuously with bright enthusiasm and natural lip-sync, turning gracefully back to face the camera directly in a confident full-front pose for a seamless 360-degree loop. Both hands remain completely empty and rest naturally low at her sides. No camera movement, no props in hands, no background music. Spoken Malay (Lip-sync): \"Poket depan comel ni siap ada cetakan beruang pelangi timbul yang kalis calar. Korang yang nak anak seronok melangkah ke tadika setiap pagi, cuba tengok dekat beg kuning tu sekarang!\""
+    },
+    "spoken_dialogue": {
+      "scene_1": "Ada dua punca anak umur tiga sampai tujuh tahun rajin ke sekolah. Bagi saya, beg galas beruang pelangi pastel ni memang buat si kecil rasa teruja nak tunjuk dekat kawan.",
+      "scene_2": "Punca kedua pula, tali bahu dia ada kusyen span tebal yang lembut gila. Korang tak payah risau anak bawa botol air berat sebab design ni memang lindungi tulang belakang si kecil.",
+      "scene_3": "Poket depan comel ni siap ada cetakan beruang pelangi timbul yang kalis calar. Korang yang nak anak seronok melangkah ke tadika setiap pagi, cuba tengok dekat beg kuning tu sekarang!"
+    }
+  },
+  "caption": "Ada dua punca anak umur tiga sampai tujuh tahun rajin ke sekolah. Bagi saya, beg galas beruang pelangi pastel ni memang buat si kecil rasa teruja nak tunjuk dekat kawan.\n\nPunca kedua pula, tali bahu dia ada kusyen span tebal yang lembut gila. Korang tak payah risau anak bawa botol air berat sebab design ni memang lindungi tulang belakang si kecil.\n\nPoket depan comel ni siap ada cetakan beruang pelangi timbul yang kalis calar. Korang yang nak anak seronok melangkah ke tadika setiap pagi, cuba tengok dekat beg kuning tu sekarang! 🎒🌈✨",
+  "hashtags": "#begsekolah #begtadika #begsekolahbudak #carebearsbag #begkanakkanak #backtoschoolmalaysia #begsekolahviral #kelengkapansekolah #racuntiktok #tiktokshopmalaysia #begkuning",
+  "bgm_prompt": "Bright playful acoustic pop, cheerful energetic tempo, whimsical glockenspiel melody, warm clean acoustic guitar strumming, light bouncy upright bass, crisp snappy handclaps, wholesome sunny kindergarten morning aesthetic, polished instrumental, strictly no vocals",
+  "bgm_title": "Sunny Rainbow Care Bears Morning",
+  "keyframes": [
+    "keyframes/beg_sekolah_beruang_pelangi_frame1_front.jpg",
+    "keyframes/beg_sekolah_beruang_pelangi_frame2_side.jpg",
+    "keyframes/beg_sekolah_beruang_pelangi_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/beg_sekolah_beruang_pelangi_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/beg_sekolah_beruang_pelangi_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/beg_sekolah_beruang_pelangi_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "url": "https://vt.tiktok.com/ZS9P2hPuLpqTT-9Q28o/",
+    "token": "ZS9P2hPuL",
+    "prefix": "beg_sekolah_beruang_pelangi",
+    "hook_archetype": "The Lifestyle Solution / Morning Routine",
+    "hook_format": "numbered",
+    "hook_score": 100,
+    "hook_status": "pass",
+    "hook_issues": [],
+    "hook_warnings": [],
+    "closing_warnings": [],
+    "delivery_style": "honest_sister",
+    "script_score": 100,
+    "script_warnings": {
+      "scene_1": [],
+      "scene_2": [],
+      "scene_3": []
+    }
+  },
+  "updated_at": "2026-11-20T21:37:27+08:00",
+  "suno_tracks": [
+    "https://suno.com/song/747415ec-0643-41a3-9abf-1b7b10114b8f",
+    "https://suno.com/song/7fa2d76f-8787-428e-80bb-6e30e6144b4a"
+  ],
+  "flow_project_url": "https://flow.google.com/u/5/project/a72cb7f1-b53d-4a14-997d-89a95087bebf",
+  "flow_status": "all_scenes_rendered",
+  "gmail_status": "reply_sent_clean"
+}

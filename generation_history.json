@@ -1092,6 +1092,22 @@
       "hook_format": "detail_tease",
       "delivery_style": "excited_bestie",
       "hook_score": 100
+    },
+    {
+      "product": "[fesyen] beg sekolah kanak-kanak perempuan, beg galas kanak-kanak dengan reka bentuk beruang pelangi, untuk umur 3–7 tahun, saiz 14 inci",
+      "timestamp": "2026-11-20T21:37:27.804956+08:00",
+      "opening_line": "Ada dua punca anak umur tiga sampai tujuh tahun rajin ke sekolah. Bagi saya, beg galas beruang pelangi pastel ni memang buat si kecil rasa teruja nak tunjuk dekat kawan.",
+      "closing_line": "Poket depan comel ni siap ada cetakan beruang pelangi timbul yang kalis calar. Korang yang nak anak seronok melangkah ke tadika setiap pagi, cuba tengok dekat beg kuning tu sekarang!",
+      "hook_archetype": "Conversational Organic Recommendation",
+      "hook_format": "numbered",
+      "delivery_style": "honest_sister",
+      "hook_score": 100,
+      "suno_tracks": [
+        "https://suno.com/song/747415ec-0643-41a3-9abf-1b7b10114b8f",
+        "https://suno.com/song/7fa2d76f-8787-428e-80bb-6e30e6144b4a"
+      ],
+      "flow_project_url": "https://flow.google.com/u/5/project/a72cb7f1-b53d-4a14-997d-89a95087bebf",
+      "flow_status": "all_scenes_queued"
     }
   ]
 }

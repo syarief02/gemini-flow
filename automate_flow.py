@@ -311,6 +311,25 @@ async def create_flow_project(browser, name: str) -> str:
     return url
 
 
+async def dismiss_flow_modals(page):
+    """Dismiss any onboarding popups, feature tours, changelog modals, or backdrops in Flow."""
+    try:
+        await page.evaluate('''() => {
+            const container = document.querySelector('.cdk-overlay-container');
+            if (container) {
+                while (container.firstChild) {
+                    container.removeChild(container.firstChild);
+                }
+            }
+        }''')
+    except Exception:
+        pass
+    try:
+        await page.keyboard.press("Escape")
+    except Exception:
+        pass
+
+
 async def get_flow_page(browser, project_url: str):
     """Use a tab already showing this product's project, or open the project in a new tab."""
     context = browser.contexts[0] if browser.contexts else await browser.new_context()
@@ -321,6 +340,7 @@ async def get_flow_page(browser, project_url: str):
         await page.goto(root, wait_until="domcontentloaded")
     await page.set_viewport_size({"width": 1440, "height": 900})
     await page.bring_to_front()
+    await dismiss_flow_modals(page)
     await page.locator(f"{COMPOSER} [contenteditable='true']").wait_for(timeout=20000)
     print(f"Active Flow project: {page.url}")
     return page
@@ -342,17 +362,25 @@ async def clear_composer(page):
 
 async def ensure_settings(page):
     """Open the settings menu and force every required toggle and the model, then verify."""
-    await page.locator(f"{COMPOSER} button[aria-label='Settings trigger']").click()
+    trigger = page.locator(f"{COMPOSER} button[aria-label='Settings trigger']")
+    summary = await trigger.inner_text()
+    if all(s in summary for s in ("Video", "720p", "10s", "9_16", "x1")):
+        print(f"  Settings already configured: {REQUIRED_MODEL} | {' · '.join(REQUIRED_TOGGLES)}")
+        return
+
+    await trigger.click()
     overlay = page.locator(OVERLAY)
     model_btn = overlay.locator("button[aria-label='Select model family']")
     await model_btn.wait_for(timeout=5000)
 
     radios = overlay.locator("button[role='radio']")
+    texts = await radios.evaluate_all("els => els.map(e => e.innerText.trim().split(/\\s+/).pop())")
     for label in REQUIRED_TOGGLES:
         # Rendered text is "<icon ligature> <label>", e.g. "crop_9_16 9:16"; match the label word only.
-        texts = await radios.evaluate_all("els => els.map(e => e.innerText.trim().split(/\\s+/).pop())")
         matches = [i for i, t in enumerate(texts) if t == label]
         if len(matches) != 1:
+            if label == "10s":
+                continue  # 10s is fixed default in latest Flow UI
             raise FlowError(f"Settings option '{label}' not found (options: {texts}).")
         btn = radios.nth(matches[0])
         if await btn.get_attribute("aria-checked") != "true":
@@ -372,7 +400,11 @@ async def ensure_settings(page):
     if await cost.count():
         print(f"  {(await cost.first.inner_text()).strip()}")
     await page.keyboard.press("Escape")
-    await model_btn.wait_for(state="detached", timeout=5000)
+    try:
+        await model_btn.wait_for(state="detached", timeout=3000)
+    except Exception:
+        await page.keyboard.press("Escape")
+        await page.wait_for_timeout(500)
 
     summary = await page.locator(f"{COMPOSER} button[aria-label='Settings trigger']").inner_text()
     if not all(s in summary for s in ("Video", "720p", "10s", "9_16", "x1")):

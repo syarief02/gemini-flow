@@ -154,9 +154,9 @@ def test_supabase_connection() -> Dict[str, Any]:
 
 
 def save_generation_record(
-    product_name: str,
-    opening_line: str,
-    closing_line: str,
+    product_name: str | Dict[str, Any],
+    opening_line: Optional[str] = None,
+    closing_line: Optional[str] = None,
     metadata: Optional[Dict[str, Any]] = None,
     scenes: Optional[Dict[str, Any]] = None,
     caption: Optional[str] = None,
@@ -166,11 +166,32 @@ def save_generation_record(
 ) -> bool:
     """
     Save or sync a generation record to Supabase if the target table exists.
+    Accepts either a single dictionary record or granular positional/keyword arguments.
     Uses intelligent upsert/update to prevent duplicate rows when called multiple times.
     """
     client = get_supabase_client()
     if not client:
         return False
+
+    if isinstance(product_name, dict):
+        rec = product_name
+        product_name = str(rec.get("product_name") or rec.get("title") or "").strip()
+        opening_line = opening_line or str(rec.get("opening_line") or "").strip()
+        closing_line = closing_line or str(rec.get("closing_line") or "").strip()
+        scenes = scenes if scenes is not None else rec.get("scenes")
+        caption = caption if caption is not None else rec.get("caption")
+        hashtags = hashtags if hashtags is not None else rec.get("hashtags")
+        bgm_prompt = bgm_prompt if bgm_prompt is not None else rec.get("bgm_prompt")
+        if not bgm_prompt and isinstance(rec.get("suno_bgm"), dict):
+            bgm_prompt = rec["suno_bgm"].get("style")
+        keyframe_urls = keyframe_urls if keyframe_urls is not None else rec.get("keyframe_urls")
+        merged_meta = dict(rec.get("metadata") or {})
+        for extra_k in ("prefix", "flow_status", "flow_project_url", "suno_tracks", "gmail_status", "bgm_title"):
+            if rec.get(extra_k) and extra_k not in merged_meta:
+                merged_meta[extra_k] = rec.get(extra_k)
+        if metadata:
+            merged_meta.update(metadata)
+        metadata = merged_meta
 
     payload = {
         "product_name": product_name,
@@ -448,32 +469,10 @@ def sync_all_generations_to_supabase(
             data = json.loads(f.read_text(encoding="utf-8"))
             p_name = (data.get("product_name") or data.get("title") or "").strip()
             o_line = (data.get("opening_line") or "").strip()
-            c_line = (data.get("closing_line") or "").strip()
             if not p_name or not o_line:
                 continue
 
-            scenes = data.get("scenes")
-            caption = data.get("caption")
-            hashtags = data.get("hashtags")
-            bgm_prompt = data.get("bgm_prompt")
-            if not bgm_prompt and isinstance(data.get("suno_bgm"), dict):
-                bgm_prompt = data["suno_bgm"].get("style")
-            keyframe_urls = data.get("keyframe_urls")
-            metadata = dict(data.get("metadata") or {})
-            if data.get("prefix") and not metadata.get("prefix"):
-                metadata["prefix"] = data.get("prefix")
-
-            synced = save_generation_record(
-                product_name=p_name,
-                opening_line=o_line,
-                closing_line=c_line,
-                scenes=scenes,
-                caption=caption,
-                hashtags=hashtags,
-                bgm_prompt=bgm_prompt,
-                keyframe_urls=keyframe_urls,
-                metadata=metadata
-            )
+            synced = save_generation_record(data)
             if synced:
                 added += 1
             else:
