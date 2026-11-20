@@ -238,8 +238,9 @@ async def connect_to_brave(port: int = 9222):
         await p.stop()
         raise RuntimeError(
             f"Could not connect to Brave CDP on port {port}: {str(http_err).splitlines()[0]}\n"
-            "Launch Brave with --remote-debugging-port=9222 --remote-allow-origins=*, or switch on remote "
-            "debugging in Brave and approve its prompt."
+            "Run `python launch_brave.py` (add --restart if Brave is open without remote debugging). It starts "
+            "Brave outside this shell's task and exits; never start Brave with Start-Process or subprocess "
+            "from an agent shell."
         )
 
 

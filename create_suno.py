@@ -41,6 +41,7 @@ async def setup_suno(prompt_text: str = None, title_text: str = None):
         print("Connected to Brave!")
     except Exception as e:
         print(f"Connection failed: {e}")
+        print("Run `python launch_brave.py` (add --restart if Brave is open without remote debugging), then retry.")
         await p.stop()
         return False
 

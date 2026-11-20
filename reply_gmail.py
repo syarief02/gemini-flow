@@ -50,6 +50,7 @@ async def reply_with_clean_format(
         print("Connected to Brave!")
     except Exception as e:
         print(f"Could not connect to Brave: {e}")
+        print("Run `python launch_brave.py` (add --restart if Brave is open without remote debugging), then retry.")
         await p.stop()
         return False
 

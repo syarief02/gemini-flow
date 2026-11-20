@@ -25,6 +25,7 @@ Every AI agent operating in this repository MUST memorize and adhere strictly to
 |------|-----------------------------------|----------------------------------|
 | **Gmail Promo Reply** | Composing a brand new email thread, replying to a random or top email without verifying the product link, adding greetings ("Salam Syarief"), section headers ("MAKLUMAT PRODUK"), Flow video prompts, Suno prompts, dividers (`===`), image or GitHub links, or leaving Gmail quoted text / previous thread content. | **ALWAYS CHECK EXACT PRODUCT LINK IN EMAIL FIRST, THEN REPLY.** Search Gmail for the exact product link/shortcode. If no email contains that exact link, **ABORT IMMEDIATELY** (never compose a new email, never reply to an unrelated email). Once opened, verify the thread body contains the link, expand and delete quoted text (`div.gmail_quote` / `div.ajR`), and enter **STRICTLY AND ONLY THE CLEAN TIKTOK CAPTION + HASHTAGS**. |
 | **Brave CDP Connection** | Attempting to connect to an existing Brave instance without flags or launching without `--remote-allow-origins=*`, or calling `browser.close()` which kills the user's window. | Always launch with `--remote-debugging-port=9222 --remote-allow-origins=*`. **NEVER call `browser.close()`** so the user's visible interactive window stays open on desktop. |
+| **Launching Brave / Background Tasks** | Starting Brave from an agent shell with `Start-Process`, `subprocess.Popen`, `start` or `open_brave.bat` run by the agent, then keeping the command alive with a `while True` loop so Brave doesn't die (`test_brave_run.py`, 2026-11-19). Brave became part of Antigravity's task: a background task that never finished, and every Brave window the user opened belonged to it, so stopping the task closed their browser. | **Start Brave only with `python launch_brave.py`** (`--restart` if it's open without CDP). It starts Brave through WMI, outside the agent's task, and exits once port 9222 answers. **Every command you run must exit by itself**: no keep-alive loops, no scripts that wait forever. Before finishing a run, `python launch_brave.py --status` must show no WARNING. |
 | **Keyframe Consistency** | Adding handbags, totes, phones, coffee cups, tumblers, waving hands, or changing hijab/bottoms between frames. | **Strict Zero-Prop & Empty-Hands Rule.** Both hands empty at sides. Same model, same modest hijab, same outfit head-to-toe, same background across all 3 frames. |
 | **Keyframe Background** | Using blank, plain, or sterile studio backdrops (`"minimalist studio"`, `"plain background"`, `"neutral grey wall"`), which renders a flat, featureless void with zero context or depth. | **MANDATORY REALISTIC LIFESTYLE ENVIRONMENT**: Always specify a rich, aesthetic, realistic lifestyle setting (e.g. sunlit modern minimalist cafe with light oak tables and potted greenery; or cozy Japandi/Scandinavian living room with linen sofa, sheer curtains, soft daylight, and textured travertine/terrazzo floors). Depth of field, soft natural lighting, and architectural details MUST be present across all 3 keyframes. |
 | **Flow AI Parameters** | Using 5s/8s duration, landscape 16:9, or text-to-video mode. | **Duration = 10s**, **Orientation = Portrait (9:16)**, **Model = Omni 1.1 Flash**, **Mode = Video + Frames** (Frame 1➡️2, Frame 2➡️3, Frame 3➡️1), **720p**, **x1**. |
@@ -289,10 +290,13 @@ Deliver to the user in this exact order:
 
 1. **Launch Brave with Remote Debugging Enabled:**
    - Brave MUST be running with `--remote-debugging-port=9222` and `--remote-allow-origins=*` (Chromium 130+ requirement).
-   - If Brave is already open without these flags, you MUST restart it using this exact PowerShell command:
-     ```powershell
-     Stop-Process -Name brave -Force -ErrorAction SilentlyContinue ; Start-Sleep -Seconds 2 ; Start-Process "C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe" -ArgumentList "--remote-debugging-port=9222", "--remote-allow-origins=*", "https://flow.google.com/?pli=1&authuser=5" ; Start-Sleep -Seconds 4
+   - Start or restart Brave ONLY with the launcher. It does nothing if port 9222 already answers, and it exits as soon as Brave is ready:
+     ```bash
+     python launch_brave.py                 # start Brave with CDP (no-op if it's already up)
+     python launch_brave.py --restart       # Brave is open WITHOUT CDP: close it gently, reopen it with CDP
+     python launch_brave.py --status        # check: CDP up, and Brave not trapped inside a script's task
      ```
+   - **CRITICAL: never start Brave from your own shell** (`Start-Process brave.exe`, `subprocess.Popen`, `start`, or running `open_brave.bat` yourself). Agent shells run inside a job object, so Brave becomes part of your command: the command never finishes, and ending it closes the user's browser. Never "keep Brave alive" with a `while True` loop; that's the background task the user saw on 2026-11-20. `launch_brave.py` starts Brave through WMI (parent `WmiPrvSE.exe`), outside your task.
    - **CRITICAL:** NEVER call `browser.close()` in Playwright scripts when attaching to the user's browser, as that terminates the interactive desktop window. Call `await p.stop()` or simply exit Python without closing the browser.
 
 2. **Connect via Playwright CDP (`automate_flow.py`):**
@@ -607,7 +611,8 @@ git push
 | `automate_flow.py` | Flow AI renderer in Brave via Playwright CDP. Enforces settings, attaches frames by exact filename, pixel-verifies both slots, and refuses to submit on any failed check (`--dry-run` to test) |
 | `reply_gmail.py` | Automated Gmail reply script in Brave browser to dispatch copy packages via CDP |
 | `create_suno.py` | Automated Suno AI BGM instrumental generator in Brave browser via CDP |
-| `open_brave.bat` | Launcher batch script to start Brave with remote debugging on port 9222 |
+| `launch_brave.py` | **The only way to start Brave for automation.** Starts Brave with CDP on port 9222 through WMI (outside the agent's task) and exits; `--restart` reopens a Brave that lacks CDP, `--status` warns when Brave is trapped inside a script's task |
+| `open_brave.bat` | Double-click shortcut for the user: runs `launch_brave.py` with the Flow URL |
 | `generation_history.json` | Tracks last used opening/closing lines to prevent repetition (window: last 7) |
 | `flow_projects.json` | Keyframe prefix → that product's own Google Flow project (`name`, `url`, `created`). Written by `automate_flow.py --create-project`; read by every render. Commit it. |
 | `generation_store.py` | Reads and writes `generations/<prefix>.json` and finds each product's keyframe trio in `keyframes/` |
@@ -716,10 +721,11 @@ To ensure seamless, hands-free generation directly inside the user's desktop bro
 
 ### 1. Launching Brave with Debugging
 - Brave executable path: `C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe`
-- When starting or restarting Brave for automation, ALWAYS pass:
-  ```powershell
-  Stop-Process -Name brave -Force -ErrorAction SilentlyContinue ; Start-Sleep -Seconds 2 ; Start-Process "C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe" -ArgumentList "--remote-debugging-port=9222", "--remote-allow-origins=*", "<target_url>" ; Start-Sleep -Seconds 4
+- When starting or restarting Brave for automation, ALWAYS use the launcher (it passes both flags):
+  ```bash
+  python launch_brave.py --url "<target_url>"      # add --restart if Brave is open without CDP
   ```
+- The launcher starts Brave through WMI so it is NOT a child of the agent's shell, then exits. Never use `Start-Process`, `subprocess.Popen` or `start` from an agent shell, and never leave a script running to keep Brave alive (see Troubleshooting §1c).
 - **Port 9222**: Dedicated remote debugging listener.
 - **`--remote-allow-origins=*`**: Mandatory flag for Chromium 130+ to permit Playwright websocket connections.
 
@@ -759,22 +765,29 @@ Whenever the user supplies a TikTok Shop product link:
 ### 1. Brave CDP Connection Refused / 404 Not Found on `/json/version`
 * **Symptoms:** `BrowserType.connect_over_cdp: Unexpected status 404` or `connect ECONNREFUSED 127.0.0.1:9222`.
 * **Root Cause:** Brave was launched normally (e.g. from taskbar or desktop) without debugging flags, or an unflagged background process is holding the user profile lock.
-* **Guaranteed Solution:** Force-stop all running Brave processes and relaunch with both `--remote-debugging-port=9222` AND `--remote-allow-origins=*`:
-  ```powershell
-  Stop-Process -Name brave -Force -ErrorAction SilentlyContinue
-  Start-Sleep -Seconds 2
-  Start-Process "C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe" -ArgumentList "--remote-debugging-port=9222", "--remote-allow-origins=*", "<target_url>"
-  Start-Sleep -Seconds 4
+* **Guaranteed Solution:** Close Brave gently and reopen it with both `--remote-debugging-port=9222` AND `--remote-allow-origins=*`, outside your shell's task:
+  ```bash
+  python launch_brave.py --restart --url "<target_url>"
   ```
+  It asks Brave's windows to close (Brave saves the session; it force-closes only if Brave hangs for 20s), starts Brave through WMI and exits once port 9222 answers. Tabs come back when Brave is set to "Continue where you left off".
 
 ### 1b. Brave Keeps Asking to "Allow Remote Debugging" / 403 Forbidden
 * **Symptoms:** `/json/version` returns 404, connections time out, or `ws://.../devtools/browser/<id>` returns `403 Forbidden`; the user has to click an approval prompt in Brave for each script run.
 * **Root Cause:** Brave was started normally and remote debugging was switched on from inside the browser. That mode asks the user to approve each new script connection. (The Claude in Chrome extension is a separate channel and never needs this.)
-* **Guaranteed Solution:** Start Brave with `--remote-debugging-port=9222 --remote-allow-origins=*` (restart command above). The user's taskbar Brave shortcut has carried these flags since 2026-10-20; the shared desktop and Start-menu shortcuts need admin rights to change. If Brave was already running without the flag (e.g. opened by a link), the flag is ignored until every Brave window is closed. `automate_flow.connect_to_brave()` falls back to the `DevToolsActivePort` websocket when the flag is missing, but then every connection needs the user's approval.
+* **Guaranteed Solution:** Start Brave with `--remote-debugging-port=9222 --remote-allow-origins=*` (`python launch_brave.py --restart`). The user's taskbar Brave shortcut has carried these flags since 2026-10-20; the shared desktop and Start-menu shortcuts need admin rights to change. If Brave was already running without the flag (e.g. opened by a link), the flag is ignored until every Brave window is closed. `automate_flow.connect_to_brave()` falls back to the `DevToolsActivePort` websocket when the flag is missing, but then every connection needs the user's approval.
+
+### 1c. Agent Shows a Background Task That Never Ends / Brave Unusable or Closes When the Task Stops
+* **Symptoms:** At the end of a run, Antigravity (or another agent) still shows a running background task; Brave can't be used normally, or closes when that task is stopped. `python launch_brave.py --status` prints `WARNING: Brave (PID ...) was started by python.exe` (or `powershell.exe`, `cmd.exe`, `agy.exe`).
+* **Root Cause:** An agent started Brave from its own shell (`Start-Process`, `subprocess.Popen`, `start`) and kept that command alive so Brave wouldn't die with it. On 2026-11-20 this was `python test_brave_run.py`: it launched Brave as its child, then looped `while True: time.sleep(10)`. Brave runs one process per profile, so every Brave window the user opened belonged to the agent's task.
+* **Guaranteed Solution:**
+  1. Close Brave gently (`taskkill /IM brave.exe`, no `/F`), so it saves the session.
+  2. Stop the stuck task: end the looping script's process (here `python.exe test_brave_run.py`), or stop the task in the agent's UI.
+  3. `python launch_brave.py`, then `python launch_brave.py --status` must show no WARNING.
+  4. Never write a keep-alive script again; `launch_brave.py` is the only way to start Brave.
 
 ### 2. Accidental Browser Window Closure
 * **Symptoms:** The user complains that Brave disappeared or closed after automation ran.
-* **Root Cause:** Calling `await browser.close()` in Playwright CDP scripts.
+* **Root Cause:** Calling `await browser.close()` in Playwright CDP scripts, or Brave was started inside an agent's task and the task was stopped (see §1c).
 * **Guaranteed Solution:** NEVER call `browser.close()` on CDP sessions. Simply let the Python script end or call `await p.stop()`. This cleanly detaches the automation listener while keeping the user's interactive browser window alive and visible on their desktop.
 
 ### 3. Gmail Reply Thread Matching & Formatting Violations
