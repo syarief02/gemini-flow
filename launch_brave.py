@@ -203,7 +203,7 @@ def main() -> int:
             print("Brave is not running.")
         return 0 if version and not warn_if_trapped(procs) else 1
 
-    if version and not (args.restart and trapped(procs)):
+    if version and not args.restart:
         print(f"Brave CDP already up on port {PORT} ({version.get('Browser', 'Brave')}). Nothing to start.")
         warn_if_trapped(procs)
         if args.url:

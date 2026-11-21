@@ -1,0 +1,59 @@
+{
+  "prefix": "jaket_wanita_elegan_slimming",
+  "created_at": "2026-11-21T20:30:00+08:00",
+  "product_name": "Jaket Wanita Elegan dan Slimming untuk Musim Gugur dan Dingin Cucian Tangan Sahaja Blazers Jackets Tops Cardigan",
+  "opening_line": "Kenapa susah cari kot musim sejuk yang tak buat kita nampak kembang? Rahsia jaket bulu krim ni ada pada kolar mandrin kemas dan potongan lurus ramping yang terus naikkan gaya.",
+  "closing_line": "Empat butang bulat sedondon dekat depan ni buat penampilan korang nampak mahal persis butik Korea. Korang yang nak OOTD percutian serba anggun dan hangat, boleh terus pilih saiz di beg kuning sekarang!",
+  "scenes": {
+    "visual_prompts": {
+      "scene_1": "Static locked-off vertical 9:16 portrait shot, the camera does not move. A charming 25-year-old Malaysian Muslimah creator in a neat champagne-beige chiffon bawal hijab, tailored cream ivory felted wool mid-length coat with mandarin collar and four round fabric buttons, matching cream trousers, and low block heels stands in a sunlit Scandinavian living room lounge with cream limewash walls, large arched windows, sheer white curtains, and a potted olive tree. She starts facing forward with a warm, confident smile, speaking continuously with natural lip-sync, then turns smoothly 45 degrees into her side profile to settle into the end pose. Both hands remain completely empty and rest naturally low at her sides. No camera movement, no props in hands, no background music. Spoken Malay (Lip-sync): \"Kenapa susah cari kot musim sejuk yang tak buat kita nampak kembang? Rahsia jaket bulu krim ni ada pada kolar mandrin kemas dan potongan lurus ramping yang terus naikkan gaya.\"",
+      "scene_2": "Static locked-off vertical 9:16 portrait shot, the camera does not move. The same charming 25-year-old Malaysian Muslimah creator in the champagne-beige chiffon bawal hijab and cream ivory mandarin-collar coat stands in the sunlit Scandinavian living room. Starting in a 45-degree side profile, she speaks continuously with intimate, confident conviction and natural lip-sync, smiling as she turns smoothly to glance back over her shoulder toward the camera, settling into the end pose. Both hands remain completely empty and rest naturally low at her sides. No camera movement, no props in hands, no background music. Spoken Malay (Lip-sync): \"Tip saya, kain bulu tebal ni ringan gila tapi tahan angin sejuk. Garisan jahitan sisi dia bantu tubuh tampak langsing walaupun korang pakai baju tebal di bahagian dalam.\"",
+      "scene_3": "Static locked-off vertical 9:16 portrait shot, the camera does not move. The same charming 25-year-old Malaysian Muslimah creator in the champagne-beige chiffon bawal hijab and cream ivory mandarin-collar coat stands in the sunlit Scandinavian living room. Starting with her glance back over her shoulder, she speaks continuously with bright, enthusiastic conviction and natural lip-sync, turning gracefully back to face the camera directly in a confident full-front pose for a seamless 360-degree loop. Both hands remain completely empty and rest naturally low at her sides. No camera movement, no props in hands, no background music. Spoken Malay (Lip-sync): \"Empat butang bulat sedondon dekat depan ni buat penampilan korang nampak mahal persis butik Korea. Korang yang nak OOTD percutian serba anggun dan hangat, boleh terus pilih saiz di beg kuning sekarang!\""
+    },
+    "spoken_dialogue": {
+      "scene_1": "Kenapa susah cari kot musim sejuk yang tak buat kita nampak kembang? Rahsia jaket bulu krim ni ada pada kolar mandrin kemas dan potongan lurus ramping yang terus naikkan gaya.",
+      "scene_2": "Tip saya, kain bulu tebal ni ringan gila tapi tahan angin sejuk. Garisan jahitan sisi dia bantu tubuh tampak langsing walaupun korang pakai baju tebal di bahagian dalam.",
+      "scene_3": "Empat butang bulat sedondon dekat depan ni buat penampilan korang nampak mahal persis butik Korea. Korang yang nak OOTD percutian serba anggun dan hangat, boleh terus pilih saiz di beg kuning sekarang!"
+    }
+  },
+  "caption": "Kenapa susah cari kot musim sejuk yang tak buat kita nampak kembang? Rahsia jaket bulu krim ni ada pada kolar mandrin kemas dan potongan lurus ramping yang terus naikkan gaya.\n\nTip saya, kain bulu tebal ni ringan gila tapi tahan angin sejuk. Garisan jahitan sisi dia bantu tubuh tampak langsing walaupun korang pakai baju tebal di bahagian dalam.\n\nEmpat butang bulat sedondon dekat depan ni buat penampilan korang nampak mahal persis butik Korea. Korang yang nak OOTD percutian serba anggun dan hangat, boleh terus pilih saiz di beg kuning sekarang! 🧥❄️✨",
+  "hashtags": "#jaketwanita #kotmusimsejuk #koreanwintercoat #winteroutfit #bajutravel #ootdmusimsejuk #quietluxury #koreancoat #tiktokshopmalaysia #begkuning",
+  "bgm_prompt": "Acoustic lo-fi chillhop, gentle warm Rhodes chords, soft clean acoustic guitar fingerpicking, subtle melodic glockenspiel accent, smooth unhurried downtempo groove, cozy Seoul winter cafe boutique aesthetic, polished instrumental, strictly no vocals",
+  "bgm_title": "Seoul Winter Oat Milk Elegance",
+  "flow_project_url": "https://flow.google.com/u/5/project/9515f193-d6b2-4d23-9336-7f4e41276c44",
+  "flow_status": "all_scenes_queued",
+  "keyframes": [
+    "keyframes/jaket_wanita_elegan_slimming_frame1_front.jpg",
+    "keyframes/jaket_wanita_elegan_slimming_frame2_side.jpg",
+    "keyframes/jaket_wanita_elegan_slimming_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/jaket_wanita_elegan_slimming_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/jaket_wanita_elegan_slimming_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/jaket_wanita_elegan_slimming_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "url": "https://vt.tiktok.com/ZS9PruQAWKyPn-IoaRE/",
+    "token": "ZS9PruQAW",
+    "prefix": "jaket_wanita_elegan_slimming",
+    "hook_archetype": "The Hidden Gem / Secret Discovery",
+    "hook_format": "direct_question",
+    "hook_score": 100,
+    "hook_status": "pass",
+    "hook_issues": [],
+    "hook_warnings": [],
+    "closing_warnings": [],
+    "delivery_style": "insider_tip",
+    "script_score": 100,
+    "script_warnings": {
+      "scene_1": [],
+      "scene_2": [],
+      "scene_3": []
+    }
+  },
+  "suno_tracks": [
+    "https://suno.com/song/e2f92680-1bc0-4b74-8908-b7c4fe6a5ffc",
+    "https://suno.com/song/76da5dd6-1ef7-4f53-a861-50740f369003"
+  ],
+  "gmail_status": "reply_sent_clean"
+}
