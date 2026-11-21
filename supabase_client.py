@@ -17,8 +17,8 @@ import warnings
 warnings.filterwarnings("ignore", message=r"urllib3.*doesn't match a supported version")
 
 if sys.platform == "win32":
-    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
-    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")  # type: ignore[attr-defined]
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")  # type: ignore[attr-defined]
 
 from dotenv import load_dotenv
 
@@ -43,6 +43,12 @@ def get_supabase_client():
     except Exception as err:
         print(f"Failed to initialize Supabase client: {err}")
         return None
+
+
+def _rows(response: Any) -> List[Dict[str, Any]]:
+    """A supabase-py response's rows as plain dicts (postgrest types `.data` as generic JSON)."""
+    data = getattr(response, "data", None) or []
+    return [row for row in data if isinstance(row, dict)]
 
 
 # Aliases for backward compatibility
@@ -223,7 +229,7 @@ def save_generation_record(
                 .limit(1)
                 .execute()
             )
-            for row in (prefix_match.data or []):
+            for row in _rows(prefix_match):
                 if row.get("id"):
                     match_id = row["id"]
                     break
@@ -239,7 +245,7 @@ def save_generation_record(
                 .limit(1)
                 .execute()
             )
-            for row in (existing.data or []):
+            for row in _rows(existing):
                 if row.get("id"):
                     match_id = row["id"]
                     break
@@ -265,7 +271,7 @@ def save_generation_record(
             }
             # Query existing via REST
             encoded_product = urllib.parse.quote(product_name)
-            encoded_line = urllib.parse.quote(opening_line)
+            encoded_line = urllib.parse.quote(opening_line or "")
             q_url = f"{SUPABASE_URL}/rest/v1/gemini_flow_generations?product_name=eq.{encoded_product}&opening_line=eq.{encoded_line}&select=id&limit=1"
             req_check = urllib.request.Request(q_url, headers=headers)
             with urllib.request.urlopen(req_check, timeout=10) as r_check:
@@ -320,7 +326,7 @@ def sync_local_history_to_supabase(history_path: Optional[str | Path] = None) ->
     try:
         existing_res = client.table("gemini_flow_generations").select("product_name, opening_line").execute()
         existing_keys = {
-            (r.get("product_name"), r.get("opening_line")) for r in (existing_res.data or [])
+            (r.get("product_name"), r.get("opening_line")) for r in _rows(existing_res)
         }
     except Exception as e:
         return {"status": "error", "message": f"Failed to fetch Supabase existing records: {e}"}
@@ -371,7 +377,8 @@ def ensure_storage_bucket_exists(bucket_name: str = "gemini-flow-keyframes") -> 
         return False
     try:
         buckets = client.storage.list_buckets()
-        existing = [b.name if hasattr(b, "name") else b.get("name") for b in (buckets or [])]
+        existing = [getattr(b, "name", None) or (b.get("name") if isinstance(b, dict) else None)
+                    for b in (buckets or [])]
         if bucket_name not in existing:
             client.storage.create_bucket(bucket_name, options={"public": True})
             print(f"Created public Supabase storage bucket '{bucket_name}'.")
@@ -541,13 +548,11 @@ def cleanup_duplicate_generations() -> int:
         return 0
 
     try:
-        rows = (
+        rows = _rows(
             client.table("gemini_flow_generations")
             .select("id, product_name, opening_line, created_at, keyframe_urls")
             .order("created_at", desc=True)
             .execute()
-            .data
-            or []
         )
 
         seen: Dict[tuple, Dict[str, Any]] = {}
@@ -591,7 +596,7 @@ def fetch_recent_generations(limit: int = 7) -> List[Dict[str, Any]]:
             .limit(limit)
             .execute()
         )
-        data = response.data or []
+        data = _rows(response)
         for row in data:
             if "prefix" not in row and isinstance(row.get("metadata"), dict):
                 row["prefix"] = row["metadata"].get("prefix")
@@ -613,7 +618,7 @@ def fetch_generation_by_id(record_id: str) -> Optional[Dict[str, Any]]:
             .limit(1)
             .execute()
         )
-        data = response.data or []
+        data = _rows(response)
         if not data:
             return None
         row = data[0]
@@ -640,7 +645,7 @@ def fetch_generation_by_prefix(prefix: str) -> Optional[Dict[str, Any]]:
             .limit(1)
             .execute()
         )
-        data = response.data or []
+        data = _rows(response)
         if not data:
             return None
         row = data[0]
@@ -683,7 +688,7 @@ def fetch_generations_summary(limit: int = 10) -> List[Dict[str, Any]]:
         return []
     try:
         res = client.table("v_gemini_flow_generations_summary").select("*").order("created_at", desc=True).limit(limit).execute()
-        return res.data or []
+        return _rows(res)
     except Exception as e:
         print(f"Notice fetching summary view: {e}")
         return []
@@ -702,7 +707,8 @@ def get_database_health() -> Dict[str, Any]:
     table_counts = {}
     storage_counts = {}
     try:
-        res = client.table("gemini_flow_generations").select("id", count="exact").limit(1).execute()
+        from postgrest.types import CountMethod
+        res = client.table("gemini_flow_generations").select("id", count=CountMethod.exact).limit(1).execute()
         table_counts["gemini_flow_generations"] = res.count
     except Exception as e_tbl:
         table_counts["gemini_flow_generations"] = f"error: {e_tbl}"

@@ -8,13 +8,13 @@ from pathlib import Path
 from playwright.async_api import async_playwright
 
 if sys.platform == "win32":
-    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
-    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")  # type: ignore[attr-defined]
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")  # type: ignore[attr-defined]
 
 DEFAULT_INBOX_URL = "https://mail.google.com/mail/u/0/#inbox"
 
 
-def get_record_info(prefix: str = None) -> tuple[str, str, str]:
+def get_record_info(prefix: str | None = None) -> tuple[str, str, str]:
     """Retrieve (caption, tiktok_url, product_name) from record."""
     from generation_store import latest_record, load_record
 
@@ -38,9 +38,9 @@ def get_record_info(prefix: str = None) -> tuple[str, str, str]:
 
 
 async def reply_with_clean_format(
-    caption_text: str = None,
-    thread_url: str = None,
-    search_query: str = None
+    caption_text: str,
+    thread_url: str | None = None,
+    search_query: str | None = None
 ):
     print("Step 1: Connecting to Brave over CDP on port 9222...")
     p = await async_playwright().start()
@@ -360,20 +360,25 @@ if __name__ == "__main__":
         chosen_caption = args.caption
     elif args.file:
         file_path = Path(args.file)
-        if file_path.is_file():
-            content = file_path.read_text(encoding="utf-8")
-            try:
-                data = json.loads(content)
-                cap = data.get("tiktok_caption") or data.get("caption") or ""
-                tags = data.get("hashtags") or ""
-                chosen_caption = f"{cap}\n\n{tags}".strip() if tags and tags not in cap else cap
-            except Exception:
-                chosen_caption = content
+        if not file_path.is_file():
+            parser.error(f"--file not found: {file_path}")
+        content = file_path.read_text(encoding="utf-8")
+        try:
+            data = json.loads(content)
+            cap = data.get("tiktok_caption") or data.get("caption") or ""
+            tags = data.get("hashtags") or ""
+            chosen_caption = f"{cap}\n\n{tags}".strip() if tags and tags not in cap else cap
+        except Exception:
+            chosen_caption = content
     else:
         cap, link, title = get_record_info(args.prefix)
         chosen_caption = cap
         if not search_q:
             search_q = link or title
+
+    # Stop before touching Gmail: an empty caption used to crash after Reply was already open.
+    if not chosen_caption or not chosen_caption.strip():
+        parser.error("No caption to send (empty --caption or --file).")
 
     success = asyncio.run(reply_with_clean_format(
         caption_text=chosen_caption,

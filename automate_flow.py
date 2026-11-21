@@ -572,6 +572,8 @@ async def check_flow_status(
             prefix = re.sub(r"_frame1(_front)?$", "", newest[0].stem)
 
     project_url = project_url_for(prefix, project_url) if prefix else project_url
+    if not project_url:
+        raise FlowError("No Flow project to inspect: pass --prefix of a product with a recorded project, or --project-url.")
     print(f"Inspecting Flow project for prefix '{prefix}': {project_url}")
 
     p, browser = await connect_to_brave()

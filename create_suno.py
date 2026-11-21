@@ -7,11 +7,11 @@ from pathlib import Path
 from playwright.async_api import async_playwright
 
 if sys.platform == "win32":
-    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
-    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")  # type: ignore[attr-defined]
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")  # type: ignore[attr-defined]
 
 SUNO_URL = "https://suno.com/create"
-def get_latest_bgm_info(prefix: str = None) -> tuple[str, str]:
+def get_latest_bgm_info(prefix: str | None = None) -> tuple[str, str]:
     """BGM prompt + title from generations/<prefix>.json, or from the newest record without a prefix."""
     from generation_store import latest_record, load_record
 
@@ -24,7 +24,7 @@ def get_latest_bgm_info(prefix: str = None) -> tuple[str, str]:
     return record["bgm_prompt"].strip(), title
 
 
-async def setup_suno(prompt_text: str = None, title_text: str = None):
+async def setup_suno(prompt_text: str | None = None, title_text: str | None = None):
     if not prompt_text or not title_text:
         latest_prompt, latest_title = get_latest_bgm_info()
         target_prompt = (prompt_text or latest_prompt).strip()
@@ -262,13 +262,15 @@ if __name__ == "__main__":
         chosen_title = args.title or "TikTok Promo BGM"
     elif args.file:
         file_path = Path(args.file)
-        if file_path.is_file():
-            try:
-                data = json.loads(file_path.read_text(encoding="utf-8"))
-                chosen_prompt = data.get("suno_bgm", {}).get("style") or data.get("bgm_prompt")
-                chosen_title = f"{data.get('title', 'Product')[:35]} - BGM"
-            except Exception:
-                chosen_prompt = file_path.read_text(encoding="utf-8")
+        if not file_path.is_file():
+            # Without this, a missing file silently fell back to the NEWEST product's BGM prompt.
+            parser.error(f"--file not found: {file_path}")
+        try:
+            data = json.loads(file_path.read_text(encoding="utf-8"))
+            chosen_prompt = data.get("suno_bgm", {}).get("style") or data.get("bgm_prompt")
+            chosen_title = f"{data.get('title', 'Product')[:35]} - BGM"
+        except Exception:
+            chosen_prompt = file_path.read_text(encoding="utf-8")
     else:
         chosen_prompt, chosen_title = get_latest_bgm_info(args.prefix)
 
