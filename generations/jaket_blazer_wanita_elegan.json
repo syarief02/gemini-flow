@@ -1,0 +1,59 @@
+{
+  "prefix": "jaket_blazer_wanita_elegan",
+  "created_at": "2026-11-21T20:55:00+08:00",
+  "product_name": "Jaket Blazer Wanita, Saiz S-3XL, Lengan Panjang, Fesyen Musim Bunga Musim Luruh, Kasual dan Elegan, Sesuai Langsing dan Longgar, Sesuai untuk Pakaian Perniagaan dan Pejabat Formal, Sut Pakaian Luar, Saiz Besar Tersedia dalam Hitam, Beige, Khaki dan Kopi.",
+  "opening_line": "Jangan beli blazer moka ni kalau korang rimas orang asyik tegur. Potongan bahu dia kemas gila dan warna kopi pekat ni buat gaya harian nampak mahal serta berkarisma.",
+  "closing_line": "Saya suka kain dia sebab tak renyuk langsung walaupun korang duduk seharian dekat kerusi pejabat. Untuk saiz S sampai tiga XL, jom tengok pilihan warna dekat beg kuning sekarang!",
+  "scenes": {
+    "visual_prompts": {
+      "scene_1": "Static locked-off vertical 9:16 portrait shot, the camera does not move. A charming 25-year-old Malaysian Muslimah creator in a neat soft-taupe chiffon bawal hijab, tailored deep mocha brown single-button blazer jacket over a clean white inner top, tailored black trousers, and low block heels stands in a sunlit boutique executive lounge with large floor-to-ceiling windows and travertine flooring. She starts facing forward with a warm, playful smile, speaking continuously with natural lip-sync, then turns smoothly 45 degrees into her side profile to settle into the end pose. Both hands remain completely empty and rest naturally low at her sides. No camera movement, no props in hands, no background music. Spoken Malay (Lip-sync): \"Jangan beli blazer moka ni kalau korang rimas orang asyik tegur. Potongan bahu dia kemas gila dan warna kopi pekat ni buat gaya harian nampak mahal serta berkarisma.\"",
+      "scene_2": "Static locked-off vertical 9:16 portrait shot, the camera does not move. The same charming 25-year-old Malaysian Muslimah creator in the soft-taupe chiffon bawal hijab and mocha brown blazer stands in the sunlit executive lounge. Starting in a 45-degree side profile, she speaks continuously with lively, teasing conviction and natural lip-sync, smiling playfully as she turns smoothly to glance back over her shoulder toward the camera, settling into the end pose. Both hands remain completely empty and rest naturally low at her sides. No camera movement, no props in hands, no background music. Spoken Malay (Lip-sync): \"Tengok bahagian kolar lapel ni, kemas terbentuk tanpa rasa kaku atau berat. Poket sisi dia pun luas, senang korang nak selit pas kerja bila rushing masuk bilik mesyuarat.\"",
+      "scene_3": "Static locked-off vertical 9:16 portrait shot, the camera does not move. The same charming 25-year-old Malaysian Muslimah creator in the soft-taupe chiffon bawal hijab and mocha brown blazer stands in the sunlit executive lounge. Starting with her glance back over her shoulder, she speaks continuously with bright, enthusiastic conviction and natural lip-sync, turning gracefully back to face the camera directly in a confident full-front pose for a seamless 360-degree loop. Both hands remain completely empty and rest naturally low at her sides. No camera movement, no props in hands, no background music. Spoken Malay (Lip-sync): \"Saya suka kain dia sebab tak renyuk langsung walaupun korang duduk seharian dekat kerusi pejabat. Untuk saiz S sampai tiga XL, jom tengok pilihan warna dekat beg kuning sekarang!\""
+    },
+    "spoken_dialogue": {
+      "scene_1": "Jangan beli blazer moka ni kalau korang rimas orang asyik tegur. Potongan bahu dia kemas gila dan warna kopi pekat ni buat gaya harian nampak mahal serta berkarisma.",
+      "scene_2": "Tengok bahagian kolar lapel ni, kemas terbentuk tanpa rasa kaku atau berat. Poket sisi dia pun luas, senang korang nak selit pas kerja bila rushing masuk bilik mesyuarat.",
+      "scene_3": "Saya suka kain dia sebab tak renyuk langsung walaupun korang duduk seharian dekat kerusi pejabat. Untuk saiz S sampai tiga XL, jom tengok pilihan warna dekat beg kuning sekarang!"
+    }
+  },
+  "caption": "Jangan beli blazer moka ni kalau korang rimas orang asyik tegur. Potongan bahu dia kemas gila dan warna kopi pekat ni buat gaya harian nampak mahal serta berkarisma.\n\nTengok bahagian kolar lapel ni, kemas terbentuk tanpa rasa kaku atau berat. Poket sisi dia pun luas, senang korang nak selit pas kerja bila rushing masuk bilik mesyuarat.\n\nSaya suka kain dia sebab tak renyuk langsung walaupun korang duduk seharian dekat kerusi pejabat. Untuk saiz S sampai tiga XL, jom tengok pilihan warna dekat beg kuning sekarang! ☕💼✨",
+  "hashtags": "#blazerwanita #blazerhijab #ootdoffice #blazermurah #officeoutfit #bajukerjawanita #koreanblazer #blazerplusize #tiktokshopmalaysia #begkuning",
+  "bgm_prompt": "Smooth chillout lounge, warm Rhodes electric piano chords, soft crisp acoustic guitar rhythm, subtle deep synth bass, light sophisticated brushed drums, elegant Kuala Lumpur boutique hotel executive aesthetic, polished instrumental, strictly no vocals",
+  "bgm_title": "Mocha Executive Coffee Lounge",
+  "suno_tracks": [
+    "https://suno.com/song/d4d8a7ac-d269-4c37-bde9-eb3496590edc",
+    "https://suno.com/song/c6cb3796-2ed1-4d16-a107-8c96856b50e0"
+  ],
+  "flow_project_url": "https://flow.google.com/u/5/project/3f03a84c-9c56-4941-8ee7-29b677d07bae",
+  "flow_status": "all_scenes_queued",
+  "keyframes": [
+    "keyframes/jaket_blazer_wanita_elegan_frame1_front.jpg",
+    "keyframes/jaket_blazer_wanita_elegan_frame2_side.jpg",
+    "keyframes/jaket_blazer_wanita_elegan_frame3_shoulder.jpg"
+  ],
+  "keyframe_urls": [
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/jaket_blazer_wanita_elegan_frame1_front.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/jaket_blazer_wanita_elegan_frame2_side.jpg",
+    "https://raw.githubusercontent.com/syarief02/gemini-flow/master/keyframes/jaket_blazer_wanita_elegan_frame3_shoulder.jpg"
+  ],
+  "metadata": {
+    "url": "https://vt.tiktok.com/ZS9PrCMsyD1cj-zmpc3/",
+    "token": "ZS9PrCMsy",
+    "prefix": "jaket_blazer_wanita_elegan",
+    "hook_archetype": "The Price-Quality Myth-Buster",
+    "hook_format": "dont_buy",
+    "hook_score": 100,
+    "hook_status": "pass",
+    "hook_issues": [],
+    "hook_warnings": [],
+    "closing_warnings": [],
+    "delivery_style": "playful_tease",
+    "script_score": 100,
+    "script_warnings": {
+      "scene_1": [],
+      "scene_2": [],
+      "scene_3": []
+    }
+  },
+  "gmail_status": "reply_sent_clean"
+}
