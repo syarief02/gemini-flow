@@ -82,11 +82,17 @@ def load_record(prefix: str) -> Optional[Dict[str, Any]]:
 
 
 def save_record(prefix: str, record: Dict[str, Any]) -> Path:
-    """Create or update generations/<prefix>.json. Keeps the original created_at on updates."""
+    """Create or update generations/<prefix>.json. Keeps the original created_at on updates.
+
+    Fields are MERGED into the existing record, and a field passed as None keeps its current
+    value: fields added later in the run (flow_status, suno_tracks, final_video, performance, ...)
+    survive a re-save of the prompts. (Until 2026-11-21 a re-save replaced the whole record.)
+    """
     prefix = clean_prefix(prefix)
     existing = load_record(prefix) or {}
     now = _now()
-    data = {"prefix": prefix, "created_at": existing.get("created_at", now), **record, "updated_at": now}
+    merged = {**existing, **{k: v for k, v in record.items() if v is not None}}
+    data = {"prefix": prefix, "created_at": existing.get("created_at", now), **merged, "updated_at": now}
     data["prefix"] = prefix
 
     GENERATIONS_DIR.mkdir(exist_ok=True)
@@ -96,6 +102,13 @@ def save_record(prefix: str, record: Dict[str, Any]) -> Path:
     tmp.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     os.replace(tmp, path)
     return path
+
+
+def update_record(prefix: str, **fields: Any) -> Path:
+    """Set a few fields on an existing record (e.g. flow_status, final_video). Refuses unknown prefixes."""
+    if load_record(prefix) is None:
+        raise FileNotFoundError(f"No generation record at {record_path(prefix)}; run Step 9 first.")
+    return save_record(prefix, fields)
 
 
 def latest_record() -> Optional[Dict[str, Any]]:

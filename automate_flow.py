@@ -665,6 +665,15 @@ async def run_flow_pipeline(
     else:
         data = load_scene_prompts(prefix)
         print(f"Prompts from record: {data['product']}")
+        from record_checks import check_dialogue
+        errs, _ = check_dialogue({f"scene_{i}": data["dialogue"][i] for i in (1, 2, 3)})
+        errs = [e for e in errs if any(e.startswith(f"Scene {s}:") for s in scenes_to_run)]
+        if errs:
+            print("\nABORTED before rendering (nothing submitted): the spoken lines break hard rules:")
+            for e in errs:
+                print(f"  ❌ {e}")
+            print("Rewrite those lines, re-save the record (Step 9) and render again.")
+            return False
         for s in scenes_to_run:
             prompts[s] = build_scene_prompt(data["visual"][s], data["dialogue"][s])
 

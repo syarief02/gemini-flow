@@ -11,9 +11,11 @@ Given a single TikTok Shop product URL, the complete pipeline automatically exec
 1. **3 Consistent 9:16 Keyframe Images** (Front, Side, Over-Shoulder poses), saved in `keyframes/` and committed to GitHub
 2. **TikTok Caption + SEO Hashtags** (Bahasa Melayu Malaysia, policy-safe, 1-click copy box)
 3. **3 Flow AI Video Generations in Browser** (Omni Flash 10s portrait, Frame-to-Video via Brave CDP)
-4. **Automated Gmail Promo Reply in Browser** (Instantly replies to the user's email thread in Brave with the full copy package)
-5. **Suno AI Instrumental BGM Generation in Browser** (Configures and triggers pure instrumental BGM creation on `suno.com/create`)
-6. **GitHub Record & Asset Tracking** (Full record in `generations/<prefix>.json`, keyframes in `keyframes/`, both committed and pushed)
+4. **Suno AI Instrumental BGM Generation in Browser** (Configures and triggers pure instrumental BGM creation on `suno.com/create`)
+5. **One Finished 30s Video** (`assemble_video.py`: downloads and QA-checks the 3 clips, joins them, adds music, subtitles and hook text, writes `final/<prefix>_final.mp4`)
+6. **Automated Gmail Promo Reply in Browser** (replies to the user's email thread with the clean caption + hashtags, the finished MP4 attached)
+7. **GitHub Record & Asset Tracking** (Full record in `generations/<prefix>.json`, keyframes in `keyframes/`, both committed and pushed)
+8. **Post Results** (`track_performance.py`: the posted link, views and orders per product, ranked by hook format and delivery style)
 
 ---
 
@@ -23,10 +25,10 @@ Every AI agent operating in this repository MUST memorize and adhere strictly to
 
 | Area | ❌ FATAL MISTAKE (NEVER DO THIS) | ✅ CORRECT BEHAVIOR (MANDATORY) |
 |------|-----------------------------------|----------------------------------|
-| **Gmail Promo Reply** | Composing a brand new email thread, replying to a random or top email without verifying the product link, adding greetings ("Salam Syarief"), section headers ("MAKLUMAT PRODUK"), Flow video prompts, Suno prompts, dividers (`===`), image or GitHub links, or leaving Gmail quoted text / previous thread content. | **ALWAYS CHECK EXACT PRODUCT LINK IN EMAIL FIRST, THEN REPLY.** Search Gmail for the exact product link/shortcode. If no email contains that exact link, **ABORT IMMEDIATELY** (never compose a new email, never reply to an unrelated email). Once opened, verify the thread body contains the link, expand and delete quoted text (`div.gmail_quote` / `div.ajR`), and enter **STRICTLY AND ONLY THE CLEAN TIKTOK CAPTION + HASHTAGS**. |
+| **Gmail Promo Reply** | Composing a brand new email thread, replying to a random or top email without verifying the product link, adding greetings ("Salam Syarief"), section headers ("MAKLUMAT PRODUK"), Flow video prompts, Suno prompts, dividers (`===`), image or GitHub links, or leaving Gmail quoted text / previous thread content. | **ALWAYS CHECK EXACT PRODUCT LINK IN EMAIL FIRST, THEN REPLY.** Search Gmail for the exact product link/shortcode. If no email contains that exact link, **ABORT IMMEDIATELY** (never compose a new email, never reply to an unrelated email). Once opened, verify the thread body contains the link, expand and delete quoted text (`div.gmail_quote` / `div.ajR`), and enter **STRICTLY AND ONLY THE CLEAN TIKTOK CAPTION + HASHTAGS**. The finished MP4 goes in as an **attachment** (Step 7), never as a link in the body. |
 | **Brave CDP Connection** | Attempting to connect to an existing Brave instance without flags or launching without `--remote-allow-origins=*`, or calling `browser.close()` which kills the user's window. | Always launch with `--remote-debugging-port=9222 --remote-allow-origins=*`. **NEVER call `browser.close()`** so the user's visible interactive window stays open on desktop. |
 | **Launching Brave / Background Tasks** | Starting Brave from an agent shell with `Start-Process`, `subprocess.Popen`, `start` or `open_brave.bat` run by the agent, then keeping the command alive with a `while True` loop so Brave doesn't die (`test_brave_run.py`, 2026-11-19). Brave became part of Antigravity's task: a background task that never finished, and every Brave window the user opened belonged to it, so stopping the task closed their browser. | **Start Brave only with `python launch_brave.py`** (`--restart` if it's open without CDP). It starts Brave through WMI, outside the agent's task, and exits once port 9222 answers. **Every command you run must exit by itself**: no keep-alive loops, no scripts that wait forever. Before finishing a run, `python launch_brave.py --status` must show no WARNING. |
-| **Keyframe Consistency** | Adding handbags, totes, phones, coffee cups, tumblers, waving hands, or changing hijab/bottoms between frames. | **Strict Zero-Prop & Empty-Hands Rule.** Both hands empty at sides. Same model, same modest hijab, same outfit head-to-toe, same background across all 3 frames. |
+| **Keyframe Consistency** | Adding handbags, totes, phones, coffee cups, tumblers, waving hands, or changing hijab/bottoms between frames. Putting a non-clothing product on a table in the corner (school bag, 2026-11-20: ~10% of the frame while she talked about straps nobody could see). | **Strict Zero-Prop & Empty-Hands Rule.** Both hands empty at sides. Same model, same modest hijab, same outfit head-to-toe, same background across all 3 frames. **A wearable non-clothing product** (bag, hat, scarf) is WORN in the same place in all 3 frames (`prompt_templates.WORN_PRODUCT_LINE`), never held. **Child-size products: stop and ask the user** how to present them. |
 | **Keyframe Background** | Using blank, plain, or sterile studio backdrops (`"minimalist studio"`, `"plain background"`, `"neutral grey wall"`), which renders a flat, featureless void with zero context or depth. | **MANDATORY REALISTIC LIFESTYLE ENVIRONMENT**: Always specify a rich, aesthetic, realistic lifestyle setting (e.g. sunlit modern minimalist cafe with light oak tables and potted greenery; or cozy Japandi/Scandinavian living room with linen sofa, sheer curtains, soft daylight, and textured travertine/terrazzo floors). Depth of field, soft natural lighting, and architectural details MUST be present across all 3 keyframes. |
 | **Flow AI Parameters** | Using 5s/8s duration, landscape 16:9, or text-to-video mode. | **Duration = 10s**, **Orientation = Portrait (9:16)**, **Model = Omni 1.1 Flash**, **Mode = Video + Frames** (Frame 1➡️2, Frame 2➡️3, Frame 3➡️1), **720p**, **x1**. |
 | **Flow Project per Product** | Rendering a new product's keyframes or videos into an existing project (e.g. the old shared "Oct 19 - 02:05" project), which mixes products, makes picker searches ambiguous, and hides which clip belongs to which product. | **Every new product gets its OWN new Flow project**, created once at the start of its first Flow step: `python automate_flow.py --create-project "<Short Product Name>" --prefix <prefix>`. The project URL is recorded in `flow_projects.json`; all keyframe generation (Flow Image mode), uploads and renders for that product happen only in that project. Re-renders reuse it; never create a second project for the same prefix. |
@@ -34,11 +36,14 @@ Every AI agent operating in this repository MUST memorize and adhere strictly to
 | **Flow AI Frame Pairing** | Reversing Start/End frames (e.g. putting Side as Start in Scene 1), uploading mismatched files, or guessing frame order. | **STRICT DIRECTIONAL CONTINUITY:** **Scene 1:** Start = Frame 1 (Front) ➡️ End = Frame 2 (Side); **Scene 2:** Start = Frame 2 (Side) ➡️ End = Frame 3 (Shoulder); **Scene 3:** Start = Frame 3 (Shoulder) ➡️ End = Frame 1 (Front 360° Loop). |
 | **Flow AI Spoken Lip-Sync** | Submitting English-only visual prompt to Flow AI without the spoken dialogue, or separating dialogue outside the composer. | **MANDATORY VERBATIM LIP-SYNC IN COMPOSER:** The prompt entered into Flow AI's composer MUST explicitly include BOTH the English visual instructions AND the verbatim Malaysian Malay dialogue block: `Spoken Malay (Lip-sync): "<dialogue>"`. Flow AI generates character lip-sync directly from this text. |
 | **Flow AI Camera & Dialogue Fit** | "Camera glides / pans / zooms / orbits" (all 3 keyframes share one background, so camera moves cause warping). Spoken lines of ~40+ words (cut off before the clip ends) **or** short "spec list" lines of 14-21 words with colons (stretched, robotic, unnatural: the user rejected these on 2026-10-20). | Open every scene with **"Static locked-off vertical shot, the camera does not move."** and make the **model turn in place** from the Start pose to the End pose. Spoken line = **2-3 natural conversational sentences, 28-32 words** (hard limits 24-34), no colons, she **talks through the whole clip, including while turning**. Add **"No background music"** (Suno BGM is layered later). |
-| **Suno AI BGM** | Generating songs with vocal lyrics or background singing. | **Instrumental mode MUST be toggled ON.** TikTok promos use spoken Malay lip-sync voiceovers; vocals clash with speech. |
+| **Suno AI BGM** | Generating songs with vocal lyrics or background singing. Downloading a song by decrypting its CDN file or recording the player. | **Instrumental mode MUST be toggled ON.** TikTok promos use spoken Malay lip-sync voiceovers; vocals clash with speech. **Licensing:** the account is on Suno's Free plan (checked 2026-11-21): 0 downloads, and Free songs carry no commercial-use rights. `assemble_video.py` only uses Suno's own Download button; otherwise it builds a voice-only video and the user adds a TikTok Commercial Music Library sound when posting. |
+| **Finished Video** | Stopping at "3 scenes queued" and leaving the joining, music and subtitles to the user, or handing over clips nobody checked. | **Run `python assemble_video.py --prefix <prefix> --wait 900`** (Step 8b) after Flow and Suno. It refuses clips that match no keyframe, writes `final/<prefix>_final.mp4` and `final/<prefix>/qa_sheet.jpg`. **Open the QA sheet and check every row** before Step 7. |
+| **Hard Checks** | Captions that are the spoken script pasted together with 10-11 hashtags, `#RacunTikTok`, lines where she does something with her hands ("saya usap bulu"), health claims ("lindungi tulang belakang"), invented stock or reactions; or editing the JSON by hand to get around a refusal. | `record_checks.py` turns these into **errors that refuse**: `save_generation_history()` won't save, `automate_flow.py` won't render, `reply_gmail.py` won't send. Fix the copy and save again (`python record_checks.py --prefix <prefix>` to check). Never write `generations/` by hand or add `generation_history.json` entries by hand (the one allowed in-place edit is in Step 9). |
 | **Spoken Dialogue & Caption** | Using Indonesian words ("banget", "emang", "bgt"), em-dashes (`—`), or mentioning direct prices. | **Standard Malaysian Malay (KL accent)**, pronoun "saya" (never "aku"), zero em-dashes (use `:` or `,`), zero prices (direct to "beg kuning"). |
 | **Hook Selection** | Banning valid hook formulas, reusing openers from the last 7 recorded entries, or writing every hook as the same "Korang ...?" question full of "penyelamat terbaik / automatik" and closing with "cepat tekan beg kuning sebelum saiz habis" (the user called this boring on 2026-11-15). | **Never ban valid hooks, but vary the format.** Run `python generate_prompts.py --hook-brief`, live search MY TikTok data, write 3+ candidates in **3 different hook formats**, score them with `--audit-hook` (it scores freshness: opening word, format, question streak, repeated and worn-out phrases), pick the top one, and vary the Scene 3 closer too. |
 | **Character Delivery** | The same mannequin performance in every clip: "pleasant, friendly smile, warm facial expressions", a "calm, relaxed" voice, and brochure lines that narrate her turn ("Bila pusing ke tepi, perincian...", "Kemasan belakang...", "...beg kuning ya!"). The user called this boring on 2026-11-17. | **Pick ONE delivery style per product** (`prompt_templates.DELIVERY_STYLES`, prefer a fresh one from `--hook-brief`) and use its voice and per-scene acting in all 3 prompts. Write 3 beats (hook → her reaction → payoff + verdict) in spoken KL Malay that talks TO the viewer, and score them with `--audit-script`. Expression in her face, head and shoulders; hands stay empty at her sides. |
-| **Saving to GitHub & Cloud** | Leaving a product only on this PC (no `generations/<prefix>.json`, keyframes not committed). | Save the full record with `save_generation_history(prefix=...)` (Step 9), commit and push `generations/<prefix>.json`, `keyframes/<prefix>_*` and history (Step 10). When Supabase env keys are present, sync record via `supabase_client.py`. No secret credentials or sensitive tokens in public records. |
+| **Saving to GitHub (only)** | Leaving a product only on this PC (no `generations/<prefix>.json`, keyframes not committed). Writing to Supabase: the project is shared with other programs (BubatRent/Rent2Go, forex, MQL). | Save the full record with `save_generation_history(prefix=...)` (Step 9), commit and push `generations/<prefix>.json`, `keyframes/<prefix>_*` and history (Step 10). **GitHub only: Gemini Flow never writes to Supabase** (user decision 2026-11-21; the auto-sync was removed). No secret credentials or sensitive tokens in public records. |
+| **Post Results** | Choosing hooks only by freshness, with no idea which posted videos sold. | After posting: `python track_performance.py --prefix <prefix> --post-url <link>`; ~48h later add `--views --likes --orders --gmv` (TikTok Studio + Affiliate dashboard). `--hook-brief` shows which formats and styles sell; `--pending` lists products missing numbers. |
 
 ---
 
@@ -47,6 +52,10 @@ Every AI agent operating in this repository MUST memorize and adhere strictly to
 > ⛔ **MANDATORY PRE-FLIGHT GATE — NEVER SKIP STEP 0**:
 > Under NO circumstances may an agent proceed directly to Step 1 (`scrape_product.py`) when given a TikTok product URL without completing Step 0.
 > Skipping Step 0 is a critical workflow violation. Every deliverable package MUST start with the **Policy Compliance Badge**.
+
+> ▶️ **RUN ORDER (steps are numbered by topic, not by order):**
+> 0 Policy → 1 Scrape → 2 View images → 3 Keyframes → 4 Hooks and script → 5 Package → **9 Save the record** (it must pass `record_checks.py`) → **6 Flow renders** → **8 Suno** → **8b Assemble the finished video** (open its QA sheet) → **7 Gmail reply with the MP4 attached** → **10 Git commit and push** → **11 After posting: record results**.
+> Every command must exit by itself; `--wait` options poll for a bounded time and then exit.
 
 ### Step 0: Policy Compliance Check (MANDATORY FIRST STEP)
 
@@ -397,10 +406,9 @@ Deliver to the user in this exact order:
    - It refuses to run when a spoken line is missing, under 24 or over 34 words, or contains `:`/`;`. It warns on camera-motion words and on staging that delays her speech, and appends the conversational pace line if the prompt lacks one.
    - **If any check fails, the scene is ABORTED and nothing is submitted** (`ABORTED Scene N ...` plus `flow_scene<N>_aborted.png`). Fix the cause (shorten the line, upload the right file, select the right project). **Never bypass the gate by clicking `Start generation` yourself.**
 
-6. **Post-Render QA (MANDATORY before Gmail/Suno steps):**
-   - Renders take about 1 minute. For each new tile, open it and click ⓘ: it must say **Omni 1.1 Flash · 9:16 · 10s · 720p**.
-   - Scrub the video at about 0s, 3s, 6s and 9.9s: same model, hijab, garment, bottoms and background as the keyframes; first frame = Start keyframe, last frame = End keyframe; no props, no waving, no warping.
-   - A render with a **different woman / no hijab / different top** means the frames were not attached (text-to-video). Regenerate that scene; don't hand it to the user.
+6. **Post-Render QA (MANDATORY, done in Step 8b):**
+   - `assemble_video.py` downloads every render, matches each clip's first and last frame to the keyframes (right pose ≈ 7-8, other poses 12.5-21; limit 10 with a 3-point margin), refuses clips that match none (text-to-video: a different woman / no hijab / different top), checks ~10s length and that her voice is there, and writes `final/<prefix>/qa_sheet.jpg` (per scene: start keyframe, the clip at 0.1s / 3s / 6s / end, end keyframe).
+   - **Open the QA sheet and check every row**: same model, hijab, garment, bottoms and background; no props, no warping, hands not morphing. Re-render a bad scene (`python automate_flow.py --scene N --prefix <prefix>`) and assemble again; a re-render is newer, so it wins.
    - Agents cannot hear audio: tell the user to listen for Malaysian accent and lip-sync before posting.
 
 7. **Interactive Browser Agents (e.g. Claude in Chrome):** The Claude in Chrome extension runs inside this same Brave profile (same Google sign-ins as `authuser=5`). An agent driving Flow by hand MUST apply the same gate: clear the composer, open the settings menu and check every value, search the full filename, zoom the screenshot on both slot chips to confirm the poses, then submit. Open **the product's own project** (URL from `flow_projects.json`; create it with `--create-project` if missing) in your own tab; don't take over the user's tab or work in another product's project.
@@ -409,7 +417,15 @@ Deliver to the user in this exact order:
 
 ### Step 7: Automate Gmail Promo Reply in Browser (Brave) — ⚠️ STRICT CLEAN FORMAT
 
-**Goal:** Automatically reply to the user's promo email thread in Gmail with the ready-to-post TikTok caption and hashtags, allowing instant 1-tap copy-pasting on mobile.
+**Goal:** Automatically reply to the user's promo email thread in Gmail with the ready-to-post TikTok caption and hashtags, allowing instant 1-tap copy-pasting on mobile, **with the finished MP4 attached** so the user can post straight from the phone (user decision 2026-11-21).
+
+```bash
+python reply_gmail.py --prefix <prefix> --dry-run   # compose + attach, screenshot, then discard (nothing sent)
+python reply_gmail.py --prefix <prefix>             # send: caption body + final/<prefix>_final.mp4 attached
+```
+- **Runs AFTER Step 8b.** With `--prefix` it attaches the record's `final_video` automatically, waits until Gmail shows "Attachment: <name>" (not "Saving attachment"), and only then clicks Send. With no assembled video it warns and sends the caption only; `--no-attach` skips it on purpose.
+- It refuses to send a caption that fails `record_checks.py` (hashtag count, feature lines, script pasted as caption, prices, dashes, spam tags) and prints why, before touching Gmail.
+- The thread is found by the exact TikTok link from the record's metadata (`tiktok_url`, or `url` in older records).
 
 1. **Locate Target Email Thread in Brave:**
    - Connect via CDP on port 9222.
@@ -473,6 +489,7 @@ Deliver to the user in this exact order:
 5. **Insert Clean Caption and Send:**
    - Locate composer textbox: `div[role='textbox'][aria-label*='Message Body'], div[role='textbox']`.
    - Fill with the pure clean caption + hashtags string.
+   - Attach the MP4 through the compose's `input[type='file'][name='Filedata']` and wait for the "Attachment: <name>" chip (the chip sits outside the compose `<form>`). The body stays caption + hashtags only.
    - Click the Send button: `div[role='button']:has-text('Send'), [data-tooltip*='Send']`.
    - Wait 3-4 seconds and capture verification screenshot `gmail_reply_sent_clean.png`.
 
@@ -505,6 +522,27 @@ Deliver to the user in this exact order:
    - Click the **Create** button: `button:has-text('Create'), button[aria-label='Create']`.
    - Wait 5-6 seconds for the 2 new tracks with spinning loading rings to appear under the **Today** workspace section.
    - Capture verification screenshot `suno_generating.png`.
+   - Record the two song links in the record (`update_record(prefix, suno_tracks=[...])`); Step 8b uses track 1.
+
+5. **⚠️ Licensing (checked 2026-11-21):** the Suno account is on the **Free plan: 0 downloads, and Free-plan songs carry no commercial-use rights** (the Download dialog offers both only with Pro). TikTok Shop promos are commercial. Until the user upgrades, Step 8b builds a voice-only video and the user adds a sound from **TikTok's Commercial Music Library** in the app. Never get the audio another way (decrypting the CDN file, recording the player). Whether to keep running this step is the user's call.
+
+---
+
+### Step 8b: Assemble the Finished Video (`assemble_video.py`)
+
+**Goal:** One post-ready 30s 9:16 MP4, so the user never opens CapCut.
+
+```bash
+python assemble_video.py --prefix <prefix> --wait 900      # waits up to 15 min for the renders, then assembles
+python assemble_video.py --prefix <prefix> --qa-only       # download + check clips only
+python assemble_video.py --prefix <prefix> --bgm <licensed.mp3>   # use a licensed track instead of Suno
+```
+- Downloads every clip in the product's Flow project (hover → `<video>` src → download through the signed-in session), QA-checks and orders them (Step 6 §6), and refuses to assemble if any scene has no passing clip (exit 2).
+- Joins the clips (hard cuts are seamless: each clip ends on the next one's start frame). Motion: Scene 1 opens on a close-up of her upper body and eases out to the full outfit in 0.9s (the first frame is no longer the same full-body shot as every other video); Scene 2 punches in on the garment from 2.0s to 4.6s while she keeps talking. `--no-motion` turns this off.
+- Text: the hook sentence shows as a yellow box while she says it, then Malay subtitles from the spoken lines, timed to her speech (silence detection). All text sits at ~65-71% height: never over her face or the garment, clear of TikTok's caption area and buttons.
+- Audio: her voice + the BGM (ducked while she talks), loudness -14 LUFS.
+- Output: `final/<prefix>_final.mp4` (1080x1920, 30fps, under 24 MB for Gmail), `final/<prefix>/qa_sheet.jpg`, `qa.json`; the record gets `final_video`, `assembly` and `flow_status: all_scenes_rendered_and_checked`. `final/` is gitignored.
+- **Before Step 7:** open the QA sheet, and look at a few frames of the final MP4 (hook box, subtitles, punch-in).
 
 ---
 
@@ -545,6 +583,8 @@ save_generation_history(
     }
 )
 ```
+- **It refuses to save** (raises `ValueError`, writes nothing) when the record fails `record_checks.py`: caption = 3-5 `✨ Feature: description` lines in the Caption Structure (not the spoken script), 4-6 hashtags, no spam tags/prices/dashes/Indonesian words, valid `hook_format` and `delivery_style`, spoken lines 24-34 words with no hand actions, health claims or invented stock/reactions. Fix and call it again.
+- Saving **merges** into an existing record: fields added later (`flow_status`, `suno_tracks`, `final_video`, `performance`) survive a re-save, and a field passed as `None` keeps its value. Use `generation_store.update_record(prefix, field=value)` to set single fields.
 - The record lists the keyframe trio it finds in `keyframes/` (`keyframes`) and their public GitHub links (`keyframe_urls`, live after `git push`). It prints a WARNING if the trio is incomplete.
 - Save the garment reference photo used for the keyframes as `keyframes/<prefix>_product.jpg`, so the product can be regenerated later.
 - `reply_gmail.py --prefix <prefix>` and `create_suno.py --prefix <prefix>` read the caption and BGM prompt from the same record. Without a record they stop with an error; they never fall back to a sample caption.
@@ -563,7 +603,23 @@ git commit -m "feat: <product name> promo in its own Flow project"
 git push
 ```
 - Add only this run's files (plus any script or doc you deliberately changed); never sweep unrelated working-tree changes into the commit.
-- `keyframes/` is committed on purpose (`.gitignore` re-includes `keyframes/*.jpg` after ignoring images elsewhere). `output/` (raw scrapes) stays ignored.
+- `keyframes/` is committed on purpose (`.gitignore` re-includes `keyframes/*.jpg` after ignoring images elsewhere). `output/` (raw scrapes) and `final/` (assembled videos) stay ignored.
+
+---
+
+### Step 11: Record the Post's Results (after the user posts)
+
+**Goal:** Learn which hooks actually sell, instead of choosing only by freshness.
+
+```bash
+python track_performance.py --prefix <prefix> --post-url https://www.tiktok.com/@<handle>/video/<id>
+python track_performance.py --prefix <prefix> --views 5400 --likes 210 --comments 12 --shares 9 --orders 4 --gmv 119.60
+python track_performance.py --report     # hook formats and delivery styles ranked by orders per 1k views
+python track_performance.py --pending    # assembled/posted products still missing a link or numbers
+```
+- Ask the user for the post link after posting, and for the numbers ~48h later (TikTok Studio for views/likes; the Affiliate dashboard for orders/GMV; TikTok pages can't be read automatically). A later snapshot (e.g. day 7) can be added; the report uses the latest.
+- The query string is stripped from the link (it carries tracking IDs). Commit the record afterwards (Step 10).
+- `--hook-brief` lists the results; prefer formats proven over 3+ posts, but keep testing unproven ones about 1 run in 3.
 
 ---
 
@@ -609,16 +665,19 @@ git push
 | `generate_keyframes.py` | Generates 3 consistent 9:16 keyframe images dynamically for any product session |
 | `prompt_templates.py` | Reusable templates for keyframes, Flow AI prompts, caption, and Suno BGM; `DELIVERY_STYLES` (her voice + acting per scene) and `PACE_LINE` |
 | `automate_flow.py` | Flow AI renderer in Brave via Playwright CDP. Enforces settings, attaches frames by exact filename, pixel-verifies both slots, and refuses to submit on any failed check (`--dry-run` to test) |
-| `reply_gmail.py` | Automated Gmail reply script in Brave browser to dispatch copy packages via CDP |
+| `reply_gmail.py` | Gmail reply in Brave: clean caption + hashtags body, finished MP4 attached (`--dry-run` composes and discards). Refuses captions that fail `record_checks.py` |
 | `create_suno.py` | Automated Suno AI BGM instrumental generator in Brave browser via CDP |
+| `assemble_video.py` | Step 8b: downloads and QA-checks the 3 Flow clips, joins them with motion, BGM, subtitles and hook text into `final/<prefix>_final.mp4`, plus `final/<prefix>/qa_sheet.jpg` |
+| `record_checks.py` | Hard rules as errors (caption structure, hashtags, prices, dashes, Indonesian, hand actions, health claims, invented proof, hook_format/delivery_style). Used by Steps 6, 7 and 9; `--prefix` checks a record |
+| `track_performance.py` | Step 11: post link + views/orders per product; `--report` ranks hook formats and delivery styles; feeds `--hook-brief` |
 | `launch_brave.py` | **The only way to start Brave for automation.** Starts Brave with CDP on port 9222 through WMI (outside the agent's task) and exits; `--restart` reopens a Brave that lacks CDP, `--status` warns when Brave is trapped inside a script's task |
 | `open_brave.bat` | Double-click shortcut for the user: runs `launch_brave.py` with the Flow URL |
 | `generation_history.json` | Tracks last used opening/closing lines to prevent repetition (window: last 7) |
 | `flow_projects.json` | Keyframe prefix → that product's own Google Flow project (`name`, `url`, `created`). Written by `automate_flow.py --create-project`; read by every render. Commit it. |
-| `generation_store.py` | Reads and writes `generations/<prefix>.json` and finds each product's keyframe trio in `keyframes/` |
+| `generation_store.py` | Reads and writes `generations/<prefix>.json` (`save_record` merges, `update_record` sets single fields) and finds each product's keyframe trio in `keyframes/` |
 | `generations/` | One full record per product (prompts, spoken lines, caption, hashtags, BGM prompt, keyframes, Flow project, metadata). Written in Step 9, read by `automate_flow.py`, `reply_gmail.py` and `create_suno.py`. Commit it. |
 | `keyframes/` | Every product's 3 keyframes and garment reference photo (`<prefix>_product.jpg`). Committed to the public GitHub repo. |
-| `supabase_client.py` | Supabase client used only by the unused web app (`webapp.py`). The pipeline no longer uses Supabase. |
+| `supabase_client.py` | Supabase client used only by the unused web app (`webapp.py`). The pipeline never writes to Supabase (auto-sync removed 2026-11-21); don't call it from pipeline scripts. |
 | `publish_to_wordpress.py` | WordPress.com publishing integration for promo articles and affiliate links |
 | `tiktok_policy_notes.md` | **TikTok policy tracker**: compiled rules, violations, AIGC requirements, and change log |
 | `scrape_product.py` | Scrapes TikTok Shop product page → images + metadata |
@@ -627,52 +686,14 @@ git push
 
 ---
 
-## TikTok Policy Compliance System
+## Where the Systems Are Described
 
-- **File:** `tiktok_policy_notes.md`
-- **Purpose:** Single source of truth for all TikTok Shop, Affiliate, AIGC, and Community policies.
-- **How it works:**
-  1. AI reads the file at the START of every generation session (Step 0).
-  2. AI searches online for any policy updates or changes.
-  3. If new rules are found, AI updates the file and adds to the Change Log.
-  4. AI cross-checks the product category against prohibited categories.
-  5. AI ensures all generated content complies with documented rules.
-  6. Updated policy file is committed and pushed to Git for version tracking.
-- **Change Log:** Bottom of `tiktok_policy_notes.md` — records date, change, and source for every policy update detected.
-
----
-
-## Anti-Repetition & Viral Hook System
-
-- **File:** `generation_history.json` (committed to GitHub)
-- **Window:** Last **7** entries only. Older entries can be freely reused.
-- **How it works:**
-  1. **Zero Banned Hooks**: NEVER ban any hook styles or formulas. All hook techniques (pain-point questions, relatable confessions, visual pattern interrupts, curiosity gap) are valid.
-  2. **Search Internet Data for Best Hooks**: Before writing, search current TikTok e-commerce data and viral retail trends for high-converting hook formulas in Malaysia.
-  3. **Record to Avoid Repetition**: `get_recently_used_phrases(last_n=7)` (printed by `python generate_prompts.py --hook-brief`) retrieves the last 7 recorded openers and closers, plus a variety brief: formats used, formats not used recently, overused opening words, question streaks and worn-out phrases.
-  4. **Structural freshness, not just exact text**: `verify_hook_quality()` flags a hook that starts with the same word as recent ones, repeats a recent format, continues a run of questions, shares 3-word phrases with recent hooks, uses a worn-out phrase, or has a first sentence over 12 words. It checks the Scene 3 closer the same way. Each warning costs 10 points; nothing is blocked.
-  5. **Auto-Logging**: After generation, `save_generation_history(..., hook_format=...)` logs the newly created hook, its format and the CTA to `generation_history.json` and, with `prefix=`, the full record (including the audit warnings) to `generations/<prefix>.json`.
-- **No fixed rotation scripts.** No banned hooks. Data-driven viral hooks with recent history awareness. Older entries without a stored `hook_format` are classified from their text.
-
----
-
-## Flow AI Video Prompt Structure
-
-Each scene prompt is **one English paragraph + one verbatim Malay line** (full rules and a verified example in Step 6 §4b; templates in `prompt_templates.py`):
-- **Visual:** `Static locked-off vertical shot, the camera does not move.` + model, hijab, exact outfit and setting from the keyframes + how she turns in place from the Start pose to the End pose + the delivery style's acting line for that scene + "Her face, eyes, head and shoulders stay expressive and alive the whole time, reacting to what she says, while her hands stay empty and relaxed at her sides, no hand gestures, no props."
-- **Audio:** "For the audio, generate a highly realistic female voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent, strictly NOT an Indonesian accent. Her delivery is {the style's voice}. No background music, only her voice and soft ambient sound. Ensure there are no text overlays or watermarks." + `PACE_LINE` (lively, expressive, talks continuously; see Step 6 §4b).
-- **Dialogue:** `Spoken Malay (Lip-sync): "<verbatim Malaysian Malay, 2-3 natural spoken sentences, 28-32 words, no colons>"`. Write the Malay yourself; never ask Flow to translate English.
-
-**CRITICAL PACKAGING RULE — WRAP IN SAME CODE BOX FOR 1-CLICK COPY:**
-ALWAYS wrap the Flow AI prompt AND the spoken Malay lip-sync dialogue in the **SAME text / code box**.
-Do NOT separate the spoken Malay into an external quote below the box. This allows the user to click the copy button (`📋`) on the code box once to copy everything needed for that scene cleanly.
-
-Example layout:
-```text
-Static locked-off vertical shot, the camera does not move. A young Malaysian Muslim woman in a ... hijab stands in ..., wearing .... She starts ..., then slowly turns in place .... Her hands stay empty and relaxed at her sides the whole time, no gestures, no props. ... For the audio, generate a highly realistic female voice with a standard Malaysian Malay (Bahasa Melayu Malaysia) accent, strictly NOT an Indonesian accent. No background music, only her voice and soft ambient sound. Ensure there are no text overlays or watermarks.
-
-Spoken Malay (Lip-sync): "Dua atau tiga ayat santai macam bercakap dengan kawan, lebih kurang 28 hingga 32 patah perkataan, tanpa tanda titik bertindih."
-```
+These used to be repeated here; each now lives in one place:
+- **Policy compliance** (`tiktok_policy_notes.md`, re-checked online every run, Change Log at its bottom): Step 0.
+- **Hook variety and anti-repetition** (`generation_history.json`, last 7 entries, `--hook-brief`, `--audit-hook`, `--audit-script`): Steps 4-4d.
+- **Results** (which formats and styles sell): Step 11, shown in `--hook-brief`.
+- **Flow prompt structure** (static shot + turn in place + delivery style + audio direction + `Spoken Malay (Lip-sync)` line): Step 6 §4b. When showing prompts to the user, each scene's prompt and its Malay line go in the SAME code box (Step 5).
+- **Hard rules that refuse** (caption, hashtags, spoken lines, record fields): `record_checks.py`, Step 9.
 
 ---
 
@@ -680,6 +701,7 @@ Spoken Malay (Lip-sync): "Dua atau tiga ayat santai macam bercakap dengan kawan,
 
 **CRITICAL PACKAGING RULE — WRAP IN CODE BOX FOR 1-CLICK COPY:**
 ALWAYS deliver the full caption and hashtags inside a single code box (`text`) so the user can copy everything in 1 click.
+**Enforced by `record_checks.py`:** 3-5 `✨` feature lines, 4-6 hashtags, and the caption must not be the spoken script pasted together (every caption from mid-Nov 2026 was, with 10-11 hashtags).
 
 ```
 {relatable_hook_question} {emoji}
@@ -743,20 +765,7 @@ await p.stop()
 ```
 
 ### 3. Automated Browser Tasks Sequence
-Whenever the user supplies a TikTok Shop product link:
-1. **Google Flow AI (`automate_flow.py`)**:
-   - Tab: the product's own project from `flow_projects.json` (created with `--create-project` for each new product).
-   - Forces Video / Frames / 9:16 / Omni 1.1 Flash / 720p / 10s / x1.
-   - Attaches and pixel-verifies Frame 1 ➡️ 2 (Scene 1), Frame 2 ➡️ 3 (Scene 2), Frame 3 ➡️ 1 (Scene 3).
-   - Types visual prompt + `Spoken Malay (Lip-sync)` line and starts renders only after every check passes. Then do Post-Render QA (Step 6 §6).
-2. **Gmail Promo Package Reply (`reply_gmail.py`)**:
-   - Tab: `https://mail.google.com/mail/u/0/#inbox`
-   - Checks and verifies the email thread containing the **exact TikTok product link** first. If not found, aborts immediately (never replies to wrong threads, never composes new emails).
-   - Once verified, clicks **Reply**, fills **STRICTLY AND ONLY THE CLEAN TIKTOK CAPTION + HASHTAGS** (zero greetings, zero metadata headers, zero prompts, zero quoted text), and clicks **Send**.
-3. **Suno AI Instrumental BGM (`create_suno.py`)**:
-   - Tab: `https://suno.com/create`
-   - Sets mode to **Instrumental** (strictly no vocals).
-   - Pastes the generated acoustic/lo-fi style prompt and title, then clicks **Create**.
+Follow the RUN ORDER at the top of the workflow: `automate_flow.py` (Step 6) → `create_suno.py` (Step 8) → `assemble_video.py` (Step 8b) → `reply_gmail.py` (Step 7). Each script opens its own tab (or reuses the Gmail/Suno tab), closes only tabs it opened, and exits.
 
 ---
 
@@ -834,5 +843,16 @@ Whenever the user supplies a TikTok Shop product link:
 * **`No Flow project recorded for '<prefix>'`:** the product has no project yet. Run the printed `--create-project` command, then render again.
 * **`Flow project creation error`:** the home page had no **New project** button (signed out or UI changed), or the rename didn't save. Create or rename the project by hand in Flow, then add `"<prefix>": {"name": ..., "url": "https://flow.google.com/u/5/project/<id>", "created": ...}` to `flow_projects.json`.
 * **Never** bypass the gate by clicking `Start generation` manually without performing the same checks.
+* **`ABORTED before rendering ... break hard rules`:** a spoken line fails `record_checks.py` (hand action like "saya usap", health claim, invented stock/reactions, Indonesian word). Rewrite the line, re-save (Step 9), render again.
+
+### 9. `NOT SAVED` / `NOT SENT` (record_checks.py)
+* **Meaning:** `save_generation_history()` or `reply_gmail.py` found a hard-rule error; nothing was written or sent. The printed ❌ lines say exactly what.
+* **Most common:** the caption is the spoken script pasted together, or has 8-11 hashtags. Write it in the Caption Structure (hook, pitch, `Kelebihan ... ni yang buat saya suka:` with 3-5 `✨ Feature: description` lines, styling tip, CTA) with 4-6 hashtags.
+* Never get around it by editing the JSON by hand.
+
+### 10. `NOT ASSEMBLED` (assemble_video.py)
+* **`no usable clip for scene(s) [N]`:** renders still running (use `--wait 900`), or a clip failed QA. Read the `BAD` line: "matches no keyframe clearly" = rendered without its frames (text-to-video) or another product's clip; re-render that scene and assemble again.
+* **`no background music: Suno says 'Out of Downloads'`:** expected on the Free plan; the video is voice-only. Tell the user to add a Commercial Music Library sound when posting, or pass `--bgm <licensed file>`.
+* **Gmail refuses the file:** over 25 MB; the script re-encodes anything over 24 MB automatically, so check `assembly.size_mb` in the record.
 
 

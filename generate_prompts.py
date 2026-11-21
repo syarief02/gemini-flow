@@ -125,6 +125,17 @@ def get_recently_used_phrases(last_n: int = 7) -> str:
                          + ", ".join(f"'{o}' ({ops.count(o)}x)" for o in repeated))
     lines.append("  Acting: the style's expression for each scene (face, eyes, head, shoulders). Hands stay empty "
                  "at her sides. Check the script: python generate_prompts.py --audit-script \"<s1>\" \"<s2>\" \"<s3>\"")
+    unlogged = [e.get("product", "?")[:40] for e in recent if not e.get("hook_format") or not e.get("delivery_style")]
+    if unlogged:
+        lines.append(f"  Note: {len(unlogged)} recent entries have no hook_format/delivery_style recorded (older than "
+                     "delivery styles, or written by hand instead of save_generation_history): " + "; ".join(unlogged))
+
+    # Results: which formats and styles actually sold (track_performance.py)
+    try:
+        from track_performance import performance_brief
+        lines += performance_brief()
+    except Exception as e_perf:
+        lines.append(f"\n📈 Results unavailable: {e_perf}")
     return "\n".join(lines)
 
 def detect_hook_archetype(opening_line: str) -> str:
@@ -587,6 +598,20 @@ def save_generation_history(
     spoken = (scenes or {}).get("spoken_dialogue")
     script_audit = audit_promo_script(spoken, exclude_prefix=prefix) if spoken else None
 
+    # Hard rules (record_checks.py): refuse to save rather than print a warning nobody acts on.
+    if prefix:
+        from record_checks import check_record, report
+        errors, warns = check_record({
+            "scenes": scenes or {}, "caption": caption, "hashtags": hashtags,
+            "metadata": {**(metadata or {}), "hook_format": hook_format, "delivery_style": delivery_style},
+        })
+        if errors:
+            print(f"❌ NOT SAVED: '{prefix}' breaks {len(errors)} hard rule(s). Fix them and save again:")
+            report(errors, warns, prefix)
+            raise ValueError(f"Record for '{prefix}' not saved: " + " | ".join(errors))
+        for w in warns:
+            print(f"   ⚠️ {w}")
+
     try:
         data = _read_history_file()
     except FileNotFoundError:
@@ -679,28 +704,8 @@ def save_generation_history(
             "metadata": meta,
         })
         print(f"🗂️ Saved generation record: {record_file.relative_to(record_file.parent.parent)}")
-
-        # Auto-sync generation record and keyframes to Supabase
-        try:
-            from supabase_client import is_supabase_enabled, save_generation_record, upload_prefix_keyframes_to_supabase
-            if is_supabase_enabled():
-                cdn_map = upload_prefix_keyframes_to_supabase(prefix)
-                if cdn_map:
-                    meta["supabase_keyframe_urls"] = cdn_map
-                save_generation_record(
-                    product_name=product_name,
-                    opening_line=opening_line,
-                    closing_line=closing_line,
-                    scenes=scenes,
-                    caption=caption,
-                    hashtags=hashtags,
-                    bgm_prompt=bgm_prompt,
-                    keyframe_urls=kf["urls"],
-                    metadata=meta
-                )
-                print(f"☁️ Auto-synced '{product_name}' to Supabase database & storage.")
-        except Exception as e_supa:
-            print(f"Notice: Supabase auto-sync: {e_supa}")
+        # Records and keyframes live only in this repo (Step 9/10). The Supabase project is shared
+        # with other programs and Gemini Flow must not write to it (user decision, 2026-11-21).
 
 SYSTEM_PROMPT = """You are a top Malaysian TikTok e-commerce content strategist who creates VIRAL short-form video scripts.
 You specialize in creating spoken dialogue that feels like a real person talking to their bestie—NOT a product brochure being read aloud.

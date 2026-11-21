@@ -70,3 +70,6 @@ scratch/
 
 # Claude Code personal settings
 .claude/settings.local.json
+
+# Assembled videos and their work files (assemble_video.py); large, kept local
+final/

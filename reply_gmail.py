@@ -32,15 +32,54 @@ def get_record_info(prefix: str | None = None) -> tuple[str, str, str]:
     full_caption = f"{cap}\n\n{tags}".strip() if tags and tags not in cap else cap
     
     meta = record.get("metadata") or {}
-    tiktok_url = meta.get("tiktok_url") or meta.get("source_url") or ""
+    # Agents have stored the shared link as tiktok_url, source_url or url; the thread is found by the link.
+    tiktok_url = next((str(meta[k]) for k in ("tiktok_url", "source_url", "url")
+                       if "tiktok.com" in str(meta.get(k) or "")), "")
     
     return full_caption, tiktok_url, product_name
+
+
+GMAIL_ATTACH_MAX_MB = 25.0
+
+
+async def attach_and_wait(gmail_page, attachment: Path, timeout_s: int = 180) -> bool:
+    """Attach a file to the open reply and wait until Gmail has finished uploading it."""
+    size_mb = attachment.stat().st_size / 1e6
+    if size_mb > GMAIL_ATTACH_MAX_MB:
+        print(f"❌ {attachment.name} is {size_mb:.1f} MB; Gmail would turn it into a Drive link. Not attaching.")
+        return False
+    print(f"Attaching {attachment.name} ({size_mb:.1f} MB)...")
+    await gmail_page.locator("input[type='file'][name='Filedata']").last.set_input_files(str(attachment))
+    for _ in range(timeout_s):
+        # Gmail labels the chip "Saving attachment: NAME..." while uploading and "Attachment: NAME..." when done.
+        # The chip sits outside the compose <form>, so look across the page.
+        state = await gmail_page.evaluate("""(name) => {
+            const labels = [...document.querySelectorAll('[aria-label]')].map(e => e.getAttribute('aria-label'));
+            return { done: labels.some(l => l.startsWith('Attachment: ' + name)),
+                     uploading: labels.some(l => l.startsWith('Saving attachment: ' + name)) };
+        }""", attachment.name)
+        if state["done"] and not state["uploading"]:
+            print(f"✅ Attachment uploaded: {attachment.name}")
+            return True
+        await gmail_page.wait_for_timeout(1000)
+    print(f"❌ Attachment did not finish uploading within {timeout_s}s.")
+    return False
+
+
+async def discard_reply(gmail_page) -> None:
+    btn = gmail_page.locator("div[role='button'][aria-label^='Discard draft'], [data-tooltip^='Discard draft']").last
+    if await btn.count():
+        await btn.click()
+        await gmail_page.wait_for_timeout(1500)
+        print("Draft discarded.")
 
 
 async def reply_with_clean_format(
     caption_text: str,
     thread_url: str | None = None,
-    search_query: str | None = None
+    search_query: str | None = None,
+    attachment: Path | None = None,
+    dry_run: bool = False,
 ):
     print("Step 1: Connecting to Brave over CDP on port 9222...")
     p = await async_playwright().start()
@@ -321,6 +360,21 @@ async def reply_with_clean_format(
             }""")
             await gmail_page.wait_for_timeout(500)
 
+        # Step 2f: Attach the assembled video (the body stays caption + hashtags only)
+        if attachment:
+            if not await attach_and_wait(gmail_page, attachment):
+                await discard_reply(gmail_page)
+                await p.stop()
+                return False
+
+        if dry_run:
+            await gmail_page.screenshot(path="gmail_reply_dry_run.png")
+            print("DRY RUN: reply composed (caption" + (f" + {attachment.name}" if attachment else "")
+                  + "), NOT sent. Screenshot: gmail_reply_dry_run.png. Discarding the draft...")
+            await discard_reply(gmail_page)
+            await p.stop()
+            return True
+
         # Locate Send button
         send_btn = gmail_page.locator("div[role='button']:has-text('Send'), [data-tooltip*='Send']").last
         if await send_btn.is_visible(timeout=3000):
@@ -351,6 +405,9 @@ if __name__ == "__main__":
     parser.add_argument("--latest", action="store_true", help="Send the caption from the newest record in generations/")
     parser.add_argument("--thread-url", type=str, help="Target Gmail thread URL")
     parser.add_argument("--search", type=str, help="Search query or product link to find the exact email thread")
+    parser.add_argument("--attach", type=str, help="File to attach (default with --prefix: the record's final_video)")
+    parser.add_argument("--no-attach", action="store_true", help="Send the caption without the assembled video")
+    parser.add_argument("--dry-run", action="store_true", help="Compose and attach, then discard instead of sending")
     args = parser.parse_args()
 
     chosen_caption = None
@@ -380,9 +437,45 @@ if __name__ == "__main__":
     if not chosen_caption or not chosen_caption.strip():
         parser.error("No caption to send (empty --caption or --file).")
 
+    # Hard caption rules (hashtag count, feature lines, no prices/dashes/spam tags). Refuse, don't warn.
+    from record_checks import check_caption
+    spoken_lines = None
+    if args.prefix:
+        from generation_store import load_record as _load
+        spoken_lines = ((_load(args.prefix) or {}).get("scenes") or {}).get("spoken_dialogue")
+    cap_errors, cap_warnings = check_caption(chosen_caption, "", spoken_lines)
+    for w in cap_warnings:
+        print(f"⚠️ {w}")
+    if cap_errors:
+        print("❌ NOT SENT: the caption breaks hard rules (AGENTS.md 'TikTok Caption Structure'):")
+        for e in cap_errors:
+            print(f"   ❌ {e}")
+        print("Fix the caption, re-save the record (Step 9), then run this again.")
+        sys.exit(1)
+
+    attachment = None
+    if args.attach:
+        attachment = Path(args.attach)
+        if not attachment.is_file():
+            parser.error(f"--attach file not found: {attachment}")
+    elif args.prefix and not args.no_attach:
+        from generation_store import WORKSPACE, load_record
+        final_video = (load_record(args.prefix) or {}).get("final_video")
+        if final_video and (WORKSPACE / final_video).is_file():
+            attachment = WORKSPACE / final_video
+        else:
+            print(f"⚠️ No assembled video for '{args.prefix}' (run assemble_video.py --prefix {args.prefix} "
+                  "first). Sending the caption only.")
+
     success = asyncio.run(reply_with_clean_format(
         caption_text=chosen_caption,
         thread_url=args.thread_url,
-        search_query=search_q
+        search_query=search_q,
+        attachment=attachment,
+        dry_run=args.dry_run,
     ))
+    if success and args.prefix and not args.dry_run:
+        from generation_store import update_record
+        update_record(args.prefix, gmail_status="reply_sent_clean",
+                      gmail_attachment=attachment.name if attachment else "none")
     sys.exit(0 if success else 1)

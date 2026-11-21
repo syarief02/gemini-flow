@@ -67,6 +67,27 @@ Full outfit visible, 9:16 vertical portrait, \
 consistent face, identical outfit, and styling, cinematic golden hour lighting, \
 sharp focus, no handbag, no tote bag, no purse, no tumbler, no props, no text overlay, no watermark."""
 
+# NON-CLOTHING PRODUCTS (added 2026-11-21). The frames above assume the product IS the outfit, and
+# they ban every bag. For a bag, hat or scarf that leaves the product tiny or missing: the school-bag
+# run of 2026-11-20 put the bag on a side table at ~10% of the frame while she talked about straps
+# nobody could see. Morphing comes from props that APPEAR, MOVE or CHANGE between frames, not from
+# the product itself. So for a wearable product, replace the "no handbag/no tote bag" words with
+# WORN_PRODUCT_LINE in all three frame prompts (same placement every time):
+#   - she WEARS it, never holds it; her hands stay empty at her sides;
+#   - Frame 3 (back to camera) shows a backpack's back and straps: a natural turn_reveal payoff.
+# CHILD-SIZE products (kids' bags, kids' clothes): an adult wearing them misstates the size, and
+# AI-generated children in ads are sensitive. Stop and ask the user how to present the product.
+WORN_PRODUCT_LINE = ("She wears the {product} {placement} in all three frames, in exactly the same position, "
+                     "clearly visible and large in the frame, as part of her outfit. Her hands stay empty and "
+                     "relaxed at her sides. No other bag, purse, phone, cup or prop anywhere.")
+PRODUCT_PLACEMENTS = {
+    "backpack": "on both shoulders, straps adjusted evenly",
+    "crossbody_bag": "across her body, strap over her left shoulder, bag resting at her right hip",
+    "shoulder_bag": "on her left shoulder, bag resting at her left hip",
+    "hat": "on her head over the hijab",
+    "scarf_shawl": "draped around her shoulders over the outfit",
+}
+
 
 # =============================================================================
 # FLOW AI VIDEO PROMPTS (Omni Flash 10s portrait)
