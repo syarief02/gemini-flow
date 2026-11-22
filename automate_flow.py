@@ -362,22 +362,22 @@ async def clear_composer(page):
 
 
 async def ensure_settings(page):
-    """Open the settings menu and force every required toggle and the model, then verify."""
-    trigger = page.locator(f"{COMPOSER} button[aria-label='Settings trigger']")
-    summary = await trigger.inner_text()
-    if all(s in summary for s in ("Video", "720p", "10s", "9_16", "x1")):
-        print(f"  Settings already configured: {REQUIRED_MODEL} | {' · '.join(REQUIRED_TOGGLES)}")
-        return
+    """Open the settings menu and force every required toggle and the model, then verify.
 
+    Always opens the menu: the summary ("Video · 720p · 10s · 9:16 · x1") doesn't name the model, and
+    Flow's default became Omni 1.2 Flash on 2026-11-22, so a matching summary can still be the wrong model.
+    """
+    trigger = page.locator(f"{COMPOSER} button[aria-label='Settings trigger']")
     await trigger.click()
     overlay = page.locator(OVERLAY)
     model_btn = overlay.locator("button[aria-label='Select model family']")
     await model_btn.wait_for(timeout=5000)
 
     radios = overlay.locator("button[role='radio']")
-    texts = await radios.evaluate_all("els => els.map(e => e.innerText.trim().split(/\\s+/).pop())")
     for label in REQUIRED_TOGGLES:
+        # Re-read every time: switching Image -> Video re-renders the options (Frames, 720p appear).
         # Rendered text is "<icon ligature> <label>", e.g. "crop_9_16 9:16"; match the label word only.
+        texts = await radios.evaluate_all("els => els.map(e => e.innerText.trim().split(/\\s+/).pop())")
         matches = [i for i, t in enumerate(texts) if t == label]
         if len(matches) != 1:
             if label == "10s":
@@ -392,10 +392,11 @@ async def ensure_settings(page):
 
     if REQUIRED_MODEL not in (await model_btn.inner_text()):
         await model_btn.click()
-        await overlay.locator("button[role='menuitem']").filter(has_text=REQUIRED_MODEL).first.click()
+        await overlay.locator("[role='menuitem']").filter(has_text=REQUIRED_MODEL).first.click()
         await page.wait_for_timeout(500)
         if REQUIRED_MODEL not in (await model_btn.inner_text()):
             raise FlowError(f"Could not select model '{REQUIRED_MODEL}'.")
+    print(f"  Model: {(await model_btn.inner_text()).split(chr(10))[0].strip()}")
 
     cost = overlay.get_by_text(re.compile(r"Generating will use"))
     if await cost.count():

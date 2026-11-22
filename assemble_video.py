@@ -131,7 +131,16 @@ def _thumb(img: Image.Image) -> Image.Image:
 
 
 def frame_diff(a: Image.Image, b: Image.Image) -> float:
-    return ImageStat.Stat(ImageChops.difference(_thumb(a), _thumb(b))).mean[0]
+    """Mean grayscale difference after matching overall brightness.
+
+    Flow's video frames come out ~9 levels darker than the keyframes they start from (2026-11-22), which
+    added ~9 to every diff and failed correct clips. Matching the means compares pose and layout instead:
+    right pose ~4-5.5, other poses 9-20, another product's keyframes 46+.
+    """
+    ta, tb = _thumb(a), _thumb(b)
+    shift = round(ImageStat.Stat(tb).mean[0] - ImageStat.Stat(ta).mean[0])
+    ta = ta.point(lambda v: max(0, min(255, v + shift)))
+    return ImageStat.Stat(ImageChops.difference(ta, tb)).mean[0]
 
 
 def speech_span(path: Path, duration: float) -> tuple[float, float, float]:

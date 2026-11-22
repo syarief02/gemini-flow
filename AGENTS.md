@@ -407,7 +407,7 @@ Deliver to the user in this exact order:
    - **If any check fails, the scene is ABORTED and nothing is submitted** (`ABORTED Scene N ...` plus `flow_scene<N>_aborted.png`). Fix the cause (shorten the line, upload the right file, select the right project). **Never bypass the gate by clicking `Start generation` yourself.**
 
 6. **Post-Render QA (MANDATORY, done in Step 8b):**
-   - `assemble_video.py` downloads every render, matches each clip's first and last frame to the keyframes (right pose ≈ 7-8, other poses 12.5-21; limit 10 with a 3-point margin), refuses clips that match none (text-to-video: a different woman / no hijab / different top), checks ~10s length and that her voice is there, and writes `final/<prefix>/qa_sheet.jpg` (per scene: start keyframe, the clip at 0.1s / 3s / 6s / end, end keyframe).
+   - `assemble_video.py` downloads every render, matches each clip's first and last frame to the keyframes after matching their overall brightness (Flow's video frames come out ~9 levels darker than the keyframes; right pose ≈ 4-5.5, other poses 9-20, another product 46+; limit 10 with a 3-point margin), refuses clips that match none (text-to-video: a different woman / no hijab / different top), checks ~10s length and that her voice is there, and writes `final/<prefix>/qa_sheet.jpg` (per scene: start keyframe, the clip at 0.1s / 3s / 6s / end, end keyframe).
    - **Open the QA sheet and check every row**: same model, hijab, garment, bottoms and background; no props, no warping, hands not morphing. Re-render a bad scene (`python automate_flow.py --scene N --prefix <prefix>`) and assemble again; a re-render is newer, so it wins.
    - Agents cannot hear audio: tell the user to listen for Malaysian accent and lip-sync before posting.
 
