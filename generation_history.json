@@ -1126,6 +1126,16 @@
       "prefix": "jaket_blazer_wanita_elegan",
       "hook_format": "dont_buy",
       "delivery_style": "playful_tease"
+    },
+    {
+      "product": "[JWD592] Set pakaian terdiri daripada kardigan rajutan lembut berhiaskan bulu dan baju tanpa tali dengan potongan longgar",
+      "timestamp": "2026-11-22T21:31:15.927571+08:00",
+      "opening_line": "Set ni untuk nampak manis, bukan nampak macam pakai baju sejuk tebal. Top dia sebenarnya tanpa tali tau, jadi saya nak kongsi dengan korang cara saya pakai yang tetap sopan.",
+      "closing_line": "Manis, sopan, dan tak nampak tebal langsung, itu yang saya nak. Saya pilih warna beige ni, tapi ada putih dan kelabu juga dalam beg kuning, korang pilih yang mana?",
+      "hook_archetype": "Conversational Organic Recommendation",
+      "hook_format": "this_not_that",
+      "delivery_style": "confident_stylist",
+      "hook_score": 100
     }
   ]
 }
