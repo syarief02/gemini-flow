@@ -1136,6 +1136,16 @@
       "hook_format": "this_not_that",
       "delivery_style": "confident_stylist",
       "hook_score": 100
+    },
+    {
+      "product": "2026 Women’s Quilted Trench Coat, Thick for Spring, Autumn, and Winter, Slim-Fit Cut, Medium Length.",
+      "timestamp": "2026-11-24T02:35:17.322181+08:00",
+      "opening_line": "Dari depan nampak macam trench biasa, tapi tunggu saya pusing. Serius korang, belakang kot kopi gelap ni ada satu detail kecil yang buat saya terus jatuh hati, nak tahu tak?",
+      "closing_line": "Depan kemas, belakang ada detail, dalam pula hangat, sebab tu saya cakap bukan trench biasa. Warna kopi gelap ni senang padan dengan seluar hitam, kalau korang berkenan, beg kuning dekat bawah.",
+      "hook_archetype": "The Visual Pattern Interrupt / Direct Question",
+      "hook_format": "turn_reveal",
+      "delivery_style": "excited_bestie",
+      "hook_score": 100
     }
   ]
 }
