@@ -4,7 +4,7 @@
 # AI agents MUST check this file AND search online for the latest updates
 # BEFORE generating any content. If new rules are found, update this file.
 #
-# Last Verified: 2026-11-19
+# Last Verified: 2026-11-24
 
 ---
 
@@ -123,6 +123,7 @@ These are rules we enforce on ourselves to maintain a clean account health:
 
 | Date | Change | Source |
 |------|--------|--------|
+| 2026-11-24 | Live compliance review: no Malaysia-specific policy change found since 2026-11-19. TikTok Shop Cross-Border Seller Academy AIGC guidance (updated 2026-11-13, per a third-party summary) restates our existing rules: AI may be used in promotional content when the product is depicted accurately and others' rights are respected, and fully AI-generated or heavily edited content must be disclosed. No rule changes; zero-direct-price rule and AIGC toggle reminder unchanged. | Web search (TikTok Shop Cross-Border Seller Academy summary, TT123 SEA AIGC guidelines, Nov 2026) |
 | 2026-11-19 | Live compliance review: Verified late-November 2026 TikTok Shop Malaysia & SEA AIGC policy enforcement: Re-affirmed Three Golden Rules for AIGC product promotions (zero fabricated product specs, no misleading before/after performance claims, strict ban on unauthorized synthetic likeness/expert impersonation), mandatory "AI-generated content" toggle on publishing, and strict content health rating (CHR) protection. Content generator strictly conforms with zero-direct-price policy and transparent AIGC disclosure. | TikTok Shop Creator Content Policies & Synthetic Media Guidelines (Nov 2026) |
 | 2026-11-12 | Live compliance review: Verified mid-November 2026 TikTok Shop Affiliate & Creator Content Policy updates: Tightened enforcement on Creator Health Rating (CHR 2.0, 0-1,000 pts), category-specific promotion eligibility gates across 17 categories (CHR >= 150, PPS >= 3.5), heightened scrutiny on AIGC realism requiring strict physical match to official Product Description Page (PDP) without phantom features/accessories, and strict penalties for outdated/expired pricing claims. Generator fully aligns with zero-direct-price rule and compliant AIGC disclosure. | TikTok Shop Creator Content Policies & Affiliate Marketing Guidelines (Nov 2026) |
 | 2026-11-03 | Live compliance review: Verified early-November 2026 TikTok Shop Malaysia enforcement updates: Strict prohibition of exaggerated transformation/medical claims, stringent AIGC synthetic media guidelines (mandatory "AI-generated content" toggle, ban on modifying core product attributes/specs, accurate staging without phantom accessories), and Creator Health Rating (CHR) / LHDN e-invoicing identity adherence. Promo generator strictly complies with zero-direct-price policy and transparent AIGC disclosure. | TikTok Shop Malaysia Creator Compliance Bulletin & Community Guidelines (Nov 2026) |
