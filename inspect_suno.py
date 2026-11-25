@@ -12,6 +12,7 @@ async def inspect_suno():
             suno_tab = page
             break
     if suno_tab:
+        await suno_tab.set_viewport_size({"width": 1400, "height": 900})
         await suno_tab.bring_to_front()
         await suno_tab.wait_for_timeout(2000)
         links = await suno_tab.evaluate('''() => {

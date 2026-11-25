@@ -281,12 +281,15 @@ async def create_flow_project(browser, name: str) -> str:
     """Create a new Flow project in its own tab, rename it to `name`, and return its URL."""
     context = browser.contexts[0] if browser.contexts else await browser.new_context()
     page = await context.new_page()  # never take over the user's own Flow tab
+    await page.set_viewport_size({"width": 1440, "height": 900})
+    await page.bring_to_front()
     await page.goto(FLOW_URL, wait_until="domcontentloaded")
     new_btn = page.locator("button").filter(has_text=re.compile(r"New project", re.I)).first
     try:
         await new_btn.wait_for(timeout=20000)
     except Exception:
         raise FlowError("Flow home page has no 'New project' button (signed out, or the UI changed).")
+    await dismiss_flow_modals(page)
     await new_btn.click()
     try:
         await page.wait_for_url(re.compile(r"/project/[0-9a-f-]{36}"), timeout=30000)
