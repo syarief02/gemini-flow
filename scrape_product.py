@@ -313,6 +313,8 @@ async def _scrape_tiktok_playwright(tiktok_url: str, output_dir: str) -> dict:
             # Check if page body was blocked by TikTok's regional / captcha gate
             blocked_keywords = [
                 "product not available",
+                "not currently available",
+                "not available in your country",
                 "produk tidak tersedia",
                 "not available in your region",
                 "tidak tersedia di rantau",
@@ -339,7 +341,9 @@ async def _scrape_tiktok_playwright(tiktok_url: str, output_dir: str) -> dict:
                         extra_browsers.append(headed_browser)
                         page = headed_page
                         page_title, body_text, is_blocked = h_title, h_body, False
-                        clean_title = re.sub(r"\s+", " ", re.sub(r"\s*-\s*TikTok Shop.*$", "", h_title)).strip()
+                        parsed_title = re.sub(r"\s+", " ", re.sub(r"\s*-\s*TikTok Shop.*$", "", h_title)).strip()
+                        if parsed_title:
+                            clean_title = parsed_title
                         print(f"📄 Product: {clean_title}", flush=True)
 
             if is_blocked:

@@ -594,9 +594,10 @@ async def check_flow_status(
         # Inspect DOM state
         status_data = await page.evaluate('''() => {
             const isEditor = window.location.href.includes('/edit/');
-            const tiles = Array.from(document.querySelectorAll('div[role="gridcell"], div.tile, div.gallery-item, div.asset-tile, div[tabindex="0"]'));
-            const playBadges = Array.from(document.querySelectorAll('button[aria-label="Play"], button.play-button, mat-icon[aria-label*="Play"], [data-icon="play"]'));
-            const progress = Array.from(document.querySelectorAll('[role="progressbar"], div.progress, span.status, div.generating'));
+            const videoTiles = Array.from(document.querySelectorAll('flow-video-tile'));
+            const tiles = Array.from(document.querySelectorAll('flow-grid-tile-container, div[role="gridcell"], div.tile, div.gallery-item, div.asset-tile, div[tabindex="0"]'));
+            const playBadges = Array.from(document.querySelectorAll('button[aria-label="Play"], button.play-button, mat-icon[aria-label*="Play"], [data-icon="play"], flow-video-tile i, flow-video-tile mat-icon'));
+            const progress = Array.from(document.querySelectorAll('[role="progressbar"], div.progress, span.status, div.generating, mat-progress-bar, mat-spinner'));
             const generatingTexts = Array.from(document.querySelectorAll('p, span, div')).filter(el => {
                 const t = (el.innerText || '').toLowerCase();
                 return t.includes('generating') || t.includes('queued');
@@ -607,9 +608,9 @@ async def check_flow_status(
                 url: window.location.href,
                 title: document.title,
                 isEditor: isEditor,
-                videoCountEstimate: Math.max(playBadges.length, (tiles.length >= 3 ? 3 : 0)),
+                videoCountEstimate: videoTiles.length || Math.max(playBadges.length, (tiles.length >= 3 ? 3 : 0)),
                 generatingCount: Math.max(progress.length, generatingTexts.length > 0 ? 1 : 0),
-                hasVideoTag: !!videoTag,
+                hasVideoTag: !!videoTag || videoTiles.length > 0,
                 timecodeSample: timecode.slice(0, 3)
             };
         }''')

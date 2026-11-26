@@ -280,6 +280,20 @@ def download_bgm(record: dict, track_no: int, dest: Path) -> tuple[Path | None, 
 # QA: which clip is which scene, and is it usable?
 # ---------------------------------------------------------------------------
 
+def _clear_match(diffs: list[float], keys: list[Image.Image]) -> tuple[bool, float]:
+    """Accept a clear best match even when pale/monochrome keyframes sit closer than FRAME_MATCH_MARGIN."""
+    order = sorted(range(len(diffs)), key=diffs.__getitem__)
+    best_i, second_i = order[0], order[1]
+    best, second = diffs[best_i], diffs[second_i]
+    margin = second - best
+    if best > FRAME_MATCH_MAX:
+        return False, margin
+    if margin >= FRAME_MATCH_MARGIN:
+        return True, margin
+    pair_gap = frame_diff(keys[best_i], keys[second_i])
+    return (margin >= max(1.2, 0.55 * pair_gap) and second >= 1.8 * max(best, 0.1)), margin
+
+
 def check_clip(path: Path, trio: list[Path]) -> dict:
     info = probe(path)
     keys = [Image.open(p).convert("RGB") for p in trio]
@@ -289,8 +303,10 @@ def check_clip(path: Path, trio: list[Path]) -> dict:
     s, e = d_start.index(min(d_start)), d_end.index(min(d_end))
     scene = PAIR_TO_SCENE.get((s, e))
     problems = []
-    margin = min(sorted(d_start)[1] - min(d_start), sorted(d_end)[1] - min(d_end))
-    if min(d_start) > FRAME_MATCH_MAX or min(d_end) > FRAME_MATCH_MAX or margin < FRAME_MATCH_MARGIN:
+    start_ok, s_margin = _clear_match(d_start, keys)
+    end_ok, e_margin = _clear_match(d_end, keys)
+    margin = min(s_margin, e_margin)
+    if not (start_ok and end_ok):
         problems.append(f"first/last frame matches no keyframe clearly (best {min(d_start)}/{min(d_end)}, limit "
                         f"{FRAME_MATCH_MAX}; margin {margin:.1f}, need {FRAME_MATCH_MARGIN}): rendered without "
                         "its frames (text-to-video), or the wrong product's clip?")
